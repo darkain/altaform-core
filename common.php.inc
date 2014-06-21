@@ -23,6 +23,10 @@ function _pudl_event($thumbsize) {
 	return _pudl_thumb('pudl_event', 'ev.event_icon', $thumbsize);
 }
 
+function _pudl_gathering($thumbsize) {
+	return _pudl_thumb('pudl_gathering', 'gt.gathering_icon', $thumbsize);
+}
+
 function _pudl_file($thumbsize) {
 	return _pudl_thumb('pudl_file', 'fl.file_hash', $thumbsize);
 }
