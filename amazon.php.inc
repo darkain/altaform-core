@@ -27,7 +27,7 @@ function s3client() {
 // $filepath should be absolute path to a file on disk
 function s3delete($bucket, $awspath, $options=[]) {
 	$client = s3client();
-	$result = $client->putObject(array_merge($options, [
+	$result = $client->deleteObject(array_merge($options, [
 		'Bucket'	=> $bucket,
 		'Key'		=> $awspath,
 	]));
