@@ -13,7 +13,9 @@ $url['host']	= ($url['https']?'https://':'http://') . $url['domain'];
 $url['af_host']	= $host;
 $url['safe']	= array();
 $url['id']		= 0;
-$url			= array_merge($url, parse_url($url['uri']));
+$url			= array_merge($url, (array)parse_url($url['uri']));
+
+if (empty($url['path'])) error404();
 
 if (!isset($url['base'])) $url['base'] = '';
 if (substr($url['path'], 0, 1) != '/') $url['path'] = '/' . $url['path'];

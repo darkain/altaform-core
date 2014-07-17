@@ -44,6 +44,7 @@ function error403($text='') {
 function error404($text='') {
 	global $url, $get, $af;
 
+	if (empty($url['all'])) $url['all'] = '';
 	if ($get->server('HTTP_REFERER') === $url['all']) {
 		$af->redirect("$url[host]$url[base]/", 302);
 	}
