@@ -624,6 +624,18 @@ class altaform extends altaformlite {
 
 
 
+	//Log TinyButStrong error messages
+	function meth_Misc_Alert($Src, $Msg, $NoErrMsg=false, $SrcType=false) {
+		ob_start();
+		$ret = parent::meth_Misc_Alert($Src, $Msg, $NoErrMsg, $SrcType);
+		$text = ob_get_clean();
+		_af_log_error($text, false);
+		echo $text;
+		return $ret;
+	}
+
+
+
 	public function debug() {
 		global $site;
 		return (!empty($site['debug']));
