@@ -626,10 +626,20 @@ class altaform extends altaformlite {
 
 	//Log TinyButStrong error messages
 	function meth_Misc_Alert($Src, $Msg, $NoErrMsg=false, $SrcType=false) {
+		global $url, $get;
+		
 		ob_start();
 		$ret = parent::meth_Misc_Alert($Src, $Msg, $NoErrMsg, $SrcType);
 		$text = ob_get_clean();
-		_af_log_error($text, false);
+
+		_af_log_error([
+			'time'		=> date('r'),
+			'details'	=>	$text,
+			'url'		=> isset($url['all']) ? $url['all'] : $get->server('REQUEST_URI'),
+			'for'		=> $get->server('HTTP_X_FORWARDED_FOR'),
+			'agent'		=> $get->server('HTTP_USER_AGENT'),
+		], false);
+
 		echo $text;
 		return $ret;
 	}
