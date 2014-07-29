@@ -634,7 +634,8 @@ class altaform extends altaformlite {
 
 		_af_log_error([
 			'time'		=> date('r'),
-			'details'	=>	$text,
+			'file'		=> $this->_LastFile,
+			'details'	=> $text,
 			'url'		=> isset($url['all']) ? $url['all'] : $get->server('REQUEST_URI'),
 			'for'		=> $get->server('HTTP_X_FORWARDED_FOR'),
 			'agent'		=> $get->server('HTTP_USER_AGENT'),
