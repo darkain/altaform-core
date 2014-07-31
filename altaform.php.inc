@@ -587,11 +587,9 @@ class altaform extends altaformlite {
 				"`queue_service`='$service'",
 				"`queue_type`='$type'",
 			]);
+			return;
 		}
 
-		
-		//TODO: check to see if this is SQL injection possible
-		//      with json_encode and single-quote characters
 		$db->insert(
 			'pudl_queue',
 			[
