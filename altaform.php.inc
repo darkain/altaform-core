@@ -612,7 +612,7 @@ class altaform extends altaformlite {
 
 	public function linkify($text) {
 		$text = preg_replace(
-			'@(?<![.*">])\b(?:(?:https?)://|[a-z]\.)[-A-Z0-9+&#/%=~_|$?!:,.]*[A-Z0-9+&#/%=~_|$]@i',
+			'@(?<![.*">])\b(?:(?:https?)://)[-A-Z0-9+&#/%=~_|$?!:,.]*[A-Z0-9+&#/%=~_|$]@i',
 			'<a href="\0" target="_blank">\0</a>',
 			htmlspecialchars($text)
 		);
