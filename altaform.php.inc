@@ -622,6 +622,17 @@ class altaform extends altaformlite {
 
 
 
+
+	public function implode($array) {
+		if (empty($array)  ||  !is_array($array)) return '';
+		if (count($array) === 1) return reset($array);
+		if (count($array) === 2) return reset($array) . ' and ' . end($array);
+		$last = array_pop($array);
+		return implode(', ', $array) . ', and ' . $last;
+	}
+
+
+
 	//Log TinyButStrong error messages
 	function meth_Misc_Alert($Src, $Msg, $NoErrMsg=false, $SrcType=false) {
 		global $url, $get;
