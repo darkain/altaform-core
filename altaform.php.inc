@@ -635,7 +635,7 @@ class altaform extends altaformlite {
 
 	//Log TinyButStrong error messages
 	function meth_Misc_Alert($Src, $Msg, $NoErrMsg=false, $SrcType=false) {
-		global $url, $get;
+		global $db, $get, $url;
 		
 		ob_start();
 		$ret = parent::meth_Misc_Alert($Src, $Msg, $NoErrMsg, $SrcType);
@@ -646,7 +646,10 @@ class altaform extends altaformlite {
 			'file'		=> $this->_LastFile,
 			'details'	=> $text,
 			'url'		=> isset($url['all']) ? $url['all'] : $get->server('REQUEST_URI'),
-			'for'		=> $get->server('HTTP_X_FORWARDED_FOR'),
+			'mariadb'	=> !empty($db) ? $db->server() : '',
+			'server'	=> $get->server('SERVER_ADDR'),
+			'remote'	=> $get->server('REMOTE_ADDR'),
+			'forward'	=> $get->server('HTTP_X_FORWARDED_FOR'),
 			'agent'		=> $get->server('HTTP_USER_AGENT'),
 		], false);
 

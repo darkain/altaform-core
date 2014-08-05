@@ -85,6 +85,12 @@ function assert500($item, $text='') { if (empty($item)) error500($text); }
 function _af_log_error($text, $die=true) {
 	global $site, $af, $db;
 
+	//only print output once!
+	static $echo = false;
+	if ($echo) return;
+	$echo = true;
+	
+
 	if (isset($af)  &&  $af->hasPermission('admin')) $site['debug'] = true;
 
 	$error = '';
@@ -126,7 +132,7 @@ function _af_log_error($text, $die=true) {
 
 
 function _af_error_handler($errno, $errstr, $errfile=NULL, $errline=NULL, $errcontext=NULL) {
-	global $get, $url;
+	global $db, $get, $url;
 
 	if (!error_reporting()) return false;
 
@@ -137,7 +143,10 @@ function _af_error_handler($errno, $errstr, $errfile=NULL, $errline=NULL, $errco
 		'file'		=> $errfile,
 		'line'		=> $errline,
 		'url'		=> isset($url['all']) ? $url['all'] : $get->server('REQUEST_URI'),
-		'for'		=> $get->server('HTTP_X_FORWARDED_FOR'),
+		'mariadb'	=> !empty($db) ? $db->server() : '',
+		'server'	=> $get->server('SERVER_ADDR'),
+		'remote'	=> $get->server('REMOTE_ADDR'),
+		'forward'	=> $get->server('HTTP_X_FORWARDED_FOR'),
 		'agent'		=> $get->server('HTTP_USER_AGENT'),
 	));
 
@@ -149,7 +158,7 @@ set_error_handler('_af_error_handler');
 
 
 function _af_log_exception(Exception $e) {
-	global $get, $url;
+	global $db, $get, $url;
 
 	if (!error_reporting()) return false;
 
@@ -160,8 +169,11 @@ function _af_log_exception(Exception $e) {
 		'file'		=> $e->getFile(),
 		'line'		=> $e->getLine(),
 		'url'		=> isset($url['all']) ? $url['all'] : $get->server('REQUEST_URI'),
+		'mariadb'	=> !empty($db) ? $db->server() : '',
+		'server'	=> $get->server('SERVER_ADDR'),
+		'remote'	=> $get->server('REMOTE_ADDR'),
+		'forward'	=> $get->server('HTTP_X_FORWARDED_FOR'),
 		'agent'		=> $get->server('HTTP_USER_AGENT'),
-		'for'		=> $get->server('HTTP_X_FORWARDED_FOR'),
 	));
 }
 set_exception_handler('_af_log_exception');
@@ -180,7 +192,7 @@ register_shutdown_function('_af_fatal_error');
 
 
 function _pudl_debug($db, $result=false) {
-	global $get, $url;
+	global $db, $get, $url;
 
 	_af_log_error(array(
 		'time'		=> date('r'),
@@ -188,7 +200,10 @@ function _pudl_debug($db, $result=false) {
 		'details'	=> $db->error(),
 		'query'		=> ($result !== false) ? ($result->query()) : ($db->query()),
 		'url'		=> isset($url['all']) ? $url['all'] : $get->server('REQUEST_URI'),
+		'mariadb'	=> !empty($db) ? $db->server() : '',
+		'server'	=> $get->server('SERVER_ADDR'),
+		'remote'	=> $get->server('REMOTE_ADDR'),
+		'forward'	=> $get->server('HTTP_X_FORWARDED_FOR'),
 		'agent'		=> $get->server('HTTP_USER_AGENT'),
-		'for'		=> $get->server('HTTP_X_FORWARDED_FOR'),
 	));
 }
