@@ -1,16 +1,16 @@
 <?php
 
 function _pudl_thumb($table, $field, $thumbsize) {
-	return array(
+	return [
 		$table,
-		array(
-			'join' => array('th' => 'pudl_file_thumb'),
-			'clause' => array(
+		[
+			'join' => ['th' => 'pudl_file_thumb'],
+			'clause' => [
 				$field.'=th.file_hash',
 				"th.thumb_type='$thumbsize'",
-			)
-		)
-	);
+			]
+		]
+	];
 }
 
 
@@ -37,6 +37,28 @@ function _pudl_gallery($thumbsize) {
 
 function _pudl_gallery_image($thumbsize) {
 	return _pudl_thumb('pudl_gallery_image', 'gi.file_hash', $thumbsize);
+}
+
+
+function _pudl_gallery_costume($thumbsize) {
+	$table = _pudl_gallery($thumbsize);
+	
+	$table[] = [
+		'join' => ['gl1'=>'pudl_group_label'],
+		'clause' => 'ga.series_id=gl1.group_label_id'
+	];
+
+	$table[] = [
+		'join' => ['gl2'=>'pudl_group_label'],
+		'clause' => 'ga.character_id=gl2.group_label_id'
+	];
+
+	$table[] = [
+		'join' => ['gl3'=>'pudl_group_label'],
+		'clause' => 'ga.outfit_id=gl3.group_label_id'
+	];
+
+	return $table;
 }
 
 
