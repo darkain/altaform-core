@@ -38,6 +38,10 @@ $host = $get->server('HTTP_HOST');
 require_once('common.php.inc');
 
 
+//Altaform Base Code
+require_once('altaform.php.inc');
+
+
 //Main Configuration File
 if (!is_file("_config/$host/config.php.inc")) $host = 'default';
 if (!is_file("_config/$host/config.php.inc")) {
@@ -60,7 +64,6 @@ if (!empty($site['ctype'])) {
 }
 
 
-
 //PHP Universal Database Library (PUDL)
 if (isset($site['pudl_server'])) {
 	require_once('_pudl/pudlMySqli.php');
@@ -71,10 +74,6 @@ if (isset($site['pudl_server'])) {
 
 //PHP PUDL Session Handler
 require_once('_pudl/pudlSession.php');
-
-
-//Altaform Base Code
-require_once('altaform.php.inc');
 
 
 //Initialize all the things!
@@ -91,5 +90,7 @@ if (isset($db)) {
 	);
 }
 
-$af = new altaform();
+
+//Instantiate Altaform class
+$af = new $altaform();
 $af->login();

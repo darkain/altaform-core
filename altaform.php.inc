@@ -9,6 +9,9 @@ require_once('time.php.inc');
 //Altaform Lite - the basic rendering system
 require_once('altaform-lite.php.inc');
 
+//Altaform Class Name - replace this if you inherit Altaform!
+$altaform = 'altaform';
+
 
 class altaform extends altaformlite {
 	public function __construct() {
