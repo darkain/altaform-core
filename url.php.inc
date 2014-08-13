@@ -24,7 +24,7 @@ if (substr($url['path'], -1) != '/') $url['path'] .= '/';
 $url['part'] = explode('/', $url['path']);
 $url['url'] = '/';
 foreach ($url['part'] as $key => $val) {
-	$url['safe'][] = isset($db) ? $db->safe($val) : mysqli_real_escape_string($val);
+	$url['safe'][] = isset($db) ? $db->safe($val) : @mysql_real_escape_string($val);
 	if (strlen($val) < 1) continue;
 	$url['url'] .= urlencode($val) . '/';
 }
