@@ -19,7 +19,7 @@ class cdnImporter {
 		$return = [
 			'mime_id'	=> NULL,
 			'mime_ext'	=> $ext,
-			'mime_type'	=> 'application/octet-stream'];
+			'mime_type'	=> 'application/octet-stream'],
 		];
 
 		switch ($ext) {
