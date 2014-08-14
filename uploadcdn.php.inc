@@ -8,19 +8,31 @@ class cdnImporter {
 
 	public static function getMimeType($ext) {
 		global $db;
+
 		$ext = strtolower($ext);
-		$ext = $db->safe($ext);
 
-		$row = false;
-		if (!empty($ext)) $row = $db->row('pudl_mimetype', "`mime_ext`='$ext'");
+		if (!empty($db)) {
+			$row = $db->rowId('pudl_mimetype', 'mime_ext', $db->safe($ext));
+			if (!empty($row)) return $row;
+		}
 
-		if ($row !== false) return $row;
-
-		return array(
+		$return = [
 			'mime_id'	=> NULL,
 			'mime_ext'	=> $ext,
-			'mime_type'	=> 'application/octet-stream'
-		);
+			'mime_type'	=> 'application/octet-stream'];
+		];
+
+		switch ($ext) {
+			case 'jpe':
+			case 'jpg': $ext = 'jpeg';
+			case 'jpeg':
+			case 'tiff':
+			case 'gif':
+			case 'png':
+				$return['mime_type'] = "image/$ext";
+		}
+
+		return $return;
 	}
 
 
