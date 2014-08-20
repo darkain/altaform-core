@@ -66,8 +66,10 @@ if (!empty($site['ctype'])) {
 
 //PHP Universal Database Library (PUDL)
 if (isset($site['pudl_server'])) {
-	require_once('_pudl/pudlMySqli.php');
-	$db = pudlMySqli::instance($site);
+	if (!isset($site['pudl_type'])) $site['pudl_type'] = 'MySqli';
+	$pudltype = 'pudl' . $site['pudl_type'];
+	require_once("_pudl/$pudltype.php");
+	$db = $pudltype::instance($site);
 	if (!empty($site['pudl_connected'])) call_user_func($site['pudl_connected']);
 }
 
