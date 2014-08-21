@@ -114,7 +114,7 @@ function _af_log_error($text, $die=true) {
 	$out = print_r($arr, true) . "\n";
 
 	@file_put_contents(
-		(isset($af)?$af->path():'') . '_log/' . date('Y-m-d'),
+		(isset($af)?$af->path():'') . '_log/' . @date('Y-m-d'),
 		$out,
 		FILE_APPEND
 	);
@@ -137,7 +137,7 @@ function _af_error_handler($errno, $errstr, $errfile=NULL, $errline=NULL, $errco
 	if (!error_reporting()) return false;
 
 	_af_log_error(array(
-		'time'		=> date('r'),
+		'time'		=> @date('r'),
 		'error'		=> $errno,
 		'details'	=> $errstr,
 		'file'		=> $errfile,
@@ -163,7 +163,7 @@ function _af_log_exception(Exception $e) {
 	if (!error_reporting()) return false;
 
 	_af_log_error(array(
-		'time'		=> date('r'),
+		'time'		=> @date('r'),
 		'error'		=> get_class($e),
 		'details'	=> $e->getMessage(),
 		'file'		=> $e->getFile(),
@@ -195,7 +195,7 @@ function _pudl_debug($db, $result=false) {
 	global $db, $get, $url;
 
 	_af_log_error(array(
-		'time'		=> date('r'),
+		'time'		=> @date('r'),
 		'error'		=> $db->errno(),
 		'details'	=> $db->error(),
 		'query'		=> ($result !== false) ? ($result->query()) : ($db->query()),
