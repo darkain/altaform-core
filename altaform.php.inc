@@ -410,6 +410,18 @@ class altaform extends altaformlite {
 	}
 
 
+	protected function meth_Custom_Format(&$text, $style) {
+		switch ($style) {
+			case 'cdn':
+				$text = $this->cdnUrl($text);
+			break;
+
+			default:
+				parent::meth_Custom_Format($text, $style);
+		}
+	}	
+
+
 	public function geolocate($location) {
 		global $db;
 

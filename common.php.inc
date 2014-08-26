@@ -39,6 +39,15 @@ function _pudl_gallery_image($thumbsize) {
 	return _pudl_thumb('pudl_gallery_image', 'gi.file_hash', $thumbsize);
 }
 
+function _pudl_product($thumbsize) {
+	return _pudl_thumb('pudl_product', 'pr.product_icon', $thumbsize);
+}
+
+function _pudl_vendor($thumbsize) {
+	return _pudl_thumb('pudl_vendor', 've.vendor_icon', $thumbsize);
+}
+
+
 
 function _pudl_gallery_costume($thumbsize) {
 	$table = _pudl_gallery($thumbsize);
