@@ -31,7 +31,6 @@ if (!defined('PHP_VERSION_ID')) {
 //Getvar Library (GET/POST variables)
 require_once('_getvar/getvar.php.inc');
 $get = new getvar();
-$host = $get->server('HTTP_HOST');
 
 
 //Main Library
@@ -40,6 +39,12 @@ require_once('common.php.inc');
 
 //Altaform Base Code
 require_once('altaform.php.inc');
+
+
+//Host Information for Config
+$host = $get->server('HTTP_HOST');
+$pos = strpos($host, ':');
+if ($pos) $host = substr($host, 0, $pos);
 
 
 //Main Configuration File
