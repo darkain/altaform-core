@@ -1,48 +1,60 @@
 <?php
 
-function timeSince($timestamp) {
-	global $db;
-	if ($timestamp == 0) return "Never";
+class aftime {
 
 	// array of time period chunks
-	$chunks = array(
-		array(60 * 60 * 24 * 365 , 'year'),
-		array(60 * 60 * 24 * 30 , 'month'),
-		array(60 * 60 * 24 * 7, 'week'),
-		array(60 * 60 * 24 , 'day'),
-		array(60 * 60 , 'hour'),
-		array(60 , 'minute'),
-	);
+	public static $chunks = [
+		[31536000, 'year'],
+		[ 2592000, 'month'],
+		[  604800, 'week'],
+		[   86400, 'day'],
+		[    3600, 'hour'],
+		[      60, 'minute'],
+	];
 
-	$since = $db->time() - $timestamp;
 
-	if ($since == 0) return 'Now';
-	if ($since == 1) return '1 second ago';
-	if ($since < 60) return "$since seconds ago";
+	public static function since($timestamp, $maxoffset=86400) {
+		global $af;
+		if ($timestamp == 0) return "Never";
 
-	if ($since > 60*60*24) return date('F jS, Y \a\t g:i A', $timestamp);
-
-	// $j saves performing the count function each time around the loop
-	for ($i = 0, $j = count($chunks); $i < $j; $i++) {
-		$seconds = $chunks[$i][0];
-		$name = $chunks[$i][1];
-		// finding the biggest chunk (if the chunk fits, break)
-		if (($count = floor($since / $seconds)) > 1) break;
-	}
-
-	$print = ($count == 1) ? '1 '.$name : "$count {$name}s";
-
-	for ($x = $i+1;	$x < $j;	$x++) {
-		// now getting the second item
-		$seconds2 = $chunks[$x][0];
-		$name2 = $chunks[$x][1];
-
-		// add second item if it's count greater than 0
-		if (($count2 = floor(($since - ($seconds * $count)) / $seconds2)) != 0) {
-			$print .= ($count2 == 1) ? ', 1 '.$name2 : ", $count2 {$name2}s";
-			break;
+		if ($af->time() > $timestamp) {
+			$tense = ' ago';
+			$since = $af->time() - $timestamp;
+			if ($since == 1) return "1 second$tense";
+			if ($since < 60) return "$since seconds$tense";
+		} else {
+			$tense = '';
+			$since = $timestamp - $af->time();
+			if ($since == 0) return 'Now';
+			if ($since == 1) return '1 second';
+			if ($since < 60) return "$since seconds";
 		}
+
+		if ($maxoffset > 0  &&  $since > $maxoffset) return date('F jS, Y \a\t g:i A', $timestamp);
+
+		// $j saves performing the count function each time around the loop
+		for ($i = 0, $j = count(self::$chunks); $i < $j; $i++) {
+			$seconds = self::$chunks[$i][0];
+			$name = self::$chunks[$i][1];
+			// finding the biggest chunk (if the chunk fits, break)
+			if (($count = floor($since / $seconds)) > 1) break;
+		}
+
+		$print = ($count == 1) ? '1 '.$name : "$count {$name}s";
+
+		for ($x = $i+1;	$x < $j;	$x++) {
+			// now getting the second item
+			$seconds2 = self::$chunks[$x][0];
+			$name2 = self::$chunks[$x][1];
+
+			// add second item if it's count greater than 0
+			if (($count2 = floor(($since - ($seconds * $count)) / $seconds2)) != 0) {
+				$print .= ($count2 == 1) ? ', 1 '.$name2 : ", $count2 {$name2}s";
+				break;
+			}
+		}
+		
+		return $print . $tense;
 	}
-	
-	return $print . ' ago';
+
 }
