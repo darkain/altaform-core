@@ -47,6 +47,10 @@ function _pudl_vendor($thumbsize) {
 	return _pudl_thumb('pudl_vendor', 've.vendor_icon', $thumbsize);
 }
 
+function _pudl_group($thumbsize) {
+	return _pudl_thumb('pudl_group', 'gr.group_icon', $thumbsize);
+}
+
 
 
 function _pudl_gallery_costume($thumbsize) {
