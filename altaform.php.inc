@@ -3,6 +3,9 @@
 //Extra string functions
 require_once('string.php.inc');
 
+//Device detection
+require_once('device.php.inc');
+
 //Extra time functions
 require_once('time.php.inc');
 
@@ -73,6 +76,7 @@ class altaform extends altaformlite {
 
 	public function headerHTML() {
 		global $url;
+
 		$this->load($this->path() . "_config/$url[af_host]/header_html.tpl");
 		$this->block('script',	$this->_script);
 		$this->block('style',	$this->_style);
@@ -83,8 +87,17 @@ class altaform extends altaformlite {
 
 	public function headerPage() {
 		global $url;
+		$path = $this->path() . "_config/$url[af_host]/";
 
-		$this->load($this->path() . "_config/$url[af_host]/header_page.tpl");
+		if (afdevice::mobile()  &&  file_exists("$path/header_mobile.tpl")) {
+			$this->load("$path/header_mobile.tpl");
+		} else if (afdevice::tablet()  &&  file_exists("$path/header_tablet.tpl")) {
+			$this->load("$path/header_tablet.tpl");
+		} else if (afdevice::tv()  &&  file_exists("$path/header_tv.tpl")) {
+			$this->load("$path/header_tv.tpl");
+		} else {
+			$this->load("$path/header_page.tpl");
+		}
 
 		foreach ($this->_header as $key => &$val) {
 			$this->block($key, $val);
@@ -117,7 +130,17 @@ class altaform extends altaformlite {
 
 	public function footerPage() {
 		global $url;
-		$this->render($this->path() . "_config/$url[af_host]/footer_page.tpl");
+		$path = $this->path() . "_config/$url[af_host]/";
+
+		if (afdevice::mobile()  &&  file_exists("$path/footer_mobile.tpl")) {
+			$this->load("$path/footer_mobile.tpl");
+		} else if (afdevice::tablet()  &&  file_exists("$path/footer_tablet.tpl")) {
+			$this->load("$path/footer_tablet.tpl");
+		} else if (afdevice::tv()  &&  file_exists("$path/footer_tv.tpl")) {
+			$this->load("$path/footerr_tv.tpl");
+		} else {
+			$this->load("$path/footer_page.tpl");
+		}
 	}
 
 
