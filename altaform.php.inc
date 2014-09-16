@@ -22,7 +22,6 @@ class altaform extends altaformlite {
 		$this->SetOption('render', TBS_OUTPUT);
 		$this->ResetVarRef(true);
 
-		$this->_geoloc	= [];
 		$this->_header	= empty($site['af_header']) ? [] : $site['af_header'];
 		$this->_script	= [];
 		$this->_style	= [];
@@ -416,89 +415,15 @@ class altaform extends altaformlite {
 				$text = $this->cdnUrl($text);
 			break;
 
+			case 'url':
+				$text = afstring::url($text);
+			break;
+
 			default:
 				parent::meth_Custom_Format($text, $style);
 		}
 	}	
 
-
-	public function geolocate($location) {
-		global $db;
-
-		if (empty($location)) return false;
-		if (!isset($this->_geoloc[$location])) {
-			$loc = $db->safe($location);
-			$this->_geoloc[$location] = $db->row('pudl_geolocation', "`location`='$loc'");
-		}
-
-		return $this->_geoloc[$location];
-	}
-
-
-	public function geoip($ipaddress=false) {
-		if ($ipaddress === false) $ipaddress = $this->ipaddress();
-		if ($ipaddress === false) return false;
-
-		$ctx = stream_context_create(['http'=>['timeout'=>1]]);
-
-		$json = @file_get_contents("http://geo.cospix.net/$ipaddress", 0, $ctx);
-		if (empty($json)) return false;
-
-		$data = @json_decode($json, true);
-		if (empty($data)) return false;
-
-		return $data;
-	}
-
-
-	public function centerMap() {
-		global $user, $get;
-
-		//Specific map center requested by URL
-		if (($get->float('lat') !== 0  ||  $get->float('lon') !== 0)  &&  $get->float('zoom') > 0) {
-			return [
-				'lat'	=> $get->float('lat'),
-				'lon'	=> $get->float('lon'),
-				'zoom'	=> $get->float('zoom')
-			];
-		}
-
-		//User's profile default location
-		if (!empty($user['user_lat'])  &&  !empty($user['user_lat'])) {
-			return [
-				'lat'	=> $user['user_lat'],
-				'lon'	=> $user['user_lon'],
-				'zoom'	=> 7
-			];
-		}
-
-		//Geolocate User
-		$geoip = $this->geoip();
-		if (!empty($geoip['latitude']) && !empty($geoip['longitude'])) {
-			return [
-				'lat'	=> $geoip['latitude'],
-				'lon'	=> $geoip['longitude'],
-				'zoom'	=> 7
-			];
-		}
-
-		//Default: North America
-		return [
-			'lat'	=> 41,
-			'lon'	=> -100,
-			'zoom'	=> 4
-		];
-	}
-
-
-	public function ipaddress() {
-		if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-			return $_SERVER['HTTP_X_FORWARDED_FOR'];
-		} else if (isset($_SERVER['REMOTE_ADDR'])) {
-			return $_SERVER['REMOTE_ADDR'];
-		}
-		return false;
-	}
 
 
 	public function exif_read_data($source) {
@@ -625,28 +550,6 @@ class altaform extends altaformlite {
 
 
 
-	public function linkify($text) {
-		$text = preg_replace(
-			'@(?<![.*">])\b(?:(?:https?)://)[-A-Z0-9+&#/%=~_|$?!:,.]*[A-Z0-9+&#/%=~_|$]@i',
-			'<a href="\0" target="_blank">\0</a>',
-			htmlspecialchars($text)
-		);
-
-		return str_replace(["\r","\n"], ['','<br/>'], $text);
-	}
-
-
-
-
-	public function implode($array) {
-		if (empty($array)  ||  !is_array($array)) return '';
-		if (count($array) === 1) return reset($array);
-		if (count($array) === 2) return reset($array) . ' and ' . end($array);
-		$last = array_pop($array);
-		return implode(', ', $array) . ', and ' . $last;
-	}
-
-
 
 	//Log TinyButStrong error messages
 	function meth_Misc_Alert($Src, $Msg, $NoErrMsg=false, $SrcType=false) {
@@ -680,7 +583,6 @@ class altaform extends altaformlite {
 	}
 	
 
-	private $_geoloc;
 	private $_header;
 	private $_script;
 	private $_style;

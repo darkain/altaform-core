@@ -66,14 +66,14 @@ if (count($url['part']) > 2) {
 				if (empty($url['virtual'])) {
 					for ($x=$i; $x<$count; $x++) $url['virtual'][] = $url['safe'][$x];
 				}
-				$url['id'] = string_to_int($url['virtual'][0]);
+				$url['id'] = afstring::int($url['virtual'][0]);
 				require_once('virtual.php');
 				break;
 			} else if (is_dir('virtual')) {
 				if (empty($url['virtual'])) {
 					for ($x=$i; $x<$count; $x++) $url['virtual'][] = $url['safe'][$x];
 				}
-				$url['id'] = string_to_int($url['virtual'][0]);
+				$url['id'] = afstring::int($url['virtual'][0]);
 				chdir('virtual');
 				if ($count-$i == 1) {
 					if (is_file('index.php')) {
@@ -94,14 +94,14 @@ if (count($url['part']) > 2) {
 			if (empty($url['virtual'])) {
 				for ($x=$i; $x<$count; $x++) $url['virtual'][] = $url['safe'][$x];
 			}
-			$url['id'] = string_to_int($url['virtual'][0]);
+			$url['id'] = afstring::int($url['virtual'][0]);
 			chdir('virtual');
 
 		} else if (is_file('virtual.php')) {
 			if (empty($url['virtual'])) {
 				for ($x=$i; $x<$count; $x++) $url['virtual'][] = $url['safe'][$x];
 			}
-			$url['id'] = string_to_int($url['virtual'][0]);
+			$url['id'] = afstring::int($url['virtual'][0]);
 			require_once('virtual.php');
 			break;
 
