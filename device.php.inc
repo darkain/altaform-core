@@ -32,6 +32,10 @@
 class afdevice {
 	static $device = false;
 
+
+	public function __construct() { self::device(); }
+
+
 	static function device() {	
 		global $get;
 
@@ -110,3 +114,6 @@ class afdevice {
 	static function mobile()	{ return (self::device() === 'mobile'	); }
 
 }
+
+
+$afdevice = new afdevice();
