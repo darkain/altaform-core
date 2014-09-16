@@ -136,10 +136,12 @@ class altaform extends altaformlite {
 		} else if (afdevice::tablet()  &&  file_exists("$path/footer_tablet.tpl")) {
 			$this->load("$path/footer_tablet.tpl");
 		} else if (afdevice::tv()  &&  file_exists("$path/footer_tv.tpl")) {
-			$this->load("$path/footerr_tv.tpl");
+			$this->load("$path/footer_tv.tpl");
 		} else {
 			$this->load("$path/footer_page.tpl");
 		}
+
+		$this->render();
 	}
 
 
