@@ -19,6 +19,10 @@ function _pudl_user($thumbsize) {
 	return _pudl_thumb('pudl_user', 'us.user_icon', $thumbsize);
 }
 
+function _pudl_article($thumbsize) {
+	return _pudl_thumb('pudl_article', 'ar.article_icon', $thumbsize);
+}
+
 function _pudl_event($thumbsize) {
 	return _pudl_thumb('pudl_event', 'ev.event_icon', $thumbsize);
 }
