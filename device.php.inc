@@ -94,7 +94,7 @@ class afdevice {
 			self::$device = 'desktop';
 
 		// Check if user agent is a Desktop BOT/Crawler/Spider
-		} else if ((preg_match('/Bot|Crawler|Spider|Yahoo|ia_archiver|Covario-IDS|findlinks|DataparkSearch|larbin|Mediapartners-Google|NG-Search|Snappy|Teoma|Jeeves|TinEye/i', $agent)) && (!preg_match('/Mobile/i', $agent))) {
+		} else if ((preg_match('/Bot|Crawler|Spider|Yahoo|ia_archiver|Covario-IDS|findlinks|DataparkSearch|larbin|Mediapartners-Google|NG-Search|Snappy|Teoma|Jeeves|TinEye|Validator/i', $agent)) && (!preg_match('/Mobile/i', $agent))) {
 			self::$device = 'desktop';
 
 		// Otherwise assume it is a Mobile Device
