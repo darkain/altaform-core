@@ -144,9 +144,9 @@ function _af_error_handler($errno, $errstr, $errfile=NULL, $errline=NULL, $errco
 		'line'		=> $errline,
 		'url'		=> isset($url['all']) ? $url['all'] : $get->server('REQUEST_URI'),
 		'mariadb'	=> !empty($db) ? $db->server() : '',
-		'server'	=> $get->server('SERVER_ADDR'),
+		'proxy'		=> $get->server('SERVER_ADDR'),
+		'server'	=> $get->server('X-PHP-IP'),
 		'remote'	=> $get->server('REMOTE_ADDR'),
-		'forward'	=> $get->server('HTTP_X_FORWARDED_FOR'),
 		'agent'		=> $get->server('HTTP_USER_AGENT'),
 	));
 
@@ -170,9 +170,9 @@ function _af_log_exception(Exception $e) {
 		'line'		=> $e->getLine(),
 		'url'		=> isset($url['all']) ? $url['all'] : $get->server('REQUEST_URI'),
 		'mariadb'	=> !empty($db) ? $db->server() : '',
-		'server'	=> $get->server('SERVER_ADDR'),
+		'proxy'		=> $get->server('SERVER_ADDR'),
+		'server'	=> $get->server('X-PHP-IP'),
 		'remote'	=> $get->server('REMOTE_ADDR'),
-		'forward'	=> $get->server('HTTP_X_FORWARDED_FOR'),
 		'agent'		=> $get->server('HTTP_USER_AGENT'),
 	));
 }
@@ -201,9 +201,9 @@ function _pudl_debug($db, $result=false) {
 		'query'		=> ($result !== false) ? ($result->query()) : ($db->query()),
 		'url'		=> isset($url['all']) ? $url['all'] : $get->server('REQUEST_URI'),
 		'mariadb'	=> !empty($db) ? $db->server() : '',
-		'server'	=> $get->server('SERVER_ADDR'),
+		'proxy'		=> $get->server('SERVER_ADDR'),
+		'server'	=> $get->server('X-PHP-IP'),
 		'remote'	=> $get->server('REMOTE_ADDR'),
-		'forward'	=> $get->server('HTTP_X_FORWARDED_FOR'),
 		'agent'		=> $get->server('HTTP_USER_AGENT'),
 	));
 }

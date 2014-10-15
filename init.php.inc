@@ -79,8 +79,6 @@ if (isset($site['pudl_server'])) {
 }
 
 
-//PHP PUDL Session Handler
-require_once('_pudl/pudlSession.php');
 
 
 //Initialize all the things!
@@ -89,12 +87,25 @@ if (isset($db)) {
 	$get->pudl = $db;
 	$get->default = _GETVAR_SQLSAFE;
 
-	$dbSession = new pudlSession(
-		$db,
-		'pudl_session',
-		isset($site['session_name'])   ? $site['session_name']   : false,
-		isset($site['session_domain']) ? $site['session_domain'] : false
-	);
+	//Redis Session Handler
+	if (!empty($site['session_type'])  &&  $site['session_type'] === 'redis') {
+		require_once('_redis/redisSession.php');
+		$rses = new redisSession(
+			isset($site['session_name'])	? $site['session_name']		: false,
+			isset($site['session_domain'])	? $site['session_domain']	: false
+		);
+
+	//PUDL Session Handler
+	} else {
+
+		require_once('_pudl/pudlSession.php');
+		new pudlSession(
+			$db,
+			'pudl_session',
+			isset($site['session_name'])	? $site['session_name']		: false,
+			isset($site['session_domain'])	? $site['session_domain']	: false
+		);
+	}
 }
 
 

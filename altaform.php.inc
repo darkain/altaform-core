@@ -598,9 +598,9 @@ class altaform extends altaformlite {
 			'details'	=> $text,
 			'url'		=> isset($url['all']) ? $url['all'] : $get->server('REQUEST_URI'),
 			'mariadb'	=> !empty($db) ? $db->server() : '',
-			'server'	=> $get->server('SERVER_ADDR'),
+			'proxy'		=> $get->server('SERVER_ADDR'),
+			'server'	=> $get->server('X-PHP-IP'),
 			'remote'	=> $get->server('REMOTE_ADDR'),
-			'forward'	=> $get->server('HTTP_X_FORWARDED_FOR'),
 			'agent'		=> $get->server('HTTP_USER_AGENT'),
 		], false);
 
