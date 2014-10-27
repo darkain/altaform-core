@@ -4,7 +4,7 @@ function _pudl_thumb($table, $field, $thumbsize) {
 	return [
 		$table,
 		[
-			'join' => ['th' => 'pudl_file_thumb'],
+			'left' => ['th' => 'pudl_file_thumb'],
 			'clause' => [
 				$field.'=th.file_hash',
 				"th.thumb_type='$thumbsize'",
@@ -61,17 +61,17 @@ function _pudl_gallery_costume($thumbsize) {
 	$table = _pudl_gallery($thumbsize);
 	
 	$table[] = [
-		'join' => ['gl1'=>'pudl_group_label'],
+		'left' => ['gl1'=>'pudl_group_label'],
 		'clause' => 'ga.series_id=gl1.group_label_id'
 	];
 
 	$table[] = [
-		'join' => ['gl2'=>'pudl_group_label'],
+		'left' => ['gl2'=>'pudl_group_label'],
 		'clause' => 'ga.character_id=gl2.group_label_id'
 	];
 
 	$table[] = [
-		'join' => ['gl3'=>'pudl_group_label'],
+		'left' => ['gl3'=>'pudl_group_label'],
 		'clause' => 'ga.outfit_id=gl3.group_label_id'
 	];
 
