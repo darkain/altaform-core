@@ -120,7 +120,6 @@ function _af_log_error($text, $die=true) {
 	);
 
 	if (!empty($site['error_email'])) {
-		var_dump($site['error_email']);
 		@mail(
 			$site['error_email'],
 			date('r') . (!empty($site['error_tag']) ? " @$site[error_tag]" : ''),
