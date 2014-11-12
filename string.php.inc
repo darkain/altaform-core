@@ -51,6 +51,13 @@ class afstring {
 		$last = array_pop($array);
 		return implode(', ', $array) . ', and ' . $last;
 	}
+
+	
+	static function embed($path, $mimetype=false) {
+		$text = '';
+		if (!empty($mimetype)) $text .= "data:$mimetype;base64,";
+		return $text . base64_encode(file_get_contents($path));
+	}
 }
 
 
