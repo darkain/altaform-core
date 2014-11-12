@@ -356,15 +356,14 @@ class altaform extends altaformlite {
 
 	public function hasPermission($permission, $theuser=false) {
 		global $user;
-		if (is_array($theuser)) {
-			return (!empty($theuser['permission'][$permission]));
-		}
-		return (!empty($user['permission'][$permission]));
+		if (!is_array($theuser)) return (!empty($user['permission'][$permission]));
+		if (empty($theuser['permission'])) $this->permissions($theuser);
+		return (!empty($theuser['permission'][$permission]));
 	}
 
 
-	public function requirePermission($permission) {
-		if (!$this->hasPermission($permission)) error401();
+	public function requirePermission($permission, $theuser=false) {
+		if (!$this->hasPermission($permission, $theuser)) error401();
 	}
 
 
@@ -377,7 +376,11 @@ class altaform extends altaformlite {
 		$types = explode(',', $user['user_permission']);
 		foreach ($types as $key => $val) { $user['permission'][$val] = 1; }
 
-		if ($user['user_adfree'] > $this->time()) $user['permission']['adfree'] = 1;
+		if (!empty($user['user_adfree'])) {
+			if ($user['user_adfree'] > $this->time()) {
+				$user['permission']['adfree'] = 1;
+			}
+		}
 	}
 
 
