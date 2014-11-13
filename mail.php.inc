@@ -19,7 +19,7 @@ class afmail {
 			}
 		}
 
-		if (!isset($headers['from']))     $headers['from']     = $site['email'];
+		if (!isset($headers['from']))     $headers['from']     = $site['af_email'];
 		if (!isset($headers['return']))   $headers['return']   = $headers['from'];
 		if (!isset($headers['reply']))    $headers['reply']    = $headers['from'];
 		if (!isset($headers['priority'])) $headers['priority'] = 3;	
