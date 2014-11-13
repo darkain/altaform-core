@@ -41,8 +41,9 @@ class afmail {
 			$mail->SetFrom($headers['from']);
 		}
 
+		$mail->Sender = is_array($headers['return']) ? reset($headers['return']) : $headers['return'];
+
 		$mail->Priority	= $headers['priority'];
-		$mail->Sender	= $headers['return'];
 		$mail->Hostname	= $url['domain'];
 		$mail->Subject	= $subject;
 		$mail->XMailer	= 'Altaform v1.1';
