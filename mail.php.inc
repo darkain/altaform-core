@@ -25,17 +25,28 @@ class afmail {
 		if (!isset($headers['priority'])) $headers['priority'] = 3;	
 
 
-		$mail->msgHTML(		$body);
-		$mail->addAddress(	$headers['to']);
-		$mail->AddReplyTo(	$headers['reply']);
-		$mail->SetFrom(		$headers['from']);
+		$mail->msgHTML($body);
 
-		$mail->Priority	=	$headers['priority'];
-		$mail->Sender	=	$headers['return'];
-		$mail->Hostname	=	$url['domain'];
-		$mail->Subject	=	$subject;
-		$mail->Encoding	=	'7bit';
-		$mail->WordWrap	=	80;
+		$mail->AddAddress($headers['to']);
+
+		if (is_array($headers['reply'])) {
+			$mail->AddReplyTo( reset($headers['reply']), end($headers['reply']) );
+		} else {
+			$mail->AddReplyTo($headers['reply']);
+		}
+		
+		if (is_array($headers['from'])) {
+			$mail->SetFrom( reset($headers['from']), end($headers['from']) );
+		} else {
+			$mail->SetFrom($headers['from']);
+		}
+
+		$mail->Priority	= $headers['priority'];
+		$mail->Sender	= $headers['return'];
+		$mail->Hostname	= $url['domain'];
+		$mail->Subject	= $subject;
+		$mail->XMailer	= 'Altaform v1.1';
+		$mail->WordWrap	= 80;
 
 		$return = $mail->send();
 
