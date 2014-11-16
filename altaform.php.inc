@@ -73,6 +73,20 @@ class altaform extends altaformlite {
 
 
 
+	public function load($filename) {
+		if (afdevice::mobile()  &&  file_exists($filename . '.mobile')) {
+			$this->LoadTemplate($filename . '.mobile');
+		} else if (afdevice::tablet()  &&  file_exists($filename . '.tablet')) {
+			$this->LoadTemplate($filename . '.tablet');
+		} else if (afdevice::tv()  &&  file_exists($filename . '.tv')) {
+			$this->LoadTemplate($filename . '.tv');
+		} else {
+			$this->LoadTemplate($filename);
+		}
+	}
+
+
+
 
 	public function headerHTML() {
 		global $url;
@@ -87,17 +101,8 @@ class altaform extends altaformlite {
 
 	public function headerPage() {
 		global $url;
-		$path = $this->path() . "_config/$url[af_host]/";
 
-		if (afdevice::mobile()  &&  file_exists("$path/header_mobile.tpl")) {
-			$this->load("$path/header_mobile.tpl");
-		} else if (afdevice::tablet()  &&  file_exists("$path/header_tablet.tpl")) {
-			$this->load("$path/header_tablet.tpl");
-		} else if (afdevice::tv()  &&  file_exists("$path/header_tv.tpl")) {
-			$this->load("$path/header_tv.tpl");
-		} else {
-			$this->load("$path/header_page.tpl");
-		}
+		$this->load($this->path() . "_config/$url[af_host]/header_page.tpl");
 
 		foreach ($this->_header as $key => &$val) {
 			$this->block($key, $val);
@@ -130,19 +135,7 @@ class altaform extends altaformlite {
 
 	public function footerPage() {
 		global $url;
-		$path = $this->path() . "_config/$url[af_host]/";
-
-		if (afdevice::mobile()  &&  file_exists("$path/footer_mobile.tpl")) {
-			$this->load("$path/footer_mobile.tpl");
-		} else if (afdevice::tablet()  &&  file_exists("$path/footer_tablet.tpl")) {
-			$this->load("$path/footer_tablet.tpl");
-		} else if (afdevice::tv()  &&  file_exists("$path/footer_tv.tpl")) {
-			$this->load("$path/footer_tv.tpl");
-		} else {
-			$this->load("$path/footer_page.tpl");
-		}
-
-		$this->render();
+		$this->render($this->path() . "_config/$url[af_host]/footer_page.tpl");
 	}
 
 
@@ -384,35 +377,6 @@ class altaform extends altaformlite {
 	}
 
 
-	public function encrypt($data) {
-		global $site;
-		$key	= pack('H*', $site['af_secret']);
-		$size	= mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
-		$iv		= mcrypt_create_iv($size, MCRYPT_RAND);
-		$cipher	= mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $key, $data, MCRYPT_MODE_CBC, $iv);
-		$encode = base64_encode($iv . $cipher);
-		$encode = str_replace('+', '-', $encode);
-		$encode = str_replace('/', '_', $encode);
-		$encode = str_replace('=', '~', $encode);
-		return $encode;		
-	}
-
-
-	public function decrypt($data) {
-		global $site;
-		if (empty($data)) return false;
-		$key	= pack('H*', $site['af_secret']);
-		$data	= str_replace('-', '+', $data);
-		$data	= str_replace('_', '/', $data);
-		$data	= str_replace('~', '=', $data);
-		$data	= @base64_decode($data, true);
-		if (empty($data)) return false;
-		$size	= mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
-		$iv		= substr($data, 0, $size);
-		$text	= substr($data, $size);
-		$value	= mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $key, $text, MCRYPT_MODE_CBC, $iv);
-		return rtrim ($value, "\0\4");
-	}
 
 
 	public function cdnUrl(&$data, $hashkey='file_hash') {

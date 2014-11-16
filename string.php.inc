@@ -58,6 +58,39 @@ class afstring {
 		if (!empty($mimetype)) $text .= "data:$mimetype;base64,";
 		return $text . base64_encode(file_get_contents($path));
 	}
+
+
+	static function encrypt($data, $secret=false) {
+		global $site;
+		if (empty($secret)) $secret = $site['af_secret'];
+		$key	= pack('H*', $secret);
+		$size	= mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
+		$iv		= mcrypt_create_iv($size, MCRYPT_RAND);
+		$cipher	= mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $key, $data, MCRYPT_MODE_CBC, $iv);
+		$encode = base64_encode($iv . $cipher);
+		$encode = str_replace('+', '-', $encode);
+		$encode = str_replace('/', '_', $encode);
+		$encode = str_replace('=', '~', $encode);
+		return $encode;		
+	}
+
+
+	static function decrypt($data, $secret=false) {
+		global $site;
+		if (empty($data)) return false;
+		if (empty($secret)) $secret = $site['af_secret'];
+		$key	= pack('H*', $secret);
+		$data	= str_replace('-', '+', $data);
+		$data	= str_replace('_', '/', $data);
+		$data	= str_replace('~', '=', $data);
+		$data	= @base64_decode($data, true);
+		if (empty($data)) return false;
+		$size	= mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
+		$iv		= substr($data, 0, $size);
+		$text	= substr($data, $size);
+		$value	= mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $key, $text, MCRYPT_MODE_CBC, $iv);
+		return rtrim ($value, "\0\4");
+	}	
 }
 
 
