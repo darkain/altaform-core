@@ -15,7 +15,9 @@ ini_set('zlib.output_compression_level', '0');
 
 //Set the content type for this document to HTML with UTF-8 encoding
 if (!headers_sent()) {
-	header('X-UA-Compatible: IE=edge,chrome=1');
+	if (!empty($_SERVER['HTTP_USER_AGENT'])  &&  strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false) {
+		header('X-UA-Compatible: IE=edge,chrome=1');
+	}
 	header('Content-Type: text/html; charset=utf-8');
 	header('Content-Language: en_US');
 }
