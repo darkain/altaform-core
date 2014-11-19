@@ -27,21 +27,39 @@ class afmail {
 
 		$mail->msgHTML($body);
 
-		$mail->AddAddress($headers['to']);
+		if (isset($headers['to'])  &&  is_array($headers['to'])) {
+			$mail->AddAddress( reset($headers['to']), end($headers['to']) );
+		} else if (!empty($headers['to'])) {
+			$mail->AddAddress($headers['to']);
+		}
 
-		if (is_array($headers['reply'])) {
+		if (isset($headers['cc'])  &&  is_array($headers['cc'])) {
+			$mail->AddCC( reset($headers['cc']), end($headers['cc']) );
+		} else if (!empty($headers['cc'])) {
+			$mail->AddCC($headers['cc']);
+		}
+
+		if (isset($headers['bcc'])  &&  is_array($headers['bcc'])) {
+			$mail->AddBCC( reset($headers['bcc']), end($headers['bcc']) );
+		} else if (!empty($headers['bcc'])) {
+			$mail->AddBCC($headers['bcc']);
+		}
+		
+		if (isset($headers['reply'])  &&  is_array($headers['reply'])) {
 			$mail->AddReplyTo( reset($headers['reply']), end($headers['reply']) );
-		} else {
+		} else if (!empty($headers['reply'])) {
 			$mail->AddReplyTo($headers['reply']);
 		}
 		
-		if (is_array($headers['from'])) {
+		if (isset($headers['from'])  &&  is_array($headers['from'])) {
 			$mail->SetFrom( reset($headers['from']), end($headers['from']) );
-		} else {
+		} else if (!empty($headers['from'])) {
 			$mail->SetFrom($headers['from']);
 		}
 
-		$mail->Sender = is_array($headers['return']) ? reset($headers['return']) : $headers['return'];
+		if (!empty($headers['return'])) {
+			$mail->Sender = is_array($headers['return']) ? reset($headers['return']) : $headers['return'];
+		}
 
 		$mail->Priority	= $headers['priority'];
 		$mail->Hostname	= $url['domain'];
