@@ -35,12 +35,12 @@ class afstring {
 
 	static function linkify($string) {
 		$string = preg_replace(
-			'@(?<![.*">])\b(?:(?:https?)://)[-A-Z0-9+&#/%=~_|$?!:,.]*[A-Z0-9+&#/%=~_|$]@i',
-			'<a href="\0" target="_blank">\0</a>',
+			 "/(?i)\b((?:https?:\/\/|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))/i",
+			'<a target="_blank" href="\0">\0</a>',
 			htmlspecialchars($string)
 		);
 
-		return str_replace(["\r","\n"], ['','<br/>'], $string);
+		return str_replace(["\r","\n", 'href="www'], ['','<br/>', 'href="http://www'], $string);
 	}
 
 
