@@ -118,3 +118,7 @@ if (count($url['part']) > 2) {
 		error404();
 	}
 }
+
+
+//Force disconnect of database before other destruction happens
+$db->disconnect();
