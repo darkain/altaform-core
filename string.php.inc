@@ -35,12 +35,16 @@ class afstring {
 
 	static function linkify($string) {
 		$string = preg_replace(
-			 "/(?i)\b((?:https?:\/\/|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))/i",
-			'<a target="_blank" href="\0">\0</a>',
-			htmlspecialchars($string)
+			'@(?<![.*>])\b(?:(?:https?)://|(?<![./*>])((www|m)\.)|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))[-A-Z0-9+&#/%=~_|$?!:,.]*[A-Z0-9+&#/%=~_|$]@i',
+			'<a href="\0" target="_blank">\0</a>',
+			htmlspecialchars($string, ENT_NOQUOTES)
 		);
 
-		return str_replace(["\r","\n", 'href="www'], ['','<br/>', 'href="http://www'], $string);
+		return str_replace(
+			["\r","\n",  '<a href="www.',		'<a href="m.'],
+			['','<br/>', '<a href="http://www.','<a href="http://m.'],
+			$string
+		);
 	}
 
 
