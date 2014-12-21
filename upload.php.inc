@@ -12,15 +12,15 @@ class fileImporter {
 		$ext = $db->safe($ext);
 
 		$row = false;
-		if (!empty($ext)) $row = $db->row('pudl_mimetype', "`mime_ext`='$ext'");
+		if (!empty($ext)) $row = $db->rowId('pudl_mimetype', 'mime_ext', $ext);
 
-		if ($row !== false) return $row;
+		if (!empty($row)) return $row;
 
-		return array(
+		return [
 			'mime_id'	=> NULL,
 			'mime_ext'	=> $ext,
 			'mime_type'	=> 'application/octet-stream'
-		);
+		];
 	}
 
 
@@ -28,7 +28,7 @@ class fileImporter {
 	public static function import($path, $data=false) {
 		global $af, $db, $site, $user;
 
-		if (empty($data)) $data = array();
+		if (empty($data)) $data = [];
 
 		//GET THE FILE HASH
 		if (empty($data['md5'])) {
@@ -283,10 +283,14 @@ class fileImporter {
 
 			$return = '0x0004';
 			$canvas = @imagecreatetruecolor($size, $size);
-			if ($canvas === false) {
+			if (empty($canvas)) {
 				@imagedestroy($data);
 				return $return;
 			}
+
+			//Set the image to WHITE instead of BLACK
+			$color = @imagecolorallocate($canvas, 255, 255, 255);
+			@imagefill($canvas, 0, 0, $color);
 
 			//NEW FILENAME OMGZ!
 			$image[$size] = preg_replace('/^.*\./', '$0x'.$size.'.', $dest_image);		    
