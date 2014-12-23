@@ -114,6 +114,36 @@ class afstring {
 		$value	= mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $key, $text, MCRYPT_MODE_CBC, $iv);
 		return rtrim ($value, "\0\4");
 	}	
+
+
+
+	static function language($input) {
+		foreach (self::$languages as $key => $val) {
+			preg_match_all($val, $input, $language[$key]);
+		}
+
+		// Reduce our array hell down to the counts we actually care about
+		foreach ($language as &$val) {
+			$val = count($val[0]);
+		} unset($val);
+
+		// Add the Chinese character count to the korean and japanese if they're >0
+		if ($language['jpn']) $language['jpn'] += $language['chi'];
+		if ($language['kor']) $language['kor'] += $language['chi'];
+
+		// Return the key of the largest language in our list
+		return max($language) ? array_flip($language)[max($language)] : 'eng';
+	}
+
+
+	static $languages = [
+		'eng' => '/[a-z]/i',
+		'jpn' => '/[\x{3040}-\x{30ff}]/u',
+		'kor' => '/[\x{3130}-\x{318f}\x{ac00}-\x{d7af}]/u',
+		'chi' => '/[\x{2e80}-\x{2eff}\x{3000}-\x{303f}\x{3200}-\x{9fff}]/u',
+		'rus' => '/[\x{0400}-\x{052f}]/u',
+		'heb' => '/[\x{0590}-\x{05ff}]/u',
+	];	
 }
 
 
