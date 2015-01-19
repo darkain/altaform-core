@@ -82,7 +82,7 @@ class fileImporter {
 				'file_name'		=> $db->safe($data['name']),
 				'mime_id'		=> $data['mime']['mime_id'],
 			);
-			
+
 			//insert file information into database
 			$db->insertIgnore('pudl_file', $insert);
 
@@ -94,7 +94,7 @@ class fileImporter {
 					'user_time'		=> $db->time(),
 				));
 			}
-		
+
 		} else {
 			$insert = array(
 				'thumb_hash'	=> array('UNHEX'=>"'$data[md5]'"),
@@ -131,8 +131,8 @@ class fileImporter {
 		$temp = tempnam(sys_get_temp_dir(), 'thumb-');
 		unlink($temp);
 		$temp .= '.' . $data['mime_ext'];
-		
-		
+
+
 		//RESIZED IMAGES
 		$resize = fileImporter::resize($data['file_cdn'], $temp);
 		if (is_array($resize)) {
@@ -243,7 +243,7 @@ class fileImporter {
 
 
 
-	public static function thumbnail($src_image, $dest_image, $sizes=false, $quality=90) {
+	public static function thumbnail($src_image, $dest_image, $sizes=false, $quality=90, $squared=true) {
 		$image = @getimagesize($src_image);
 		if ($image === false) return '0x0001';
 
@@ -265,14 +265,30 @@ class fileImporter {
 
 		if (empty($data)) return '0x0003';
 
-		if ($image[0] > $image[1]) {
-			$x = ($image[0] - $image[1]) / 2;
-			$y = 0;
-			$square = $image[0] - ($x * 2);
+		if ($squared) {
+			if ($image[0] > $image[1]) {
+				$x = ($image[0] - $image[1]) / 2;
+				$y = 0;
+				$square = $image[0] - ($x * 2);
+			} else {
+				$x = 0;
+				$y = ($image[1] - $image[0]) / 2;
+				$square = $image[1] - ($y * 2);
+			}
 		} else {
-			$x = 0;
-			$y = ($image[1] - $image[0]) / 2;
-			$square = $image[1] - ($y * 2);
+			if ($image[0] < $image[1]) {
+				$x = ($image[0] - $image[1]) / 2;
+				$y = 0;
+				$w = $image[0] / $image[1];
+				$h = 1.0;
+				$square = $image[0] - ($x * 2);
+			} else {
+				$x = 0;
+				$y = ($image[1] - $image[0]) / 2;
+				$w = 1.0;
+				$h = $image[1] / $image[0];
+				$square = $image[1] - ($y * 2);
+			}
 		}
 
 		if (empty($sizes)) $sizes = self::$thumbSize;
@@ -293,22 +309,31 @@ class fileImporter {
 			@imagefill($canvas, 0, 0, $color);
 
 			//NEW FILENAME OMGZ!
-			$image[$size] = preg_replace('/^.*\./', '$0x'.$size.'.', $dest_image);		    
+			$image[$size] = preg_replace('/^.*\./', '$0x'.$size.'.', $dest_image);
 
-			if (@imagecopyresampled($canvas, $data, 0, 0, $x, $y, $size, $size, $square, $square)) {
-				switch( strtolower(preg_replace('/^.*\./', '', $dest_image)) ) {
-					case 'jpeg':
-					case 'jpg':
-						//USE PEL TO EXTRACT ICC DATA FROM SOURCE, AND EMBED IN DESTINATION
-						$return = new PelJpeg($canvas);
-						if (!empty($iccdata)) $return->setICC($iccdata);
-						$return->saveFile($image[$size]);
-						break;
+			$ok = false;
+			if ($squared) {
+				$ok = @imagecopyresampled($canvas, $data, 0, 0, $x, $y, $size, $size, $square, $square);
+			} else {
+				$ok = @imagecopyresampled(
+					$canvas, $data,
+					($size-($size*$w))/2,	($size-($size*$h))/2,	0,			0,
+					$size*$w,				$size*$h,				$image[0],	$image[1]
+				);
+			}
 
-					case 'png': $return = @imagepng($canvas, $image[$size]); break;
-					case 'gif': $return = @imagegif($canvas, $image[$size]); break;
-					default: return '0x0005 - ' . $dest_image;
-				}
+			if ($ok) switch( strtolower(preg_replace('/^.*\./', '', $dest_image)) ) {
+				case 'jpeg':
+				case 'jpg':
+					//USE PEL TO EXTRACT ICC DATA FROM SOURCE, AND EMBED IN DESTINATION
+					$return = new PelJpeg($canvas);
+					if (!empty($iccdata)) $return->setICC($iccdata);
+					$return->saveFile($image[$size]);
+					break;
+
+				case 'png': $return = @imagepng($canvas, $image[$size]); break;
+				case 'gif': $return = @imagegif($canvas, $image[$size]); break;
+				default: return '0x0005 - ' . $dest_image;
 			}
 			@imagedestroy($canvas);
 		}
