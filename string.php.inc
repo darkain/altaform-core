@@ -83,6 +83,30 @@ class afstring {
 	}
 
 
+	static function regex($string) {
+		$string = str_replace('\\',	'\\\\\\\\',	$string);
+		$string = str_replace('/',	'\\\\/',	$string);
+		$string = str_replace('[',	'\\\\[',	$string);
+		$string = str_replace(']',	'\\\\]',	$string);
+		$string = str_replace('|',	'\\\\|',	$string);
+		$string = str_replace('(',	'\\\\(',	$string);
+		$string = str_replace(')',	'\\\\)',	$string);
+		$string = str_replace('{',	'\\\\{',	$string);
+		$string = str_replace('}',	'\\\\}',	$string);
+		$string = str_replace('$',	'\\\\$',	$string);
+		$string = str_replace('.',	'\\\\.',	$string);
+		$string = str_replace('^',	'\\\\^',	$string);
+		$string = str_replace('+',	'\\\\+',	$string);
+		$string = str_replace('-',	'\\\\-',	$string);
+		$string = str_replace('*',	'\\\\*',	$string);
+		$string = str_replace('?',	'\\\\?',	$string);
+		$string = str_replace('"',	'\\\\"',	$string);
+		$string = str_replace("'",	"\\\\'",	$string);
+		$string = rtrim($string, '\\');
+		return $string;
+	}
+
+
 	static function encrypt($data, $secret=false) {
 		global $site;
 		if (empty($secret)) $secret = $site['af_secret'];
