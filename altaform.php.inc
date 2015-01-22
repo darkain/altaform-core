@@ -19,7 +19,7 @@ $altaform = 'altaform';
 class altaform extends altaformlite {
 	public function __construct() {
 		parent::__construct();
-		
+
 		global $site;
 
 		$this->SetOption('render', TBS_OUTPUT);
@@ -118,7 +118,7 @@ class altaform extends altaformlite {
 			$this->headerPage();
 			return;
 		}
-		
+
 		if ($replace  ||  empty($this->_header[$key])) {
 			$this->_header[$key] = [$data];
 		} else {
@@ -225,7 +225,7 @@ class altaform extends altaformlite {
 
 		return json_decode($string, true);
 	}
-	
+
 
 
 	public function getUserPreferences($id=false) {
@@ -262,7 +262,7 @@ class altaform extends altaformlite {
 		return $db->replace('pudl_user_preference', [
 			'user_id' => $id,
 			'preference' => json_encode($preferences)
-		], true);		
+		], true);
 	}
 
 
@@ -287,13 +287,15 @@ class altaform extends altaformlite {
 
 		$session = $db->safe(empty($session) ? session_id() : $session);
 
+		//TODO: SWITCH THIS OVER TO THE NEW CACHING SYSTEM WHEN IT IS READY
+		// THE SYSTEM WITH CACHE IDENTIFIERS
 		$user = $db->row(
 			['us' => _pudl_user(50)],
-			"`user_session`='$session'"
+			["user_session='$session'", ["user_permission='user'","user_permission='admin'"]]
 		);
 
 		if (empty($user)) {
-			$user = $db->row('pudl_user', "user_id=0");
+			$user = $db->cache(60*60)->row('pudl_user', "user_id=0");
 			$user['messages'] = 0;
 			$user['user_session'] = $session;
 
@@ -395,7 +397,7 @@ class altaform extends altaformlite {
 
 		$part1 = substr($hash, 0, 3);
 		$part2 = substr($hash, 3, 3);
-		
+
 		return "$url[cdn]/$part1/$part2/$hash";
 	}
 
@@ -422,7 +424,7 @@ class altaform extends altaformlite {
 			default:
 				parent::meth_Custom_Format($text, $style);
 		}
-	}	
+	}
 
 
 
@@ -554,7 +556,7 @@ class altaform extends altaformlite {
 	//Log TinyButStrong error messages
 	function meth_Misc_Alert($Src, $Msg, $NoErrMsg=false, $SrcType=false) {
 		global $db, $get, $url;
-		
+
 		ob_start();
 		$ret = parent::meth_Misc_Alert($Src, $Msg, $NoErrMsg, $SrcType);
 		$text = ob_get_clean();
@@ -581,7 +583,7 @@ class altaform extends altaformlite {
 		global $site;
 		return (!empty($site['debug']));
 	}
-	
+
 
 	private $_header;
 	private $_script;
