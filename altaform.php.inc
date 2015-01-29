@@ -29,8 +29,8 @@ class altaform extends altaformlite {
 		$this->_script	= [];
 		$this->_style	= [];
 		$this->_meta	= [];
-		$this->_prefs   = [];
-		$this->_footer  = 1;
+		$this->_prefs	= [];
+		$this->_footer	= 1;
 
 		//Various data types Altaform manages
 		require_once('types.php.inc');
