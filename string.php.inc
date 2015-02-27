@@ -22,7 +22,7 @@ class afstring {
 		$string = preg_replace('/\s\s+/', ' ', $string);
 		$string = trim($string);
 		if (is_numeric($length) && $length >= 1) $string = self::truncateWord($string, $length);
-		return $string;		
+		return $string;
 	}
 
 
@@ -75,7 +75,7 @@ class afstring {
 		return implode(', ', $array) . ', and ' . $last;
 	}
 
-	
+
 	static function embed($path, $mimetype=false) {
 		$text = '';
 		if (!empty($mimetype)) $text .= "data:$mimetype;base64,";
@@ -118,7 +118,7 @@ class afstring {
 		$encode = str_replace('+', '-', $encode);
 		$encode = str_replace('/', '_', $encode);
 		$encode = str_replace('=', '~', $encode);
-		return $encode;		
+		return $encode;
 	}
 
 
@@ -137,7 +137,7 @@ class afstring {
 		$text	= substr($data, $size);
 		$value	= mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $key, $text, MCRYPT_MODE_CBC, $iv);
 		return rtrim ($value, "\0\4");
-	}	
+	}
 
 
 
@@ -148,7 +148,7 @@ class afstring {
 
 		// Reduce our array hell down to the counts we actually care about
 		foreach ($language as &$val) {
-			$val = count($val[0]);
+			$val = !empty($val[0]) ? count($val[0]) : 0;
 		} unset($val);
 
 		// Add the Chinese character count to the korean and japanese if they're >0
@@ -167,7 +167,7 @@ class afstring {
 		'chi' => '/[\x{2e80}-\x{2eff}\x{3000}-\x{303f}\x{3200}-\x{9fff}]/u',
 		'rus' => '/[\x{0400}-\x{052f}]/u',
 		'heb' => '/[\x{0590}-\x{05ff}]/u',
-	];	
+	];
 }
 
 

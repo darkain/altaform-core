@@ -5,9 +5,9 @@ require_once('_products/lib/AmazonECS.class.php');
 
 class afproduct {
 	static function search($search, $key, $category='All', $group='Small,Images') {
-		global $site, $db; 
+		global $site, $db;
 
-		$data = $db->redis()->get($key);
+		$data = self::cached($key);
 		if (!empty($data)) return $data;
 
 		if (empty(self::$amazon)) {
@@ -17,11 +17,17 @@ class afproduct {
 
 		$data = self::$amazon->category($category)->responseGroup($group)->search($search);
 
-		$db->redis()->set($key, $data, (60*60*24));
+		$db->redis()->set("aws-product-$key", $data, (60*60*24));
 
 		return $data;
 	}
 
-//	static $redis	= false;
+
+	static function cached($key) {
+		global $db;
+		$data = $db->redis()->get("aws-product-$key");
+		return !empty($data) ? $data : false;
+	}
+
 	static $amazon	= false;
 }
