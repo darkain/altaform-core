@@ -53,8 +53,45 @@ class aftime {
 				break;
 			}
 		}
-		
+
 		return $print . $tense;
+	}
+
+
+
+	public static function nearestZone($lat, $lon, $country=false) {
+		if ($country) {
+			$list = DateTimeZone::listIdentifiers(DateTimeZone::PER_COUNTRY, $country);
+		} else {
+			$list = DateTimeZone::listIdentifiers();
+		}
+
+		$zone = false;
+		$tz_dist = 0;
+
+		if(!isset($list[0])) return $zone;
+
+		if (count($list) === 1) return $list[0];
+
+		foreach($list as &$item) {
+			$timezone	= new DateTimeZone($item);
+			$location	= $timezone->getLocation();
+			$tz_lat		= $location['latitude'];
+			$tz_long	= $location['longitude'];
+
+			$theta		= $lon - $tz_long;
+			$dist		= (sin(deg2rad($lat)) * sin(deg2rad($tz_lat)))
+						+ (cos(deg2rad($lat)) * cos(deg2rad($tz_lat)) * cos(deg2rad($theta)));
+			$dist		= acos($dist);
+			$dist		= abs(rad2deg($dist));
+
+			if (!$zone || $tz_dist > $dist) {
+				$zone		= $timezone;
+				$tz_dist	= $dist;
+			}
+		}
+
+		return $zone;
 	}
 
 }
