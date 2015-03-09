@@ -59,6 +59,7 @@ class aftime {
 
 
 
+	//TODO: WE NEED A BETTER IMPLEMENTATION. RENO NV DOESN'T WORK
 	public static function nearestZone($lat, $lon, $country=false) {
 		if ($country) {
 			$list = DateTimeZone::listIdentifiers(DateTimeZone::PER_COUNTRY, $country);
