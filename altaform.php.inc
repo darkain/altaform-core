@@ -90,9 +90,15 @@ class altaform extends altaformlite {
 
 
 	public function headerHTML() {
-		global $url;
+		global $site;
 
-		$this->load($this->path() . "_config/$url[af_host]/header_html.tpl");
+		$root = $this->path() . $site['root'];
+		if ($this->debug()  &&  file_exists("$root/header_html_debug.tpl")) {
+			$this->load("$root/header_html_debug.tpl");
+		} else {
+			$this->load("$root/header_html.tpl");
+		}
+
 		$this->block('script',	$this->_script);
 		$this->block('style',	$this->_style);
 		$this->block('meta',	$this->_meta);
@@ -101,10 +107,14 @@ class altaform extends altaformlite {
 
 
 	public function headerPage() {
-		global $url;
+		global $site;
 
-		$this->load($this->path() . "_config/$url[af_host]/header_page.tpl");
-
+		$root = $this->path() . $site['root'];
+		if ($this->debug()  &&  file_exists("$root/header_page_debug.tpl")) {
+			$this->load("$root/header_page_debug.tpl");
+		} else {
+			$this->load("$root/header_page.tpl");
+		}
 		foreach ($this->_header as $key => &$val) {
 			$this->block($key, $val);
 		} unset($val);
@@ -129,14 +139,26 @@ class altaform extends altaformlite {
 
 
 	public function footerHTML() {
-		global $url;
-		$this->render($this->path() . "_config/$url[af_host]/footer_html.tpl");
+		global $site;
+
+		$root = $this->path() . $site['root'];
+		if ($this->debug()  &&  file_exists("$root/footer_html_debug.tpl")) {
+			$this->render("$root/footer_html_debug.tpl");
+		} else {
+			$this->render("$root/footer_html.tpl");
+		}
 	}
 
 
 	public function footerPage() {
-		global $url;
-		$this->render($this->path() . "_config/$url[af_host]/footer_page.tpl");
+		global $site;
+
+		$root = $this->path() . $site['root'];
+		if ($this->debug()  &&  file_exists("$root/footer_page_debug.tpl")) {
+			$this->render("$root/footer_page_debug.tpl");
+		} else {
+			$this->render("$root/footer_page.tpl");
+		}
 	}
 
 

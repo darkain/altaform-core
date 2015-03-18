@@ -11,7 +11,7 @@ $url['https']	= ($url['https'] !== 'off'  &&  !empty($url['https']));
 $url['domain']	= $get->server('HTTP_HOST', '', _GETVAR_BASIC);
 $url['host']	= ($url['https']?'https://':'http://') . $url['domain'];
 $url['af_host']	= $host;
-$url['safe']	= array();
+$url['safe']	= [];
 $url['id']		= 0;
 $url			= array_merge($url, (array)parse_url($url['uri']));
 
@@ -110,10 +110,10 @@ if (count($url['part']) > 2) {
 		}
 	}
 } else {
-	if (is_file("_config/$url[af_host]/index.php")) {
-		require_once("_config/$url[af_host]/index.php");
-	} else if (is_file("_config/$url[af_host]/index.tpl")) {
-		$af->renderPage("_config/$url[af_host]/index.tpl");
+	if (is_file("$site[root]/index.php")) {
+		require_once("$site[root]/index.php");
+	} else if (is_file("$site[root]/index.tpl")) {
+		$af->renderPage("$site[root]/index.tpl");
 	} else {
 		error404();
 	}
@@ -121,4 +121,6 @@ if (count($url['part']) > 2) {
 
 
 //Force disconnect of database before other destruction happens
+//This is used to free the connection pool resource, so the next
+//script can access the database connection from the pool faster
 $db->disconnect();
