@@ -33,12 +33,10 @@ class fileImporter {
 		//GET THE FILE HASH
 		if (empty($data['md5'])) {
 			$data['md5'] = md5_file($path);
+			self::$hash = $data['md5'];
 		}
 		$part1 = substr($data['md5'], 0, 3);
 		$part2 = substr($data['md5'], 3, 3);
-		//TODO: CHECK TO SEE IF MD5 ALREADY EXISTS
-		//IF SO, RETURN EXISTING DATA AND EXIT INSTANTLY!
-
 
 		$base = $af->path();
 
@@ -253,12 +251,16 @@ class fileImporter {
 		switch (strtolower(preg_replace('/^.*?\//', '', $image['mime']))) {
 			case 'jpeg':
 			case 'jpg':
-				$exif = new PelJpeg($src_image);
-				$data = @ImageCreateFromString($exif->getBytes());
-				$iccdata  = $exif->getICC();
+				try {
+					$exif = new PelJpeg($src_image);
+					$data = @ImageCreateFromString($exif->getBytes());
+					$iccdata  = $exif->getICC();
+				} catch (Exception $e) {
+					_af_email_error('IMAGE ERROR:' . self::$hash);
+					$data = @imagecreatefromjpeg($src_image);
+				}
 				break;
 
-			case 'jpg': $data = @imagecreatefromjpeg($src_image); break;
 			case 'png': $data = @imagecreatefrompng( $src_image); break;
 			case 'gif': $data = @imagecreatefromgif( $src_image); break;
 		}
@@ -361,11 +363,16 @@ class fileImporter {
 		switch (strtolower(preg_replace('/^.*?\//', '', $image['mime']))) {
 			case 'jpeg':
 			case 'jpg':
-				$exif = new PelJpeg($src_image);
-				$data = ImageCreateFromString($exif->getBytes());
-				$exifdata = $exif->getExif();
-				$iccdata  = $exif->getICC();
-				if (!empty($exifdata)) $image['exif'] = $af->exif_read_data($src_image);
+				try {
+					$exif = new PelJpeg($src_image);
+					$data = @ImageCreateFromString($exif->getBytes());
+					$exifdata = $exif->getExif();
+					$iccdata  = $exif->getICC();
+					if (!empty($exifdata)) $image['exif'] = $af->exif_read_data($src_image);
+				} catch (Exception $e) {
+					_af_email_error('IMAGE ERROR:' . self::$hash);
+					$data = @imagecreatefromjpeg($src_image);
+				}
 				break;
 
 			case 'png': $data = @ImageCreateFromPNG($src_image); break;
@@ -441,4 +448,5 @@ class fileImporter {
 
 	public static $thumbSize = array(50, 100, 150, 200);
 	public static $imageSize = array(800, 1280, 1920);
+	public static $hash = '';
 }
