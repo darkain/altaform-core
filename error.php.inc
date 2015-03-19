@@ -89,7 +89,7 @@ function _af_log_error($text, $die=true) {
 	static $echo = false;
 	if ($echo) return;
 	$echo = true;
-	
+
 
 	if (isset($af)  &&  $af->hasPermission('admin')) $site['debug'] = true;
 
@@ -119,13 +119,7 @@ function _af_log_error($text, $die=true) {
 		FILE_APPEND
 	);
 
-	if (!empty($site['error_email'])) {
-		@mail(
-			$site['error_email'],
-			date('r') . (!empty($site['error_tag']) ? " @$site[error_tag]" : ''),
-			$out
-		);
-	}
+	_af_email_error($out);
 
 	if (!empty($db)) $db->rollback();
 
@@ -134,6 +128,20 @@ function _af_log_error($text, $die=true) {
 	}
 
 	if ($die) error500();
+}
+
+
+
+function _af_email_error($text) {
+	global $site;
+
+	if (!empty($site['error_email'])) {
+		@mail(
+			$site['error_email'],
+			date('r') . (!empty($site['error_tag']) ? " @$site[error_tag]" : ''),
+			$text
+		);
+	}
 }
 
 
