@@ -444,6 +444,10 @@ class altaform extends altaformlite {
 				$text = afstring::url($text);
 			break;
 
+			case 'hex':
+				$text = bin2hex($text);
+			break;
+
 			default:
 				parent::meth_Custom_Format($text, $style);
 		}
