@@ -7,6 +7,8 @@ class afproduct {
 	static function search($search, $key=false, $category='All', $group='Small,Images') {
 		global $site, $db;
 
+		if (!$db->redis()) return false;
+
 		if (empty($key)) $key = $search;
 
 		$data = self::cached($key);
@@ -29,6 +31,7 @@ class afproduct {
 
 	static function cached($key) {
 		global $db;
+		if (!$db->redis()) return false;
 		$data = $db->redis()->get("aws-product-$key");
 		return !empty($data) ? $data : false;
 	}
