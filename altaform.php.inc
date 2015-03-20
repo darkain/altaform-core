@@ -448,6 +448,10 @@ class altaform extends altaformlite {
 				$text = bin2hex($text);
 			break;
 
+			case 'urldate':
+				$text = strtolower(date('Y/M', $text));
+			break;
+
 			default:
 				parent::meth_Custom_Format($text, $style);
 		}
