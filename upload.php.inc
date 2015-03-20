@@ -203,7 +203,7 @@ class fileImporter {
 	public static function importFacebookProfileImage($fburl) {
 		$fburl = str_replace( 'http://www.facebook.com/', '', $fburl);
 		$fburl = str_replace('https://www.facebook.com/', '', $fburl);
-		$fburl = "http://graph.facebook.com/$fburl/picture?type=large";
+		$fburl = "http://graph.facebook.com/v2.2/$fburl/picture?type=large";
 
 		$data = @file_get_contents($fburl);
 		if ($data === false) return false;
