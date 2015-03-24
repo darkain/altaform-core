@@ -3,9 +3,12 @@
 class afyoutube {
 
 	public static function importPath($path) {
-		preg_match('~https?://(www\.)?youtube\.com/watch\?v=(#!/)?@?([^/\?"\']*)~', $path, $item);
-		if (empty($item[3])) return false;
-		return self::import($item[3]);
+		$parts = parse_url($path);
+		if (empty($parts['query'])) return false;
+		parse_str($parts['query'], $query);
+		if (empty($query['v'])) return false;
+		var_dump($query['v']);exit;
+		return self::import($query['v']);
 	}
 
 
