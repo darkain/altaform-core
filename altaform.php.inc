@@ -310,15 +310,15 @@ class altaform extends altaformlite {
 
 		$session = $db->safe(empty($session) ? session_id() : $session);
 
-		//TODO: SWITCH THIS OVER TO THE NEW CACHING SYSTEM WHEN IT IS READY
-		// THE SYSTEM WITH CACHE IDENTIFIERS
-		$user = $db->row(
-			['us' => _pudl_user(50)],
-			["user_session='$session'", ["user_permission='user'","user_permission='admin'"]]
-		);
+		if (!empty($session)) {
+			$user = $db->cache(60*60, "AF-SESSION-$session")->row(
+				['us' => _pudl_user(50)],
+				["user_session='$session'", ["user_permission='user'","user_permission='admin'"]]
+			);
+		}
 
 		if (empty($user)) {
-			$user = $db->cache(60*60)->row('pudl_user', "user_id=0");
+			$user = $db->cache(60*60)->rowId('pudl_user', 'user_id', 0);
 			$user['messages'] = 0;
 			$user['user_session'] = $session;
 
@@ -343,7 +343,11 @@ class altaform extends altaformlite {
 
 		$session = $db->safe(empty($session) ? session_id() : $session);
 
-		$db->update('pudl_user', "`user_session`=NULL", "`user_session`='$session'");
+		if (!empty($session)) {
+			$db->update('pudl_user', "user_session=NULL", "user_session='$session'");
+			$db->purge("AF-SESSION-$session");
+		}
+
 		$user = $db->row('pudl_user', "user_id=0");
 		$this->permissions($user);
 

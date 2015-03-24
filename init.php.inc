@@ -91,15 +91,17 @@ if (isset($db)) {
 
 	//Redis Session Handler
 	if (!empty($site['session_type'])  &&  $site['session_type'] === 'redis') {
-		require_once('_redis/redisSession.php');
-		$rses = new redisSession(
-			isset($site['session_name'])	? $site['session_name']		: false,
-			isset($site['session_domain'])	? $site['session_domain']	: false
-		);
+		ini_set('session.save_path', "tcp://$site[pudl_redis]");
+		new RedisSessionModule();
+
+		//require_once('_redis/redisSession.php');
+		//$rses = new redisSession(
+		//	isset($site['session_name'])	? $site['session_name']		: false,
+		//	isset($site['session_domain'])	? $site['session_domain']	: false
+		//);
 
 	//PUDL Session Handler
 	} else {
-
 		require_once('_pudl/pudlSession.php');
 		new pudlSession(
 			$db,
