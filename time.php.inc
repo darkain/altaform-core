@@ -59,40 +59,20 @@ class aftime {
 
 
 
-	//TODO: WE NEED A BETTER IMPLEMENTATION. RENO NV DOESN'T WORK
-	public static function nearestZone($lat, $lon, $country=false) {
-		if ($country) {
-			$list = DateTimeZone::listIdentifiers(DateTimeZone::PER_COUNTRY, $country);
-		} else {
-			$list = DateTimeZone::listIdentifiers();
-		}
+	public static function nearestZone($lat, $lon) {
+		global $af, $site;
 
-		$zone = false;
-		$tz_dist = 0;
+		$path  = 'https://maps.googleapis.com/maps/api/timezone/json';
+		$path .= "?location=$lat,$lon";
+		$path .= '&timestamp=' . $af->time();
+		$path .= '&sensor=false';
+		$path .= '&key=' . $site['g_server_key'];
 
-		if(!isset($list[0])) return $zone;
+		$data = @file_get_contents($path);
+		$json = @json_decode($data, true);
 
-		if (count($list) === 1) return $list[0];
-
-		foreach($list as &$item) {
-			$timezone	= new DateTimeZone($item);
-			$location	= $timezone->getLocation();
-			$tz_lat		= $location['latitude'];
-			$tz_long	= $location['longitude'];
-
-			$theta		= $lon - $tz_long;
-			$dist		= (sin(deg2rad($lat)) * sin(deg2rad($tz_lat)))
-						+ (cos(deg2rad($lat)) * cos(deg2rad($tz_lat)) * cos(deg2rad($theta)));
-			$dist		= acos($dist);
-			$dist		= abs(rad2deg($dist));
-
-			if (!$zone || $tz_dist > $dist) {
-				$zone		= $timezone;
-				$tz_dist	= $dist;
-			}
-		}
-
-		return $zone;
+		if (!empty($json)) return $json;
+		return false;
 	}
 
 }
