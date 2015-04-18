@@ -7,7 +7,6 @@ class afyoutube {
 		if (empty($parts['query'])) return false;
 		parse_str($parts['query'], $query);
 		if (empty($query['v'])) return false;
-		var_dump($query['v']);exit;
 		return self::import($query['v']);
 	}
 
