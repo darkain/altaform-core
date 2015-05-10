@@ -35,6 +35,42 @@ if (!empty($url['query'])  &&  $url['query']!='jq=1') $url['all'] .= "?$url[quer
 
 
 
+
+//NOTE: EVERYTHING ABOVE IS GOING TO BE MIGRATED INTO THE NEW AFURL CLASS
+//$URL IS A COMMONLY USED VARIABLE NAME IN COUNTLESS LIBRARIES, SO WE
+//DONT WANT TO USE IT ANYMORE. WE'RE USING $AFURL INSTEAD, BUT INSTEAD
+//OF JUST RENAMING IT, WE'RE WRAPPING IT INTO A CLASS WITH MORE FUNCTIONS
+
+class afurl {
+	public function __construct() {
+		global $url;
+
+		$this->url	= $url;
+		$this->base	= $url['base'];
+	}
+
+
+	public function id($new_id=false) {
+		if ($new_id !== false) $this->id = afstring::int($new_id);
+		return $this->id;
+	}
+
+
+	public function user($user) {
+		return $this->base . '/' . empty($user['user_url']) ? $user['user_id'] : $user['user_url'] . '/';
+	}
+
+
+	private $url;
+	private $base;
+	private $id = 0;
+}
+
+$afurl = new afurl();
+
+
+
+
 //	load our web page!!
 if (count($url['part']) > 2) {
 	$count = count($url['part']) - 1;
@@ -66,6 +102,7 @@ if (count($url['part']) > 2) {
 				if (empty($url['virtual'])) {
 					for ($x=$i; $x<$count; $x++) $url['virtual'][] = $url['safe'][$x];
 				}
+				$afurl->id($url['virtual'][0]);
 				$url['id'] = afstring::int($url['virtual'][0]);
 				require_once('virtual.php');
 				break;
@@ -73,6 +110,7 @@ if (count($url['part']) > 2) {
 				if (empty($url['virtual'])) {
 					for ($x=$i; $x<$count; $x++) $url['virtual'][] = $url['safe'][$x];
 				}
+				$afurl->id($url['virtual'][0]);
 				$url['id'] = afstring::int($url['virtual'][0]);
 				chdir('virtual');
 				if ($count-$i == 1) {
@@ -94,6 +132,7 @@ if (count($url['part']) > 2) {
 			if (empty($url['virtual'])) {
 				for ($x=$i; $x<$count; $x++) $url['virtual'][] = $url['safe'][$x];
 			}
+			$afurl->id($url['virtual'][0]);
 			$url['id'] = afstring::int($url['virtual'][0]);
 			chdir('virtual');
 
@@ -101,6 +140,7 @@ if (count($url['part']) > 2) {
 			if (empty($url['virtual'])) {
 				for ($x=$i; $x<$count; $x++) $url['virtual'][] = $url['safe'][$x];
 			}
+			$afurl->id($url['virtual'][0]);
 			$url['id'] = afstring::int($url['virtual'][0]);
 			require_once('virtual.php');
 			break;
