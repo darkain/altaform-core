@@ -87,24 +87,24 @@ class afstring {
 
 
 	static function regex($string) {
-		$string = str_replace('\\',	'\\\\\\\\',	$string);
-		$string = str_replace('/',	'\\\\/',	$string);
-		$string = str_replace('[',	'\\\\[',	$string);
-		$string = str_replace(']',	'\\\\]',	$string);
-		$string = str_replace('|',	'\\\\|',	$string);
-		$string = str_replace('(',	'\\\\(',	$string);
-		$string = str_replace(')',	'\\\\)',	$string);
-		$string = str_replace('{',	'\\\\{',	$string);
-		$string = str_replace('}',	'\\\\}',	$string);
-		$string = str_replace('$',	'\\\\$',	$string);
-		$string = str_replace('.',	'\\\\.',	$string);
-		$string = str_replace('^',	'\\\\^',	$string);
-		$string = str_replace('+',	'\\\\+',	$string);
-		$string = str_replace('-',	'\\\\-',	$string);
-		$string = str_replace('*',	'\\\\*',	$string);
-		$string = str_replace('?',	'\\\\?',	$string);
-		$string = str_replace('"',	'\\\\"',	$string);
-		$string = str_replace("'",	"\\\\'",	$string);
+		$string = str_replace('\\',	'\\\\',	$string);
+		$string = str_replace('/',	'\\/',	$string);
+		$string = str_replace('[',	'\\[',	$string);
+		$string = str_replace(']',	'\\]',	$string);
+		$string = str_replace('|',	'\\|',	$string);
+		$string = str_replace('(',	'\\(',	$string);
+		$string = str_replace(')',	'\\)',	$string);
+		$string = str_replace('{',	'\\{',	$string);
+		$string = str_replace('}',	'\\}',	$string);
+		$string = str_replace('$',	'\\$',	$string);
+		$string = str_replace('.',	'\\.',	$string);
+		$string = str_replace('^',	'\\^',	$string);
+		$string = str_replace('+',	'\\+',	$string);
+		$string = str_replace('-',	'\\-',	$string);
+		$string = str_replace('*',	'\\*',	$string);
+		$string = str_replace('?',	'\\?',	$string);
+		$string = str_replace('"',	'\\"',	$string);
+		$string = str_replace("'",	"\\'",	$string);
 		$string = rtrim($string, '\\');
 		return $string;
 	}
