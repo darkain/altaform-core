@@ -9,6 +9,8 @@ class afurl {
 		if (!empty($site['cdn']))		$this->cdn		= $site['cdn'];
 		if (!empty($site['static']))	$this->static	= $site['static'];
 		if (!empty($site['upload']))	$this->upload	= $site['upload'];
+		if (!empty($site['img']))		$this->img		= $site['img'];
+		if (!empty($site['file']))		$this->file		= $site['file'];
 
 		$this->uri		= urldecode($get->server('REQUEST_URI', '', _GETVAR_BASIC));
 		if (substr($this->uri,0,2) === '//') $af->redirect('/');
@@ -56,7 +58,7 @@ class afurl {
 
 
 	public function process() {
-		global $site;
+		global $site, $af;
 
 		//	load our web page!!
 		if (count($this->part) < 3) {
@@ -168,6 +170,8 @@ class afurl {
 	public $jq			= '';
 	public $cdn			= '';
 	public $static		= '';
+	public $img			= '';
+	public $file		= '';
 	public $upload		= '';
 	public $parts		= [];
 	public $safe		= [];
