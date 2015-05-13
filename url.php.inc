@@ -13,8 +13,6 @@ class afurl {
 		if (!empty($site['file']))		$this->file		= $site['file'];
 
 		$this->uri		= urldecode($get->server('REQUEST_URI', '', _GETVAR_BASIC));
-		if (substr($this->uri,0,2) === '//') $af->redirect('/');
-
 		$this->referer	= $get->server('HTTP_REFERER', '', _GETVAR_BASIC);
 		$this->https	= strtolower($get->server('HTTPS'));
 		$this->https	= ($this->https !== 'off'  &&  !empty($this->https));

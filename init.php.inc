@@ -121,6 +121,9 @@ require_once('url.php.inc');
 $af = new $altaform();
 $af->login();
 
+//Bad URL
+if (substr($afurl->uri,0,2) === '//') $af->redirect('/');
+
 //Parse the URL and load the page!
 $afpath = $afurl->process();
 if (is_string($afpath)) require($afpath);
