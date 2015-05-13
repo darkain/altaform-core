@@ -20,10 +20,10 @@ function afError($header, $text) {
 
 
 function error401($text='') {
-	global $url, $get, $af;
+	global $afurl, $get, $af;
 
-	if ($get->server('HTTP_REFERER') === $url['all']) {
-		$af->redirect("$url[host]$url[base]/", 302);
+	if ($get->server('HTTP_REFERER') === $afurl->all) {
+		$af->redirect("$afurl->host$afurl->base/", 302);
 	}
 
 	afError(
@@ -42,11 +42,11 @@ function error403($text='') {
 
 
 function error404($text='') {
-	global $url, $get, $af;
+	global $afurl, $get, $af;
 
-	if (empty($url['all'])) $url['all'] = '';
-	if ($get->server('HTTP_REFERER') === $url['all']) {
-		$af->redirect("$url[host]$url[base]/", 302);
+	if (empty($afurl->all)) $afurl->all = '';
+	if ($get->server('HTTP_REFERER') === $afurl->all) {
+		$af->redirect("$afurl->host$afurl->base/", 302);
 	}
 
 	afError(
@@ -148,7 +148,7 @@ function _af_email_error($text) {
 
 
 function _af_error_handler($errno, $errstr, $errfile=NULL, $errline=NULL, $errcontext=NULL) {
-	global $db, $get, $url;
+	global $db, $get, $afurl;
 
 	if (!error_reporting()) return false;
 
@@ -158,7 +158,7 @@ function _af_error_handler($errno, $errstr, $errfile=NULL, $errline=NULL, $errco
 		'details'	=> $errstr,
 		'file'		=> $errfile,
 		'line'		=> $errline,
-		'url'		=> isset($url['all']) ? $url['all'] : $get->server('REQUEST_URI'),
+		'url'		=> isset($afurl->all) ? $afurl->all : $get->server('REQUEST_URI'),
 		'mariadb'	=> !empty($db) ? $db->server() : '',
 		'proxy'		=> $get->server('SERVER_ADDR'),
 		'server'	=> $get->server('X-PHP-IP'),
@@ -174,7 +174,7 @@ set_error_handler('_af_error_handler');
 
 
 function _af_log_exception(Exception $e) {
-	global $db, $get, $url;
+	global $db, $get, $afurl;
 
 	if (!error_reporting()) return false;
 
@@ -184,7 +184,7 @@ function _af_log_exception(Exception $e) {
 		'details'	=> $e->getMessage(),
 		'file'		=> $e->getFile(),
 		'line'		=> $e->getLine(),
-		'url'		=> isset($url['all']) ? $url['all'] : $get->server('REQUEST_URI'),
+		'url'		=> isset($afurl->all) ? $afurl->all : $get->server('REQUEST_URI'),
 		'mariadb'	=> !empty($db) ? $db->server() : '',
 		'proxy'		=> $get->server('SERVER_ADDR'),
 		'server'	=> $get->server('X-PHP-IP'),
@@ -208,14 +208,14 @@ register_shutdown_function('_af_fatal_error');
 
 
 function _pudl_debug($db, $result=false) {
-	global $db, $get, $url;
+	global $db, $get, $afurl;
 
 	_af_log_error(array(
 		'time'		=> @date('r'),
 		'error'		=> $db->errno(),
 		'details'	=> $db->error(),
 		'query'		=> ($result !== false) ? ($result->query()) : ($db->query()),
-		'url'		=> isset($url['all']) ? $url['all'] : $get->server('REQUEST_URI'),
+		'url'		=> isset($afurl->all) ? $afurl->all : $get->server('REQUEST_URI'),
 		'mariadb'	=> !empty($db) ? $db->server() : '',
 		'proxy'		=> $get->server('SERVER_ADDR'),
 		'server'	=> $get->server('X-PHP-IP'),

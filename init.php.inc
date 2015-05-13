@@ -113,6 +113,20 @@ if (isset($db)) {
 }
 
 
+//URL Parser
+require_once('url.php.inc');
+
+
 //Instantiate Altaform class
 $af = new $altaform();
 $af->login();
+
+//Parse the URL and load the page!
+$afpath = $afurl->process();
+if (is_string($afpath)) require($afpath);
+
+
+//Force disconnect of database before other destruction happens
+//This is used to free the connection pool resource, so the next
+//script can access the database connection from the pool faster
+$db->disconnect();

@@ -1,56 +1,50 @@
 <?php
 
-// 	parse out the URL
-$url['uri']		= urldecode($get->server('REQUEST_URI', '', _GETVAR_BASIC));
-if (substr($url['uri'],0,2) === '//') $af->redirect('/');
-
-$url['offline']	= (int)!empty($url['offline']);
-$url['referer'] = $get->server('HTTP_REFERER', '', _GETVAR_BASIC);
-$url['https']	= strtolower($get->server('HTTPS'));
-$url['https']	= ($url['https'] !== 'off'  &&  !empty($url['https']));
-$url['domain']	= $get->server('HTTP_HOST', '', _GETVAR_BASIC);
-$url['host']	= ($url['https']?'https://':'http://') . $url['domain'];
-$url['af_host']	= $host;
-$url['safe']	= [];
-$url['id']		= 0;
-$url			= array_merge($url, (array)parse_url($url['uri']));
-
-if (empty($url['path'])) error404();
-
-if (!isset($url['base'])) $url['base'] = '';
-if (substr($url['path'], 0, 1) != '/') $url['path'] = '/' . $url['path'];
-if (substr($url['path'], -1) != '/') $url['path'] .= '/';
-
-$url['part'] = explode('/', $url['path']);
-$url['url'] = '/';
-foreach ($url['part'] as $key => $val) {
-	$url['safe'][] = isset($db) ? $db->safe($val) : @mysql_real_escape_string($val);
-	if (strlen($val) < 1) continue;
-	$url['url'] .= urlencode($val) . '/';
-}
-
-$url['all'] = $url['host'] . $url['base'] . $url['url'];
-$url['full'] = $url['all'];
-if (!empty($url['query'])  &&  $url['query']!='jq=1') $url['all'] .= "?$url[query]";
-
-
-
-
-//NOTE: EVERYTHING ABOVE IS GOING TO BE MIGRATED INTO THE NEW AFURL CLASS
-//$URL IS A COMMONLY USED VARIABLE NAME IN COUNTLESS LIBRARIES, SO WE
-//DONT WANT TO USE IT ANYMORE. WE'RE USING $AFURL INSTEAD, BUT INSTEAD
-//OF JUST RENAMING IT, WE'RE WRAPPING IT INTO A CLASS WITH MORE FUNCTIONS
-
 class afurl {
 	public function __construct() {
-		global $url;
+		global $af, $db, $get, $site;
 
-		$this->url	= $url;
-		$this->base	= $url['base'];
+		//Configurable paths
+		if (!empty($site['base']))		$this->base		= $site['base'];
+		if (!empty($site['cdn']))		$this->cdn		= $site['cdn'];
+		if (!empty($site['static']))	$this->static	= $site['static'];
+		if (!empty($site['upload']))	$this->upload	= $site['upload'];
+
+		$this->uri		= urldecode($get->server('REQUEST_URI', '', _GETVAR_BASIC));
+		if (substr($this->uri,0,2) === '//') $af->redirect('/');
+
+		$this->referer	= $get->server('HTTP_REFERER', '', _GETVAR_BASIC);
+		$this->https	= strtolower($get->server('HTTPS'));
+		$this->https	= ($this->https !== 'off'  &&  !empty($this->https));
+		$this->domain	= $get->server('HTTP_HOST', '', _GETVAR_BASIC);
+		$this->host		= ($this->https?'https://':'http://') . $this->domain;
+		$this->af_host	= $this->host;
+		$this->safe		= [];
+
+		$this->parts	= (array)parse_url($this->uri);
+		if (empty($this->parts['path'])) error404();
+
+		if (substr($this->parts['path'], 0, 1) != '/') $this->parts['path'] = '/' . $this->parts['path'];
+		if (substr($this->parts['path'], -1) != '/') $this->parts['path'] .= '/';
+
+		$this->part = explode('/', $this->parts['path']);
+		$this->url = '/';
+		foreach ($this->part as $key => $val) {
+			$this->safe[] = isset($db) ? $db->safe($val) : @mysql_real_escape_string($val);
+			if (strlen($val) < 1) continue;
+			$this->url .= urlencode($val) . '/';
+		}
+
+		$this->all	= $this->host . $this->base . $this->url;
+		$this->full	= $this->all;
+		if (!empty($this->parts['query'])  &&  $this->parts['query']!='jq=1') {
+			$this->all .= '?' . $this->parts['query'];
+		}
+
 	}
 
 
-	public function id($new_id=false) {
+	public function vid($new_id=false) {
 		if ($new_id !== false) $this->id = afstring::int($new_id);
 		return $this->id;
 	}
@@ -61,106 +55,124 @@ class afurl {
 	}
 
 
-	private $url;
-	private $base;
-	private $id = 0;
-}
+	public function process() {
+		global $site;
 
-$afurl = new afurl();
+		//	load our web page!!
+		if (count($this->part) < 3) {
+			if (is_file("$site[root]/index.php")) {
+				return "$site[root]/index.php";
 
+			} else if (is_file("$site[root]/index.tpl")) {
+				$af->renderPage("$site[root]/index.tpl");
+				return true;
 
-
-
-//	load our web page!!
-if (count($url['part']) > 2) {
-	$count = count($url['part']) - 1;
-
-	for ($i=1; $i<$count; $i++) {
-		if (is_dir($url['part'][$i])) {
-			chdir($url['part'][$i]);
-			if ($count-$i == 1) {
-				if (is_file('index.php')) {
-					require_once('index.php');
-					break;
-				} else if (is_file('index.tpl')) {
-					$af->renderPage('index.tpl');
-					break;
-				} else {
-					error404();
-				}
+			} else {
+				error404();
 			}
+		}
 
-		} else if ($count-$i == 1) {
-			$file = $url['part'][$i];
-			if (is_file("$file.php")) {
-				require_once("$file.php");
-				break;
-			} else if (is_file("$file.tpl")) {
-				$af->renderPage("$file.tpl");
-				break;
-			} else if (is_file('virtual.php')) {
-				if (empty($url['virtual'])) {
-					for ($x=$i; $x<$count; $x++) $url['virtual'][] = $url['safe'][$x];
-				}
-				$afurl->id($url['virtual'][0]);
-				$url['id'] = afstring::int($url['virtual'][0]);
-				require_once('virtual.php');
-				break;
-			} else if (is_dir('virtual')) {
-				if (empty($url['virtual'])) {
-					for ($x=$i; $x<$count; $x++) $url['virtual'][] = $url['safe'][$x];
-				}
-				$afurl->id($url['virtual'][0]);
-				$url['id'] = afstring::int($url['virtual'][0]);
-				chdir('virtual');
+
+		$count = count($this->part) - 1;
+
+		for ($i=1; $i<$count; $i++) {
+			if (is_dir($this->part[$i])) {
+
+				chdir($this->part[$i]);
 				if ($count-$i == 1) {
 					if (is_file('index.php')) {
-						require_once('index.php');
-						break;
+						return 'index.php';
+
 					} else if (is_file('index.tpl')) {
 						$af->renderPage('index.tpl');
-						break;
+						return true;
+
 					} else {
 						error404();
 					}
 				}
+
+			} else if ($count-$i == 1) {
+
+				$file = $this->part[$i];
+				if (is_file("$file.php")) {
+					return "$file.php";
+
+				} else if (is_file("$file.tpl")) {
+					$af->renderPage("$file.tpl");
+					return true;
+
+				} else if (is_file('virtual.php')) {
+					$this->virtualize($i);
+					return 'virtual.php';
+
+				} else if (is_dir('virtual')) {
+					$this->virtualize($i);
+					chdir('virtual');
+
+					if ($count-$i == 1) {
+						if (is_file('index.php')) {
+							return 'index.php';
+						} else if (is_file('index.tpl')) {
+							$af->renderPage('index.tpl');
+							return true;
+						} else {
+							error404();
+						}
+					}
+
+				} else {
+					error404();
+				}
+
+			} else if (is_dir('virtual')) {
+				$this->virtualize($i);
+				chdir('virtual');
+
+			} else if (is_file('virtual.php')) {
+				$this->virtualize($i);
+				return 'virtual.php';
+
 			} else {
 				error404();
 			}
-
-		} else if (is_dir('virtual')) {
-			if (empty($url['virtual'])) {
-				for ($x=$i; $x<$count; $x++) $url['virtual'][] = $url['safe'][$x];
-			}
-			$afurl->id($url['virtual'][0]);
-			$url['id'] = afstring::int($url['virtual'][0]);
-			chdir('virtual');
-
-		} else if (is_file('virtual.php')) {
-			if (empty($url['virtual'])) {
-				for ($x=$i; $x<$count; $x++) $url['virtual'][] = $url['safe'][$x];
-			}
-			$afurl->id($url['virtual'][0]);
-			$url['id'] = afstring::int($url['virtual'][0]);
-			require_once('virtual.php');
-			break;
-
-		} else {
-			error404();
 		}
+
 	}
-} else {
-	if (is_file("$site[root]/index.php")) {
-		require_once("$site[root]/index.php");
-	} else if (is_file("$site[root]/index.tpl")) {
-		$af->renderPage("$site[root]/index.tpl");
-	} else {
-		error404();
+
+
+
+	private function virtualize($start) {
+		if (!empty($this->virtual)) return;
+
+		$count = count($this->part)-1;
+		if ($start >= $count) error500();
+
+		for ($x=$start; $x<$count; $x++) {
+			$this->virtual[] = $this->safe[$x];
+		}
+
+		$this->vid($this->virtual[0]);
 	}
+
+
+	public $https		= false;
+	public $url			= '';
+	public $uri			= '';
+	public $base		= '';
+	public $referer		= '';
+	public $domain		= '';
+	public $host		= '';
+	public $af_host		= '';
+	public $part		= '';
+	public $jq			= '';
+	public $cdn			= '';
+	public $static		= '';
+	public $upload		= '';
+	public $parts		= [];
+	public $safe		= [];
+	public $virtual		= [];
+	public $id			= 0;
 }
 
-
-//Force disconnect of database before other destruction happens
-//This is used to free the connection pool resource, so the next
-//script can access the database connection from the pool faster
-$db->disconnect();
+$afurl = new afurl();

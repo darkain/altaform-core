@@ -409,7 +409,7 @@ class altaform extends altaformlite {
 
 
 	public function cdnUrl(&$data, $hashkey='file_hash') {
-		global $url;
+		global $afurl;
 
 		if (is_array($data)) {
 			$hash = $data[$hashkey];
@@ -425,7 +425,7 @@ class altaform extends altaformlite {
 		$part1 = substr($hash, 0, 3);
 		$part2 = substr($hash, 3, 3);
 
-		return "$url[cdn]/$part1/$part2/$hash";
+		return "$afurl->cdn/$part1/$part2/$hash";
 	}
 
 
@@ -590,7 +590,7 @@ class altaform extends altaformlite {
 
 	//Log TinyButStrong error messages
 	function meth_Misc_Alert($Src, $Msg, $NoErrMsg=false, $SrcType=false) {
-		global $db, $get, $url;
+		global $db, $get, $afurl;
 
 		ob_start();
 		$ret = parent::meth_Misc_Alert($Src, $Msg, $NoErrMsg, $SrcType);
@@ -600,7 +600,7 @@ class altaform extends altaformlite {
 			'time'		=> date('r'),
 			'file'		=> $this->_LastFile,
 			'details'	=> $text,
-			'url'		=> isset($url['all']) ? $url['all'] : $get->server('REQUEST_URI'),
+			'url'		=> isset($afurl->all) ? $afurl->all : $get->server('REQUEST_URI'),
 			'mariadb'	=> !empty($db) ? $db->server() : '',
 			'proxy'		=> $get->server('SERVER_ADDR'),
 			'server'	=> $get->server('X-PHP-IP'),

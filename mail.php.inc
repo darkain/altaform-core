@@ -3,7 +3,7 @@
 class afmail {
 
 	static function send($headers, $subject, $body, $attach=false) {
-		global $site, $url;
+		global $site, $afurl;
 
 		require_once('_phpmailer/class.phpmailer.php');
 
@@ -22,7 +22,7 @@ class afmail {
 		if (!isset($headers['from']))     $headers['from']     = $site['af_email'];
 		if (!isset($headers['return']))   $headers['return']   = $headers['from'];
 		if (!isset($headers['reply']))    $headers['reply']    = $headers['from'];
-		if (!isset($headers['priority'])) $headers['priority'] = 3;	
+		if (!isset($headers['priority'])) $headers['priority'] = 3;
 
 
 		$mail->msgHTML($body);
@@ -44,13 +44,13 @@ class afmail {
 		} else if (!empty($headers['bcc'])) {
 			$mail->AddBCC($headers['bcc']);
 		}
-		
+
 		if (isset($headers['reply'])  &&  is_array($headers['reply'])) {
 			$mail->AddReplyTo( reset($headers['reply']), end($headers['reply']) );
 		} else if (!empty($headers['reply'])) {
 			$mail->AddReplyTo($headers['reply']);
 		}
-		
+
 		if (isset($headers['from'])  &&  is_array($headers['from'])) {
 			$mail->SetFrom( reset($headers['from']), end($headers['from']) );
 		} else if (!empty($headers['from'])) {
@@ -62,7 +62,7 @@ class afmail {
 		}
 
 		$mail->Priority	= $headers['priority'];
-		$mail->Hostname	= $url['domain'];
+		$mail->Hostname	= $afurl->domain;
 		$mail->Subject	= $subject;
 		$mail->XMailer	= 'Altaform v1.1';
 		$mail->WordWrap	= 80;
@@ -246,7 +246,7 @@ class afmail {
 		# domain-literal  =       [CFWS] "[" *([FWS] dcontent) [FWS] "]" [CFWS]
 		# dcontent        =       dtext / quoted-pair
 		# dtext           =       NO-WS-CTL /     ; Non white space controls
-		# 
+		#
 		#                         %d33-90 /       ; The rest of the US-ASCII
 		#                         %d94-126        ;  characters not including "[",
 		#                                         ;  "]", or "\"
