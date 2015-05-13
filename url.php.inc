@@ -2,7 +2,7 @@
 
 class afurl {
 	public function __construct() {
-		global $af, $db, $get, $site;
+		global $db, $get, $site;
 
 		//Configurable paths
 		if (!empty($site['base']))		$this->base		= $site['base'];
