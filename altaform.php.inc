@@ -171,12 +171,7 @@ class altaform extends altaformlite {
 	public function renderPage($filename, $field=false, $data=false) {
 		global $title, $og;
 
-		//Load page's template BEFORE header
-		$this->load($filename);
-		if ($field !== false  &&  $data !== false) {
-			$this->field($field, $data);
-		}
-		$text = $this->Source;
+		$text = file_get_contents($filename);
 
 		//PULL OUT TITLE TAG
 		preg_match("/\<title[^>]*>(.*)\<\/title\>/", $text, $matches);
@@ -192,10 +187,16 @@ class altaform extends altaformlite {
 			$text = preg_replace("/\<description[^>]*>(.*)\<\/description\>/", '', $text);
 		}
 
-		//Final render!
+		//Render all the things!
 		$this->header();
-			$this->Source = $text;
+
+			//Load page's template BEFORE header
+			$this->loadString($text);
+			if ($field !== false  &&  $data !== false) {
+				$this->field($field, $data);
+			}
 			$this->Show();
+
 		$this->footer();
 	}
 
