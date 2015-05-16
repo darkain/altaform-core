@@ -63,30 +63,14 @@ class altaformlite extends clsTinyButStrong {
 		return $this->renderToString();
 	}
 
-
-	//Override default functionallity for TBS::mergeField to enable PUDL support
-	public function mergeField($NameLst, $Value='assigned', $IsUserFct=false, $DefaultPrm=false) {
-		if (is_a($Value, 'pudlResult')) $Value = $Value->row();
-		return parent::mergeField($NameLst, $Value, $IsUserFct, $DefaultPrm);
-	}
-
-	//Shorthand name for MergeField
+	//Shorthand name for MergeField from TBS
 	public function field($NameLst, $Value='assigned', $IsUserFct=false, $DefaultPrm=false) {
-		if (is_a($Value, 'pudlResult')) $Value = $Value->row();
-		return parent::mergeField($NameLst, $Value, $IsUserFct, $DefaultPrm);
+		return parent::MergeField($NameLst, $Value, $IsUserFct, $DefaultPrm);
 	}
 
-
-	//Override default functionallity for TBS::mergeBlock to enable PUDL support
-	public function mergeBlock($BlockLst, $SrcId='assigned', $Query='', $QryPrms=false) {
-		if (is_a($SrcId, 'pudlResult')) $SrcId = $SrcId->rows();
-		return parent::mergeBlock($BlockLst, $SrcId, $Query, $QryPrms);
-	}
-
-	//Shorthand name for MergeBlock
+	//Shorthand name for MergeBlock from TBS
 	public function block($BlockLst, $SrcId='assigned', $Query='', $QryPrms=false) {
-		if (is_a($SrcId, 'pudlResult')) $SrcId = $SrcId->rows();
-		return parent::mergeBlock($BlockLst, $SrcId, $Query, $QryPrms);
+		return parent::MergeBlock($BlockLst, $SrcId, $Query, $QryPrms);
 	}
 
 
@@ -97,7 +81,7 @@ class altaformlite extends clsTinyButStrong {
 
 	public function time() {
 		return self::$_time;
-	}	
+	}
 
 
 	static protected $_time;
