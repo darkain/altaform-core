@@ -21,6 +21,20 @@ class afstring {
 	}
 
 
+	static function string($value) {
+		if (is_string($value)) return $value;
+		if (!is_object($value)) return @(string)$value;
+
+		if (method_exists($value,'__toString')) {
+			return $value->__toString();
+		} elseif (is_a($value, 'DateTime')) {
+			return $value->format('c');
+		}
+
+		return @(string)$value;
+	}
+
+
 	static function striphtml($string, $length=false) {
 		$string = preg_replace('#<[^>]+>#', ' ', $string);
 		$string = str_replace('&nbsp;', ' ', $string);
