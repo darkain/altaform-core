@@ -91,7 +91,11 @@ function _af_log_error($text, $die=true) {
 	$echo = true;
 
 
-	if (isset($af)  &&  $af->hasPermission('admin')) $site['debug'] = true;
+	if (!isset($af)) {
+		$site['debug'] = true;
+	} else if ($af->hasPermission('admin')) {
+		$site['debug'] = true;
+	}
 
 	$error = '';
 	if (ob_get_level()  &&  $die) $error = htmlspecialchars(ob_get_clean());
