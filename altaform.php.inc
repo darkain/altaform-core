@@ -377,31 +377,45 @@ class altaform extends altaformlite {
 	}
 
 
-	public function hasPermission($permission, $theuser=false) {
+	public function hasPermission($permission, $account=false) {
 		global $user;
-		if (!is_array($theuser)) return (!empty($user['permission'][$permission]));
-		if (empty($theuser['permission'])) $this->permissions($theuser);
-		return (!empty($theuser['permission'][$permission]));
+
+		if (!is_array($permission)) $permission = explode(',', $permission);
+		if (empty($account)) $account = $user;
+
+		if (is_int($account)  ||  is_string($account)) {
+			$account = $db->rowId('pudl_user', 'user_id', afstring::int($account));
+			if (empty($account)) return false;
+		}
+
+		if (empty($account['permission'])) $this->permissions($account);
+
+		foreach ($permission as $perm) {
+			$perm = trim($perm);
+			if (!empty($account['permission'][$perm])) return true;
+		}
+
+		return false;
 	}
 
 
-	public function requirePermission($permission, $theuser=false) {
-		if (!$this->hasPermission($permission, $theuser)) error401();
+	public function requirePermission($permission, $account=false) {
+		if (!$this->hasPermission($permission, $account)) error401();
 	}
 
 
-	public function permissions(&$user) {
+	public function permissions(&$account) {
 		global $site;
 
 		//USER ACCESS RIGHTS
-		$user['permission'] = $site['permission'];
+		$account['permission'] = $site['permission'];
 
-		$types = explode(',', $user['user_permission']);
-		foreach ($types as $key => $val) { $user['permission'][$val] = 1; }
+		$types = explode(',', $account['user_permission']);
+		foreach ($types as $key => $val) { $account['permission'][$val] = 1; }
 
-		if (!empty($user['user_adfree'])) {
-			if ($user['user_adfree'] > $this->time()) {
-				$user['permission']['adfree'] = 1;
+		if (!empty($account['user_adfree'])) {
+			if ($account['user_adfree'] > $this->time()) {
+				$account['permission']['adfree'] = 1;
 			}
 		}
 	}
