@@ -410,6 +410,8 @@ class altaform extends altaformlite {
 		//USER ACCESS RIGHTS
 		$account['permission'] = $site['permission'];
 
+		if (empty($account['user_permission'])) return;
+
 		$types = explode(',', $account['user_permission']);
 		foreach ($types as $key => $val) { $account['permission'][$val] = 1; }
 
