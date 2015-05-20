@@ -1,10 +1,10 @@
 <?php
 
 //Tiny But Strong Template Library (TBS)
-require_once('_tbs/tbs_class.php');
+require_once('_tbx/tbx_class.php');
 
 
-class altaformlite extends clsTinyButStrong {
+class altaformlite extends clsTinyButXtreme {
 	public function __construct() {
 		parent::__construct();
 
