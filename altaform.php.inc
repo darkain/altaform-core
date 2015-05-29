@@ -577,9 +577,9 @@ class altaform extends altaformlite {
 
 		if (empty($data)) {
 			$db->delete('pudl_queue', [
-				"`queue_user`='$user[user_id]'",
-				"`queue_service`='$service'",
-				"`queue_type`='$type'",
+				"queue_user='$user[user_id]'",
+				"queue_service='$service'",
+				"queue_type='$type'",
 			]);
 			return;
 		}
@@ -597,7 +597,7 @@ class altaform extends altaformlite {
 			[
 				'queue_time'	=> $this->time(),
 				'queue_message'	=> json_encode($data),
-				'queue_count'	=> ['INCREMENT'=>1],
+				'queue_count'	=> pudlFunction::increment(1),
 			]
 		);
 	}
