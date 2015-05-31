@@ -86,15 +86,15 @@ class cdnImporter {
 		//setup data to be inserted into the database
 		if (empty($data['parent'])) {
 			$insert = array(
-				'file_hash'		=> array('UNHEX'=>"'$data[hash]'"),
+				'file_hash'		=> pudlFunction::unhex($data['hash']),
 				'file_size'		=> filesize($path),
 				'file_name'		=> $data['name'],
 				'mime_id'		=> $data['mime']['mime_id'],
 			);
-			
+
 		} else {
 			$insert = array(
-				'thumb_hash'	=> array('UNHEX'=>"'$data[hash]'"),
+				'thumb_hash'	=> pudlFunction::unhex($data['hash']),
 				'file_hash'		=> $data['parent'],
 				'thumb_size'	=> filesize($path),
 				'thumb_type'	=> $data['thumb_type'],
@@ -124,8 +124,8 @@ class cdnImporter {
 		$temp = tempnam(sys_get_temp_dir(), 'thumb-');
 		unlink($temp);
 		$temp .= '.' . $data['mime_ext'];
-		
-		
+
+
 		//RESIZED IMAGES
 		$resize = cdnImporter::resize($data['file_cdn'], $temp);
 		if (is_array($resize)) {
@@ -213,7 +213,7 @@ class cdnImporter {
 			}
 
 			//NEW FILENAME OMGZ!
-			$image[$size] = preg_replace('/^.*\./', '$0x'.$size.'.', $dest_image);		    
+			$image[$size] = preg_replace('/^.*\./', '$0x'.$size.'.', $dest_image);
 
 			if (@imagecopyresampled($canvas, $data, 0, 0, $x, $y, $size, $size, $square, $square)) {
 				switch( strtolower(preg_replace('/^.*\./', '', $dest_image)) ) {

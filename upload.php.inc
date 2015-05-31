@@ -74,7 +74,7 @@ class fileImporter {
 		//setup data to be inserted into the database
 		if (empty($data['parent'])) {
 			$insert = array(
-				'file_hash'		=> pudlFunction::unhex("'$data[md5]'"),
+				'file_hash'		=> pudlFunction::unhex($data['md5']),
 				'file_size'		=> filesize($path),
 				'file_uploaded'	=> $db->time(),
 				'file_name'		=> $db->safe($data['name']),
@@ -87,7 +87,7 @@ class fileImporter {
 			//link image to current user account
 			if (!empty($user['user_id'])) {
 				$db->insertIgnore('pudl_file_user', array(
-					'file_hash'		=> pudlFunction::unhex("'$data[md5]'"),
+					'file_hash'		=> pudlFunction::unhex($data['md5']),
 					'user_id'		=> $user['user_id'],
 					'user_time'		=> $db->time(),
 				));
@@ -95,14 +95,14 @@ class fileImporter {
 
 		} else {
 			$insert = array(
-				'thumb_hash'	=> pudlFunction::unhex("'$data[md5]'"),
+				'thumb_hash'	=> pudlFunction::unhex($data['md5']),
 				'file_hash'		=> $data['parent'],
 				'thumb_size'	=> filesize($path),
-				'thumb_type'	=> $data['thumb_type'],
+				'thumb_type'	=> (string)$data['thumb_type'],
 			);
 
 			//insert file information into database
-			$db->insertIgnore('pudl_file_thumb', $insert);
+			$db->insert('pudl_file_thumb', $insert, false, 'thumb_hash=thumb_hash');
 		}
 
 		if ($data['mime'] !== false) $insert += $data['mime'];
