@@ -44,9 +44,11 @@ function error403($text='') {
 function error404($text='') {
 	global $afurl, $get, $af;
 
-	if (empty($afurl->all)) $afurl->all = '';
-	if ($get->server('HTTP_REFERER') === $afurl->all) {
-		$af->redirect("$afurl->host$afurl->base/", 302);
+	if (!empty($afurl)) {
+		if (empty($afurl->all)) $afurl->all = '';
+		if ($get->server('HTTP_REFERER') === $afurl->all) {
+			$af->redirect("$afurl->host$afurl->base/", 302);
+		}
 	}
 
 	afError(
