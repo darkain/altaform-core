@@ -59,7 +59,7 @@ function _pudl_group($thumbsize) {
 
 function _pudl_gallery_costume($thumbsize) {
 	$table = _pudl_gallery($thumbsize);
-	
+
 	$table[] = [
 		'left' => ['gl1'=>'pudl_group_label'],
 		'clause' => 'ga.series_id=gl1.group_label_id'
@@ -78,6 +78,14 @@ function _pudl_gallery_costume($thumbsize) {
 	return $table;
 }
 
+
+
+function af_dump($var, $die=true) {
+	echo '<pre>';
+	var_dump($var);
+	echo '</pre>';
+	if ($die) exit;
+}
 
 
 
