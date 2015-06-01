@@ -138,6 +138,11 @@ class altaform extends altaformlite {
 	}
 
 
+	public function headers($key, $data) {
+		$this->_header[$key] = $data;
+	}
+
+
 	public function footerHTML() {
 		global $site;
 
@@ -637,7 +642,7 @@ class altaform extends altaformlite {
 	}
 
 
-	private $_header;
+	protected $_header;
 	private $_script;
 	private $_style;
 	private $_meta;
