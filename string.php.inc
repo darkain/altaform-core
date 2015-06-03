@@ -158,12 +158,12 @@ class afstring {
 
 
 
-	function maxDigits($value, $digits) {
+	static function maxDigits($value, $digits) {
 		return round($value, max(0, $digits-strlen((string)round($value))));
 	}
 
 
-	function fromBytes($value, $format=false, $sep=' ') {
+	static function fromBytes($value, $format=false, $sep=' ') {
 		if ($format === false) $format = BYTE_FORMAT_KIB;
 
 		switch ($format) {
@@ -194,7 +194,7 @@ class afstring {
 	}
 
 
-	function toBytes($string) {
+	static function toBytes($string) {
 		$value = (float)trim($string);
 		$rest  = trim(substr($string, strlen((string)$value)));
 		switch (strtoupper($rest)) {  //TODO: strip out all non-alpha characters!
