@@ -75,6 +75,19 @@ class altaformlite extends clsTinyButXtreme {
 		return parent::MergeBlock($BlockLst, $SrcId, $Query, $QryPrms);
 	}
 
+	//Custom merger - both field and block supported!
+	public function merge($data) {
+		foreach ($data as $key => &$val) {
+			if (is_string($val)  ||  is_int($val)  ||  is_float($val)) {
+				$this->field($key, $val);
+			} else if (isset($val[0])  ||  empty($val)) {
+				$this->block($key, $val);
+			} else {
+				$this->field($key, $val);
+			}
+		} unset($val);
+	}
+
 
 	public function path() {
 		return self::$_path;
