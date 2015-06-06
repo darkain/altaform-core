@@ -66,8 +66,8 @@ class altaformlite extends clsTinyButXtreme {
 	}
 
 	//Shorthand name for MergeField from TBS
-	public function field($NameLst, $Value='assigned', $IsUserFct=false, $DefaultPrm=false) {
-		return parent::MergeField($NameLst, $Value, $IsUserFct, $DefaultPrm);
+	public function field($NameLst, $Value='assigned', $DefaultPrm=false) {
+		return parent::MergeField($NameLst, $Value, $DefaultPrm);
 	}
 
 	//Shorthand name for MergeBlock from TBS

@@ -616,7 +616,7 @@ class altaform extends altaformlite {
 
 		ob_start();
 		$ret = parent::meth_Misc_Alert($Src, $Msg, $NoErrMsg, $SrcType);
-		$text = ob_get_clean();
+		$text = trim(ob_get_clean());
 
 		_af_log_error([
 			'time'		=> date('r'),
@@ -628,7 +628,7 @@ class altaform extends altaformlite {
 			'server'	=> $get->server('X-PHP-IP'),
 			'remote'	=> $get->server('REMOTE_ADDR'),
 			'agent'		=> $get->server('HTTP_USER_AGENT'),
-		], false);
+		], $this->debug());
 
 		echo $text;
 		return $ret;
