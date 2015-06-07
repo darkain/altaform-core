@@ -82,7 +82,7 @@ function _pudl_gallery_costume($thumbsize) {
 
 function af_dump($var, $die=true) {
 	echo '<pre>';
-	var_dump($var);
+	var_export($var);
 	echo '</pre>';
 	if ($die) exit;
 }
