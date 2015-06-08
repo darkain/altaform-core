@@ -125,7 +125,7 @@ function _af_log_error($text, $die=true) {
 		FILE_APPEND
 	);
 
-	_af_email_error($out);
+	_af_email_error($out, !empty($arr['details']) ? $arr['details'] : '');
 
 	if (!empty($db)) $db->rollback();
 
@@ -138,13 +138,13 @@ function _af_log_error($text, $die=true) {
 
 
 
-function _af_email_error($text) {
+function _af_email_error($text, $title='') {
 	global $site;
 
 	if (!empty($site['error_email'])) {
 		@mail(
 			$site['error_email'],
-			date('r') . (!empty($site['error_tag']) ? " @$site[error_tag]" : ''),
+			date('r') . " $title" . (!empty($site['error_tag']) ? " @$site[error_tag]" : ''),
 			$text
 		);
 	}
