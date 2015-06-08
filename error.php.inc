@@ -138,16 +138,25 @@ function _af_log_error($text, $die=true) {
 
 
 
+
 function _af_email_error($text, $title='') {
 	global $site;
 
-	if (!empty($site['error_email'])) {
-		@mail(
-			$site['error_email'],
-			date('r') . " $title" . (!empty($site['error_tag']) ? " @$site[error_tag]" : ''),
-			$text
-		);
+	if (empty($site['error_email'])) return;
+
+	$tag = !empty($site['error_tag']) ? $site['error_tag'] : '';
+	if (is_array($tag)) {
+		$tag = '@'.implode("\r\n@", $tag);
+	} else if (!empty($tag)) {
+		$tag = '@' . $tag;
 	}
+	$tag = str_replace('@@', '@', trim($tag));
+
+	@mail(
+		$site['error_email'],
+		date('r') . ' ' . $title,
+		$tag . "\r\n" . $text
+	);
 }
 
 
