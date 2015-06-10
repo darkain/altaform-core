@@ -63,6 +63,9 @@ class afurl {
 			if (is_file("$site[root]/index.php")) {
 				return "$site[root]/index.php";
 
+			} if (is_file("$site[root]/index.hh")) {
+				return "$site[root]/index.hh";
+
 			} else if (is_file("$site[root]/index.tpl")) {
 				$af->renderPage("$site[root]/index.tpl");
 				return true;
@@ -83,6 +86,9 @@ class afurl {
 					if (is_file('index.php')) {
 						return 'index.php';
 
+					} else if (is_file('index.hh')) {
+						return 'index.hh';
+
 					} else if (is_file('index.tpl')) {
 						$af->renderPage('index.tpl');
 						return true;
@@ -98,6 +104,9 @@ class afurl {
 				if (is_file("$file.php")) {
 					return "$file.php";
 
+				} else if (is_file("$file.hh")) {
+					return "$file.hh";
+
 				} else if (is_file("$file.tpl")) {
 					$af->renderPage("$file.tpl");
 					return true;
@@ -106,6 +115,10 @@ class afurl {
 					$this->virtualize($i);
 					return 'virtual.php';
 
+				} else if (is_file('virtual.hh')) {
+					$this->virtualize($i);
+					return 'virtual.hh';
+
 				} else if (is_dir('virtual')) {
 					$this->virtualize($i);
 					chdir('virtual');
@@ -113,9 +126,14 @@ class afurl {
 					if ($count-$i == 1) {
 						if (is_file('index.php')) {
 							return 'index.php';
+
+						}if (is_file('index.hh')) {
+							return 'index.hh';
+
 						} else if (is_file('index.tpl')) {
 							$af->renderPage('index.tpl');
 							return true;
+
 						} else {
 							error404();
 						}
@@ -132,6 +150,10 @@ class afurl {
 			} else if (is_file('virtual.php')) {
 				$this->virtualize($i);
 				return 'virtual.php';
+
+			} else if (is_file('virtual.hh')) {
+				$this->virtualize($i);
+				return 'virtual.hh';
 
 			} else {
 				error404();
