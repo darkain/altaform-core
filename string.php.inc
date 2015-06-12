@@ -45,6 +45,11 @@ class afstring {
 	}
 
 
+	static function stripwhitespace($string) {
+		return str_replace(['+', ' ', "\t", "\r", "\n", "\0", "\x0B"], '', $string);
+	}
+
+
 	static function truncateword($string, $length) {
 		$length = (int) $length;
 		if (strlen($string) <= $length) return $string;
