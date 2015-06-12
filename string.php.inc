@@ -261,36 +261,3 @@ class afstring {
 		'heb' => '/[\x{0590}-\x{05ff}]/u',
 	];
 }
-
-
-
-
-function prettyExif(array &$exif, $html=true) {
-	if (!empty($exif['FocalLength'])) {
-		$pos = strpos($exif['FocalLength'], '/');
-		if (!empty($pos)) {
-			$num1 = (int)substr($exif['FocalLength'],0,$pos);
-			$num2 = (int)substr($exif['FocalLength'],$pos+1);
-			if ($num1 > 0  &&  $num2 > 0) {
-				$exif['FocalLength'] = $num1 / $num2;
-			} else {
-				$exif['FocalLength'] = 0;
-			}
-		}
-	}
-
-	foreach ($exif as &$item) {
-		if (is_array($item)) {
-			prettyExif($item);
-		} else if (is_string($item)) {
-			$item = str_replace('f/', 'ƒ/', $item);
-			$item = htmlspecialchars($item);
-
-			if ($html) {
-				$href = '|(https?://([\d\w\.-]+\.[\w\.]{2,6})[^\s\]\[\<\>]*/?)|i';
-				$url  = '<a href="$1" target="_blank">$2</a>';
-				$item = preg_replace($href, $url, $item);
-			}
-		}
-	}
-}
