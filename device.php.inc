@@ -35,12 +35,14 @@ class afdevice {
 
 	public function __construct() { self::device(); }
 
+	public function __invoke() { return self::device(); }
 
-	static function device() {	
+
+	static function device() {
 		global $get;
 
 		if (self::$device !== false) return self::$device;
-		
+
 		//Set User Agent = $agent
 		$agent = $get->server('HTTP_USER_AGENT');
 
@@ -51,7 +53,7 @@ class afdevice {
 
 		// Check if user agent is a TV Based Gaming Console
 		} else if ((preg_match('/Xbox|PLAYSTATION|Wii/i', $agent))) {
-			self::$device = 'tv'; 
+			self::$device = 'tv';
 
 		// Check if user agent is a Tablet
 		} else if((preg_match('/iP(a|ro)d/i', $agent)) || (preg_match('/tablet/i', $agent)) && (!preg_match('/RX-34/i', $agent)) || (preg_match('/FOLIO/i', $agent))) {
@@ -69,7 +71,7 @@ class afdevice {
 		} else if ((preg_match('/GT-P10|SC-01C|SHW-M180S|SGH-T849|SCH-I800|SHW-M180L|SPH-P100|SGH-I987|zt180|HTC(.Flyer|\_Flyer)|Sprint.ATP51|ViewPad7|pandigital(sprnova|nova)|Ideos.S7|Dell.Streak.7|Advent.Vega|A101IT|A70BHT|MID7015|Next2|nook/i', $agent)) || (preg_match('/MB511/i', $agent)) && (preg_match('/RUTEM/i', $agent))) {
 			self::$device = 'tablet';
 
-		// Check if user agent is unique Mobile User Agent	
+		// Check if user agent is unique Mobile User Agent
 		} else if ((preg_match('/BOLT|Fennec|Iris|Maemo|Minimo|Mobi|mowser|NetFront|Novarra|Prism|RX-34|Skyfire|Tear|XV6875|XV6975|Google.Wireless.Transcoder/i', $agent))) {
 			self::$device = 'mobile';
 
