@@ -13,10 +13,10 @@ class afurl {
 		if (!empty($site['file']))		$this->file		= $site['file'];
 
 		$this->uri		= urldecode($get->server('REQUEST_URI', '', _GETVAR_BASIC));
+		$this->domain	= $get->server('HTTP_HOST', '', _GETVAR_BASIC);
 		$this->referer	= $get->server('HTTP_REFERER', '', _GETVAR_BASIC);
 		$this->https	= strtolower($get->server('HTTPS'));
 		$this->https	= ($this->https !== 'off'  &&  !empty($this->https));
-		$this->domain	= $get->server('HTTP_HOST', '', _GETVAR_BASIC);
 		$this->host		= ($this->https?'https://':'http://') . $this->domain;
 		$this->af_host	= $this->host;
 		$this->safe		= [];
@@ -24,8 +24,9 @@ class afurl {
 		$this->parts	= (array)parse_url($this->uri);
 		if (empty($this->parts['path'])) error404();
 
-		if (substr($this->parts['path'], 0, 1) != '/') $this->parts['path'] = '/' . $this->parts['path'];
-		if (substr($this->parts['path'], -1) != '/') $this->parts['path'] .= '/';
+		if (substr($this->parts['path'],  0, 1) !== '/') $this->parts['path']  = '/' . $this->parts['path'];
+		if (substr($this->parts['path'], -1, 1) !== '/') $this->parts['path'] .= '/';
+		if (substr($this->parts['path'],  1, 1) === '_') error500();
 
 		$this->part = explode('/', $this->parts['path']);
 		$this->url = '/';
@@ -37,7 +38,7 @@ class afurl {
 
 		$this->all	= $this->host . $this->base . $this->url;
 		$this->full	= $this->all;
-		if (!empty($this->parts['query'])  &&  $this->parts['query']!='jq=1') {
+		if (!empty($this->parts['query'])  &&  $this->parts['query']!=='jq=1') {
 			$this->all .= '?' . $this->parts['query'];
 		}
 
@@ -63,7 +64,7 @@ class afurl {
 			if (is_file("$site[root]/index.php")) {
 				return "$site[root]/index.php";
 
-			} if (is_file("$site[root]/index.hh")) {
+			} else if (is_file("$site[root]/index.hh")) {
 				return "$site[root]/index.hh";
 
 			} else if (is_file("$site[root]/index.tpl")) {
@@ -127,7 +128,7 @@ class afurl {
 						if (is_file('index.php')) {
 							return 'index.php';
 
-						}if (is_file('index.hh')) {
+						} else if (is_file('index.hh')) {
 							return 'index.hh';
 
 						} else if (is_file('index.tpl')) {
