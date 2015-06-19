@@ -235,14 +235,14 @@ class altaform extends altaformlite {
 	public function updateUser($data, $safe=false) {
 		global $db, $user;
 		if (!$this->loggedIn()) return false;
-		return $db->update('pudl_user', $data, "`user_id`='$user[user_id]'", $safe);
+		return $db->updateId('pudl_user', $data, 'user_id', $user, $safe);
 	}
 
 
 	public function updateProfile($data, $safe=false) {
 		global $db, $user;
 		if (!$this->loggedIn()) return false;
-		return $db->update('pudl_user_profile', $data, "`user_id`='$user[user_id]'", $safe);
+		return $db->updateId('pudl_user_profile', $data, 'user_id', $user, $safe);
 	}
 
 
