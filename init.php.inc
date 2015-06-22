@@ -118,7 +118,7 @@ require_once('url.php.inc');
 
 
 //Instantiate Altaform class
-$af = new $altaform();
+$af = altaform::create();
 $af->login();
 
 //Bad URL

@@ -12,9 +12,6 @@ require_once('time.php.inc');
 //Altaform Lite - the basic rendering system
 require_once('altaform-lite.php.inc');
 
-//Altaform Class Name - replace this if you inherit Altaform!
-$altaform = 'altaform';
-
 
 class altaform extends altaformlite {
 	public function __construct() {
@@ -31,6 +28,11 @@ class altaform extends altaformlite {
 		$this->_meta	= [];
 		$this->_prefs	= [];
 		$this->_footer	= 1;
+	}
+
+
+	public static function create() {
+		return new self::$class();
 	}
 
 
@@ -597,11 +599,12 @@ class altaform extends altaformlite {
 	}
 
 
-	protected $_header;
-	private $_script;
-	private $_style;
-	private $_meta;
-	private $_prefs;
-	private $_types;
-	public  $_footer;
+	protected	$_header;
+	private		$_script;
+	private		$_style;
+	private		$_meta;
+	private		$_prefs;
+	private		$_types;
+	public		$_footer;
+	public static $class = 'altaform';
 }
