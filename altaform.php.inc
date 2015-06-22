@@ -31,9 +31,6 @@ class altaform extends altaformlite {
 		$this->_meta	= [];
 		$this->_prefs	= [];
 		$this->_footer	= 1;
-
-		//Various data types Altaform manages
-		require_once('types.php.inc');
 	}
 
 
@@ -530,49 +527,6 @@ class altaform extends altaformlite {
 		}
 
 		return $exif;
-	}
-
-
-	public function getMeta($type, $id, $key=false) {
-		global $db;
-
-		if (!is_numeric($type)) {
-			if (!isset($this->_types[$type])) return false;
-			$type = $this->_types[$type];
-		}
-		$type = (int) $type;
-		$id   = (int) $id;
-
-		if (empty($key)) { //get ALL keys
-			return $db->rows('pudl_meta', [
-				"`meta_type`='$type'",
-				"`meta_object`='$id'",
-			]);
-		}
-
-		$key = $db->safe($key);
-		return $db->rows('pudl_meta', [
-			"`meta_type`='$type'",
-			"`meta_object`='$id'",
-			"`meta_key`='$key'",
-		]);
-	}
-
-
-	public function setMeta($type, $id, $key, $value) {
-		global $db;
-
-		if (!is_numeric($type)) {
-			if (!isset($this->_types[$type])) return false;
-			$type = $this->_types[$type];
-		}
-
-		$db->insert('pudl_meta', [
-			'meta_type'   => (int) $type,
-			'meta_object' => (int) $id,
-			'meta_key'    => $key,
-			'meta_value'  => $value,
-		], true, ['meta_value' => $value]);
 	}
 
 
