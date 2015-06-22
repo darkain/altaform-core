@@ -49,6 +49,8 @@ function error404($text='') {
 		if ($get->server('HTTP_REFERER') === $afurl->all) {
 			$af->redirect("$afurl->host$afurl->base/", 302);
 		}
+
+		$text = htmlspecialchars($afurl->all) . '<br/>' . $text;
 	}
 
 	afError(

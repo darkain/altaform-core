@@ -88,6 +88,13 @@ class altaformlite extends clsTinyButXtreme {
 		} unset($val);
 	}
 
+	//Another merger helper function!
+	public function mergePage($filename, $data) {
+		$this->load($filename);
+		$this->merge($data);
+		$this->render();
+	}
+
 
 	public function path() {
 		return self::$_path;

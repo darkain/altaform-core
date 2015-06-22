@@ -2,8 +2,8 @@
 
 function _pudl_thumb($table, $field, $thumbsize) {
 	return [
-		$table,
-		[
+		998 => $table,
+		999 => [
 			'left' => ['th' => 'pudl_file_thumb'],
 			'clause' => [
 				$field.'=th.file_hash',
