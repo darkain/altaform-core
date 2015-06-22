@@ -350,7 +350,7 @@ class altaform extends altaformlite {
 		$session = $db->safe(empty($session) ? session_id() : $session);
 
 		if (!empty($session)) {
-			$db->update('pudl_user', "user_session=NULL", "user_session='$session'");
+			$db->updateId('pudl_user', ['user_session'=>NULL], 'user_session', $session);
 			$db->purge("AF-SESSION-$session");
 		}
 
