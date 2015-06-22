@@ -82,15 +82,15 @@ class fileImporter {
 			);
 
 			//insert file information into database
-			$db->insertIgnore('pudl_file', $insert);
+			$db->insert('pudl_file', $insert, false, ['mime_id'=>$data['mime']['mime_id']]);
 
 			//link image to current user account
 			if (!empty($user['user_id'])) {
-				$db->insertIgnore('pudl_file_user', array(
+				$db->insert('pudl_file_user', array(
 					'file_hash'		=> pudlFunction::unhex($data['md5']),
 					'user_id'		=> $user['user_id'],
 					'user_time'		=> $db->time(),
-				));
+				), false, 'file_hash=file_hash');
 			}
 
 		} else {
@@ -138,11 +138,11 @@ class fileImporter {
 			if (!empty($resize['exif'])) {
 				$encode = @json_encode($resize['exif']);
 				if (!empty($encode)) {
-					$db->insertIgnore('pudl_file_meta',	array(
+					$db->insert('pudl_file_meta', [
 						'file_hash'			=> $data['file_hash'],
 						'file_meta_name'	=> 'exif',
 						'file_meta_value'	=> $db->safe($encode),
-					));
+					], false, 'file_hash=file_hash');
 				}
 			}
 
