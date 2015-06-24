@@ -13,7 +13,6 @@ class afurl extends afclosure {
 		if (!empty($site['static']))	$this->static	= $site['static'];
 		if (!empty($site['upload']))	$this->upload	= $site['upload'];
 		if (!empty($site['img']))		$this->img		= $site['img'];
-		if (!empty($site['file']))		$this->file		= $site['file'];
 
 		$this->uri		= urldecode($get->server('REQUEST_URI', '', _GETVAR_BASIC));
 		$this->domain	= $get->server('HTTP_HOST', '', _GETVAR_BASIC);
@@ -193,7 +192,6 @@ class afurl extends afclosure {
 	public $cdn			= '';
 	public $static		= '';
 	public $img			= '';
-	public $file		= '';
 	public $upload		= '';
 	public $parts		= [];
 	public $safe		= [];

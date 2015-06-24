@@ -10,7 +10,9 @@ class afclosure {
 	}
 
 	public function __call($function, $arguements) {
-		return call_user_func_array($this->_functions[$function], $arguements);
+		if (isset($this->_functions[$function])) {
+			return call_user_func_array($this->_functions[$function], $arguements);
+		}
 	}
 
 	private $_functions	= [];
