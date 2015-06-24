@@ -1,8 +1,11 @@
 <?php
 
-class afurl {
-	public function __construct() {
-		global $db, $get, $site;
+require_once('closure.php.inc');
+
+
+class afurl extends afclosure {
+	public function construct($db=false) {
+		global $get, $site;
 
 		//Configurable paths
 		if (!empty($site['base']))		$this->base		= $site['base'];
@@ -19,7 +22,6 @@ class afurl {
 		$this->https	= ($this->https !== 'off'  &&  !empty($this->https));
 		$this->host		= ($this->https?'https://':'http://') . $this->domain;
 		$this->af_host	= $this->host;
-		$this->safe		= [];
 
 		$this->parts	= (array)parse_url($this->uri);
 		if (empty($this->parts['path'])) error404();
@@ -31,7 +33,7 @@ class afurl {
 		$this->part = explode('/', $this->parts['path']);
 		$this->url = '/';
 		foreach ($this->part as $key => $val) {
-			$this->safe[] = isset($db) ? $db->safe($val) : @mysql_real_escape_string($val);
+			$this->safe[] = !empty($db) ? $db->safe($val) : @mysql_real_escape_string($val);
 			if (strlen($val) < 1) continue;
 			$this->url .= urlencode($val) . '/';
 		}
@@ -41,7 +43,6 @@ class afurl {
 		if (!empty($this->parts['query'])  &&  $this->parts['query']!=='jq=1') {
 			$this->all .= '?' . $this->parts['query'];
 		}
-
 	}
 
 

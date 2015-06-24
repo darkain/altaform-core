@@ -42,6 +42,9 @@ require_once('common.php.inc');
 //Altaform Base Code
 require_once('altaform.php.inc');
 
+//URL Parser
+require_once('url.php.inc');
+
 
 //Host Information for Config
 $host = $get->server('HTTP_HOST');
@@ -113,16 +116,19 @@ if (isset($db)) {
 }
 
 
-//URL Parser
-require_once('url.php.inc');
+
+//Initialize afurl
+$afurl->construct($db);
 
 
-//Instantiate Altaform class
+//Initialize Altaform class
 $af = altaform::create();
 $af->login();
 
+
 //Bad URL
 if (substr($afurl->uri,0,2) === '//') $af->redirect('/');
+
 
 //Parse the URL and load the page!
 $afpath = $afurl->process();
