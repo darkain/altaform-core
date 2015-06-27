@@ -175,26 +175,45 @@ class altaform extends altaformlite {
 	public function renderPage($filename, $field=false, $data=false) {
 		global $title, $og;
 
+		//Pull the contents of the template BEFORE anything else!
 		$text = file_get_contents($filename);
 
 		//PULL OUT TITLE TAG
 		preg_match("/\<title[^>]*>(.*)\<\/title\>/", $text, $matches);
 		if (!empty($matches[1])) {
-			$title = $matches[1];
+			$title = $this->renderString($matches[1]);
 			$text = preg_replace("/\<title[^>]*>(.*)\<\/title\>/", '', $text);
 		}
 
 		//PULL OUT DESCRIPTION TAG
 		preg_match("/\<description[^>]*>(.*)\<\/description\>/", $text, $matches);
 		if (!empty($matches[1])) {
-			$og['description'] = $matches[1];
+			$og['description'] = $this->renderString($matches[1]);
 			$text = preg_replace("/\<description[^>]*>(.*)\<\/description\>/", '', $text);
+		}
+
+		//PULL OUT IMAGE TAG
+		preg_match("/\<image[^>]*>(.*)\<\/image\>/", $text, $matches);
+		if (!empty($matches[1])) {
+			$og['image'] = $this->renderString($matches[1]);
+			$text = preg_replace("/\<image[^>]*>(.*)\<\/image\>/", '', $text);
+
+			if (!empty($og['twittername'])  &&  !empty($og['twitterdomain'])) {
+				$this->metas([
+					['name'=>'twitter:card',		'content'=>'photo'],
+					['name'=>'twitter:site',		'content'=>$og['twittername']],
+					['name'=>'twitter:domain',		'content'=>$og['twitterdomain']],
+					['name'=>'twitter:title',		'content'=>$title],
+					['name'=>'twitter:image',		'content'=>$og['image']],
+					['name'=>'twitter:description',	'content'=>$og['description']],
+				]);
+			}
 		}
 
 		//Render all the things!
 		$this->header();
 
-			//Load page's template BEFORE header
+			//Load page's template
 			$this->loadString($text);
 			if ($field !== false  &&  $data !== false) {
 				$this->field($field, $data);
