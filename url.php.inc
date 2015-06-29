@@ -1,9 +1,12 @@
 <?php
 
-require_once('closure.php.inc');
+require_once('_closure/closure.php');
 
 
-class afurl extends afclosure {
+class afurl {
+	use closures;
+
+
 	public function construct($db=false) {
 		global $get, $site;
 
