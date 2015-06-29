@@ -178,6 +178,13 @@ class altaform extends altaformlite {
 		//Pull the contents of the template BEFORE anything else!
 		$text = file_get_contents($filename);
 
+		//PULL OUT REQUIRED PERMISSIONS TAG
+		preg_match("/\<permission[^>]*>(.*)\<\/permission\>/", $text, $matches);
+		if (!empty($matches[1])) {
+			$this->requirePermission($matches[1]);
+			$text = preg_replace("/\<permission[^>]*>(.*)\<\/permission\>/", '', $text);
+		}
+
 		//PULL OUT TITLE TAG
 		preg_match("/\<title[^>]*>(.*)\<\/title\>/", $text, $matches);
 		if (!empty($matches[1])) {
