@@ -332,11 +332,6 @@ class altaform extends altaformlite {
 	public function login($session=false) {
 		global $user, $db, $site;
 
-		if (!empty($site['af_login'])) {
-			$site['af_login']($session);
-			return;
-		}
-
 		if (!isset($db)) return;
 
 		$session = $db->safe(empty($session) ? session_id() : $session);
