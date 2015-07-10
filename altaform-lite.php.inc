@@ -65,6 +65,13 @@ class altaformlite extends clsTinyButXtreme {
 		return $this->renderToString();
 	}
 
+
+	public function fileToString($filename) {
+		$this->load($filename);
+		return $this->renderToString();
+	}
+
+
 	//Shorthand name for MergeField from TBS
 	public function field($NameLst, $Value='assigned', $DefaultPrm=false) {
 		return parent::MergeField($NameLst, $Value, $DefaultPrm);
