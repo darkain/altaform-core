@@ -260,7 +260,9 @@ class altaform extends altaformlite {
 	public function updateUser($data, $safe=false) {
 		global $db, $user;
 		if (!$this->loggedIn()) return false;
-		return $db->updateId('pudl_user', $data, 'user_id', $user, $safe);
+		$return = $db->updateId('pudl_user', $data, 'user_id', $user, $safe);
+		$this->purgeSession();
+		return $return;
 	}
 
 
@@ -371,7 +373,7 @@ class altaform extends altaformlite {
 
 		if (!empty($session)) {
 			$db->updateId('pudl_user', ['user_session'=>NULL], 'user_session', $session);
-			$db->purge("AF-SESSION-$session");
+			$this->purgeSession();
 		}
 
 		$user = $db->row('pudl_user', "user_id=0");
@@ -385,9 +387,15 @@ class altaform extends altaformlite {
 					$params['secure'], $params['httponly']
 				);
 			}
-
 			session_destroy();
 		}
+	}
+
+
+	public function purgeSession($session=false) {
+		global $db;
+		$session = $db->safe(empty($session) ? session_id() : $session);
+		$db->purge("AF-SESSION-$session");
 	}
 
 
