@@ -10,6 +10,8 @@ class afurl {
 	public function construct($db=false) {
 		global $get, $site;
 
+		$this->directory = getcwd();
+
 		//Configurable paths
 		if (!empty($site['base']))		$this->base		= $site['base'];
 		if (!empty($site['cdn']))		$this->cdn		= $site['cdn'];
@@ -61,6 +63,10 @@ class afurl {
 
 	public function process() {
 		global $site, $af;
+
+		//Reset virtual pathing, in case this is a reprocess
+		$this->virtual = [];
+
 
 		//	load our web page!!
 		if (count($this->part) < 3) {
@@ -200,6 +206,8 @@ class afurl {
 	public $safe		= [];
 	public $virtual		= [];
 	public $id			= 0;
+	public $reparse		= true;
+	public $directory	= '';
 }
 
 $afurl = new afurl();

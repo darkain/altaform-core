@@ -131,8 +131,12 @@ if (substr($afurl->uri,0,2) === '//') $af->redirect('/');
 
 
 //Parse the URL and load the page!
-$afpath = $afurl->process();
-if (is_string($afpath)) require($afpath);
+while ($afurl->reparse) {
+	$afurl->reparse = false;
+	$afpath = $afurl->process();
+	if (is_string($afpath)) require($afpath);
+	chdir($afurl->directory);
+}
 
 
 //Force disconnect of database before other destruction happens
