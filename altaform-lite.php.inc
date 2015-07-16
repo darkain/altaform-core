@@ -85,7 +85,9 @@ class altaformlite extends clsTinyButXtreme {
 	//Custom merger - both field and block supported!
 	public function merge($data) {
 		foreach ($data as $key => &$val) {
-			if (is_string($val)  ||  is_int($val)  ||  is_float($val)) {
+			if (is_object($val)) {
+				trigger_error('altaform::merge does not support type Object for key: ' . $key);
+			} else if (is_string($val)  ||  is_int($val)  ||  is_float($val)) {
 				$this->field($key, $val);
 			} else if (isset($val[0])  ||  empty($val)) {
 				$this->block($key, $val);
