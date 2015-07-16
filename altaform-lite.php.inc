@@ -89,6 +89,8 @@ class altaformlite extends clsTinyButXtreme {
 				trigger_error('altaform::merge does not support type Object for key: ' . $key);
 			} else if (is_string($val)  ||  is_int($val)  ||  is_float($val)) {
 				$this->field($key, $val);
+			} else if ($val === false) {
+				$this->field($key, []);
 			} else if (isset($val[0])  ||  empty($val)) {
 				$this->block($key, $val);
 			} else {
