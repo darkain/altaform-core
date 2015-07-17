@@ -11,6 +11,7 @@ class afurl {
 		global $get, $site;
 
 		$this->directory = getcwd();
+		$this->db = $db;
 
 		//Configurable paths
 		if (!empty($site['base']))		$this->base		= $site['base'];
@@ -37,7 +38,7 @@ class afurl {
 		$this->part = explode('/', $this->parts['path']);
 		$this->url = '/';
 		foreach ($this->part as $key => $val) {
-			$this->safe[] = !empty($db) ? $db->safe($val) : @mysql_real_escape_string($val);
+			$this->safe[] = $this->safe($val);
 			if (strlen($val) < 1) continue;
 			$this->url .= urlencode($val) . '/';
 		}
@@ -59,6 +60,36 @@ class afurl {
 	public function user($user) {
 		return $this->base . '/' . empty($user['user_url']) ? $user['user_id'] : $user['user_url'] . '/';
 	}
+
+
+
+	public function reparse($prepend=[], $append=[]) {
+		if (empty($prepend)  &&  empty($append)) return;
+
+		if (!is_array($prepend)) $prepend = [$prepend];
+		if (!is_array($append))  $append  = [$append];
+
+		$prepend[] = '';
+		$append[]  = '';
+
+		array_shift($this->part);
+		array_shift($this->safe);
+		array_pop($this->part);
+		array_pop($this->safe);
+
+		foreach ($prepend as $item) {
+			array_unshift($this->part, $item);
+			array_unshift($this->safe, $this->safe($item));
+		}
+
+		foreach ($append as $item) {
+			$this->part[] = $item;
+			$this->safe[] = $this->safe($item);
+		}
+
+		$this->reparse = true;
+	}
+
 
 
 	public function process() {
@@ -188,6 +219,20 @@ class afurl {
 	}
 
 
+	private function safe($item) {
+		return !empty($this->db) ? $this->db->safe($item) : @mysql_real_escape_string($item);
+	}
+
+
+	public function __debugInfo() {
+		$dump = [];
+		foreach ($this as $key => $item) {
+			if (!is_object($item)) $dump[$key] = $item;
+		}
+		return $dump;
+	}
+
+
 	public $https		= false;
 	public $url			= '';
 	public $uri			= '';
@@ -208,6 +253,7 @@ class afurl {
 	public $id			= 0;
 	public $reparse		= true;
 	public $directory	= '';
+	private $db			= false;
 }
 
 $afurl = new afurl();
