@@ -42,7 +42,7 @@ function error403($text='') {
 
 
 function error404($text='') {
-	global $afurl, $get, $af;
+	global $afurl, $get, $af, $site;
 
 	if (!empty($afurl)) {
 		if (empty($afurl->all)) $afurl->all = '';
@@ -51,6 +51,10 @@ function error404($text='') {
 		}
 
 		$text = htmlspecialchars($afurl->all) . '<br/>' . $text;
+
+		if (!empty($site['debug'])) {
+			$text .= '<br/><pre>' . print_r($afurl,true) . '</pre>';
+		}
 	}
 
 	afError(
