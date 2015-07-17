@@ -6,21 +6,12 @@ require_once('error.php.inc');
 //Set the include path to make it easier to use include() and require()
 set_include_path(get_include_path() . PATH_SEPARATOR . getcwd());
 
-//we DONT need compression from the web server itself
-//squid reverse proxy handles this task for us
+
+//we DONT need compression from PHP itself
+//web server / reverse proxy handles this task for us
 ini_set('zlib.output_compression', 'Off');
 ini_set('zlib.output_compression_level', '0');
 
-
-
-//Set the content type for this document to HTML with UTF-8 encoding
-if (!headers_sent()) {
-	if (!empty($_SERVER['HTTP_USER_AGENT'])  &&  strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false) {
-		header('X-UA-Compatible: IE=edge,chrome=1');
-	}
-	header('Content-Type: text/html; charset=utf-8');
-	header('Content-Language: en_US');
-}
 
 
 //DEFINE PHP_VERSION_ID IF NOT ALREADY DEFINED
@@ -42,8 +33,21 @@ require_once('common.php.inc');
 //Altaform Base Code
 require_once('altaform.php.inc');
 
+
 //URL Parser
 require_once('url.php.inc');
+
+
+
+//Set the content type for this document to HTML with UTF-8 encoding
+if (!headers_sent()) {
+	if (strpos($get->server('HTTP_USER_AGENT'), 'MSIE') !== false) {
+		header('X-UA-Compatible: IE=edge,chrome=1');
+	}
+	header('Content-Type: text/html; charset=utf-8');
+	header('Content-Language: en_US');
+}
+
 
 
 //Host Information for Config
@@ -53,25 +57,25 @@ if ($pos) $host = substr($host, 0, $pos);
 
 
 //Main Configuration File
-if (!is_file("_config/$host/config.php.inc")) $host = 'default';
-if (!is_file("_config/$host/config.php.inc")) {
+if (is_file("_config/$host/config.php.inc")) {
+	require_once("_config/$host/config.php.inc");
+} else if (is_file("_config/virtual/config.php.inc")) {
+	require_once("_config/virtual/config.php.inc");
+} else {
 	error500('Unknown Domain: ' . $get->server('HTTP_HOST'));
 }
-require_once("_config/$host/config.php.inc");
+
 
 
 //Set the time zone and locale
-if (!empty($site['timezone'])) {
-	date_default_timezone_set($site['timezone']);
-} else {
-	date_default_timezone_set('UTC');
-}
+date_default_timezone_set(
+	empty($site['timezone']) ? 'UTC' : $site['timezone']
+);
 
-if (!empty($site['ctype'])) {
-	setlocale(LC_CTYPE, $site['ctype']);
-} else {
-	setlocale(LC_CTYPE, 'en_US.UTF-8');
-}
+setlocale(LC_CTYPE,
+	empty($site['ctype']) ? 'en_US.UTF-8' : $site['ctype']
+);
+
 
 
 //PHP Universal Database Library (PUDL)
@@ -92,27 +96,14 @@ if (isset($db)) {
 	$get->pudl = $db;
 	$get->default = _GETVAR_SQLSAFE;
 
-	//Redis Session Handler
-	if (!empty($site['session_type'])  &&  $site['session_type'] === 'redis') {
-		ini_set('session.save_path', "tcp://$site[pudl_redis]");
-		new RedisSessionModule();
-
-		//require_once('_redis/redisSession.php');
-		//$rses = new redisSession(
-		//	isset($site['session_name'])	? $site['session_name']		: false,
-		//	isset($site['session_domain'])	? $site['session_domain']	: false
-		//);
-
 	//PUDL Session Handler
-	} else {
-		require_once('_pudl/pudlSession.php');
-		new pudlSession(
-			$db,
-			'pudl_session',
-			isset($site['session_name'])	? $site['session_name']		: false,
-			isset($site['session_domain'])	? $site['session_domain']	: false
-		);
-	}
+	require_once('_pudl/pudlSession.php');
+	new pudlSession(
+		$db,
+		'pudl_session',
+		isset($site['session_name'])	? $site['session_name']		: false,
+		isset($site['session_domain'])	? $site['session_domain']	: false
+	);
 }
 
 
@@ -126,7 +117,7 @@ $af = altaform::create();
 $af->login();
 
 
-//Bad URL
+//Are we a bad URL? If so, redirect!
 if (substr($afurl->uri,0,2) === '//') $af->redirect('/');
 
 
@@ -137,9 +128,3 @@ while ($afurl->reparse) {
 	if (is_string($afpath)) require($afpath);
 	chdir($afurl->directory);
 }
-
-
-//Force disconnect of database before other destruction happens
-//This is used to free the connection pool resource, so the next
-//script can access the database connection from the pool faster
-$db->disconnect();
