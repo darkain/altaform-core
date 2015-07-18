@@ -209,16 +209,16 @@ class fileImporter {
 
 
 
-	public static function process($formname, $data=false) {
+	public static function process($form='file', $data=false) {
 		//verify variables
-		if ( empty($_FILES[$formname])) return false;
-		if (!empty($_FILES[$formname]['error'])) return false;
-		if ( empty($_FILES[$formname]['size' ])) return false;
+		if ( empty($_FILES[$form])) return false;
+		if (!empty($_FILES[$form]['error'])) return false;
+		if ( empty($_FILES[$form]['size' ])) return false;
 
 		//setup path/file name variables
 		if (empty($data)) $data = [];
-		$data['path'] = $_FILES[$formname]['tmp_name'];
-		$data['name'] = $_FILES[$formname]['name'];
+		$data['path'] = $_FILES[$form]['tmp_name'];
+		$data['name'] = $_FILES[$form]['name'];
 
 		return self::importImage($data['path'], $data, true);
 	}
