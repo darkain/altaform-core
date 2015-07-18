@@ -220,6 +220,12 @@ class fileImporter {
 		$data['path'] = $_FILES[$form]['tmp_name'];
 		$data['name'] = $_FILES[$form]['name'];
 
+		switch (@exif_imagetype($data['path'])) {
+			case IMAGETYPE_JPEG:	$data['ext'] = 'jpg'; break;
+			case IMAGETYPE_PNG:		$data['ext'] = 'png'; break;
+			case IMAGETYPE_GIF:		$data['ext'] = 'gif'; break;
+		}
+
 		return self::importImage($data['path'], $data, true);
 	}
 
