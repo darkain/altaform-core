@@ -159,8 +159,8 @@ class fileImporter {
 					$db->insert('pudl_file_meta', [
 						'file_hash'			=> $data['file_hash'],
 						'file_meta_name'	=> 'exif',
-						'file_meta_value'	=> $db->safe($encode),
-					], false, 'file_hash=file_hash');
+						'file_meta_value'	=> $encode,
+					], true, 'file_hash=file_hash');
 				}
 			}
 
