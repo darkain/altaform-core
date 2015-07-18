@@ -439,10 +439,7 @@ class fileImporter {
 
 			case 4: ImageFlip($canvas, IMG_FLIP_VERTICAL); break;
 
-			case 3:
-				$canvas = ImageRotate($tmp, 180, 0);
-				ImageDestroy($tmp);
-			break;
+			case 3: ImageFlip($canvas, IMG_FLIP_BOTH); break;
 
 			case 7:
 				ImageFlip($canvas, IMG_FLIP_HORIZONTAL);
@@ -484,7 +481,7 @@ class fileImporter {
 			$data['icc']	= $pel->getICC();
 
 			if (!empty($data['raw'])) {
-				$tiff	= $exif->getTiff();
+				$tiff	= $data['raw']->getTiff();
 				$ifd0	= $tiff->getIfd();
 				$entry	= $ifd0->getEntry(PelTag::ORIENTATION);
 
@@ -513,7 +510,7 @@ class fileImporter {
 		if (empty($exif)) return false;
 
 		//NOTE: This tag is broken, so just remove it
-		unset($file['exif']['MakerNote']);
+		unset($exif['MakerNote']);
 
 		$fix = [
 			'A430' => 'CameraOwnerName',
