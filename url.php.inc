@@ -224,6 +224,35 @@ class afurl {
 	}
 
 
+
+	public static function cdn($hash, $key='file_hash') {
+		global $afurl;
+		if (empty($hash)) return false;
+		return $afurl->cdn . '/' .
+			self::cdnPath( is_array($hash) ? $hash[$key] : $hash );
+	}
+
+
+	public static function cdnAll(&$list, $key='img', $hashkey='file_hash') {
+		if (!is_array($list)) return false;
+		if (empty($key)) $key = 'img';
+		foreach ($list as $lk => &$val) {
+			$val[$key] = self::cdn($val, $hashkey);
+		} unset($val);
+		return true;
+	}
+
+
+	public static function cdnPath($hash) {
+		if (empty($hash)) return false;
+		if (strlen($hash) === 16) $hash = bin2hex($hash);
+		$hash = strtolower($hash);
+		return	substr($hash, 0, 3) . '/' .
+				substr($hash, 3, 3) . '/' .
+				$hash;
+	}
+
+
 	public function __debugInfo() {
 		$dump = [];
 		foreach ($this as $key => $item) {

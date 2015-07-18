@@ -458,33 +458,14 @@ class altaform extends altaformlite {
 
 
 
-	public function cdnUrl(&$data, $hashkey='file_hash') {
-		global $afurl;
-
-		if (is_array($data)) {
-			$hash = $data[$hashkey];
-		} else {
-			$hash = $data;
-		}
-
-		if (empty($hash)) return false;
-
-		if (strlen($hash) === 16) $hash = bin2hex($hash);
-		$hash = strtolower($hash);
-
-		$part1 = substr($hash, 0, 3);
-		$part2 = substr($hash, 3, 3);
-
-		return "$afurl->cdn/$part1/$part2/$hash";
+	//THIS IS DEPRICATED, REPLACED BY AFURL
+	public function cdnUrl($hash, $key='file_hash') {
+		return afurl::cdn($hash, $key);
 	}
 
-
+	//THIS IS DEPRICATED, REPLACED BY AFURL
 	public function cdnUrlAll(&$list, $key='img', $hashkey='file_hash') {
-		if (!is_array($list)) return;
-		if (empty($key)) $key = 'img';
-		foreach ($list as $lk => &$val) {
-			$val[$key] = $this->cdnUrl($val, $hashkey);
-		}
+		return afurl::cdnAll($list, $key, $hashkey);
 	}
 
 
@@ -509,55 +490,6 @@ class altaform extends altaformlite {
 			default:
 				parent::meth_Custom_Format($text, $style);
 		}
-	}
-
-
-
-	public function exif_read_data($source) {
-		$exif = @exif_read_data($source);
-		if (empty($exif)) return false;
-
-		if (isset($exif['UndefinedTag:0xA430'])) {
-			$exif['CameraOwnerName'] = $exif['UndefinedTag:0xA430'];
-			unset($exif['UndefinedTag:0xA430']);
-		}
-
-		if (isset($exif['UndefinedTag:0xA431'])) {
-			$exif['BodySerialNumber'] = $exif['UndefinedTag:0xA431'];
-			unset($exif['UndefinedTag:0xA431']);
-		}
-
-		if (isset($exif['UndefinedTag:0xA432'])) {
-			$exif['LensSpecification'] = $exif['UndefinedTag:0xA432'];
-			unset($exif['UndefinedTag:0xA432']);
-		}
-
-		if (isset($exif['UndefinedTag:0xA433'])) {
-			$exif['LensMake'] = $exif['UndefinedTag:0xA433'];
-			unset($exif['UndefinedTag:0xA433']);
-		}
-
-		if (isset($exif['UndefinedTag:0xA434'])) {
-			$exif['LensModel'] = $exif['UndefinedTag:0xA434'];
-			unset($exif['UndefinedTag:0xA434']);
-		}
-
-		if (isset($exif['UndefinedTag:0xA435'])) {
-			$exif['LensSerialNumber'] = $exif['UndefinedTag:0xA435'];
-			unset($exif['UndefinedTag:0xA435']);
-		}
-
-		if (isset($exif['UndefinedTag:0x8830'])) {
-			$exif['SensitivityType'] = $exif['UndefinedTag:0x8830'];
-			unset($exif['UndefinedTag:0x8830']);
-		}
-
-		if (isset($exif['UndefinedTag:0x8832'])) {
-			$exif['RecommendedExposureIndex'] = $exif['UndefinedTag:0x8832'];
-			unset($exif['UndefinedTag:0x8832']);
-		}
-
-		return $exif;
 	}
 
 
