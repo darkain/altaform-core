@@ -152,22 +152,24 @@ class fileImporter {
 			if (!empty($resize['exif'])) {
 				$data['exif'] = $resize['exif'];
 
-				$encode = pudlFunction::jsonEncode($resize['exif']);
 
 				//TODO: CONVERT THIS OVER TO NEW DYNAMIC COLUMNS
-				if (!empty($encode)) {
-					$db->insert('pudl_file_meta', [
-						'file_hash'			=> $data['file_hash'],
-						'file_meta_name'	=> 'exif',
-						'file_meta_value'	=> $encode,
-					], true, 'file_hash=file_hash');
+				if ($database) {
+					$encode = pudlFunction::jsonEncode($resize['exif']);
+					if (!empty($encode)) {
+						$db->insert('pudl_file_meta', [
+							'file_hash'			=> $data['file_hash'],
+							'file_meta_name'	=> 'exif',
+							'file_meta_value'	=> $encode,
+						], true, 'file_hash=file_hash');
+					}
 				}
 			}
 
 			foreach (self::$imageSize as $size) {
 				if (is_string($resize[$size])) {
 					$data['thumb_type'] = $size;
-					$data[$size] = self::import($resize[$size], $data);
+					$data[$size] = self::import($resize[$size], $data, $database);
 					@unlink($resize[$size]);
 				}
 			}
@@ -179,7 +181,7 @@ class fileImporter {
 			foreach (self::$thumbSize as $size) {
 				if (is_string($crop[$size])) {
 					$data['thumb_type'] = $size;
-					$data[$size] = self::import($crop[$size], $data);
+					$data[$size] = self::import($crop[$size], $data, $database);
 					@unlink($crop[$size]);
 				}
 			}
