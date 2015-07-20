@@ -539,6 +539,12 @@ class fileImporter {
 			}
 		}
 
+		foreach ($exif as $key => $val) {
+			if (substr($key, 0, 15) === 'UndefinedTag:0x') {
+				unset($exif[$key]);
+			}
+		}
+
 		return $exif;
 	}
 
