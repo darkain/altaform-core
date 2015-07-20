@@ -199,10 +199,11 @@ class fileImporter {
 		if ($data === false) return false;
 
 		$temp = tempnam(sys_get_temp_dir(), 'fb-') . '.jpg';
+		if ($temp === false) return false;
 
 		file_put_contents($temp, $data);
 
-		$data = self::importImage($temp, true);
+		$data = self::importImage($temp);
 
 		@unlink($temp);
 
