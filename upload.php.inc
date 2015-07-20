@@ -203,7 +203,7 @@ class fileImporter {
 
 		file_put_contents($temp, $data);
 
-		$data = self::importImage($temp);
+		$data = self::importImage($temp, false, true);
 
 		@unlink($temp);
 
