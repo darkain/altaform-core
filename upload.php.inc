@@ -320,10 +320,13 @@ class fileImporter {
 				case 'jpe':
 				case 'jpg':
 					//USE PEL TO EXTRACT ICC DATA FROM SOURCE, AND EMBED IN DESTINATION
+					/*
 					$canvas = self::rotate($canvas, $jpeg);
 					$return = new PelJpeg($canvas);
 					if (!empty($jpeg['icc'])) $return->setICC($jpeg['icc']);
 					$return->saveFile($image[$size]);
+					*/
+					$return = @ImageJPEG($canvas, $image[$size]);
 					break;
 
 				case 'png': $return = @ImagePNG($canvas, $image[$size]); break;
@@ -412,15 +415,18 @@ class fileImporter {
 					case 'jpe':
 					case 'jpg':
 						//USE PEL TO EXTRACT EXIF DATA FROM SOURCE, AND EMBED IN DESTINATION
+						/*
 						$canvas = self::rotate($canvas, $jpeg);
 						$return = new PelJpeg($canvas);
 						if (!empty($jpeg['icc'])) $return->setICC($jpeg['icc']);
 						$return->saveFile($image[$size]);
+						*/
+						$return = @ImageJPEG($canvas, $image[$size]);
 						break;
 
 					//OTHER FORMATS, NOTHING SPECIAL
-					case 'png': $return = @imagepng($canvas, $image[$size]); break;
-					case 'gif': $return = @imagegif($canvas, $image[$size]); break;
+					case 'png': $return = @ImagePNG($canvas, $image[$size]); break;
+					case 'gif': $return = @ImageGIF($canvas, $image[$size]); break;
 					default: return '0x0005 - ' . $image[$size];
 				}
 			}
@@ -481,7 +487,7 @@ class fileImporter {
 			'icc'		=> false,
 			'rotate'	=> 1,
 		];
-
+/*
 		try {
 			$pel = new PelJpeg($source);
 
@@ -503,9 +509,9 @@ class fileImporter {
 			}
 
 		} catch (Exception $e) {
-			_af_email_error('IMAGE ERROR:' . self::$hash);
+			_af_email_error('IMAGE ERROR:' . self::$hash); */
 			$data['image'] = @ImageCreateFromJPEG($source);
-		}
+		//}
 
 		$data['exif'] = self::exif_read_data($source);
 
