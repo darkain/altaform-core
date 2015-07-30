@@ -1,522 +1,212 @@
 <?php
 
 require_once('amazon.php.inc');
-require_once('_exif/src/PelJpeg.php');
+
+
+use Aws\S3\S3Client;
+use Aws\S3\Enum\Group;
+use Aws\S3\Enum\CannedAcl;
+use Aws\Common\Enum\Region;
+
 
 
 class fileImporter {
 
-	public static function getMimeType($ext) {
-		global $db;
 
-		$ext = strtolower($ext);
-
-		if (!empty($db)) {
-			$row = $db->rowId('pudl_mimetype', 'mime_ext', $db->safe($ext));
-			if (!empty($row)) return $row;
-		}
-
-		$mimetype = [
-			'mime_id'	=> NULL,
-			'mime_ext'	=> $ext,
-			'mime_type'	=> 'application/octet-stream',
-		];
-
-		switch ($ext) {
-			case 'jpe':
-			case 'jpg': $ext = 'jpeg';
-			case 'jpeg':
-			case 'tiff':
-			case 'gif':
-			case 'png':
-				$mimetype['mime_type'] = 'image/'.$ext;
-		}
-
-		return $mimetype;
+	public static function importPath($path, $name=false) {
+		$image = new Imagick($path);
+		$image->setFilename($path);
+		return self::processImage($image, $name);
 	}
 
 
 
-	public static function import($path, $data=false, $database=true) {
-		global $af, $db, $site, $user;
 
-		if (empty($data)) $data = [];
+	public static function importFile($file, $name='STREAM') {
+		$image = new Imagick();
+		$image->readImageFile($file, $name);
+		return self::processImage($image);
+	}
 
-		//GET THE FILE HASH
-		if (empty($data['hash'])  ||  isset($data['parent'])) {
-			$data['hash'] = md5_file($path);
+
+
+
+	public static function importBlob($blob, $name='BLOB') {
+		$image = new Imagick();
+		$image->readImageBlob($blob, $name);
+		return self::processImage($image);
+	}
+
+
+
+
+	public static function importURL($url) {
+		$blob = @file_get_contents($url);
+		return (!empty($blob)) ? self::importBlob($blob, $url) : false;
+	}
+
+
+
+
+	//NOTE:	12 byte minimum file size pulled from PHP comments:
+	//		http://php.net/manual/en/function.exif-imagetype.php
+	public static function upload($form=false, $database=true) {
+		if (empty($_FILES)  ||  !is_array($_FILES)) {
+			return false;
+		} else if (empty($form)) {
+			$data = reset($_FILES);
+		} else if (isset($_FILES[$form])  &&  is_array($_FILES[$form])) {
+			$data = $_FILES[$form];
 		}
 
-		self::$hash = $data['hash'];
-		$base = $af->path();
+		if ( empty($data))				return false;
+		if (!is_array($data))			return false;
+		if (!empty($data['error']))		return false;
+		if ( empty($data['size']))		return false;
+		if ( empty($data['name']))		return false;
+		if ( empty($data['tmp_name']))	return false;
+		if ($data['size'] < 12)			return false;
+		if (!is_uploaded_file($data['tmp_name'])) return false;
 
-		//GET THE FILE NAME
-		if (empty($data['name'])) {
-			$info = pathinfo($path);
-			$data['name'] = $info['basename'];
+		//TODO:	IF $DATABASE=TRUE, CHECK HASH AGAINST DATABASE HERE!
+		//		IF ALREADY IN DATABASE, NO NEED TO PROCESS/UPLOAD IMAGE
+
+		$image = self::importPath($data['tmp_name'], $data['name']);
+
+		if ($database) self::database($image);
+
+		return $image;
+	}
+
+
+
+
+	public static function importFacebookProfileImage($facebook_id) {
+		return self::importURL(
+			'http://graph.facebook.com/v2.4/' . $facebook_id . '/picture?width=9999&height=9999'
+		);
+	}
+
+
+
+
+	private static function processImage(&$image, $name=false) {
+		//ONLY SUPPORT JPEG / PNG / GIF FILES FOR NOW
+		switch ($image->getImageFormat()) {
+			case 'JPEG':  case 'PNG':  case 'GIF':  continue;
+			default: return false;
 		}
 
-		//GET THE FILE EXTENSION
-		if (empty($data['ext'])) {
-			$data['ext'] = '';
-			$pos = strrpos($data['name'], '.');
-			if ($pos !== false) $data['ext'] = substr($data['name'], $pos+1);
-			$data['ext'] = strtolower($data['ext']);
-		}
+		//BUILD DATA TO RETURN
+		$data['exif']		= self::getExif($image);
+		$data['hash']		= self::getHash($image);
+		$data['url']		= afurl::cdn($data['hash']);
+		$data['size']		= $image->getImageLength();
+		$data['mime']		= $image->getImageMimeType();
+		$data['type']		= $image->getImageFormat();
+		$data['name']		= basename(!empty($name) ? $name : $image->getFilename());
+		$data['file_hash']	= pudlFunction::unhex($data['hash']);
 
-		//get the MIMETYPE information for the file
-		if (empty($data['mime'])) {
-			$data['mime'] = self::getMimeType($data['ext']);
-		}
-
-		//IMPORT INTO AMAZON WEB SERVICES (AWS) S3 STORAGE
-		s3upload(
-			$path,
-			$site['aws_bucket'],
-			afurl::cdnPath($data['hash']),
-			$data['mime']['mime_type'],
-			array(
-				'CacheControl'	=> 'max-age=315360000, public',
-				'Expires'		=> gmdate("D, d M Y H:i:s T", strtotime("+10 years")),
-			)
+		//UPLOAD ORIGINAL IMAGE TO AMAZON AWS S3
+		self::s3upload(
+			$image->getImageBlob(),
+			$data['hash'],
+			$image->getImageMimeType()
 		);
 
-		//setup data to be inserted into the database
-		if (empty($data['parent'])) {
-			$insert = [
-				'file_hash'		=> pudlFunction::unhex($data['hash']),
-				'file_size'		=> filesize($path),
-				'file_uploaded'	=> $db->time(),
-				'file_name'		=> $data['name'],
-				'mime_id'		=> $data['mime']['mime_id'],
-			];
+		//GET THE LONG EDGE OF THE IMAGE
+		$long = $image->getImageWidth() > $image->getImageHeight() ?
+				$image->getImageWidth() : $image->getImageHeight();
 
-			//insert file information into database
-			if ($database) {
-				$db->insert('pudl_file', $insert, true, ['mime_id'=>$insert['mime_id']]);
+		//PROCESS RESIZED IMAGES (MAINTAIN ASPECT RATIO)
+		foreach (self::$imageSize as $size) {
+			if ($size >= $long) continue;
+			$data[$size] = self::resize($image, $size, false);
+		}
 
-				//link image to current user account
-				if (!empty($user['user_id'])) {
-					$db->insert('pudl_file_user', [
-						'file_hash'		=> pudlFunction::unhex($data['hash']),
-						'user_id'		=> $user['user_id'],
-						'user_time'		=> $db->time(),
-					], false, 'file_hash=file_hash');
-				}
-			}
+		//PROCESS THUMBNAILS (SQUARE CROP)
+		foreach (self::$thumbSize as $size) {
+			$data[$size] = self::resize($image, $size, true);
+		}
 
+		//CLEANUP / FREE RESOURCES
+		$image->clear();
+
+		//RETURN THE EVERYTHINGS!
+		return $data;
+	}
+
+
+
+
+	private static function resize(&$image, $size, $square=false) {
+		$resized = clone $image;
+
+		if ($square) {
+			$resized->cropThumbnailImage($size, $size);
 		} else {
-			$insert = [
-				'thumb_hash'	=> pudlFunction::unhex($data['hash']),
-				'file_hash'		=> $data['parent'],
-				'thumb_size'	=> filesize($path),
-				'thumb_type'	=> (string)$data['thumb_type'],
-			];
-
-			//insert file information into database
-			if ($database) {
-				$db->insert('pudl_file_thumb', $insert, false, 'thumb_hash=thumb_hash');
-			}
+			$resized->resizeImage($size, $size, Imagick::FILTER_SINC, 1, true);
 		}
 
-		if ($data['mime'] !== false) $insert += $data['mime'];
-		$insert['file_cdn'] = $path;
-		$insert['file_url'] = $af->cdnUrl($data['hash']);
-		$insert['hash'] = $data['hash'];
+		$resized->setImagePage(0, 0, 0, 0);
+		$resized->setImageCompressionQuality(85);
 
-		return $insert;
-	}
+		//GET BINARY DATA
+		$blob = $resized->getImageBlob();
 
+		//BUILD OUR DATA ARRAY
+		$data['type']		= (string) $size;
+		$data['hash']		= md5($blob);
+		$data['size']		= strlen($blob);
+		$data['url']		= afurl::cdn($data['hash']);
+		$data['thumb_hash']	= pudlFunction::unhex($data['hash']);
 
+		//UPLOAD TO AMAZON AWS S3
+		self::s3upload($blob, $data['hash'], $resized->getImageMimeType());
 
-	public static function importImage($path, $data=false, $database=false) {
-		global $db;
+		//CLEANUP / FREE RESOURCES
+		$resized->clear();
 
-		$data = self::import($path, $data, $database);
-		if (empty($data)) return false;
-
-		//generate thumbnail if uploaded file is image!
-		if (substr($data['mime_type'], 0, 6) !== 'image/') return $data;
-
-		$data['parent'] = $data['file_hash'];
-
-		$temp = tempnam(sys_get_temp_dir(), 'thumb-');
-		unlink($temp);
-		$temp .= '.' . $data['mime_ext'];
-
-
-		//RESIZED IMAGES
-		$resize = self::resize($data['file_cdn'], $temp);
-		if (is_array($resize)) {
-			// PUT EXIF DATA INTO DATABASE
-			if (!empty($resize['exif'])) {
-				$data['exif'] = $resize['exif'];
-
-
-				//TODO: CONVERT THIS OVER TO NEW DYNAMIC COLUMNS
-				if ($database) {
-					$encode = pudlFunction::jsonEncode($resize['exif']);
-					if (!empty($encode)) {
-						$db->insert('pudl_file_meta', [
-							'file_hash'			=> $data['file_hash'],
-							'file_meta_name'	=> 'exif',
-							'file_meta_value'	=> $encode,
-						], true, 'file_hash=file_hash');
-					}
-				}
-			}
-
-			foreach (self::$imageSize as $size) {
-				if (is_string($resize[$size])) {
-					$data['thumb_type'] = $size;
-					$data[$size] = self::import($resize[$size], $data, $database);
-					@unlink($resize[$size]);
-				}
-			}
-		}
-
-		//CROPPED THUMBNAILS
-		$crop = self::thumbnail($data['file_cdn'], $temp);
-		if (is_array($crop)) {
-			foreach (self::$thumbSize as $size) {
-				if (is_string($crop[$size])) {
-					$data['thumb_type'] = $size;
-					$data[$size] = self::import($crop[$size], $data, $database);
-					@unlink($crop[$size]);
-				}
-			}
-		}
-
+		//RETURN OUR DATA ARRAY!
 		return $data;
 	}
 
 
 
-	public static function importFacebookProfileImage($fbid) {
-		$fburl = "http://graph.facebook.com/v2.4/$fbid/picture?width=9999&height=9999";
 
-		$data = @file_get_contents($fburl);
-		if ($data === false) return false;
+	private static function getExif(&$image) {
+		$path = $image->getFilename();
 
-		$temp = tempnam(sys_get_temp_dir(), 'fb-') . '.jpg';
-		if ($temp === false) return false;
+		//LOCAL FILE, MUCH FASTER TO USE FILE SYSTEM THAN TO GENERATE A BLOB
+		if (!empty($path)) {
+			if (substr($path, 0, 1) === '/'  ||  substr($path, 0, 7) === 'file://') {
+				return self::exif_read_data($path);
+			}
+		}
 
-		file_put_contents($temp, $data);
-
-		$data = self::importImage($temp, false, true);
-
-		@unlink($temp);
-
-		return $data;
+		return self::exif_read_data(
+			$exif = 'data://' . $image->getImageMimeType() . ';base64,' . base64_encode(
+				substr($image->getImageBlob(), 0, 1024*1024)
+			)
+		);
 	}
 
 
 
-	public static function process($form='file', $data=false) {
-		//verify variables
-		if ( empty($_FILES[$form])) return false;
-		if (!empty($_FILES[$form]['error'])) return false;
-		if ( empty($_FILES[$form]['size' ])) return false;
 
-		//setup path/file name variables
-		if (empty($data)) $data = [];
-		$data['path'] = $_FILES[$form]['tmp_name'];
-		$data['name'] = $_FILES[$form]['name'];
+	private static function getHash(&$image) {
+		$path = $image->getFilename();
 
-		switch (@exif_imagetype($data['path'])) {
-			case IMAGETYPE_JPEG:	$data['ext'] = 'jpg'; break;
-			case IMAGETYPE_PNG:		$data['ext'] = 'png'; break;
-			case IMAGETYPE_GIF:		$data['ext'] = 'gif'; break;
+		//LOCAL FILE, MUCH FASTER TO USE FILE SYSTEM THAN TO GENERATE A BLOB
+		if (!empty($path)) {
+			if (substr($path, 0, 1) === '/'  ||  substr($path, 0, 7) === 'file://') {
+				return md5_file($path);
+			}
 		}
 
-		return self::importImage($data['path'], $data, true);
+		return md5($image->getImageBlob());
 	}
 
-
-
-	public static function thumbnail($source, $output, $sizes=false, $quality=90, $squared=true) {
-		$image = @getimagesize($source);
-		if ($image === false) return '0x0001';
-
-		if ($image[0] <= 0 || $image[1] <= 0) return '0x0002';
-
-		$data = false;
-		$rotate = 1;
-		switch (strtolower(preg_replace('/^.*?\//', '', $image['mime']))) {
-			case 'jpeg':
-			case 'jpe':
-			case 'jpg':
-				$jpeg	= self::loadJpeg($source);
-				$data	= $jpeg['image'];
-				$image['exif'] = $jpeg['exif'];
-				break;
-
-			case 'png': $data = @ImageCreateFromPNG($source); break;
-
-			case 'gif': $data = @ImageCreateFromGIF($source); break;
-		}
-
-		if (empty($data)) return '0x0003';
-
-		if ($squared) {
-			if ($image[0] > $image[1]) {
-				$x = ($image[0] - $image[1]) / 2;
-				$y = 0;
-				$square = $image[0] - ($x * 2);
-			} else {
-				$x = 0;
-				$y = ($image[1] - $image[0]) / 2;
-				$square = $image[1] - ($y * 2);
-			}
-		} else {
-			if ($image[0] < $image[1]) {
-				$x = ($image[0] - $image[1]) / 2;
-				$y = 0;
-				$w = $image[0] / $image[1];
-				$h = 1.0;
-				$square = $image[0] - ($x * 2);
-			} else {
-				$x = 0;
-				$y = ($image[1] - $image[0]) / 2;
-				$w = 1.0;
-				$h = $image[1] / $image[0];
-				$square = $image[1] - ($y * 2);
-			}
-		}
-
-		if (empty($sizes)) $sizes = self::$thumbSize;
-		if (!is_array($sizes)) $sizes = [$sizes];
-		foreach ($sizes as $size) {
-			$size = (int) $size;
-			if ($size < 1) continue;
-
-			$return = '0x0004';
-			$canvas = @ImageCreateTrueColor($size, $size);
-			if (empty($canvas)) {
-				@ImageDestroy($data);
-				return $return;
-			}
-
-			//Set the image to WHITE instead of BLACK
-			$color = @ImageColorAllocate($canvas, 255, 255, 255);
-			@ImageFill($canvas, 0, 0, $color);
-
-			//NEW FILENAME OMGZ!
-			$image[$size] = preg_replace('/^.*\./', '$0x'.$size.'.', $output);
-
-			$ok = false;
-			if ($squared) {
-				$ok = @ImageCopyResampled($canvas, $data, 0, 0, $x, $y, $size, $size, $square, $square);
-			} else {
-				$ok = @ImageCopyResampled(
-					$canvas, $data,
-					($size-($size*$w))/2,	($size-($size*$h))/2,	0,			0,
-					$size*$w,				$size*$h,				$image[0],	$image[1]
-				);
-			}
-
-			if ($ok) switch( strtolower(preg_replace('/^.*\./', '', $output)) ) {
-				case 'jpeg':
-				case 'jpe':
-				case 'jpg':
-					//USE PEL TO EXTRACT ICC DATA FROM SOURCE, AND EMBED IN DESTINATION
-					/*
-					$canvas = self::rotate($canvas, $jpeg);
-					$return = new PelJpeg($canvas);
-					if (!empty($jpeg['icc'])) $return->setICC($jpeg['icc']);
-					$return->saveFile($image[$size]);
-					*/
-					$return = @ImageJPEG($canvas, $image[$size]);
-					break;
-
-				case 'png': $return = @ImagePNG($canvas, $image[$size]); break;
-
-				case 'gif': $return = @ImageGIF($canvas, $image[$size]); break;
-
-				default: return '0x0005 - ' . $output;
-			}
-			@ImageDestroy($canvas);
-		}
-
-		@ImageDestroy($data);
-
-		if ($return === false) return '0x0007';
-
-		return $image;
-	}
-
-
-
-	public static function resize($source, $output, $sizes=false, $quality=90) {
-
-		$image = @getimagesize($source);
-		if ($image === false) return '0x0001';
-
-		if ($image[0] <= 0 || $image[1] <= 0) return '0x0002';
-
-
-		//LOAD UP THE SOURCE IMAGE FILE
-		$data = false;
-		$rotate = 1;
-		switch (strtolower(preg_replace('/^.*?\//', '', $image['mime']))) {
-			case 'jpeg':
-			case 'jpe':
-			case 'jpg':
-				$jpeg	= self::loadJpeg($source);
-				$data	= $jpeg['image'];
-				$image['exif'] = $jpeg['exif'];
-				break;
-
-			case 'png': $data = @ImageCreateFromPNG($source); break;
-
-			case 'gif': $data = @ImageCreateFromGIF($source); break;
-		}
-
-		if ($data === false) return '0x0003';
-		$return = '0x0008';
-
-
-		//LOOP THRU EACH SIZE, AND CREATE RESIZED IMAGE FOR EACH
-		if (empty($sizes)) $sizes = self::$imageSize;
-		if (!is_array($sizes)) $sizes = array($sizes);
-
-		foreach ($sizes as $size) {
-			$size = (int) $size;
-			if ($size < 1) continue;
-
-			if ($image[0] > $image[1]) {
-				$scale = $size / $image[0];
-			} else {
-				$scale = $size / $image[1];
-			}
-
-			if ($scale >= 1) {
-				$image[$size] = true;
-				continue;
-			}
-
-			$w = (int)($image[0] * $scale);
-			$h = (int)($image[1] * $scale);
-
-
-			$return = '0x0004';
-			$canvas = @ImageCreateTrueColor($w, $h);
-			if ($canvas === false) {
-				@ImageDestroy($data);
-				return $return;
-			}
-
-			//NEW FILENAME OMGZ!
-			$image[$size] = preg_replace('/^.*\./', '$0x'.$size.'.', $output);
-
-			if (@ImageCopyResampled($canvas, $data, 0, 0, 0, 0, $w, $h, $image[0], $image[1])) {
-				switch( strtolower(preg_replace('/^.*\./', '', $image[$size])) ) {
-					case 'jpeg':
-					case 'jpe':
-					case 'jpg':
-						//USE PEL TO EXTRACT EXIF DATA FROM SOURCE, AND EMBED IN DESTINATION
-						/*
-						$canvas = self::rotate($canvas, $jpeg);
-						$return = new PelJpeg($canvas);
-						if (!empty($jpeg['icc'])) $return->setICC($jpeg['icc']);
-						$return->saveFile($image[$size]);
-						*/
-						$return = @ImageJPEG($canvas, $image[$size]);
-						break;
-
-					//OTHER FORMATS, NOTHING SPECIAL
-					case 'png': $return = @ImagePNG($canvas, $image[$size]); break;
-					case 'gif': $return = @ImageGIF($canvas, $image[$size]); break;
-					default: return '0x0005 - ' . $image[$size];
-				}
-			}
-			@imagedestroy($canvas);
-		}
-
-
-		@imagedestroy($data);
-
-		if ($return === false) return '0x0007';
-
-		return $image;
-	}
-
-
-
-	protected static function rotate($canvas, $rotate) {
-		if (is_array($rotate)) $rotate = $rotate['rotate'];
-		$tmp = $canvas;
-
-		switch ($rotate) {
-			//case 1: do nothing, as image orientation is already correct
-
-			case 2: ImageFlip($canvas, IMG_FLIP_HORIZONTAL); break;
-
-			case 4: ImageFlip($canvas, IMG_FLIP_VERTICAL); break;
-
-			case 3: ImageFlip($canvas, IMG_FLIP_BOTH); break;
-
-			case 7:
-				ImageFlip($canvas, IMG_FLIP_HORIZONTAL);
-				//NO BREAK; FALL INTO ROTATE #6
-
-			case 6:
-				$canvas = ImageRotate($tmp, 270, 0);
-				ImageDestroy($tmp);
-			break;
-
-			case 5:
-				ImageFlip($canvas, IMG_FLIP_HORIZONTAL);
-				//NO BREAK; FALL INTO ROTATE #8
-
-			case 8:
-				$canvas = ImageRotate($tmp, 90, 0);
-				ImageDestroy($tmp);
-			break;
-		}
-
-		return $canvas;
-	}
-
-
-
-	protected static function loadJpeg($source) {
-		$data = [
-			'image'		=> false,
-			'raw'		=> false,
-			'icc'		=> false,
-			'rotate'	=> 1,
-		];
-/*
-		try {
-			$pel = new PelJpeg($source);
-
-			$data['image']	= @ImageCreateFromString($pel->getBytes());
-			$data['raw']	= $pel->getExif();
-			$data['icc']	= $pel->getICC();
-
-			if (!empty($data['raw'])) {
-				$tiff	= $data['raw']->getTiff();
-				$ifd0	= $tiff->getIfd();
-				$entry	= $ifd0->getEntry(PelTag::ORIENTATION);
-
-				if (!empty($entry)) {
-					$data['rotate'] = $entry->getValue();
-					$entry->setValue(1);
-					$ifd0->addEntry($entry);
-					$data['raw']->setTiff($tiff);
-				}
-			}
-
-		} catch (Exception $e) {
-			_af_email_error('IMAGE ERROR:' . self::$hash); */
-			$data['image'] = @ImageCreateFromJPEG($source);
-		//}
-
-		$data['exif'] = self::exif_read_data($source);
-
-		return $data;
-	}
 
 
 
@@ -524,7 +214,7 @@ class fileImporter {
 		$exif = @exif_read_data($source);
 		if (empty($exif)) return false;
 
-		//NOTE: This tag is broken, so just remove it
+		//NOTE: PROPIETARY BINARY DATA, JUST REMOVE IT
 		unset($exif['MakerNote']);
 
 		$fix = [
@@ -538,25 +228,137 @@ class fileImporter {
 			'8832' => 'RecommendedExposureIndex',
 		];
 
-		foreach ($fix as $key => $val) {
+		foreach ($fix as $key => $item) {
 			if (isset($exif['UndefinedTag:0x'.$key])) {
-				$exif[$val] = $exif['UndefinedTag:0x'.$key];
+				$exif[$item] = $exif['UndefinedTag:0x'.$key];
 				unset($exif['UndefinedTag:0x'.$key]);
 			}
 		}
 
-		foreach ($exif as $key => $val) {
+		foreach ($exif as $key => &$item) {
 			if (substr($key, 0, 15) === 'UndefinedTag:0x') {
 				unset($exif[$key]);
+			} else {
+				self::exifClean($item);
 			}
-		}
+		} unset($item);
 
 		return $exif;
 	}
 
 
 
-	public static $thumbSize = array(50, 100, 150, 200);
-	public static $imageSize = array(800, 1280, 1920);
-	public static $hash = '';
+
+	private static function exifClean(&$data) {
+		if (is_string($data)) {
+			$data = trim($data);
+			$data = preg_replace('/[\x00-\x1F]/', '', $data);
+			$data = mb_convert_encoding($data, 'UTF-8', 'UTF-8');
+		} else if (is_array($data)) {
+			foreach ($data as &$item) self::exifClean($item);
+		}
+	}
+
+
+
+
+	public static function s3client() {
+		global $site;
+
+		if (empty(self::$s3client)) {
+			self::$s3client = S3Client::factory([
+				'key'		=> $site['aws_key'],
+				'secret'	=> $site['aws_secret'],
+				'base_url'	=> $site['aws_url'],
+			]);
+		}
+
+		return self::$s3client;
+	}
+
+
+
+
+	public static function s3upload($body, $hash, $mime) {
+		global $site;
+
+		$client = self::s3client();
+
+		//EARLY OUT
+		if (empty($body)) return false;
+
+		//UPLOAD TO AMAZON AWS S3
+		$result = $client->putObject([
+			'Body'			=> $body,
+			'Bucket'		=> $site['aws_bucket'],
+			'Key'			=> afurl::cdnPath($hash),
+			'ContentType'	=> $mime,
+			'acl'			=> CannedAcl::PUBLIC_READ,
+			'GrantRead'		=> 'uri="' . Group::ALL_USERS . '"',
+			'CacheControl'	=> 'max-age=315360000, public',
+			'Expires'		=> gmdate('D, d M Y H:i:s T', strtotime('+10 years')),
+		]);
+
+		//WE CAN POLL THE OBJECT UNTIL IT IS ACCESSIBLE
+		$client->waitUntilObjectExists([
+			'Bucket'	=> $site['aws_bucket'],
+			'Key'		=> afurl::cdnPath($hash),
+		]);
+
+		return $result;
+	}
+
+
+
+	public static function database($data) {
+		global $db, $user;
+
+		//GET INTERNAL MIME TYPE DATA
+		$mime = $db->rowId('pudl_mimetype', 'mime_type', $db->safe($data['mime']));
+
+		//INSERT MAIN IMAGE
+		$db->insert('pudl_file', [
+			'file_hash'		=> pudlFunction::unhex($data['hash']),
+			'file_size'		=> $data['size'],
+			'file_uploaded'	=> $db->time(),
+			'file_name'		=> $data['name'],
+			'mime_id'		=> !empty($mime) ? $mime['mime_id'] : NULL,
+		], true, 'file_hash=file_hash');
+
+		//INSERT EXIF DATA
+		if (!empty($data['exif'])) {
+			$db->insert('pudl_file_meta', [
+				'file_hash'			=> pudlFunction::unhex($data['hash']),
+				'file_meta_name'	=> 'exif',
+				'file_meta_value'	=> $data['exif'],
+			], true, 'file_hash=file_hash');
+		}
+
+		//ASSOCIATE FILE WITH CURRENT USER, IF AVAILABLE
+		if (!empty($user['user_id'])) {
+			$db->insert('pudl_file_user', [
+				'file_hash'		=> pudlFunction::unhex($data['hash']),
+				'user_id'		=> $user['user_id'],
+				'user_time'		=> $db->time(),
+			], true, 'file_hash=file_hash');
+		}
+
+		//INSERT THUMBNAIL IMAGES
+		foreach ($data as $key => $item) {
+			if (((int)$key) < 1  ||  !is_array($item)) continue;
+
+			$db->insert('pudl_file_thumb', [
+				'file_hash'		=> pudlFunction::unhex($data['hash']),
+				'thumb_hash'	=> pudlFunction::unhex($item['hash']),
+				'thumb_size'	=> $item['size'],
+				'thumb_type'	=> $item['type'],
+			], true, 'thumb_hash=thumb_hash');
+		}
+	}
+
+
+
+	public static $thumbSize	= [50, 100, 150, 200];
+	public static $imageSize	= [800, 1280, 1920];
+	public static $s3client		= NULL;
 }
