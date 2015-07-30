@@ -81,10 +81,14 @@ class fileImporter {
 
 
 
-	public static function importFacebookProfileImage($facebook_id) {
-		return self::importURL(
+	public static function importFacebookProfileImage($facebook_id, $database=true) {
+		$image = self::importURL(
 			'http://graph.facebook.com/v2.4/' . $facebook_id . '/picture?width=9999&height=9999'
 		);
+
+		if ($database) self::database($image);
+
+		return $image;
 	}
 
 
@@ -249,7 +253,7 @@ class fileImporter {
 
 
 
-	private static function exifClean(&$data) {
+	public static function exifClean(&$data) {
 		if (is_string($data)) {
 			$data = trim($data);
 			$data = preg_replace('/[\x00-\x1F]/', '', $data);
@@ -312,6 +316,8 @@ class fileImporter {
 
 	public static function database($data) {
 		global $db, $user;
+
+		if (empty($data)) return;
 
 		//GET INTERNAL MIME TYPE DATA
 		$mime = $db->rowId('pudl_mimetype', 'mime_type', $db->safe($data['mime']));
