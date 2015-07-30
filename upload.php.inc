@@ -118,12 +118,52 @@ class fileImporter {
 			$image->getImageMimeType()
 		);
 
+		//RORATE THE IMAGE, IF NEEDED
+		switch ($image->getImageOrientation()) {
+			case Imagick::ORIENTATION_UNDEFINED: break;	//NOT SET
+			case Imagick::ORIENTATION_TOPLEFT: break;	//ALREADY CORRECT
+
+			case Imagick::ORIENTATION_TOPRIGHT:
+				$image->flopImage();
+			break;
+
+			case Imagick::ORIENTATION_BOTTOMRIGHT:
+				$image->rotateImage('#fff', 180);
+			break;
+
+			case Imagick::ORIENTATION_BOTTOMLEFT:
+				$image->flipImage();
+			break;
+
+			case Imagick::ORIENTATION_LEFTTOP:
+				$image->rotateImage('#fff', 90);
+				$image->flipImage();
+			break;
+
+			case Imagick::ORIENTATION_RIGHTTOP:
+				$image->rotateImage('#fff', 90);
+			break;
+
+			case Imagick::ORIENTATION_RIGHTBOTTOM:
+				$image->rotateImage('#fff', -90);
+				$image->flopImage();
+			break;
+
+			case Imagick::ORIENTATION_LEFTBOTTOM:
+				$image->rotateImage('#fff', -90);
+			break;
+		}
+
+		//RESET ORIENTATION INFORMATION
+		$image->setImageOrientation(Imagick::ORIENTATION_TOPLEFT);
+
 		//GET THE LONG EDGE OF THE IMAGE
 		$long = $image->getImageWidth() > $image->getImageHeight() ?
 				$image->getImageWidth() : $image->getImageHeight();
 
 		//PROCESS RESIZED IMAGES (MAINTAIN ASPECT RATIO)
 		foreach (self::$imageSize as $size) {
+			//TODO: force processing of smallest size, in case of rotation
 			if ($size >= $long) continue;
 			$data[$size] = self::resize($image, $size, false);
 		}
