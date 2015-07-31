@@ -136,8 +136,7 @@ class fileImporter {
 			break;
 
 			case Imagick::ORIENTATION_LEFTTOP:
-				$image->rotateImage('#fff', 90);
-				$image->flipImage();
+				$image->transposeImage();
 			break;
 
 			case Imagick::ORIENTATION_RIGHTTOP:
@@ -145,8 +144,7 @@ class fileImporter {
 			break;
 
 			case Imagick::ORIENTATION_RIGHTBOTTOM:
-				$image->rotateImage('#fff', -90);
-				$image->flopImage();
+				$image->transverseImage();
 			break;
 
 			case Imagick::ORIENTATION_LEFTBOTTOM:
