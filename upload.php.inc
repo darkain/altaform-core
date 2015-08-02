@@ -14,7 +14,11 @@ class fileImporter {
 
 
 	public static function importPath($path, $name=false) {
-		$image = new Imagick($path);
+		try {
+			$image = new Imagick($path);
+		} catch (ImagickException $e) {
+			return false;
+		}
 		$image->setFilename($path);
 		return self::processImage($image, $name);
 	}
@@ -23,8 +27,12 @@ class fileImporter {
 
 
 	public static function importFile($file, $name='STREAM') {
-		$image = new Imagick();
-		$image->readImageFile($file, $name);
+		try {
+			$image = new Imagick();
+			$image->readImageFile($file, $name);
+		} catch (ImagickException $e) {
+			return false;
+		}
 		return self::processImage($image);
 	}
 
@@ -32,8 +40,12 @@ class fileImporter {
 
 
 	public static function importBlob($blob, $name='BLOB') {
-		$image = new Imagick();
-		$image->readImageBlob($blob, $name);
+		try {
+			$image = new Imagick();
+			$image->readImageBlob($blob, $name);
+		} catch (ImagickException $e) {
+			return false;
+		}
 		return self::processImage($image);
 	}
 
