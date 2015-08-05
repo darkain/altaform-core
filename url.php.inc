@@ -31,6 +31,8 @@ class afurl {
 		$this->parts	= (array)parse_url($this->uri);
 		if (empty($this->parts['path'])) error404();
 
+		$this->query	= $this->uri . (empty($this->parts['query']) ? '?' : '&');
+
 		if (substr($this->parts['path'],  0, 1) !== '/') $this->parts['path']  = '/' . $this->parts['path'];
 		if (substr($this->parts['path'], -1, 1) !== '/') $this->parts['path'] .= '/';
 		if (substr($this->parts['path'],  1, 1) === '_') error500();
@@ -268,6 +270,7 @@ class afurl {
 	public $url			= '';
 	public $uri			= '';
 	public $base		= '';
+	public $query		= '';
 	public $referer		= '';
 	public $domain		= '';
 	public $host		= '';
