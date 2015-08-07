@@ -107,6 +107,8 @@ class fileImporter {
 
 
 	private static function processImage(&$image, $name=false) {
+		global $af;
+
 		//ONLY SUPPORT JPEG / PNG / GIF FILES FOR NOW
 		switch ($image->getImageFormat()) {
 			case 'JPEG':  case 'PNG':  case 'GIF':  continue;
@@ -167,14 +169,18 @@ class fileImporter {
 		//RESET ORIENTATION INFORMATION
 		$image->setImageOrientation(Imagick::ORIENTATION_TOPLEFT);
 
+		//SET'S THE IMAGES COLOR SPACE TO SRGB - ANDROID/IOS COMPATIBLITY
+		$image->profileImage('icc', file_get_contents($af->path().'_altaform/srgb.icc'));
+
 		//GET THE LONG EDGE OF THE IMAGE
 		$long = $image->getImageWidth() > $image->getImageHeight() ?
 				$image->getImageWidth() : $image->getImageHeight();
 
 		//PROCESS RESIZED IMAGES (MAINTAIN ASPECT RATIO)
+		//NOTE: CREATE SMALLEST SIZE REGARDLESS, IN CASE OF ROTATION/ICC ISSUES
+		$smallest = reset(self::$imageSize);
 		foreach (self::$imageSize as $size) {
-			//TODO: force processing of smallest size, in case of rotation
-			if ($size >= $long) continue;
+			if ($size >= $long  &&  $size !== $smallest) continue;
 			$data[$size] = self::resize($image, $size, false);
 		}
 
@@ -196,12 +202,14 @@ class fileImporter {
 	private static function resize(&$image, $size, $square=false) {
 		$resized = clone $image;
 
+		//RESIZE THE IMAGE
 		if ($square) {
 			$resized->cropThumbnailImage($size, $size);
 		} else {
 			$resized->resizeImage($size, $size, Imagick::FILTER_SINC, 1, true);
 		}
 
+		//SET NEW IMAGE PROPERTIES
 		$resized->setImagePage(0, 0, 0, 0);
 		$resized->setImageCompressionQuality(85);
 
