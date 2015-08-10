@@ -32,6 +32,7 @@ class afurl {
 		if (empty($this->parts['path'])) error404();
 
 		$this->query	= $this->uri . (empty($this->parts['query']) ? '?' : '&');
+		$this->query	= str_replace(' ', '+', $this->query);
 
 		if (substr($this->parts['path'],  0, 1) !== '/') $this->parts['path']  = '/' . $this->parts['path'];
 		if (substr($this->parts['path'], -1, 1) !== '/') $this->parts['path'] .= '/';
