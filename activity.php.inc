@@ -22,11 +22,14 @@ class afactivity {
 
 	public static function delete($id, $type) {
 		global $db, $user;
+
 		if (empty($user['user_id'])) return;
 
+		$type = $db->safe($type);
+
 		$db->delete('pudl_activity', [
-			"user_id='$user[user_id]'",
-			"object_id='$id'",
+			'user_id=' . $user['user_id'],
+			'object_id=' . (int) $id,
 			"object_type='$type'",
 		]);
 	}

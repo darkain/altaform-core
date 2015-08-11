@@ -341,7 +341,10 @@ class altaform extends altaformlite {
 		if (!empty($session)) {
 			$user = $db->cache(60*60, "AF-SESSION-$session")->row(
 				['us' => _pudl_user(50)],
-				["user_session='$session'", ["user_permission='user'","user_permission='admin'"]]
+				["user_session='$session'", [
+					'user_permission="user"',
+					'user_permission="admin"',
+				]]
 			);
 		}
 
@@ -445,8 +448,10 @@ class altaform extends altaformlite {
 
 		if (empty($account['user_permission'])) return;
 
-		$types = explode(',', $account['user_permission']);
-		foreach ($types as $key => $val) { $account['permission'][$val] = 1; }
+		$permissions = explode(',', $account['user_permission']);
+		foreach ($permissions as $key => $val) {
+			$account['permission'][$val] = 1;
+		}
 
 		if (!empty($account['user_adfree'])) {
 			if ($account['user_adfree'] > $this->time()) {
@@ -565,7 +570,7 @@ class altaform extends altaformlite {
 	private		$_style;
 	private		$_meta;
 	private		$_prefs;
-	private		$_types;
 	public		$_footer;
+	public static $types = [];
 	public static $class = 'altaform';
 }

@@ -34,6 +34,10 @@ require_once('common.php.inc');
 require_once('altaform.php.inc');
 
 
+//Altaform Object Types
+require_once('types.php.inc');
+
+
 //URL Parser
 require_once('url.php.inc');
 
