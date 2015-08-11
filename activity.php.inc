@@ -8,12 +8,12 @@ class afactivity {
 		if (empty($user['user_id'])) return false;
 
 		return $db->insert('pudl_activity', [
-			'activity_timestamp'	=> $db->time(),
-			'user_id'				=> $user['user_id'],
-			'object_id'				=> $id,
-			'object_type_id'		=> $af->type($type),
+			'activity_timestamp'	=> (int) $db->time(),
+			'user_id'				=> (int) $user['user_id'],
+			'object_id'				=> (int) $id,
+			'object_type_id'		=> (int) $af->type($type),
 			'activity_verb'			=> $verb,
-		], false, 'activity_count=activity_count+1, activity_timestamp='.$db->time());
+		], true, 'activity_count=activity_count+1, activity_timestamp='.$db->time());
 	}
 
 
