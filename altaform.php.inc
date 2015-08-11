@@ -462,6 +462,18 @@ class altaform extends altaformlite {
 
 
 
+	//GET THE OBJECT TYPE, EITHER BY NUMBER OR NAME
+	//PASS IN A NUMBER TO GET A NAME
+	//PASS IN A NAME TO GET A NUMBER
+	public function type($name) {
+		if (is_int($name)  ||  ctype_digit($name)) {
+			$name = (int) $name;
+			return !empty(self::$types[$name]) ? self::$types[$name] : false;
+		}
+		return array_search($name, self::$types);
+	}
+
+
 
 	//THIS IS DEPRICATED, REPLACED BY AFURL
 	public function cdnUrl($hash, $key='file_hash') {
