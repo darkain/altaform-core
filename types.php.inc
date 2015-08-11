@@ -19,4 +19,5 @@ altaform::$types = [
 	14	=> 'youtube',
 	15	=> 'feed',
 	16	=> 'attending',
+	17	=> 'mention',
 ];
