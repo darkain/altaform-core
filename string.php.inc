@@ -200,9 +200,10 @@ class afstring {
 
 
 	static function toBytes($string) {
-		$value = (float)trim($string);
-		$rest  = trim(substr($string, strlen((string)$value)));
-		switch (strtoupper($rest)) {  //TODO: strip out all non-alpha characters!
+		$value	= (float)trim($string);
+		$rest	= trim(substr($string, strlen((string)$value)));
+		$rest	= preg_replace('/[^A-Z]/', '', strtoupper($rest));
+		switch (strtoupper($rest)) {
 			case 'B': return round($value);
 			case 'K': case 'KIB': return round($value * pow(1024, 1));
 			case 'M': case 'MIB': return round($value * pow(1024, 2));
