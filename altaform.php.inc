@@ -563,6 +563,7 @@ class altaform extends altaformlite {
 			'server'	=> $get->server('X-PHP-IP'),
 			'remote'	=> $get->server('REMOTE_ADDR'),
 			'agent'		=> $get->server('HTTP_USER_AGENT'),
+			'tbx'		=> json_encode($Src),
 		], $this->debug());
 
 		echo $text;
