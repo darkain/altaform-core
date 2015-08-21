@@ -48,7 +48,7 @@ class afyoutube {
 			'youtube_length'		=> $seconds,
 			'youtube_title'			=> str_replace("'", '', $json['items'][0]['snippet']['title']),
 			'youtube_description'	=> $json['items'][0]['snippet']['description'],
-		], true, true);
+		], true);
 
 		return $id;
 	}

@@ -13,7 +13,10 @@ class afactivity {
 			'object_id'				=> (int) $id,
 			'object_type_id'		=> (int) $af->type($type),
 			'activity_verb'			=> $verb,
-		], true, 'activity_count=activity_count+1, activity_timestamp='.$db->time());
+		], [
+			'activity_count'		=> pudlFunction::increment(),
+			'activity_timestamp'	=> $db->time(),
+		]);
 	}
 
 

@@ -387,7 +387,7 @@ class fileImporter {
 			'file_uploaded'	=> $db->time(),
 			'file_name'		=> $data['name'],
 			'mime_id'		=> !empty($mime) ? $mime['mime_id'] : NULL,
-		], true, 'file_hash=file_hash');
+		], 'file_hash=file_hash');
 
 		//INSERT EXIF DATA
 		if (!empty($data['exif'])) {
@@ -395,7 +395,7 @@ class fileImporter {
 				'file_hash'			=> pudlFunction::unhex($data['hash']),
 				'file_meta_name'	=> 'exif',
 				'file_meta_value'	=> $data['exif'],
-			], true, 'file_hash=file_hash');
+			], 'file_hash=file_hash');
 		}
 
 		//ASSOCIATE FILE WITH CURRENT USER, IF AVAILABLE
@@ -404,7 +404,7 @@ class fileImporter {
 				'file_hash'		=> pudlFunction::unhex($data['hash']),
 				'user_id'		=> $user['user_id'],
 				'user_time'		=> $db->time(),
-			], true, 'file_hash=file_hash');
+			], 'file_hash=file_hash');
 		}
 
 		//INSERT THUMBNAIL IMAGES
@@ -416,7 +416,7 @@ class fileImporter {
 				'thumb_hash'	=> pudlFunction::unhex($item['hash']),
 				'thumb_size'	=> $item['size'],
 				'thumb_type'	=> $item['type'],
-			], true, 'thumb_hash=thumb_hash');
+			], 'thumb_hash=thumb_hash');
 		}
 	}
 

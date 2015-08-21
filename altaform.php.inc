@@ -524,20 +524,16 @@ class altaform extends altaformlite {
 		}
 
 		//TODO: CONVERT THIS OVER TO NEW DYANMIC COLUMN FORMAT
-		$db->insert(
-			'pudl_queue',
-			[
+		$db->insert('pudl_queue', [
 				'queue_user'	=> $user['user_id'],
 				'queue_service'	=> $service,
 				'queue_type'	=> $type,
 				'queue_time'	=> $this->time(),
 				'queue_message'	=> json_encode($data),
-			],
-			true,
-			[
+			], [
 				'queue_time'	=> $this->time(),
 				'queue_message'	=> json_encode($data),
-				'queue_count'	=> pudlFunction::increment(1),
+				'queue_count'	=> pudlFunction::increment(),
 			]
 		);
 	}
