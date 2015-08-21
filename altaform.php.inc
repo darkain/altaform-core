@@ -341,10 +341,10 @@ class altaform extends altaformlite {
 		if (!empty($session)) {
 			$user = $db->cache(60*60, "AF-SESSION-$session")->row(
 				['us' => _pudl_user(50)],
-				["user_session='$session'", [
-					'user_permission="user"',
-					'user_permission="admin"',
-				]]
+				[
+					'user_session' => $session,
+					'user_permission IN ("user", "admin")',
+				]
 			);
 		}
 
