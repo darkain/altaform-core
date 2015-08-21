@@ -378,7 +378,7 @@ class fileImporter {
 		if (empty($data)) return;
 
 		//GET INTERNAL MIME TYPE DATA
-		$mime = $db->rowId('pudl_mimetype', 'mime_type', $db->safe($data['mime']));
+		$mime = $db->rowId('pudl_mimetype', 'mime_type', $data['mime']);
 
 		//INSERT MAIN IMAGE
 		$db->insert('pudl_file', [

@@ -14,7 +14,7 @@ class afgeo {
 			self::$_geoloc[$location] = $db->rowId(
 				'pudl_geolocation',
 				'location',
-				$db->safe($location)
+				$location
 			);
 		}
 
@@ -47,7 +47,7 @@ class afgeo {
 			return $_SERVER['REMOTE_ADDR'];
 		}
 		return false;
-	}	
+	}
 
 
 

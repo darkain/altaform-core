@@ -98,13 +98,10 @@ if (isset($site['pudl_server'])) {
 if (isset($db)) {
 	$db->debugger('_pudl_debug');
 	$get->pudl = $db;
-	$get->default = _GETVAR_SQLSAFE;
 
 	//PUDL Session Handler
 	require_once('_pudl/pudlSession.php');
-	new pudlSession(
-		$db,
-		'pudl_session',
+	new pudlSession($db, 'pudl_session',
 		isset($site['session_name'])	? $site['session_name']		: false,
 		isset($site['session_domain'])	? $site['session_domain']	: false
 	);

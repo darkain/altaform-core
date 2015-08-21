@@ -41,7 +41,6 @@ class afurl {
 		$this->part = explode('/', $this->parts['path']);
 		$this->url = '/';
 		foreach ($this->part as $key => $val) {
-			$this->safe[] = $this->safe($val);
 			if (strlen($val) < 1) continue;
 			$this->url .= urlencode($val) . '/';
 		}
@@ -76,18 +75,14 @@ class afurl {
 		$append[]  = '';
 
 		array_shift($this->part);
-		array_shift($this->safe);
 		array_pop($this->part);
-		array_pop($this->safe);
 
 		foreach ($prepend as $item) {
 			array_unshift($this->part, $item);
-			array_unshift($this->safe, $this->safe($item));
 		}
 
 		foreach ($append as $item) {
 			$this->part[] = $item;
-			$this->safe[] = $this->safe($item);
 		}
 
 		$this->reparse = true;
@@ -215,15 +210,10 @@ class afurl {
 		if ($start >= $count) error500();
 
 		for ($x=$start; $x<$count; $x++) {
-			$this->virtual[] = $this->safe[$x];
+			$this->virtual[] = $this->part[$x];
 		}
 
 		$this->vid($this->virtual[0]);
-	}
-
-
-	private function safe($item) {
-		return !empty($this->db) ? $this->db->safe($item) : @mysql_real_escape_string($item);
 	}
 
 
@@ -283,7 +273,6 @@ class afurl {
 	public $img			= '';
 	public $upload		= '';
 	public $parts		= [];
-	public $safe		= [];
 	public $virtual		= [];
 	public $id			= 0;
 	public $reparse		= true;
