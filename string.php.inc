@@ -35,6 +35,15 @@ class afstring {
 	}
 
 
+	static function slash($value) {
+		return str_replace('⁄', '/', $value);
+	}
+
+	static function unslash($value) {
+		return str_replace('/', '⁄', $value);
+	}
+
+
 	static function striphtml($string, $length=false) {
 		$string = preg_replace('#<[^>]+>#', ' ', $string);
 		$string = str_replace('&nbsp;', ' ', $string);
