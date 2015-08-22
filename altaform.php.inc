@@ -379,7 +379,7 @@ class altaform extends altaformlite {
 			$this->purgeSession();
 		}
 
-		$user = $db->row('pudl_user', "user_id=0");
+		$user = $db->rowId('pudl_user', 'user_id', 0);
 		$this->permissions($user);
 
 		if ($destroy) {
@@ -420,7 +420,7 @@ class altaform extends altaformlite {
 		if (empty($account)) $account = $user;
 
 		if (is_int($account)  ||  is_string($account)) {
-			$account = $db->rowId('pudl_user', 'user_id', afstring::int($account));
+			$account = $db->rowId('pudl_user', 'user_id', $account);
 			if (empty($account)) return false;
 		}
 
@@ -516,9 +516,9 @@ class altaform extends altaformlite {
 
 		if (empty($data)) {
 			$db->delete('pudl_queue', [
-				"queue_user='$user[user_id]'",
-				"queue_service='$service'",
-				"queue_type='$type'",
+				'queue_user'	=> $user['user_id'],
+				'queue_service'	=> $service,
+				'queue_type'	=> $type,
 			]);
 			return;
 		}
