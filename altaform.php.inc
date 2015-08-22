@@ -533,7 +533,7 @@ class altaform extends altaformlite {
 			], [
 				'queue_time'	=> $this->time(),
 				'queue_message'	=> json_encode($data),
-				'queue_count'	=> pudlFunction::increment(),
+				'queue_count'	=> pudl::_increment(1),
 			]
 		);
 	}
