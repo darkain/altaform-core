@@ -358,7 +358,7 @@ class altaform extends altaformlite {
 			$user['user_class'] = 'logged-in';
 
 			$user['messages'] = $db->count('pudl_notification', [
-				"notification_user_to='$user[user_id]'",
+				'notification_user_to' => $user['user_id'],
 				'notification_read=0'
 			]);
 		}
