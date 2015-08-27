@@ -53,12 +53,12 @@ class afurl {
 	}
 
 
-	public function __invoke($path) {
+	public function __invoke($path, $base=false) {
 		if (!is_array($path)) {
-			return $this->base . '/' . $this->clean($path)  . '/';
+			return ($base ? ($this->base.'/') : '') . $this->clean($path)  . '/';
 		}
 
-		$url = $this->base . '/';
+		$url = $base ? ($this->base.'/') : '';
 		foreach ($path as $item) $url .= $this->clean($item)  . '/';
 		return $url;
 	}
