@@ -53,6 +53,24 @@ class afurl {
 	}
 
 
+	public function __invoke($path) {
+		if (!is_array($path)) {
+			return $this->base . '/' . $this->clean($path)  . '/';
+		}
+
+		$url = $this->base . '/';
+		foreach ($path as $item) $url .= $this->clean($item)  . '/';
+		return $url;
+	}
+
+
+
+	public function clean($fragment) {
+		return strtolower(urlencode($fragment));
+	}
+
+
+
 	public function vid($new_id=false) {
 		if ($new_id !== false) $this->id = afstring::int($new_id);
 		return $this->id;
@@ -60,7 +78,9 @@ class afurl {
 
 
 	public function user($user) {
-		return $this->base . '/' . empty($user['user_url']) ? $user['user_id'] : $user['user_url'] . '/';
+		return $this(
+			empty($user['user_url']) ? $user['user_id'] : $user['user_url']
+		);
 	}
 
 
