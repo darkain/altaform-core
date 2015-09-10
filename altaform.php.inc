@@ -155,14 +155,20 @@ class altaform extends altaformlite {
 
 
 	public function footerPage() {
-		global $site;
+		global $site, $db;
 
 		$root = $this->path() . $site['root'];
 		if ($this->debug()  &&  file_exists("$root/footer_page_debug.tpl")) {
-			$this->render("$root/footer_page_debug.tpl");
+			$this->load("$root/footer_page_debug.tpl");
 		} else {
-			$this->render("$root/footer_page.tpl");
+			$this->load("$root/footer_page.tpl");
 		}
+
+		if (!empty($db)) {
+			$this->field('queries', $db->queries());
+		}
+
+		$this->render();
 	}
 
 
