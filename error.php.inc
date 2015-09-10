@@ -173,6 +173,14 @@ function _af_error_handler($errno, $errstr, $errfile=NULL, $errline=NULL, $errco
 
 	if (!error_reporting()) return false;
 
+	$die = true;
+
+	switch ($errno) {
+		case E_WARNING:		case E_USER_WARNING:
+		case E_NOTICE:		case E_USER_NOTICE:
+			$die = false;
+	}
+
 	_af_log_error(array(
 		'time'		=> @date('r'),
 		'error'		=> $errno,
@@ -185,7 +193,7 @@ function _af_error_handler($errno, $errstr, $errfile=NULL, $errline=NULL, $errco
 		'server'	=> $get->server('X-PHP-IP'),
 		'remote'	=> $get->server('REMOTE_ADDR'),
 		'agent'		=> $get->server('HTTP_USER_AGENT'),
-	));
+	), $die);
 
 	return false;
 }
