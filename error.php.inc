@@ -237,7 +237,7 @@ register_shutdown_function('_af_fatal_error');
 
 
 function _pudl_debug($db, $result=false) {
-	global $db, $get, $afurl;
+	global $get, $afurl;
 
 	_af_log_error(array(
 		'time'		=> @date('r'),
