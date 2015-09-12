@@ -159,16 +159,18 @@ class altaform extends altaformlite {
 
 		$root = $this->path() . $site['root'];
 		if ($this->debug()  &&  file_exists("$root/footer_page_debug.tpl")) {
-			$this->load("$root/footer_page_debug.tpl");
+			$this->render("$root/footer_page_debug.tpl");
 		} else {
-			$this->load("$root/footer_page.tpl");
+			$this->render("$root/footer_page.tpl");
 		}
 
-		if (!empty($db)) {
-			$this->field('queries', $db->queries());
+		if ($this->hasPermission('staff,admin')  &&  file_exists("$root/footer_admin.tpl")) {
+			$this->load("$root/footer_admin.tpl");
+			if (!empty($db)) {
+				$this->field('dbstats', $db->stats());
+			}
+			$this->render();
 		}
-
-		$this->render();
 	}
 
 
