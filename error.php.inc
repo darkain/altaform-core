@@ -169,7 +169,7 @@ function _af_email_error($text, $title='') {
 
 
 function _af_error_handler($errno, $errstr, $errfile=NULL, $errline=NULL, $errcontext=NULL) {
-	global $db, $get, $afurl;
+	global $af, $db, $get, $afurl;
 
 	if (!error_reporting()) return false;
 
@@ -178,7 +178,7 @@ function _af_error_handler($errno, $errstr, $errfile=NULL, $errline=NULL, $errco
 	switch ($errno) {
 		case E_WARNING:		case E_USER_WARNING:
 		case E_NOTICE:		case E_USER_NOTICE:
-			$die = false;
+			$die = $af->debug();
 	}
 
 	_af_log_error(array(
