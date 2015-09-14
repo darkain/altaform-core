@@ -13,6 +13,15 @@ class aftime {
 	];
 
 
+
+	public static function from($offset, $precision=0) {
+		global $af;
+		if (!$precision) return $af->time() - $offset;
+		return (floor($af->time()/$precision)*$precision) - $offset;
+	}
+
+
+
 	public static function since($timestamp, $maxoffset=86400) {
 		global $af;
 		if ($timestamp == 0) return "Never";
