@@ -28,7 +28,7 @@ function error401($text='') {
 
 	afError(
 		'HTTP/1.0 401 Authorization Required',
-		"<h1>ERROR: 401</h1>\n<h2>AUTHORIZATION REQUIRED</h2>\n<i>$text</i>"
+		"<h1>ERROR: 401</h1>\n<h2>AUTHORIZATION REQUIRED</h2>\n<i>$text</i><br/>\n"
 	);
 }
 
@@ -36,7 +36,7 @@ function error401($text='') {
 function error403($text='') {
 	afError(
 		'HTTP/1.0 403 Forbidden',
-		"<h1>ERROR: 403</h1>\n<h2>FORBIDDEN</h2>\n<i>$text</i>"
+		"<h1>ERROR: 403</h1>\n<h2>FORBIDDEN</h2>\n<i>$text</i><br/>\n"
 	);
 }
 
@@ -59,7 +59,7 @@ function error404($text='') {
 
 	afError(
 		'HTTP/1.0 404 File Not Found',
-		"<h1>ERROR: 404</h1>\n<h2>FILE NOT FOUND</h2>\n<i>$text</i>"
+		"<h1>ERROR: 404</h1>\n<h2>FILE NOT FOUND</h2>\n<i>$text</i><br/>\n"
 	);
 }
 
@@ -67,7 +67,7 @@ function error404($text='') {
 function error422($text='') {
 	afError(
 		'HTTP/1.1 422 Unprocessable Entity',
-		"<h1>ERROR: 422</h1>\n<h2>UNPROCESSABLE ENTITY</h2>\n<i>$text</i>"
+		"<h1>ERROR: 422</h1>\n<h2>UNPROCESSABLE ENTITY</h2>\n<i>$text</i><br/>\n"
 	);
 }
 
@@ -75,7 +75,7 @@ function error422($text='') {
 function error500($text='') {
 	afError(
 		'HTTP/1.0 500 Internal Server Error',
-		"<h1>ERROR: 500</h1>\n<h2>INTERNAL SERVER ERROR</h2>\n<i>$text</i>"
+		"<h1>ERROR: 500</h1>\n<h2>INTERNAL SERVER ERROR</h2>\n<i>$text</i><br/>\n"
 	);
 }
 
