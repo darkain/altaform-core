@@ -450,7 +450,10 @@ class altaform extends altaformlite {
 
 
 	public function requirePermission($permission, $account=false) {
-		if (!$this->hasPermission($permission, $account)) error401();
+		assert401(
+			$this->hasPermission($permission, $account),
+			'This page requires the following permission level: ' . $permission
+		);
 	}
 
 
@@ -460,7 +463,9 @@ class altaform extends altaformlite {
 		//USER ACCESS RIGHTS
 		$account['permission'] = $site['permission'];
 
-		if (empty($account['user_permission'])) return;
+		if (empty($account['user_permission'])) {
+			$account['user_permission'] = 'guest';
+		}
 
 		$permissions = explode(',', $account['user_permission']);
 		foreach ($permissions as $key => $val) {
