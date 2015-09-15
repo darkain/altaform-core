@@ -343,11 +343,11 @@ class altaform extends altaformlite {
 	public function login($session=false) {
 		global $user, $db, $site, $get;
 
+		$user = false;
 		if (!isset($db)) return;
 
 		if (empty($session)) $session = session_id();
 
-		$user = false;
 		if (!empty($session)) {
 			if ($id = (int) $get->session('AF:USER_ID')) {
 				$user = $db->cache(60*60, "AF-SESSION-$session")->row(
@@ -362,19 +362,20 @@ class altaform extends altaformlite {
 
 		if (empty($user)) {
 			$user = $db->cache(60*60)->rowId('pudl_user', 'user_id', 0);
+			if (empty($user)) return;
 			$user['messages'] = 0;
-			$user['user_session'] = $session;
 
 		} else {
 			$user['img'] = $this->cdnUrl($user, 'thumb_hash');
 			$user['user_class'] = 'logged-in';
 
 			$user['messages'] = $db->count('pudl_notification', [
-				'notification_user_to' => $user['user_id'],
-				'notification_read=0'
+				'notification_user_to'	=> $user['user_id'],
+				'notification_read'		=> 0,
 			]);
 		}
 
+		$user['user_session'] = $session;
 		if (empty($user['user_url'])) $user['user_url'] = $user['user_id'];
 
 		$this->permissions($user);
