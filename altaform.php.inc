@@ -354,7 +354,7 @@ class altaform extends altaformlite {
 					['us' => _pudl_user(50)],
 					[
 						'user_id'			=> $id,
-						'user_permission'	=> pudl::inSet('user', 'admin'),
+						'user_permission'	=> pudl::inSet('user', 'staff', 'admin'),
 					]
 				);
 			}
