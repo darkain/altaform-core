@@ -341,20 +341,23 @@ class altaform extends altaformlite {
 
 
 	public function login($session=false) {
-		global $user, $db, $site;
+		global $user, $db, $site, $get;
 
 		if (!isset($db)) return;
 
 		if (empty($session)) $session = session_id();
 
+		$user = false;
 		if (!empty($session)) {
-			$user = $db->cache(60*60, "AF-SESSION-$session")->row(
-				['us' => _pudl_user(50)],
-				[
-					'user_session' => $session,
-					'user_permission IN ("user", "admin")',
-				]
-			);
+			if ($id = (int) $get->session('AF:USER_ID')) {
+				$user = $db->cache(60*60, "AF-SESSION-$session")->row(
+					['us' => _pudl_user(50)],
+					[
+						'user_id'			=> $id,
+						'user_permission'	=> pudl::inSet('user', 'admin'),
+					]
+				);
+			}
 		}
 
 		if (empty($user)) {
@@ -399,6 +402,7 @@ class altaform extends altaformlite {
 					$params['secure'], $params['httponly']
 				);
 			}
+			session_unset();
 			session_destroy();
 		}
 	}
