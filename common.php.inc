@@ -89,7 +89,7 @@ function af_dump($var, $die=true) {
 
 
 
-function url_get_contents($url, $post=array(), $followRedirect=true, $failOnError=true) {
+function url_get_contents($url, $post=array(), $followRedirect=true, $failOnError=true, $session=false) {
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL,				$url);
 	curl_setopt($ch, CURLOPT_AUTOREFERER,		true);
@@ -101,10 +101,14 @@ function url_get_contents($url, $post=array(), $followRedirect=true, $failOnErro
 	curl_setopt($ch, CURLOPT_TIMEOUT,			20);
 	curl_setopt($ch, CURLOPT_POST,				true);
 	curl_setopt($ch, CURLOPT_POSTFIELDS,		$post);
-	curl_setopt($ch, CURLOPT_HTTPHEADER,		array('Expect:'));
+	curl_setopt($ch, CURLOPT_HTTPHEADER,		['Expect:']);
+
+	if ($session) {
+		curl_setopt($ch, CURLOPT_COOKIE,		$session);
+	}
 
 	$agent = ini_get('user_agent');
-	if (is_string($agent)) {
+	if (!empty($agent)  &&  is_string($agent)) {
 		curl_setopt($ch, CURLOPT_USERAGENT,		$agent);
 	}
 
