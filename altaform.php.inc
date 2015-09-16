@@ -363,23 +363,18 @@ class altaform extends altaformlite {
 		if (empty($user)) {
 			$user = $db->cache(60*60)->rowId('pudl_user', 'user_id', 0);
 			if (empty($user)) return;
-			$user['messages'] = 0;
-
-		} else {
-			$user['img'] = $this->cdnUrl($user, 'thumb_hash');
-			$user['user_class'] = 'logged-in';
-
-			$user['messages'] = $db->count('pudl_notification', [
-				'notification_user_to'	=> $user['user_id'],
-				'notification_read'		=> 0,
-			]);
 		}
 
 		$user['user_session'] = $session;
 		if (empty($user['user_url'])) $user['user_url'] = $user['user_id'];
 
 		$this->permissions($user);
+
+		$this->postLogin();
 	}
+
+
+	public function postLogin() {}
 
 
 	public function logout($session=false, $destroy=true) {
