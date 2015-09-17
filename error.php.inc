@@ -178,7 +178,7 @@ function _af_error_handler($errno, $errstr, $errfile=NULL, $errline=NULL, $errco
 	switch ($errno) {
 		case E_WARNING:		case E_USER_WARNING:
 		case E_NOTICE:		case E_USER_NOTICE:
-			$die = is_object($af) ? $af->debug() : false;
+			$die = (!empty($af) && is_object($af)) ? $af->debug() : false;
 	}
 
 	_af_log_error(array(
