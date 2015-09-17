@@ -84,7 +84,9 @@ setlocale(LC_CTYPE,
 
 //PHP Universal Database Library (PUDL)
 if (isset($site['pudl_server'])) {
-	if (!isset($site['pudl_type'])) $site['pudl_type'] = 'MySqli';
+	if (!isset($site['pudl_type'])) {
+		$site['pudl_type'] = is_array($site['pudl_server']) ? 'Galera' : 'MySqli';
+	}
 	$pudltype = 'pudl' . $site['pudl_type'];
 	require_once("_pudl/$pudltype.php");
 	$db = $pudltype::instance($site);
