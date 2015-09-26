@@ -69,7 +69,7 @@ class afmail {
 
 		$return = $mail->send();
 
-		if (!empty($path)) unlink($path);
+		if (!empty($path)) @unlink($path);
 
 		return $return;
 	}
