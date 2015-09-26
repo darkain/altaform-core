@@ -190,7 +190,11 @@ class altaform extends altaformlite {
 		//PULL OUT REQUIRED PERMISSIONS TAG
 		preg_match("/\<permission[^>]*>(.*)\<\/permission\>/", $text, $matches);
 		if (!empty($matches[1])) {
-			$this->requirePermission($matches[1]);
+			if ($matches[1] === 'login') {
+				$this->requireLogin();
+			} else {
+				$this->requirePermission($matches[1]);
+			}
 			$text = preg_replace("/\<permission[^>]*>(.*)\<\/permission\>/", '', $text);
 		}
 
