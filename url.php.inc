@@ -238,17 +238,21 @@ class afurl {
 
 
 
-	public static function cdn($hash, $key='file_hash') {
+	public static function cdn($hash, $key='hash') {
 		global $afurl;
 		if (empty($hash)) return false;
-		$path = self::cdnPath( is_array($hash) ? $hash[$key] : $hash );
-		if (empty($path)) return false;
-		return $afurl->cdn . '/' . $path;
-			;
+		if (is_array($hash)) {
+			if		(!empty($hash[$key]))			$hash = $hash[$key];
+			else if	(!empty($hash['thumb_hash']))	$hash = $hash['thumb_hash'];
+			else if	(!empty($hash['file_hash']))	$hash = $hash['file_hash'];
+			else return false;
+		}
+		$path = self::cdnPath($hash);
+		return empty($path) ? false : $afurl->cdn . '/' . $path;
 	}
 
 
-	public static function cdnAll(&$list, $key='img', $hashkey='file_hash') {
+	public static function cdnAll(&$list, $key='img', $hashkey='hash') {
 		if (!is_array($list)) return false;
 		if (empty($key)) $key = 'img';
 		foreach ($list as &$val) {
