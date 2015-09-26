@@ -6,8 +6,8 @@ function _pudl_thumb($table, $field, $thumbsize) {
 		999 => [
 			'left' => ['th' => 'pudl_file_thumb'],
 			'clause' => [
-				$field.'=th.file_hash',
-				"th.thumb_type='$thumbsize'",
+				'th.file_hash'	=> pudl::column($field),
+				'th.thumb_type'	=> (string) $thumbsize,
 			]
 		]
 	];
