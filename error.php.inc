@@ -81,11 +81,11 @@ function error500($text='') {
 
 
 
-function assert401($item, $text='') { if (empty($item)) error401($text); }
-function assert403($item, $text='') { if (empty($item)) error403($text); }
-function assert404($item, $text='') { if (empty($item)) error404($text); }
-function assert422($item, $text='') { if (empty($item)) error422($text); }
-function assert500($item, $text='') { if (empty($item)) error500($text); }
+function assert401($item, $text='') { if (empty($item)) error401($text); return $item; }
+function assert403($item, $text='') { if (empty($item)) error403($text); return $item; }
+function assert404($item, $text='') { if (empty($item)) error404($text); return $item; }
+function assert422($item, $text='') { if (empty($item)) error422($text); return $item; }
+function assert500($item, $text='') { if (empty($item)) error500($text); return $item; }
 
 
 
