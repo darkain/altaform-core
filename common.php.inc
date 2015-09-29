@@ -55,6 +55,10 @@ function _pudl_group($thumbsize) {
 	return _pudl_thumb('pudl_group', 'gr.group_icon', $thumbsize);
 }
 
+function _pudl_feature($thumbsize) {
+	return _pudl_thumb('pudl_feature', 'fe.file_hash', $thumbsize);
+}
+
 
 
 function _pudl_gallery_costume($thumbsize) {
