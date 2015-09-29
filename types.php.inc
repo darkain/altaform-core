@@ -1,6 +1,8 @@
 <?php
 
 //NOTE: THIS FILE IS AUTO-GENERATED. DO NOT EDIT DIRECTLY
+//      GENERATE THIS SCRIPT VIA /admin/buildtypes/
+
 
 altaform::$types = [
 	1	=> 'activity',
