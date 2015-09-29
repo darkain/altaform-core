@@ -21,4 +21,5 @@ altaform::$types = [
 	16	=> 'attending',
 	17	=> 'mention',
 	18	=> 'vendor',
+	19	=> 'featured',
 ];
