@@ -2,16 +2,18 @@
 
 class afactivity {
 
-	public static function add($id, $type, $verb=NULL) {
-		global $af, $db, $user;
 
-		if (empty($user['user_id'])) return false;
+	public static function add($id, $type, $verb=NULL, $userid=false) {
+		global $af, $db;
+
+		$userid = self::uid($userid);
+		if (empty($userid)) return false;
 
 		return $db->insert('pudl_activity', [
-			'activity_timestamp'	=> (int) $db->time(),
-			'user_id'				=> (int) $user['user_id'],
-			'object_id'				=> (int) $id,
-			'object_type_id'		=> (int) $af->type($type),
+			'activity_timestamp'	=> $db->time(),
+			'user_id'				=> $userid,
+			'object_id'				=> $id,
+			'object_type_id'		=> $af->type($type),
 			'activity_verb'			=> $verb,
 		], [
 			'activity_count'		=> pudl::_increment(1),
@@ -20,16 +22,18 @@ class afactivity {
 	}
 
 
-	public static function addFile($hash, $type, $verb=NULL) {
+
+	public static function addFile($hash, $type, $verb=NULL, $userid=false) {
 		global $af, $db, $user;
 
-		if (empty($user['user_id'])) return false;
+		$userid = self::uid($userid);
+		if (empty($userid)) return false;
 
 		return $db->insert('pudl_activity', [
-			'activity_timestamp'	=> (int) $db->time(),
-			'user_id'				=> (int) $user['user_id'],
+			'activity_timestamp'	=> $db->time(),
+			'user_id'				=> $userid,
 			'file_hash'				=> $hash,
-			'object_type_id'		=> (int) $af->type($type),
+			'object_type_id'		=> $af->type($type),
 			'activity_verb'			=> $verb,
 		], [
 			'activity_count'		=> pudl::_increment(1),
@@ -38,29 +42,45 @@ class afactivity {
 	}
 
 
-	public static function delete($id, $type) {
+
+	public static function delete($id, $type, $userid=false) {
 		global $af, $db, $user;
 
-		if (empty($user['user_id'])) return false;
+		$userid = self::uid($userid);
+		if (empty($userid)) return false;
 
 		return $db->delete('pudl_activity', [
-			'user_id'			=> (int) $user['user_id'],
-			'object_id'			=> (int) $id,
-			'object_type_id'	=> (int) $af->type($type),
+			'user_id'			=> $userid,
+			'object_id'			=> $id,
+			'object_type_id'	=> $af->type($type),
 		]);
 	}
 
 
-	public static function deleteFile($hash, $type) {
+
+	public static function deleteFile($hash, $type, $userid=false) {
 		global $af, $db, $user;
 
-		if (empty($user['user_id'])) return false;
+		$userid = self::uid($userid);
+		if (empty($userid)) return false;
 
 		return $db->delete('pudl_activity', [
-			'user_id'			=> (int) $user['user_id'],
+			'user_id'			=> $userid,
 			'file_hash'			=> $hash,
-			'object_type_id'	=> (int) $af->type($type),
+			'object_type_id'	=> $af->type($type),
 		]);
+	}
+
+
+
+	public static function uid($userid) {
+		global $user;
+		if (!empty($userid)) {
+			if (is_array($userid)) return (int) $userid['user_id'];
+			return (int) $userid;
+		}
+		if (!empty($user['user_id'])) return (int) $user['user_id'];
+		return false;
 	}
 
 }
