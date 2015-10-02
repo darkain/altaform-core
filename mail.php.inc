@@ -6,6 +6,7 @@ class afmail {
 		global $site, $afurl;
 
 		require_once('_phpmailer/class.phpmailer.php');
+		require_once('_phpmailer/class.smtp.php');
 
 		$mail = new PHPMailer;
 
@@ -59,6 +60,11 @@ class afmail {
 
 		if (!empty($headers['return'])) {
 			$mail->Sender = is_array($headers['return']) ? reset($headers['return']) : $headers['return'];
+		}
+
+		if (!empty($site['af_smtp'])) {
+			$mail->IsSMTP();
+			$mail->Host	= $site['af_smtp'];
 		}
 
 		$mail->Priority	= $headers['priority'];
