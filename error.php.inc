@@ -1,13 +1,15 @@
 <?php
 
 
-function afError($header, $text) {
+function afError($header, $text, $log=false) {
 	global $site, $db;
 
 	if (!headers_sent()) header($header);
 
 	if (!empty($site['debug'])  &&  !empty($db)) {
 		$text .= htmlspecialchars($db->query());
+		_af_log_error($text, false);
+	} else if (empty($site['debug'])  &&  $log) {
 		_af_log_error($text, false);
 	}
 
@@ -67,7 +69,8 @@ function error404($text='') {
 function error422($text='') {
 	afError(
 		'HTTP/1.1 422 Unprocessable Entity',
-		"<h1>ERROR: 422</h1>\n<h2>UNPROCESSABLE ENTITY</h2>\n<i>$text</i><br/>\n"
+		"<h1>ERROR: 422</h1>\n<h2>UNPROCESSABLE ENTITY</h2>\n<i>$text</i><br/>\n",
+		true
 	);
 }
 
@@ -75,7 +78,8 @@ function error422($text='') {
 function error500($text='') {
 	afError(
 		'HTTP/1.0 500 Internal Server Error',
-		"<h1>ERROR: 500</h1>\n<h2>INTERNAL SERVER ERROR</h2>\n<i>$text</i><br/>\n"
+		"<h1>ERROR: 500</h1>\n<h2>INTERNAL SERVER ERROR</h2>\n<i>$text</i><br/>\n",
+		true
 	);
 }
 
