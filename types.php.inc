@@ -24,4 +24,5 @@ altaform::$types = [
 	17	=> 'mention',
 	18	=> 'vendor',
 	19	=> 'featured',
+	20	=> 'product',
 ];
