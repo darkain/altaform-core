@@ -112,7 +112,7 @@ if (isset($db)) {
 
 
 //Initialize afurl
-$afurl->construct($db);
+$afurl->construct();
 
 
 //Initialize Altaform class

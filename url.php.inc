@@ -7,11 +7,10 @@ class afurl {
 	use closures;
 
 
-	public function construct($db=false) {
+	public function construct() {
 		global $get, $site;
 
 		$this->directory = getcwd();
-		$this->db = $db;
 
 		//Configurable paths
 		if (!empty($site['base']))		$this->base		= $site['base'];
@@ -301,7 +300,6 @@ class afurl {
 	public $id			= 0;
 	public $reparse		= true;
 	public $directory	= '';
-	private $db			= false;
 }
 
 $afurl = new afurl();
