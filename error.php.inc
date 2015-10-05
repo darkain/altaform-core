@@ -2,20 +2,32 @@
 
 
 function afError($header, $text, $log=false) {
-	global $site, $db;
+	global $site, $db, $get, $afurl;
 
 	if (!headers_sent()) header($header);
 
-	if (!empty($site['debug'])  &&  !empty($db)) {
-		$text .= htmlspecialchars($db->query());
-		_af_log_error($text, false);
-	} else if (empty($site['debug'])  &&  $log) {
-		_af_log_error($text, false);
+	echo $text;
+
+	if ($log) {
+		_af_log_error($error = [
+			'time'		=> @date('r'),
+			'details'	=> $text,
+			'url'		=> !empty($afurl->all) ? $afurl->all : !empty($get) ? $get->server('REQUEST_URI') : '',
+			'mariadb'	=> !empty($db)	? $db->server() : '',
+			'proxy'		=> !empty($get)	? $get->server('SERVER_ADDR') : '',
+			'server'	=> !empty($get)	? $get->server('X-PHP-IP') : '',
+			'remote'	=> !empty($get)	? $get->server('REMOTE_ADDR') : '',
+			'agent'		=> !empty($get)	? $get->server('HTTP_USER_AGENT') : '',
+			'query'		=> !empty($db)	? $db->query() : '',
+		], false);
+
+		if (!empty($site['debug'])) {
+			unset($error['details']);
+			var_export($error);
+		}
 	}
 
 	if (!empty($db)) $db->rollback();
-
-	echo $text;
 	flush();
 	die();
 }
