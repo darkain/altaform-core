@@ -19,6 +19,8 @@ function afError($header, $text, $log=false) {
 			'remote'	=> !empty($get)	? $get->server('REMOTE_ADDR') : '',
 			'agent'		=> !empty($get)	? $get->server('HTTP_USER_AGENT') : '',
 			'query'		=> !empty($db)	? $db->query() : '',
+			'get'		=> !empty($_GET)	? $_GET		: '',
+			'post'		=> !empty($_POST)	? $_POST	: '',
 		], false);
 
 		if (!empty($site['debug'])) {
@@ -209,6 +211,8 @@ function _af_error_handler($errno, $errstr, $errfile=NULL, $errline=NULL, $errco
 		'server'	=> $get->server('X-PHP-IP'),
 		'remote'	=> $get->server('REMOTE_ADDR'),
 		'agent'		=> $get->server('HTTP_USER_AGENT'),
+		'get'		=> !empty($_GET)	? $_GET		: '',
+		'post'		=> !empty($_POST)	? $_POST	: '',
 	), $die);
 
 	return false;
@@ -235,6 +239,8 @@ function _af_log_exception(Exception $e) {
 		'server'	=> $get->server('X-PHP-IP'),
 		'remote'	=> $get->server('REMOTE_ADDR'),
 		'agent'		=> $get->server('HTTP_USER_AGENT'),
+		'get'		=> !empty($_GET)	? $_GET		: '',
+		'post'		=> !empty($_POST)	? $_POST	: '',
 	));
 }
 set_exception_handler('_af_log_exception');
@@ -266,5 +272,7 @@ function _pudl_debug($db, $result=false) {
 		'server'	=> $get->server('X-PHP-IP'),
 		'remote'	=> $get->server('REMOTE_ADDR'),
 		'agent'		=> $get->server('HTTP_USER_AGENT'),
+		'get'		=> !empty($_GET)	? $_GET		: '',
+		'post'		=> !empty($_POST)	? $_POST	: '',
 	));
 }
