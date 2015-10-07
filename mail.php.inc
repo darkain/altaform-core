@@ -65,12 +65,18 @@ class afmail {
 		if (!empty($site['af_smtp'])) {
 			$mail->IsSMTP();
 			$mail->Host	= $site['af_smtp'];
+
+			$mail->SMTPOptions = ['ssl' => [
+				'verify_peer'		=> false,
+				'verify_peer_name'	=> false,
+				'allow_self_signed'	=> true,
+			]];
 		}
 
 		$mail->Priority	= $headers['priority'];
 		$mail->Hostname	= $afurl->domain;
 		$mail->Subject	= $subject;
-		$mail->XMailer	= 'Altaform v1.1';
+		$mail->XMailer	= 'Altaform v1.1.2';
 		$mail->WordWrap	= 80;
 
 		$return = $mail->send();
