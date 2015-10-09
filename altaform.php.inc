@@ -74,25 +74,21 @@ class altaform extends altaformlite {
 
 
 	public function load($filename) {
-		if (afdevice::mobile()  &&  file_exists($filename . '.mobile')) {
-			$this->LoadTemplate($filename . '.mobile');
-		} else if (afdevice::tablet()  &&  file_exists($filename . '.tablet')) {
-			$this->LoadTemplate($filename . '.tablet');
-		} else if (afdevice::tv()  &&  file_exists($filename . '.tv')) {
-			$this->LoadTemplate($filename . '.tv');
-		} else {
-			$this->LoadTemplate($filename);
-		}
+		$device = $filename . '.' . afdevice::device();
+		$this->LoadTemplate( file_exists($device) ? $device : $filename );
 	}
-
 
 
 
 	public function headerHTML() {
 		global $site;
 
-		$root = $this->path() . $site['root'];
-		if ($this->debug()  &&  file_exists("$root/header_html_debug.tpl")) {
+		$device	= afdevice::device();
+		$root	= $this->path() . $site['root'];
+
+		if ($this->debug()  &&  file_exists("$root/header_html_debug.tpl.$device")) {
+			$this->load("$root/header_html_debug.tpl.$device");
+		} else if ($this->debug()  &&  file_exists("$root/header_html_debug.tpl")) {
 			$this->load("$root/header_html_debug.tpl");
 		} else {
 			$this->load("$root/header_html.tpl");
@@ -108,8 +104,12 @@ class altaform extends altaformlite {
 	public function headerPage() {
 		global $site;
 
-		$root = $this->path() . $site['root'];
-		if ($this->debug()  &&  file_exists("$root/header_page_debug.tpl")) {
+		$device	= afdevice::device();
+		$root	= $this->path() . $site['root'];
+
+		if ($this->debug()  &&  file_exists("$root/header_page_debug.tpl.$device")) {
+			$this->load("$root/header_page_debug.tpl.$device");
+		} else if ($this->debug()  &&  file_exists("$root/header_page_debug.tpl")) {
 			$this->load("$root/header_page_debug.tpl");
 		} else {
 			$this->load("$root/header_page.tpl");
@@ -145,8 +145,12 @@ class altaform extends altaformlite {
 	public function footerHTML() {
 		global $site;
 
-		$root = $this->path() . $site['root'];
-		if ($this->debug()  &&  file_exists("$root/footer_html_debug.tpl")) {
+		$device	= afdevice::device();
+		$root	= $this->path() . $site['root'];
+
+		if ($this->debug()  &&  file_exists("$root/footer_html_debug.tpl.$device")) {
+			$this->load("$root/footer_html_debug.tpl.$device");
+		} else if ($this->debug()  &&  file_exists("$root/footer_html_debug.tpl")) {
 			$this->render("$root/footer_html_debug.tpl");
 		} else {
 			$this->render("$root/footer_html.tpl");
@@ -157,8 +161,12 @@ class altaform extends altaformlite {
 	public function footerPage() {
 		global $site, $db;
 
-		$root = $this->path() . $site['root'];
-		if ($this->debug()  &&  file_exists("$root/footer_page_debug.tpl")) {
+		$device	= afdevice::device();
+		$root	= $this->path() . $site['root'];
+
+		if ($this->debug()  &&  file_exists("$root/footer_page_debug.tpl.$device")) {
+			$this->load("$root/footer_page_debug.tpl.$device");
+		} else if ($this->debug()  &&  file_exists("$root/footer_page_debug.tpl")) {
 			$this->render("$root/footer_page_debug.tpl");
 		} else {
 			$this->render("$root/footer_page.tpl");
@@ -355,7 +363,7 @@ class altaform extends altaformlite {
 		if (!empty($session)) {
 			if ($id = (int) $get->session('AF:USER_ID')) {
 				$user = $db->cache(60*60, "AF-SESSION-$session")->row(
-					['us' => _pudl_user(50)],
+					['us' => _pudl_user(200)],
 					[
 						'user_id'			=> $id,
 						'user_permission'	=> pudl::inSet('user', 'staff', 'admin'),
