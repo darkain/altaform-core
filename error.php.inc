@@ -1,39 +1,20 @@
 <?php
 
-//TODO: ALLOW INDIVIDUAL PAGES THE ABILITY TO LOG EXTENDED DATA
 
 function afError($header, $text, $log=false) {
-	global $site, $db, $get, $afurl;
+	global $db;
 
 	if (!headers_sent()) header($header);
 
 	echo $text;
 
-	if ($log) {
-		_af_log_error($error = [
-			'time'		=> @date('r'),
-			'details'	=> $text,
-			'url'		=> !empty($afurl->all) ? $afurl->all : !empty($get) ? $get->server('REQUEST_URI') : '',
-			'mariadb'	=> !empty($db)	? $db->server() : '',
-			'proxy'		=> !empty($get)	? $get->server('SERVER_ADDR') : '',
-			'server'	=> !empty($get)	? $get->server('X-PHP-IP') : '',
-			'remote'	=> !empty($get)	? $get->server('REMOTE_ADDR') : '',
-			'agent'		=> !empty($get)	? $get->server('HTTP_USER_AGENT') : '',
-			'query'		=> !empty($db)	? $db->query() : '',
-			'get'		=> !empty($_GET)	? $_GET		: '',
-			'post'		=> !empty($_POST)	? $_POST	: '',
-		], false);
-
-		if (!empty($site['debug'])) {
-			unset($error['details']);
-			var_export($error);
-		}
-	}
+	if ($log) _af_log_error(['details'=>$text], false);
 
 	if (!empty($db)) $db->rollback();
 	flush();
 	die();
 }
+
 
 
 function error401($text='') {
@@ -50,12 +31,14 @@ function error401($text='') {
 }
 
 
+
 function error403($text='') {
 	afError(
 		'HTTP/1.0 403 Forbidden',
 		"<div id=\"af-fatal\"><h1>ERROR: 403</h1>\n<h2>FORBIDDEN</h2>\n<i>$text</i></div>\n"
 	);
 }
+
 
 
 function error404($text='') {
@@ -81,6 +64,7 @@ function error404($text='') {
 }
 
 
+
 function error422($text='') {
 	afError(
 		'HTTP/1.1 422 Unprocessable Entity',
@@ -88,6 +72,7 @@ function error422($text='') {
 		true
 	);
 }
+
 
 
 function error500($text='') {
@@ -108,9 +93,8 @@ function assert500($item, $text='') { if (empty($item)) error500($text); return 
 
 
 
-
-function _af_log_error($text, $die=true) {
-	global $site, $af, $db;
+function _af_log_error($data, $die=true) {
+	global $site, $af, $afurl, $db, $get;
 
 	//only print output once!
 	static $echo = false;
@@ -118,36 +102,38 @@ function _af_log_error($text, $die=true) {
 	$echo = true;
 
 
-	if (!isset($af)) {
-		$site['debug'] = true;
-	} else if ($af->hasPermission('admin')) {
+	if (!isset($af)  ||  $af->hasPermission('admin')) {
 		$site['debug'] = true;
 	}
 
-	$error = '';
-	if (ob_get_level()  &&  $die) $error = htmlspecialchars(ob_get_clean());
+	$error = (ob_get_level()  &&  $die) ? htmlspecialchars(ob_get_clean()) : '';
 
 	$arr = debug_backtrace();
 
 	foreach ($arr as &$val) {
 		foreach ($val as &$item) {
-			if (is_array($item)  ||  is_object($item)) $item = array();
+			if (is_array($item)  ||  is_object($item)) $item = [];
 		} unset($item);
 		$val = json_encode($val);
 	} unset($val);
 
-	if (is_array($text)) {
-		$arr = array_merge($text, $arr);
-	} else {
-		$arr[0] = $text;
-	}
+	$arr = array_merge(['time'=>@date('r')], $data, [
+		'url'		=> !empty($afurl->all)	? $afurl->all	: $get->server('REQUEST_URI'),
+		'get'		=> !empty($_GET)		? $_GET			: '',
+		'post'		=> !empty($_POST)		? $_POST		: '',
+		'query'		=> !empty($db)			? $db->query()	: '',
+		'mariadb'	=> !empty($db)			? $db->server()	: '',
+		'proxy'		=> $get->server('SERVER_ADDR'),
+		'server'	=> $get->server('X-PHP-IP'),
+		'remote'	=> $get->server('REMOTE_ADDR'),
+		'agent'		=> $get->server('HTTP_USER_AGENT'),
+	], $arr);
 
-	$out = print_r($arr, true) . "\n";
+	$out = print_r($arr, true) . "\r\n";
 
 	@file_put_contents(
 		(isset($af)?$af->path():'') . '_log/' . @date('Y-m-d'),
-		$out,
-		FILE_APPEND
+		$out, FILE_APPEND
 	);
 
 	_af_email_error($out, !empty($arr['details']) ? $arr['details'] : '');
@@ -160,7 +146,6 @@ function _af_log_error($text, $die=true) {
 
 	if ($die) error500();
 }
-
 
 
 
@@ -186,9 +171,8 @@ function _af_email_error($text, $title='') {
 
 
 
-
 function _af_error_handler($errno, $errstr, $errfile=NULL, $errline=NULL, $errcontext=NULL) {
-	global $af, $db, $get, $afurl;
+	global $af;
 
 	if (!error_reporting()) return false;
 
@@ -200,21 +184,12 @@ function _af_error_handler($errno, $errstr, $errfile=NULL, $errline=NULL, $errco
 			$die = (!empty($af) && is_object($af)) ? $af->debug() : false;
 	}
 
-	_af_log_error(array(
-		'time'		=> @date('r'),
+	_af_log_error([
 		'error'		=> $errno,
 		'details'	=> $errstr,
 		'file'		=> $errfile,
 		'line'		=> $errline,
-		'url'		=> isset($afurl->all) ? $afurl->all : $get->server('REQUEST_URI'),
-		'mariadb'	=> !empty($db) ? $db->server() : '',
-		'proxy'		=> $get->server('SERVER_ADDR'),
-		'server'	=> $get->server('X-PHP-IP'),
-		'remote'	=> $get->server('REMOTE_ADDR'),
-		'agent'		=> $get->server('HTTP_USER_AGENT'),
-		'get'		=> !empty($_GET)	? $_GET		: '',
-		'post'		=> !empty($_POST)	? $_POST	: '',
-	), $die);
+	], $die);
 
 	return false;
 }
@@ -222,58 +197,41 @@ set_error_handler('_af_error_handler');
 
 
 
-
 function _af_log_exception(Exception $e) {
-	global $db, $get, $afurl;
-
 	if (!error_reporting()) return false;
 
-	_af_log_error(array(
-		'time'		=> @date('r'),
+	_af_log_error([
 		'error'		=> get_class($e),
 		'details'	=> $e->getMessage(),
 		'file'		=> $e->getFile(),
 		'line'		=> $e->getLine(),
-		'url'		=> isset($afurl->all) ? $afurl->all : $get->server('REQUEST_URI'),
-		'mariadb'	=> !empty($db) ? $db->server() : '',
-		'proxy'		=> $get->server('SERVER_ADDR'),
-		'server'	=> $get->server('X-PHP-IP'),
-		'remote'	=> $get->server('REMOTE_ADDR'),
-		'agent'		=> $get->server('HTTP_USER_AGENT'),
-		'get'		=> !empty($_GET)	? $_GET		: '',
-		'post'		=> !empty($_POST)	? $_POST	: '',
-	));
+	]);
 }
 set_exception_handler('_af_log_exception');
 
 
 
-
 function _af_fatal_error() {
+	if (!error_reporting()) return false;
+
 	$e = error_get_last();
+
 	if ($e['type'] !== E_ERROR  &&  $e['type'] !== E_PARSE ) return;
-	_af_error_handler($e['type'], $e['message'], $e['file'], $e['line']);
+
+	_af_log_error([
+		'error'		=> $e['type'],
+		'details'	=> $e['message'],
+		'file'		=> $e['file'],
+		'line'		=> $e['line'],
+	]);
 }
 register_shutdown_function('_af_fatal_error');
 
 
 
-
-function _pudl_debug($db, $result=false) {
-	global $get, $afurl;
-
-	_af_log_error(array(
-		'time'		=> @date('r'),
+function _pudl_debug($db) {
+	_af_log_error([
 		'error'		=> $db->errno(),
 		'details'	=> $db->error(),
-		'query'		=> ($result !== false) ? ($result->query()) : ($db->query()),
-		'url'		=> isset($afurl->all) ? $afurl->all : $get->server('REQUEST_URI'),
-		'mariadb'	=> !empty($db) ? $db->server() : '',
-		'proxy'		=> $get->server('SERVER_ADDR'),
-		'server'	=> $get->server('X-PHP-IP'),
-		'remote'	=> $get->server('REMOTE_ADDR'),
-		'agent'		=> $get->server('HTTP_USER_AGENT'),
-		'get'		=> !empty($_GET)	? $_GET		: '',
-		'post'		=> !empty($_POST)	? $_POST	: '',
-	));
+	]);
 }
