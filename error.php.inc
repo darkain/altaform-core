@@ -1,5 +1,6 @@
 <?php
 
+//TODO: ALLOW INDIVIDUAL PAGES THE ABILITY TO LOG EXTENDED DATA
 
 function afError($header, $text, $log=false) {
 	global $site, $db, $get, $afurl;
