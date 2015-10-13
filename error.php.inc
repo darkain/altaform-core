@@ -118,11 +118,11 @@ function _af_log_error($data, $die=true) {
 	} unset($val);
 
 	$arr = array_merge(['time'=>@date('r')], $data, [
-		'url'		=> !empty($afurl->all)	? $afurl->all	: $get->server('REQUEST_URI'),
-		'get'		=> !empty($_GET)		? $_GET			: '',
-		'post'		=> !empty($_POST)		? $_POST		: '',
-		'query'		=> !empty($db)			? $db->query()	: '',
-		'mariadb'	=> !empty($db)			? $db->server()	: '',
+		'url'		=> !empty($afurl->all)	? $afurl->all			: $get->server('REQUEST_URI'),
+		'get'		=> !empty($_GET)		? json_encode($_GET)	: '',
+		'post'		=> !empty($_POST)		? json_encode($_POST)	: '',
+		'query'		=> !empty($db)			? $db->query()			: '',
+		'mariadb'	=> !empty($db)			? $db->server()			: '',
 		'proxy'		=> $get->server('SERVER_ADDR'),
 		'server'	=> $get->server('X-PHP-IP'),
 		'remote'	=> $get->server('REMOTE_ADDR'),
