@@ -192,8 +192,11 @@ class altaform extends altaformlite {
 	public function renderPage($filename, $field=false, $data=false) {
 		global $title, $og;
 
+		//Allow device specific loading
+		$device	= $filename . '.' . afdevice::device();
+
 		//Pull the contents of the template BEFORE anything else!
-		$text = file_get_contents($filename);
+		$text = file_get_contents( file_exists($device) ? $device : $filename );
 
 		//PULL OUT REQUIRED PERMISSIONS TAG
 		preg_match("/\<permission[^>]*>(.*)\<\/permission\>/", $text, $matches);
