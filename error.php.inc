@@ -17,7 +17,7 @@ function afError($header, $text, $log=false) {
 
 
 
-function error401($text='') {
+function error401($text='', $log=false) {
 	global $afurl, $get, $af;
 
 	if ($get->server('HTTP_REFERER') === $afurl->all) {
@@ -26,22 +26,24 @@ function error401($text='') {
 
 	afError(
 		'HTTP/1.0 401 Authorization Required',
-		"<div id=\"af-fatal\"><h1>ERROR: 401</h1>\n<h2>AUTHORIZATION REQUIRED</h2>\n<i>$text</i></div>\n"
+		"<div id=\"af-fatal\"><h1>ERROR: 401</h1>\n<h2>AUTHORIZATION REQUIRED</h2>\n<i>$text</i></div>\n",
+		$log
 	);
 }
 
 
 
-function error403($text='') {
+function error403($text='', $log=false) {
 	afError(
 		'HTTP/1.0 403 Forbidden',
-		"<div id=\"af-fatal\"><h1>ERROR: 403</h1>\n<h2>FORBIDDEN</h2>\n<i>$text</i></div>\n"
+		"<div id=\"af-fatal\"><h1>ERROR: 403</h1>\n<h2>FORBIDDEN</h2>\n<i>$text</i></div>\n",
+		$log
 	);
 }
 
 
 
-function error404($text='') {
+function error404($text='', $log=false) {
 	global $afurl, $get, $af, $site;
 
 	if (!empty($afurl)) {
@@ -59,7 +61,8 @@ function error404($text='') {
 
 	afError(
 		'HTTP/1.0 404 File Not Found',
-		"<div id=\"af-fatal\"><h1>ERROR: 404</h1>\n<h2>FILE NOT FOUND</h2>\n<i>$text</i></div>\n"
+		"<div id=\"af-fatal\"><h1>ERROR: 404</h1>\n<h2>FILE NOT FOUND</h2>\n<i>$text</i></div>\n",
+		$log
 	);
 }
 
@@ -85,11 +88,30 @@ function error500($text='', $log=true) {
 
 
 
-function assert401($item, $text='') { if (empty($item)) error401($text); return $item; }
-function assert403($item, $text='') { if (empty($item)) error403($text); return $item; }
-function assert404($item, $text='') { if (empty($item)) error404($text); return $item; }
-function assert422($item, $text='') { if (empty($item)) error422($text); return $item; }
-function assert500($item, $text='') { if (empty($item)) error500($text); return $item; }
+function assert401($item, $text='', $log=false) {
+	if (empty($item)) error401($text, $log);
+	return $item;
+}
+
+function assert403($item, $text='', $log=false) {
+	if (empty($item)) error403($text, $log);
+	return $item;
+}
+
+function assert404($item, $text='', $log=false) {
+	if (empty($item)) error404($text, $log);
+	return $item;
+}
+
+function assert422($item, $text='', $log=true) {
+	if (empty($item)) error422($text, $log);
+	return $item;
+}
+
+function assert500($item, $text='', $log=true) {
+	if (empty($item)) error500($text, $log);
+	return $item;
+}
 
 
 
