@@ -248,6 +248,18 @@ class afstring {
 
 
 
+	static function toAscii($string) {
+		return @iconv('UTF-8', 'ASCII//TRANSLIT', $string);
+	}
+
+
+
+	static function toUtf8($string) {
+		return @iconv('ASCII', 'UTF-8//TRANSLIT', $string);
+	}
+
+
+
 	static function language($input) {
 		foreach (self::$languages as $key => $val) {
 			preg_match_all($val, $input, $language[$key]);
