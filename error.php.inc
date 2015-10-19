@@ -65,21 +65,21 @@ function error404($text='') {
 
 
 
-function error422($text='') {
+function error422($text='', $log=true) {
 	afError(
 		'HTTP/1.1 422 Unprocessable Entity',
 		"<div id=\"af-fatal\"><h1>ERROR: 422</h1>\n<h2>UNPROCESSABLE ENTITY</h2>\n<i>$text</i></div>\n",
-		true
+		$log
 	);
 }
 
 
 
-function error500($text='') {
+function error500($text='', $log=true) {
 	afError(
 		'HTTP/1.0 500 Internal Server Error',
 		"<div id=\"af-fatal\"><h1>ERROR: 500</h1>\n<h2>INTERNAL SERVER ERROR</h2>\n<i>$text</i></div>\n",
-		true
+		$log
 	);
 }
 
