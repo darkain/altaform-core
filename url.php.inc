@@ -118,112 +118,66 @@ class afurl {
 
 		//	load our web page!!
 		if (count($this->part) < 3) {
-			if (is_file("$site[root]/index.php")) {
-				return "$site[root]/index.php";
-
-			} else if (is_file("$site[root]/index.hh")) {
-				return "$site[root]/index.hh";
-
-			} else if (is_file("$site[root]/index.tpl")) {
-				$af->renderPage("$site[root]/index.tpl");
-				return true;
-
-			} else {
-				error404();
-			}
+			chdir($site['root']);
+			if (is_file('index.php'))			return 'index.php';
+			if (is_file('index.hh'))			return 'index.hh';
+			if (is_file('index.tpl'))			return $af->renderPage('index.tpl');
+			error404();
 		}
 
 
 		$count = count($this->part) - 1;
 
 		for ($i=1; $i<$count; $i++) {
-			if (is_dir($this->part[$i])) {
 
+			if (is_dir($this->part[$i])) {
 				chdir($this->part[$i]);
 				if ($count-$i == 1) {
-					if (is_file('index.php')) {
-						return 'index.php';
-
-					} else if (is_file('index.hh')) {
-						return 'index.hh';
-
-					} else if (is_file('index.tpl')) {
-						$af->renderPage('index.tpl');
-						return true;
-
-					} else {
-						error404();
-					}
-				}
-
-			} else if ($count-$i == 1) {
-
-				$file = $this->part[$i];
-				if (is_file("$file.php")) {
-					return "$file.php";
-
-				} else if (is_file("$file.hh")) {
-					return "$file.hh";
-
-				} else if (is_file("$file.tpl")) {
-					$af->renderPage("$file.tpl");
-					return true;
-
-				} else if (is_file('virtual.php')) {
-					$this->virtualize($i);
-					return 'virtual.php';
-
-				} else if (is_file('virtual.hh')) {
-					$this->virtualize($i);
-					return 'virtual.hh';
-
-				} else if (is_dir('virtual')) {
-					$this->virtualize($i);
-					chdir('virtual');
-
-					if ($count-$i == 1) {
-						if (is_file('index.php')) {
-							return 'index.php';
-
-						} else if (is_file('index.hh')) {
-							return 'index.hh';
-
-						} else if (is_file('index.tpl')) {
-							$af->renderPage('index.tpl');
-							return true;
-
-						} else {
-							error404();
-						}
-					}
-
-				} else {
+					if (is_file('index.php'))	return 'index.php';
+					if (is_file('index.hh'))	return 'index.hh';
+					if (is_file('index.tpl'))	return $af->renderPage('index.tpl');
 					error404();
 				}
-
-			} else if (is_dir('virtual')) {
-				$this->virtualize($i);
-				chdir('virtual');
-
-			} else if (is_file('virtual.php')) {
-				$this->virtualize($i);
-				return 'virtual.php';
-
-			} else if (is_file('virtual.hh')) {
-				$this->virtualize($i);
-				return 'virtual.hh';
-
-			} else {
-				error404();
+				continue;
 			}
-		}
 
+
+			if ($count-$i == 1) {
+				$file = $this->part[$i];
+				if (is_file("$file.php"))		return "$file.php";
+				if (is_file("$file.hh"))		return "$file.hh";
+				if (is_file("$file.tpl"))		return $af->renderPage("$file.tpl");
+				if (is_file('virtual.php'))		return $this->virtualize($i, 'virtual.php');
+				if (is_file('virtual.hh'))		return $this->virtualize($i, 'virtual.hh');
+				if (!is_dir('virtual'))			error404();
+				chdir($this->virtualize($i, 'virtual'));
+				if ($count-$i == 1) {
+					if (is_file('index.php'))	return 'index.php';
+					if (is_file('index.hh'))	return 'index.hh';
+					if (is_file('index.tpl'))	return $af->renderPage('index.tpl');
+					error404();
+				}
+				continue;
+			}
+
+
+			if (is_dir('virtual')) {
+				chdir($this->virtualize($i, 'virtual'));
+				continue;
+			}
+
+
+			if (is_file('virtual.php'))			return $this->virtualize($i, 'virtual.php');
+			if (is_file('virtual.hh'))			return $this->virtualize($i, 'virtual.hh');
+
+			error404();
+		}
 	}
 
 
 
-	private function virtualize($start) {
-		if (!empty($this->virtual)) return;
+	private function virtualize($start, $return=false) {
+		if (!empty($this->virtual)) return $return;
 
 		$count = count($this->part)-1;
 		if ($start >= $count) error500();
@@ -233,6 +187,8 @@ class afurl {
 		}
 
 		$this->vid($this->virtual[0]);
+
+		return $return;
 	}
 
 

@@ -252,6 +252,8 @@ class altaform extends altaformlite {
 			$this->Show();
 
 		$this->footer();
+
+		return true;
 	}
 
 
