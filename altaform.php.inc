@@ -41,9 +41,8 @@ class altaform extends altaformlite {
 	}
 
 
-	function ok($wait=false, $die=true) {
+	function ok($die=true) {
 		echo 'AF-OK';
-		if ($wait) usleep(250000);
 		if ($die) die();
 	}
 
