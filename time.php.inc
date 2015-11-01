@@ -84,4 +84,23 @@ class aftime {
 		return false;
 	}
 
+
+
+	static function daterange($start, $end, $month='F') {
+		$start	= (int) $start;
+		$end	= (int) $end;
+		$text	= date($month.' jS', $start);
+
+		if ((int)($start / 86400)  ==  (int)($end / 86400)) {
+		} else if (date('n', $start) === date('n', $end)) {
+			$text .= '-' . date('jS', $end);
+		} else if (date('Y', $start) !== date('Y', $end)) {
+			$text .= ', '  . date('Y', $start);
+			$text .= ' - ' . date($month.' jS', $end);
+		} else {
+			$text .= ' - ' . date($month.' jS', $end);
+		}
+
+		return $text . ', ' . date('Y', $end);
+	}
 }
