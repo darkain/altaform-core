@@ -83,14 +83,16 @@ setlocale(LC_CTYPE,
 
 
 //PHP Universal Database Library (PUDL)
-if (isset($site['pudl']['server'])) {
-	if (!isset($site['pudl']['type'])) {
+if (!empty($site['pudl'])  &&  is_array($site['pudl'])) {
+	if (!isset($site['pudl']['type'])  &&  isset($site['pudl']['server'])) {
 		$site['pudl']['type'] = is_array($site['pudl']['server']) ? 'Galera' : 'MySqli';
 	}
-	$pudltype = 'pudl'.$site['pudl']['type'];
-	require_once('_pudl/'.$pudltype.'.php');
-	$db = $pudltype::instance($site['pudl']);
-	if (!empty($site['pudl']['connected'])) call_user_func($site['pudl']['connected']);
+	if (!empty($site['pudl']['type'])) {
+		$pudltype = 'pudl'.$site['pudl']['type'];
+		require_once('_pudl/'.$pudltype.'.php');
+		$db = $pudltype::instance($site['pudl']);
+		if (!empty($site['pudl']['connected'])) call_user_func($site['pudl']['connected']);
+	}
 }
 
 
