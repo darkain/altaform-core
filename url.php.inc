@@ -23,8 +23,9 @@ class afurl {
 		$this->domain	= $get->server('HTTP_HOST', '', _GETVAR_BASIC);
 		$this->referer	= $get->server('HTTP_REFERER', '', _GETVAR_BASIC);
 		$this->https	= strtolower($get->server('HTTPS'));
-		$this->https	= ($this->https !== 'off'  &&  !empty($this->https));
-		$this->host		= ($this->https?'https://':'http://') . $this->domain;
+		$this->https	= $this->https !== 'off'  &&  !empty($this->https);
+		$this->protocol	= $this->https ? 'https' : 'http';
+		$this->host		= $this->protocol . '://' . $this->domain;
 		$this->af_host	= $this->host;
 
 		$this->parts	= (array)parse_url($this->uri);
