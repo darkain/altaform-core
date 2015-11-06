@@ -7,32 +7,22 @@ class afurl {
 	use closures;
 
 
-	public function construct() {
-		global $get, $site;
+	public function __construct() {
+		global $get;
 
-		$this->directory = getcwd();
+		$this->directory	= getcwd();
+		$this->uri			= urldecode($get->server('REQUEST_URI', ''));
+		$this->domain		= $get->server('HTTP_HOST', '');
+		$this->referer		= $get->server('HTTP_REFERER', '');
+		$this->https		= strtolower($get->server('HTTPS'));
+		$this->https		= $this->https !== 'off'  &&  !empty($this->https);
+		$this->protocol		= $this->https ? 'https' : 'http';
+		$this->host			= $this->protocol . '://' . $this->domain;
+		$this->af_host		= $this->host;
+		$this->parts		= (array)parse_url($this->uri);
+		$this->query		= str_replace(' ', '+', $this->uri . (empty($this->parts['query']) ? '?' : '&'));
 
-		//Configurable paths
-		if (!empty($site['base']))		$this->base		= $site['base'];
-		if (!empty($site['cdn']))		$this->cdn		= $site['cdn'];
-		if (!empty($site['static']))	$this->static	= $site['static'];
-		if (!empty($site['upload']))	$this->upload	= $site['upload'];
-		if (!empty($site['img']))		$this->img		= $site['img'];
-
-		$this->uri		= urldecode($get->server('REQUEST_URI', '', _GETVAR_BASIC));
-		$this->domain	= $get->server('HTTP_HOST', '', _GETVAR_BASIC);
-		$this->referer	= $get->server('HTTP_REFERER', '', _GETVAR_BASIC);
-		$this->https	= strtolower($get->server('HTTPS'));
-		$this->https	= $this->https !== 'off'  &&  !empty($this->https);
-		$this->protocol	= $this->https ? 'https' : 'http';
-		$this->host		= $this->protocol . '://' . $this->domain;
-		$this->af_host	= $this->host;
-
-		$this->parts	= (array)parse_url($this->uri);
 		if (empty($this->parts['path'])) error404();
-
-		$this->query	= $this->uri . (empty($this->parts['query']) ? '?' : '&');
-		$this->query	= str_replace(' ', '+', $this->query);
 
 		if (substr($this->parts['path'],  0, 1) !== '/') $this->parts['path']  = '/' . $this->parts['path'];
 		if (substr($this->parts['path'], -1, 1) !== '/') $this->parts['path'] .= '/';
@@ -41,16 +31,20 @@ class afurl {
 		$this->part = explode('/', $this->parts['path']);
 		$this->url = '/';
 		foreach ($this->part as $key => $val) {
-			if (strlen($val) < 1) continue;
-			$this->url .= urlencode($val) . '/';
+			if (strlen($val)) $this->url .= urlencode($val) . '/';
 		}
+	}
 
-		$this->all	= $this->host . $this->base . $this->url;
-		$this->full	= $this->all;
+
+
+	public function _all() {
+		$this->full	= $this->host . $this->base . $this->url;
+		$this->all	= $this->full;
 		if (!empty($this->parts['query'])  &&  $this->parts['query']!=='jq=1') {
 			$this->all .= '?' . $this->parts['query'];
 		}
 	}
+
 
 
 	public function __invoke($path, $base=false) {
@@ -75,6 +69,7 @@ class afurl {
 		if ($new_id !== false) $this->id = afstring::int($new_id);
 		return $this->id;
 	}
+
 
 
 	public function user($user) {
@@ -208,6 +203,7 @@ class afurl {
 	}
 
 
+
 	public static function cdnAll(&$list, $key='img', $hashkey='hash') {
 		if (!is_array($list)) return false;
 		if (empty($key)) $key = 'img';
@@ -216,6 +212,7 @@ class afurl {
 		} unset($val);
 		return true;
 	}
+
 
 
 	public static function cdnPath($hash) {
@@ -228,6 +225,7 @@ class afurl {
 	}
 
 
+
 	public function __debugInfo() {
 		$dump = [];
 		foreach ($this as $key => $item) {
@@ -237,26 +235,31 @@ class afurl {
 	}
 
 
-	public $https		= false;
-	public $url			= '';
-	public $uri			= '';
+
+	//SET IN CONSTRUCTOR
+	public $directory;
+	public $uri;
+	public $domain;
+	public $referer;
+	public $https;
+	public $protocol;
+	public $host;
+	public $af_host;
+	public $part;
+	public $parts;
+	public $query;
+	public $url;
+
+	//SET DYNAMICALLY OR BY CONFIG
 	public $base		= '';
-	public $query		= '';
-	public $referer		= '';
-	public $domain		= '';
-	public $host		= '';
-	public $af_host		= '';
-	public $part		= '';
-	public $jq			= '';
 	public $cdn			= '';
 	public $static		= '';
-	public $img			= '';
 	public $upload		= '';
-	public $parts		= [];
 	public $virtual		= [];
 	public $id			= 0;
+	public $jq			= false;
 	public $reparse		= true;
-	public $directory	= '';
 }
 
-$afurl = new afurl();
+
+$afurl = new afurl;

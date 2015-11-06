@@ -23,7 +23,7 @@ if (!defined('PHP_VERSION_ID')) {
 
 //Getvar Library (GET/POST variables)
 require_once('_getvar/getvar.php.inc');
-$get = new getvar();
+$get = new getvar;
 
 
 //Main Library
@@ -55,8 +55,8 @@ if (!headers_sent()) {
 
 
 //Host Information for Config
-$host = $get->server('HTTP_HOST');
-$pos = strpos($host, ':');
+$host	= $get->server('HTTP_HOST');
+$pos	= strpos($host, ':');
 if ($pos) $host = substr($host, 0, $pos);
 
 
@@ -69,6 +69,9 @@ if (is_file("_config/$host/config.php.inc")) {
 	error500('Unknown Domain: ' . $get->server('HTTP_HOST'));
 }
 
+
+//Initialize afurl
+$afurl->_all();
 
 
 //Set the time zone and locale
@@ -111,10 +114,6 @@ if (isset($db)) {
 	);
 }
 
-
-
-//Initialize afurl
-$afurl->construct();
 
 
 //Initialize Altaform class
