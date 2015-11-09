@@ -21,12 +21,14 @@ class altaformlite extends clsTinyButXtreme {
 
 	public function load($filename) {
 		$this->LoadTemplate($filename);
+		return $this;
 	}
 
 
 	public function render($filename=false) {
 		if ($filename !== false) $this->load($filename);
 		$this->Show();
+		return $this;
 	}
 
 
@@ -34,6 +36,7 @@ class altaformlite extends clsTinyButXtreme {
 		$this->load($filename);
 		$this->block($block, $data);
 		$this->Show();
+		return $this;
 	}
 
 
@@ -41,6 +44,7 @@ class altaformlite extends clsTinyButXtreme {
 		$this->load($filename);
 		$this->field($field, $data);
 		$this->Show();
+		return $this;
 	}
 
 
@@ -48,6 +52,7 @@ class altaformlite extends clsTinyButXtreme {
 		$this->Source = $template;
 		$this->meth_Merge_AutoVar($this->Source, true);
 		if ($this->OnLoad) $this->meth_Merge_AutoOn($this->Source, 'onload', true, true);
+		return $this;
 	}
 
 
@@ -97,6 +102,7 @@ class altaformlite extends clsTinyButXtreme {
 				$this->field($key, $val);
 			}
 		} unset($val);
+		return $this;
 	}
 
 	//Another merger helper function!
@@ -104,6 +110,7 @@ class altaformlite extends clsTinyButXtreme {
 		$this->load($filename);
 		$this->merge($data);
 		$this->render();
+		return $this;
 	}
 
 
