@@ -3,12 +3,14 @@
 class afmail {
 
 	static function send($headers, $subject, $body, $attach=false) {
-		global $site, $afurl;
+		global $site, $afurl, $af;
 
 		require_once('_phpmailer/class.phpmailer.php');
 		require_once('_phpmailer/class.smtp.php');
 
 		$mail = new PHPMailer;
+
+		if ($af->debug()) $mail->SMTPDebug = 2;
 
 		if (!empty($attach)) {
 			if (is_file($attach)) {
