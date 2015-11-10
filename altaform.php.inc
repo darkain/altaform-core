@@ -22,13 +22,12 @@ class altaform extends altaformlite {
 		$this->SetOption('render', TBS_OUTPUT);
 		$this->ResetVarRef(true);
 
-		$this->_header	= empty($site['af_header']) ? [] : $site['af_header'];
-		$this->_script	= [];
-		$this->_style	= [];
-		$this->_meta	= [];
-		$this->_prefs	= [];
-		$this->_footer	= 1;
+		if (!empty($site['af_header'])) {
+			$this->_header = $site['af_header'];
+		}
 	}
+
+
 
 
 	public static function create() {
@@ -75,6 +74,7 @@ class altaform extends altaformlite {
 	public function load($filename) {
 		$device = $filename . '.' . afdevice::device();
 		$this->LoadTemplate( file_exists($device) ? $device : $filename );
+		return $this;
 	}
 
 
@@ -85,18 +85,18 @@ class altaform extends altaformlite {
 		$device	= afdevice::device();
 		$root	= $this->path() . $site['root'];
 
-		if ($this->debug()  &&  file_exists("$root/header_html_debug.tpl.$device")) {
-			$this->load("$root/header_html_debug.tpl.$device");
-		} else if ($this->debug()  &&  file_exists("$root/header_html_debug.tpl")) {
-			$this->load("$root/header_html_debug.tpl");
+		if ($this->debug()  &&  file_exists($root.'/header_html_debug.tpl.'.$device)) {
+			$this->load($root.'/header_html_debug.tpl.'.$device);
+		} else if ($this->debug()  &&  file_exists($root.'/header_html_debug.tpl')) {
+			$this->load($root.'/header_html_debug.tpl');
 		} else {
-			$this->load("$root/header_html.tpl");
+			$this->load($root.'/header_html.tpl');
 		}
 
 		$this->block('script',	$this->_script);
 		$this->block('style',	$this->_style);
 		$this->block('meta',	$this->_meta);
-		$this->render();
+		return $this->render();
 	}
 
 
@@ -106,18 +106,18 @@ class altaform extends altaformlite {
 		$device	= afdevice::device();
 		$root	= $this->path() . $site['root'];
 
-		if ($this->debug()  &&  file_exists("$root/header_page_debug.tpl.$device")) {
-			$this->load("$root/header_page_debug.tpl.$device");
-		} else if ($this->debug()  &&  file_exists("$root/header_page_debug.tpl")) {
-			$this->load("$root/header_page_debug.tpl");
+		if ($this->debug()  &&  file_exists($root.'/header_page_debug.tpl.'.$device)) {
+			$this->load($root.'/header_page_debug.tpl.'.$device);
+		} else if ($this->debug()  &&  file_exists($root.'/header_page_debug.tpl')) {
+			$this->load($root.'/header_page_debug.tpl');
 		} else {
-			$this->load("$root/header_page.tpl");
+			$this->load($root.'/header_page.tpl');
 		}
 		foreach ($this->_header as $key => &$val) {
 			$this->block($key, $val);
 		} unset($val);
 
-		$this->render();
+		return $this->render();
 	}
 
 
@@ -125,14 +125,13 @@ class altaform extends altaformlite {
 		if ($key === false) {
 			$this->headerHTML();
 			$this->headerPage();
-			return;
-		}
-
-		if ($replace  ||  empty($this->_header[$key])) {
+		} else if ($replace  ||  empty($this->_header[$key])) {
 			$this->_header[$key] = [$data];
 		} else {
 			$this->_header[$key][] = $data;
 		}
+
+		return $this;
 	}
 
 
@@ -147,13 +146,16 @@ class altaform extends altaformlite {
 		$device	= afdevice::device();
 		$root	= $this->path() . $site['root'];
 
-		if ($this->debug()  &&  file_exists("$root/footer_html_debug.tpl.$device")) {
-			$this->load("$root/footer_html_debug.tpl.$device");
-		} else if ($this->debug()  &&  file_exists("$root/footer_html_debug.tpl")) {
-			$this->render("$root/footer_html_debug.tpl");
-		} else {
-			$this->render("$root/footer_html.tpl");
+		if ($this->debug()) {
+			if (file_exists($root.'/footer_html_debug.tpl.'.$device)) {
+				return $this->load($root.'/footer_html_debug.tpl.'.$device);
+			}
+			if (file_exists($root.'/footer_html_debug.tpl')) {
+				return $this->render($root.'/footer_html_debug.tpl');
+			}
 		}
+
+		return $this->render($root.'/footer_html.tpl');
 	}
 
 
@@ -163,28 +165,31 @@ class altaform extends altaformlite {
 		$device	= afdevice::device();
 		$root	= $this->path() . $site['root'];
 
-		if ($this->debug()  &&  file_exists("$root/footer_page_debug.tpl.$device")) {
-			$this->load("$root/footer_page_debug.tpl.$device");
-		} else if ($this->debug()  &&  file_exists("$root/footer_page_debug.tpl")) {
-			$this->render("$root/footer_page_debug.tpl");
+		if ($this->debug()  &&  file_exists($root.'/footer_page_debug.tpl.'.$device)) {
+			$this->load($root.'/footer_page_debug.tpl.'.$device);
+		} else if ($this->debug()  &&  file_exists($root.'/footer_page_debug.tpl')) {
+			$this->render($root.'/footer_page_debug.tpl');
 		} else {
-			$this->render("$root/footer_page.tpl");
+			$this->render($root.'/footer_page.tpl');
 		}
 
-		if ($this->hasPermission('staff,admin')  &&  file_exists("$root/footer_admin.tpl")  &&  $this->debug()) {
-			$this->load("$root/footer_admin.tpl");
+		if ($this->hasPermission('staff,admin')  &&  $this->debug()  &&  file_exists($root.'/footer_admin.tpl')) {
+			$this->load($root.'/footer_admin.tpl');
 			if (!empty($db)) {
 				$this->field('dbstats',		$db->stats());
 				$this->block('dbmisses',	$db->stats()['missed']);
 			}
 			$this->render();
 		}
+
+		return $this;
 	}
 
 
 	public function footer() {
 		$this->footerPage();
 		$this->footerHTML();
+		return $this;
 	}
 
 
@@ -252,7 +257,7 @@ class altaform extends altaformlite {
 
 		$this->footer();
 
-		return true;
+		return $this;
 	}
 
 
@@ -260,24 +265,28 @@ class altaform extends altaformlite {
 	//Add a JavaScript file to the html header
 	public function script($path) {
 		$this->_script[] = ['path' => $path];
+		return $this;
 	}
 
 
 	//Add a Cascading Style Sheet file to the html header
 	public function style($path) {
 		$this->_style[] = ['path' => $path];
+		return $this;
 	}
 
 
 	//Add extra custom meta tags to a page (such as Twitter Cards)
 	public function meta($meta) {
 		$this->_meta[] = $meta;
+		return $this;
 	}
 
 
 	//Add extra custom meta tags to a page (such as Twitter Cards)
 	public function metas($meta) {
 		$this->_meta = array_merge($this->_meta, $meta);
+		return $this;
 	}
 
 
@@ -341,8 +350,8 @@ class altaform extends altaformlite {
 		$this->_prefs[$id] = $preferences;
 
 		return $db->replace('pudl_user_preference', [
-			'user_id' => $id,
-			'preference' => json_encode($preferences)
+			'user_id'		=> $id,
+			'preference'	=> json_encode($preferences)
 		], true);
 	}
 
@@ -351,7 +360,7 @@ class altaform extends altaformlite {
 	public function updateUserPreference($key, $value, $id=false) {
 		$prefs = self::getUserPreferences($id);
 		$prefs[$key] = $value;
-		self::setUserPreferences($prefs, $id);
+		return self::setUserPreferences($prefs, $id);
 	}
 
 
@@ -604,12 +613,12 @@ class altaform extends altaformlite {
 	}
 
 
-	protected	$_header;
-	private		$_script;
-	private		$_style;
-	private		$_meta;
-	private		$_prefs;
-	public		$_footer;
-	public static $types = [];
-	public static $class = 'altaform';
+	protected		$_header	= [];
+	private			$_script	= [];
+	private			$_style		= [];
+	private			$_meta		= [];
+	private			$_prefs		= [];
+	public			$_footer	= 0;
+	public static	$types		= [];
+	public static	$class		= 'altaform';
 }
