@@ -38,11 +38,16 @@ class afurl {
 
 
 	public function _all() {
-		$this->full	= $this->host . $this->base . $this->url;
+		$base		= $this->host . $this->base;
+		$this->full	= $base . $this->url;
 		$this->all	= $this->full;
 		if (!empty($this->parts['query'])  &&  $this->parts['query']!=='jq=1') {
 			$this->all .= '?' . $this->parts['query'];
 		}
+
+		if (empty($this->cdn))		$this->cdn		= $base . '/cdn';
+		if (empty($this->static))	$this->static	= $base . '/static';
+		if (empty($this->upload))	$this->upload	= $base . '/upload';
 	}
 
 
