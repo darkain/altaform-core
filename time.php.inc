@@ -86,7 +86,7 @@ class aftime {
 
 
 
-	static function daterange($start, $end, $month='F') {
+	static function daterange($start, $end, $month='F', $year=', Y') {
 		$start	= (int) $start;
 		$end	= (int) $end;
 		$text	= date($month.' jS', $start);
@@ -95,12 +95,12 @@ class aftime {
 		} else if (date('n', $start) === date('n', $end)) {
 			$text .= '-' . date('jS', $end);
 		} else if (date('Y', $start) !== date('Y', $end)) {
-			$text .= ', '  . date('Y', $start);
+			$text .= date($year, $start);
 			$text .= ' - ' . date($month.' jS', $end);
 		} else {
 			$text .= ' - ' . date($month.' jS', $end);
 		}
 
-		return $text . ', ' . date('Y', $end);
+		return $text . date($year, $end);
 	}
 }
