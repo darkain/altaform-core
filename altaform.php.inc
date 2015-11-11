@@ -618,7 +618,7 @@ class altaform extends altaformlite {
 	private			$_style		= [];
 	private			$_meta		= [];
 	private			$_prefs		= [];
-	public			$_footer	= 0;
+	public			$_footer	= 1;
 	public static	$types		= [];
 	public static	$class		= 'altaform';
 }
