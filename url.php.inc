@@ -196,13 +196,8 @@ class afurl {
 
 	public static function cdn($hash, $key='hash') {
 		global $afurl;
+		$hash = self::cdnHash($hash, $key);
 		if (empty($hash)) return false;
-		if (is_array($hash)) {
-			if		(!empty($hash[$key]))			$hash = $hash[$key];
-			else if	(!empty($hash['thumb_hash']))	$hash = $hash['thumb_hash'];
-			else if	(!empty($hash['file_hash']))	$hash = $hash['file_hash'];
-			else return false;
-		}
 		$path = self::cdnPath($hash);
 		return empty($path) ? false : $afurl->cdn . '/' . $path;
 	}
@@ -227,6 +222,28 @@ class afurl {
 		return	substr($hash, 0, 3) . '/' .
 				substr($hash, 3, 3) . '/' .
 				$hash;
+	}
+
+
+
+	public static function cdnFile($hash, $ext=false) {
+		$hash = self::cdnHash($hash);
+		if (empty($hash)) return false;
+		if ($ext) return 'cdn/' . self::cdnPath($hash) . '.' . $ext;
+		return 'cdn/' . self::cdnPath($hash);
+	}
+
+
+
+	public static function cdnHash($hash, $key='hash') {
+		if (empty($hash)) return false;
+		if (is_array($hash)) {
+			if (!empty($hash[$key]))			return $hash[$key];
+			if (!empty($hash['thumb_hash']))	return $hash['thumb_hash'];
+			if (!empty($hash['file_hash']))		return $hash['file_hash'];
+			return false;
+		}
+		return $hash;
 	}
 
 
