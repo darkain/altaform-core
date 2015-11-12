@@ -219,7 +219,7 @@ set_error_handler('_af_error_handler');
 
 
 
-function _af_log_exception(Exception $e) {
+function _af_log_exception($e) {
 	if (!error_reporting()) return false;
 
 	_af_log_error([
