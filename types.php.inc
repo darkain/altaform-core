@@ -26,4 +26,6 @@ altaform::$types = [
 	19	=> 'featured',
 	20	=> 'product',
 	21	=> 'favorite',
+	22	=> 'quote',
+	23	=> 'badge',
 ];
