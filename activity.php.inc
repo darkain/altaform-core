@@ -3,7 +3,7 @@
 class afactivity {
 
 
-	public static function add($id, $type, $verb=NULL, $userid=false) {
+	public static function add($id, $type, $verb, $userid=false) {
 		global $af, $db;
 
 		$userid = self::uid($userid);
@@ -23,7 +23,7 @@ class afactivity {
 
 
 
-	public static function addFile($hash, $type, $verb=NULL, $userid=false) {
+	public static function addFile($hash, $type, $verb, $userid=false) {
 		global $af, $db, $user;
 
 		$userid = self::uid($userid);
