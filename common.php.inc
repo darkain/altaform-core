@@ -1,6 +1,6 @@
 <?php
 
-function _pudl_thumb($table, $field, $thumbsize='200') {
+function _pudl_thumb($table, $field, $thumbsize=200) {
 	return [
 		998 => $table,
 		999 => [
@@ -31,7 +31,7 @@ function _pudl_gathering() {
 	return _pudl_thumb('pudl_gathering', 'gt.gathering_icon');
 }
 
-function _pudl_file($thumbsize) {
+function _pudl_file($thumbsize=200) {
 	return _pudl_thumb('pudl_file', 'fl.file_hash', $thumbsize);
 }
 
@@ -39,8 +39,8 @@ function _pudl_gallery() {
 	return _pudl_thumb('pudl_gallery', 'ga.gallery_thumb');
 }
 
-function _pudl_gallery_image() {
-	return _pudl_thumb('pudl_gallery_image', 'gi.file_hash');
+function _pudl_gallery_image($thumbsize=200) {
+	return _pudl_thumb('pudl_gallery_image', 'gi.file_hash', $thumbsize);
 }
 
 function _pudl_product() {
