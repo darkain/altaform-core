@@ -1,13 +1,13 @@
 <?php
 
-function _pudl_thumb($table, $field) {
+function _pudl_thumb($table, $field, $thumbsize='200') {
 	return [
 		998 => $table,
 		999 => [
 			'left' => ['th' => 'pudl_file_thumb'],
 			'clause' => [
 				'th.file_hash'	=> pudl::column($field),
-				'th.thumb_type'	=> '200',  //YES, STRING IS INTENTIONAL
+				'th.thumb_type'	=> (string) $thumbsize,
 			]
 		]
 	];
@@ -31,8 +31,8 @@ function _pudl_gathering() {
 	return _pudl_thumb('pudl_gathering', 'gt.gathering_icon');
 }
 
-function _pudl_file() {
-	return _pudl_thumb('pudl_file', 'fl.file_hash');
+function _pudl_file($thumbsize) {
+	return _pudl_thumb('pudl_file', 'fl.file_hash', $thumbsize);
 }
 
 function _pudl_gallery() {
