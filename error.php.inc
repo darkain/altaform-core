@@ -151,7 +151,7 @@ function _af_log_error($data, $die=true) {
 		'agent'		=> $get->server('HTTP_USER_AGENT'),
 	], $arr);
 
-	$out = print_r($arr, true) . "\r\n";
+	$out = str_replace("\n", "\r\n", print_r($arr, true)) . "\r\n";
 
 	@file_put_contents(
 		(isset($af)?$af->path():'') . '_log/' . @date('Y-m-d'),
@@ -187,7 +187,7 @@ function _af_email_error($text, $title='') {
 	@mail(
 		$site['error_email'],
 		date('r') . ' ' . $title,
-		$tag . "\r\n" . $text
+		$tag . "\r\n" . wordwrap($text, 75, "\r\n", true)
 	);
 }
 
