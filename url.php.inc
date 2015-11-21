@@ -85,11 +85,12 @@ class afurl {
 
 
 
-	public function reparse($prepend=[], $append=[]) {
+	public function reparse($prepend=[], $append=[], $replace=false) {
 		if (empty($prepend)  &&  empty($append)) return;
 
-		if (!is_array($prepend)) $prepend = [$prepend];
-		if (!is_array($append))  $append  = [$append];
+		if (!is_array($prepend))	$prepend	= [$prepend];
+		if (!is_array($append))		$append		= [$append];
+		if ($replace)				$this->part	= [];
 
 		$prepend[] = '';
 		$append[]  = '';
@@ -117,13 +118,9 @@ class afurl {
 		$this->virtual = [];
 
 
-		//	load our web page!!
+		//	load our home page!!
 		if (count($this->part) < 3) {
-			chdir($site['root']);
-			if (is_file('index.php'))			return 'index.php';
-			if (is_file('index.hh'))			return 'index.hh';
-			if (is_file('index.tpl'))			return $af->renderPage('index.tpl');
-			error404();
+			return $this->reparse('homepage');
 		}
 
 
