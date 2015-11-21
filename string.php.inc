@@ -36,11 +36,11 @@ class afstring {
 
 
 	static function slash($value) {
-		return str_replace('⁄', '/', $value);
+		return str_replace('/', '⁄', $value);
 	}
 
 	static function unslash($value) {
-		return str_replace('/', '⁄', $value);
+		return str_replace('⁄', '/', $value);
 	}
 
 
