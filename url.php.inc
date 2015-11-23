@@ -99,10 +99,12 @@ class afurl {
 		array_pop($this->part);
 
 		foreach ($prepend as $item) {
+			if ($item === false) continue;
 			array_unshift($this->part, $item);
 		}
 
 		foreach ($append as $item) {
+			if ($item === false) continue;
 			$this->part[] = $item;
 		}
 
@@ -112,15 +114,18 @@ class afurl {
 
 
 	public function process() {
-		global $site, $af;
+		global $af;
+
+		//Recursion limit
+		static $recurse = 0;
+		if ($recurse++ == 20) error500('INTERNAL REDIRECT RECURSION LIMIT REACHED');
 
 		//Reset virtual pathing, in case this is a reprocess
 		$this->virtual = [];
 
-
 		//	load our home page!!
 		if (count($this->part) < 3) {
-			return $this->reparse('homepage');
+			return $this->reparse($this->homepage);
 		}
 
 
@@ -278,6 +283,7 @@ class afurl {
 	public $id			= 0;
 	public $jq			= false;
 	public $reparse		= true;
+	public $homepage	= 'homepage';
 }
 
 
