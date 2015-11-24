@@ -253,9 +253,8 @@ register_shutdown_function('_af_fatal_error');
 
 function _pudl_debug($db, $result=NULL) {
 	_af_log_error([
-		'error'				=> $db->errno(),
-		'details'			=> $db->error(),
-		'result-error'		=> ($result instanceof pudlResult) ? $result->error() : 'NULL',
-		'ressult-details'	=> ($result instanceof pudlResult) ? $result->error() : 'NULL',
+		'error'		=> $db->errno(),
+		'details'	=> $db->error(),
+		'result'	=> ($result instanceof pudlResult) ? $result->error() : 'NULL',
 	]);
 }
