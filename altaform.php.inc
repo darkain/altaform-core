@@ -93,6 +93,7 @@ class altaform extends altaformlite {
 			$this->load($root.'/header_html.tpl');
 		}
 
+		$this->field('sheet',	implode(' ', $this->_sheet));
 		$this->block('script',	$this->_script);
 		$this->block('style',	$this->_style);
 		$this->block('meta',	$this->_meta);
@@ -272,6 +273,13 @@ class altaform extends altaformlite {
 	//Add a Cascading Style Sheet file to the html header
 	public function style($path) {
 		$this->_style[] = ['path' => $path];
+		return $this;
+	}
+
+
+	//Add inline Cascading Style Sheet html header
+	public function sheet($styles) {
+		$this->_sheet[] = $styles;
 		return $this;
 	}
 
@@ -616,6 +624,7 @@ class altaform extends altaformlite {
 	protected		$_header	= [];
 	private			$_script	= [];
 	private			$_style		= [];
+	private			$_sheet		= [];
 	private			$_meta		= [];
 	private			$_prefs		= [];
 	public			$_footer	= 1;
