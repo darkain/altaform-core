@@ -78,12 +78,16 @@ class afmail {
 		$mail->Priority	= $headers['priority'];
 		$mail->Hostname	= $afurl->domain;
 		$mail->Subject	= $subject;
-		$mail->XMailer	= 'Altaform v1.1.2';
+		$mail->XMailer	= altaform::$version;
 		$mail->WordWrap	= 80;
 
 		$return = $mail->send();
 
 		if (!empty($path)) @unlink($path);
+
+		if (!$return  &&  $af->debug()) {
+			error500($mail->ErrorInfo);
+		}
 
 		return $return;
 	}

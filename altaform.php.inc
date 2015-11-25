@@ -630,4 +630,5 @@ class altaform extends altaformlite {
 	public			$_footer	= 1;
 	public static	$types		= [];
 	public static	$class		= 'altaform';
+	public static	$version	= 'Altaform 1.5.0';
 }
