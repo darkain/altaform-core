@@ -113,6 +113,12 @@ class afurl {
 
 
 
+	public function replace($prepend=[], $append=[]) {
+		$this->reparse($prepend, $append, true);
+	}
+
+
+
 	public function process() {
 		global $af;
 
