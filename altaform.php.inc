@@ -72,9 +72,13 @@ class altaform extends altaformlite {
 
 
 	public function load($filename) {
-		$device = $filename . '.' . afdevice::device();
-		$this->LoadTemplate( file_exists($device) ? $device : $filename );
-		return $this;
+		$device	= $filename . '.' . afdevice::device();
+		if (file_exists($device)) return parent::load($device);
+
+		$pathed	= $this->path() . $device;
+		if (file_exists($pathed)) return parent::load($pathed);
+
+		return parent::load($filename);
 	}
 
 
