@@ -23,7 +23,8 @@
 				<td><a target="_blank" href="[server.path]">[server.path]</a></td>
 				<td class="right">
 					[server.version;noerr]
-					<span> - [server.type;noerr;magnet=span] - [server.arch;noerr]</span>
+					<span> - [server.type;noerr;magnet=span]</span>
+					<span> - [server.arch;noerr;magnet=span]</span>
 				</td>
 				<td class="center">[server.boot;noerr;date=Y-m-d @ h:i:s]</td>
 				<td class="center">[server.uptime;noerr]</td>
