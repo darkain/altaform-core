@@ -92,8 +92,10 @@ class afurl {
 		if (!is_array($append))		$append		= [$append];
 		if ($replace)				$this->part	= [];
 
-		$prepend[] = '';
-		$append[]  = '';
+		$prepend	= array_reverse($prepend);
+
+		$prepend[]	= '';
+		$append[]	= '';
 
 		array_shift($this->part);
 		array_pop($this->part);
