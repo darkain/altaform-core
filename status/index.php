@@ -42,7 +42,7 @@ foreach ($servers as &$server) {
 ////////////////////////////////////////////////////////////
 // REDIS SERVER
 ////////////////////////////////////////////////////////////
-if ($db->redis()) {
+if ($db->redis() instanceof Redis) {
 	$nstime	= microtime(true);
 	$redis	= $db->redis()->info();
 	$servers[] = [
@@ -56,7 +56,7 @@ if ($db->redis()) {
 } else {
 	$servers[]			= [
 		'path'			=> 'Redis-01',
-		'version'		=> 'OFFLINE!',
+		'uptime'		=> 'OFFLINE!',
 	];
 }
 
