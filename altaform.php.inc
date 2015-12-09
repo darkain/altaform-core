@@ -48,7 +48,7 @@ class altaform extends altaformlite {
 
 
 	//301=PERM, 302=TEMP
-	public function redirect($url, $type=301, $die=true) {
+	public static function redirect($url, $type=301, $die=true) {
 		header("Location: $url", true, $type);
 		echo("<script>top.location.href='$url';</script>");
 		if ($die) exit;
