@@ -74,6 +74,12 @@ if (is_file("_config/$host/config.php.inc")) {
 $afurl->_all();
 
 
+//Upgrade to HTTPS connection
+if (!$afurl->https  &&  !empty($site['secure'])  &&  $get->server('HTTP_UPGRADE_INSECURE_REQUESTS')) {
+	altaform::redirect( 'https' . substr($afurl->all, 4) );
+}
+
+
 //Set the time zone and locale
 date_default_timezone_set(
 	empty($site['timezone']) ? 'UTC' : $site['timezone']
