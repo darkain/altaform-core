@@ -258,6 +258,43 @@ class afurl {
 
 
 
+	public static function post($url, $post=[], $options=[], $session=false) {
+		$ch = curl_init();
+
+		$agent = ini_get('user_agent');
+		if (!empty($agent)  &&  is_string($agent)) {
+			curl_setopt($ch, CURLOPT_USERAGENT, $agent);
+		}
+
+		if (!empty($session)) {
+			curl_setopt($ch, CURLOPT_COOKIE, $session);
+		}
+
+		curl_setopt_array($ch, $options+[
+			CURLOPT_URL				=> $url,
+			CURLOPT_AUTOREFERER		=> true,
+			CURLOPT_BINARYTRANSFER	=> true,
+			CURLOPT_RETURNTRANSFER	=> true,
+			CURLOPT_CONNECTTIMEOUT	=> 20,
+			CURLOPT_TIMEOUT			=> 20,
+			CURLOPT_POST			=> true,
+			CURLOPT_POSTFIELDS		=> $post,
+			CURLOPT_HTTPHEADER		=> ['Expect:'],
+		]);
+
+		$contents			= curl_exec($ch);
+		$data				= curl_getinfo($ch);
+		$data['error']		= curl_error($ch);
+		$data['errno']		= curl_errno($ch);
+		$data['content']	= $contents;
+
+		curl_close($ch);
+
+		return $data;
+	}
+
+
+
 	public function __debugInfo() {
 		$dump = [];
 		foreach ($this as $key => $item) {

@@ -93,36 +93,10 @@ function af_dump($var, $die=true) {
 
 
 
-function url_get_contents($url, $post=array(), $followRedirect=true, $failOnError=true, $session=false) {
-	$ch = curl_init();
-	curl_setopt($ch, CURLOPT_URL,				$url);
-	curl_setopt($ch, CURLOPT_AUTOREFERER,		true);
-	curl_setopt($ch, CURLOPT_BINARYTRANSFER,	true);
-	curl_setopt($ch, CURLOPT_FAILONERROR,		$failOnError);
-	curl_setopt($ch, CURLOPT_FOLLOWLOCATION,	$followRedirect);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER,	true);
-	curl_setopt($ch, CURLOPT_CONNECTTIMEOUT,	20);
-	curl_setopt($ch, CURLOPT_TIMEOUT,			20);
-	curl_setopt($ch, CURLOPT_POST,				true);
-	curl_setopt($ch, CURLOPT_POSTFIELDS,		$post);
-	curl_setopt($ch, CURLOPT_HTTPHEADER,		['Expect:']);
-
-	if ($session) {
-		curl_setopt($ch, CURLOPT_COOKIE,		$session);
-	}
-
-	$agent = ini_get('user_agent');
-	if (!empty($agent)  &&  is_string($agent)) {
-		curl_setopt($ch, CURLOPT_USERAGENT,		$agent);
-	}
-
-	$contents			= curl_exec($ch);
-	$data				= curl_getinfo($ch);
-	$data['error']		= curl_error($ch);
-	$data['errno']		= curl_errno($ch);
-	$data['content']	= $contents;
-
-	curl_close($ch);
-
-	return $data;
+//TODO: WARNING: THIS IS DEPRICATED
+function url_get_contents($url, $post=[], $followRedirect=true, $failOnError=true, $session=false) {
+	return afurl::post($url, $post, [
+		CURLOPT_FOLLOWLOCATION	=> $followRedirect,
+		CURLOPT_FAILONERROR		=> $failOnError,
+	], $session);
 }
