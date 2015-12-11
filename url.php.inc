@@ -295,6 +295,15 @@ class afurl {
 
 
 
+	//301=PERM, 302=TEMP
+	public static function redirect($url, $type=301, $die=true) {
+		header("Location: $url", true, $type);
+		echo("<script>top.location.href='$url';</script>");
+		if ($die) exit;
+	}
+
+
+
 	public function __debugInfo() {
 		$dump = [];
 		foreach ($this as $key => $item) {
