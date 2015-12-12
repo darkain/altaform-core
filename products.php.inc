@@ -23,7 +23,9 @@ class afproduct {
 			$data = self::$amazon->category($category)->responseGroup($group)->search($search);
 		} catch(Exception $e) {}
 
-		$db->redis()->set("aws-product-$key", $data, (60*60*24));
+		try {
+			$db->redis()->set("aws-product-$key", $data, (60*60*24));
+		} catch (RedisException $e) {}
 
 		return $data;
 	}
@@ -32,7 +34,11 @@ class afproduct {
 	static function cached($key) {
 		global $db;
 		if (!$db->redis()) return false;
-		$data = $db->redis()->get("aws-product-$key");
+		try {
+			$data = $db->redis()->get("aws-product-$key");
+		} catch (RedisException $e) {
+			return false;
+		}
 		return !empty($data) ? $data : false;
 	}
 
