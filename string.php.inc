@@ -71,7 +71,7 @@ class afstring {
 
 		$string = preg_replace(
 			'@(?<![.*>])\b(?:(?:https?)://|(?<![./*>])((www|m)\.)|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))[-A-Z0-9+&#/%=~_|$?!:;,.]*[A-Z0-9+&#/%=~_|$]@i',
-			'<a href="' . "$afurl->base/anchor/" . '\0" target="_blank">\0</a>',
+			'<a href="' . $afurl->base . '/anchor/\0" target="_blank">\0</a>',
 			htmlspecialchars($string, ENT_NOQUOTES)
 		);
 
