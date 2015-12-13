@@ -4,6 +4,7 @@ require_once('_products/lib/AmazonECS.class.php');
 
 
 class afproduct {
+
 	static function search($search, $key=false, $category='All', $group='Small,Images') {
 		global $site, $db;
 
@@ -12,7 +13,7 @@ class afproduct {
 		if (empty($key)) $key = $search;
 
 		$data = self::cached($key);
-		if (!empty($data)) return $data;
+		if (!empty($data)) return self::https($data);
 
 		try {
 			if (empty(self::$amazon)) {
@@ -27,8 +28,10 @@ class afproduct {
 			$db->redis()->set("aws-product-$key", $data, (60*60*24));
 		} catch (RedisException $e) {}
 
-		return $data;
+		return self::https($data);
 	}
+
+
 
 
 	static function cached($key) {
@@ -39,8 +42,10 @@ class afproduct {
 		} catch (RedisException $e) {
 			return false;
 		}
-		return !empty($data) ? $data : false;
+		return !empty($data) ? self::https($data) : false;
 	}
+
+
 
 
 	static function image($product) {
@@ -64,5 +69,51 @@ class afproduct {
 		return false;
 	}
 
+
+
+
+	//CONVERTS IMAGES URLS OVER TO HTTPS
+	static function https($data) {
+		global $afurl;
+
+		if (!is_array($data)) return $data;
+
+		if ($afurl->https  &&  !empty($data['Items']['Item'])) {
+			foreach ($data['Items']['Item'] as &$item) {
+				foreach (self::$sizes as $size) {
+					if (!empty($item[$size]['URL'])) {
+						$item[$size]['URL'] = str_replace(
+							'http://ecx.images-amazon.com/',
+							'https://images-na.ssl-images-amazon.com/',
+							$item[$size]['URL']
+						);
+					}
+
+					if (!empty($item['ImageSets']['ImageSet'][$size]['URL'])) {
+						$item['ImageSets']['ImageSet'][$size]['URL'] = str_replace(
+							'http://ecx.images-amazon.com/',
+							'https://images-na.ssl-images-amazon.com/',
+							$item['ImageSets']['ImageSet'][$size]['URL']
+						);
+					}
+				}
+			} unset($item);
+		}
+
+		return $data;
+	}
+
+
+
+
 	static $amazon	= false;
+
+	public static $sizes	= [
+		'TinyImage',
+		'SmallImage',
+		'MediumImage',
+		'LargeImage',
+		'SwatchImage',
+		'ThumbnailImage',
+	];
 }
