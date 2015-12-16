@@ -90,13 +90,3 @@ function af_dump($var, $die=true) {
 	echo '</pre>';
 	if ($die) exit;
 }
-
-
-
-//TODO: WARNING: THIS IS DEPRICATED
-function url_get_contents($url, $post=[], $followRedirect=true, $failOnError=true, $session=false) {
-	return afurl::post($url, $post, [
-		CURLOPT_FOLLOWLOCATION	=> $followRedirect,
-		CURLOPT_FAILONERROR		=> $failOnError,
-	], $session);
-}
