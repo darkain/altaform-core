@@ -534,7 +534,7 @@ class altaform extends altaformlite {
 	}
 
 
-	protected function meth_Custom_Format(&$text, $style) {
+	protected function _customFormat(&$text, $style) {
 		switch ($style) {
 			case 'cdn':
 				$text = $this->cdnUrl($text);

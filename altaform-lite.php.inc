@@ -50,8 +50,8 @@ class altaformlite extends clsTinyButXtreme {
 
 	public function loadString($template) {
 		$this->Source = $template;
-		$this->meth_Merge_AutoVar($this->Source, true);
-		if ($this->OnLoad) $this->meth_Merge_AutoOn($this->Source, 'onload', true, true);
+		$this->_mergeAuto($this->Source);
+		if ($this->OnLoad) $this->_mergeOn($this->Source, 'onload');
 		return $this;
 	}
 
