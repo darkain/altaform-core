@@ -9,7 +9,6 @@ class altaformlite extends clsTinyButXtreme {
 		parent::__construct();
 
 		parent::SetOption('render', TBS_OUTPUT);
-		parent::ResetVarRef(true);
 
 		self::$_time = time();
 

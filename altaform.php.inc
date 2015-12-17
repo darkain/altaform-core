@@ -19,9 +19,6 @@ class altaform extends altaformlite {
 
 		global $site;
 
-		$this->SetOption('render', TBS_OUTPUT);
-		$this->ResetVarRef(true);
-
 		if (!empty($site['af_header'])) {
 			$this->_header = $site['af_header'];
 		}
