@@ -9,18 +9,22 @@ require_once('device.php.inc');
 //Extra time functions
 require_once('time.php.inc');
 
-//Altaform Lite - the basic rendering system
-require_once('altaform-lite.php.inc');
+//TBX - the rendering system
+require_once('_tbx/tbx_class.php');
 
 
-class altaform extends altaformlite {
+class altaform extends clsTinyButXtreme {
 	public function __construct() {
 		parent::__construct();
 
 		global $site;
 
+		self::$_time		= time();
+		self::$_path		= getcwd();
+		if (substr(self::$_path, -1) !== '/') self::$_path .= '/';
+
 		if (!empty($site['af_header'])) {
-			$this->_header = $site['af_header'];
+			$this->_header	= $site['af_header'];
 		}
 	}
 
@@ -112,9 +116,10 @@ class altaform extends altaformlite {
 		} else {
 			$this->load($root.'/header_page.tpl');
 		}
-		foreach ($this->_header as $key => &$val) {
+
+		foreach ($this->_header as $key => $val) {
 			$this->block($key, $val);
-		} unset($val);
+		}
 
 		return $this->render();
 	}
@@ -122,9 +127,10 @@ class altaform extends altaformlite {
 
 	public function header($key=false, $data=false, $replace=false) {
 		if ($key === false) {
-			$this->headerHTML();
-			$this->headerPage();
-		} else if ($replace  ||  empty($this->_header[$key])) {
+			return $this->headerHTML()->headerPage();
+		}
+
+		if ($replace  ||  empty($this->_header[$key])) {
 			$this->_header[$key] = [$data];
 		} else {
 			$this->_header[$key][] = $data;
@@ -186,9 +192,7 @@ class altaform extends altaformlite {
 
 
 	public function footer() {
-		$this->footerPage();
-		$this->footerHTML();
-		return $this;
+		return $this->footerPage()->footerHTML();
 	}
 
 
@@ -245,16 +249,11 @@ class altaform extends altaformlite {
 		}
 
 		//Render all the things!
-		$this->header();
-
-			//Load page's template
-			$this->loadString($text);
+		$this->header()->loadString($text);
 			if ($field !== false  &&  $data !== false) {
 				$this->field($field, $data);
 			}
-			$this->Show();
-
-		$this->footer();
+		$this->render()->footer();
 
 		return $this;
 	}
@@ -613,20 +612,39 @@ class altaform extends altaformlite {
 
 
 
+
+	public function path() {
+		return self::$_path;
+	}
+
+
+
+
+	public function time() {
+		return self::$_time;
+	}
+
+
+
+
 	public function debug() {
 		global $site;
 		return (!empty($site['debug']));
 	}
 
 
-	protected		$_header	= [];
-	private			$_script	= [];
-	private			$_style		= [];
-	private			$_sheet		= [];
-	private			$_meta		= [];
-	private			$_prefs		= [];
-	public			$_footer	= 1;
-	public static	$types		= [];
-	public static	$class		= 'altaform';
-	public static	$version	= 'Altaform 1.5.0';
+
+
+	private				$_script	= [];
+	private				$_style		= [];
+	private				$_sheet		= [];
+	private				$_meta		= [];
+	private				$_prefs		= [];
+	protected			$_header	= [];
+	protected static	$_time		= 0;
+	protected static	$_path		= '';
+	public				$_footer	= 1;
+	public static		$types		= [];
+	public static		$class		= 'altaform';
+	public static		$version	= 'Altaform 1.6.0';
 }
