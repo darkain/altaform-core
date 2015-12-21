@@ -42,7 +42,9 @@ class altaform extends clsTinyButXtreme {
 
 
 	function cli() {
-		return (php_sapi_name() == 'cli' || (is_numeric($_SERVER['argc']) && $_SERVER['argc'] > 0));
+		global $get;
+		if (php_sapi_name() === 'cli') return true;
+		return ((int)$get->server('argc')) > 0;
 	}
 
 
