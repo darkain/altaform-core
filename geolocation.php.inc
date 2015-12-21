@@ -41,12 +41,10 @@ class afgeo {
 
 
 	static function ipaddress() {
-		if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-			return $_SERVER['HTTP_X_FORWARDED_FOR'];
-		} else if (!empty($_SERVER['REMOTE_ADDR'])) {
-			return $_SERVER['REMOTE_ADDR'];
-		}
-		return false;
+		global $get;
+		$address = $get->server('HTTP_X_FORWARDED_FOR');
+		if (empty($address)) $address = $get->server('REMOTE_ADDR');
+		return empty($address) ? false : $address;
 	}
 
 

@@ -417,7 +417,7 @@ class altaform extends clsTinyButXtreme {
 
 
 	public function login($session=false) {
-		global $user, $db, $site, $get;
+		global $user, $db, $get;
 
 		$user = false;
 		if (!isset($db)) return;
@@ -511,7 +511,7 @@ class altaform extends clsTinyButXtreme {
 
 
 	public function hasPermission($permission, $account=false) {
-		global $user;
+		global $user, $db;
 
 		if (!is_array($permission)) $permission = explode(',', $permission);
 		if (empty($account)) $account = $user;
@@ -555,7 +555,7 @@ class altaform extends clsTinyButXtreme {
 		}
 
 		$permissions = explode(',', $account['user_permission']);
-		foreach ($permissions as $key => $val) {
+		foreach ($permissions as $val) {
 			$account['permission'][$val] = 1;
 		}
 

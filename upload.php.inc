@@ -247,7 +247,8 @@ class fileImporter {
 		}
 
 		return self::exif_read_data(
-			$exif = 'data://' . $image->getImageMimeType() . ';base64,' . base64_encode(
+			'data://' . $image->getImageMimeType() .
+			';base64,' . base64_encode(
 				substr($image->getImageBlob(), 0, 1024*1024)
 			)
 		);

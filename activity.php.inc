@@ -24,7 +24,7 @@ class afactivity {
 
 
 	public static function addFile($hash, $type, $verb, $userid=false) {
-		global $af, $db, $user;
+		global $af, $db;
 
 		$userid = self::uid($userid);
 		if (empty($userid)) return false;
@@ -44,7 +44,7 @@ class afactivity {
 
 
 	public static function delete($id, $type, $userid=false) {
-		global $af, $db, $user;
+		global $af, $db;
 
 		$userid = self::uid($userid);
 		if (empty($userid)) return false;
@@ -59,7 +59,7 @@ class afactivity {
 
 
 	public static function deleteFile($hash, $type, $userid=false) {
-		global $af, $db, $user;
+		global $af, $db;
 
 		$userid = self::uid($userid);
 		if (empty($userid)) return false;

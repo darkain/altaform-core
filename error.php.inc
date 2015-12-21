@@ -193,7 +193,7 @@ function _af_email_error($text, $title='') {
 
 
 
-function _af_error_handler($errno, $errstr, $errfile=NULL, $errline=NULL, $errcontext=NULL) {
+function _af_error_handler($errno, $errstr, $errfile=NULL, $errline=NULL) {
 	global $af;
 
 	if (!error_reporting()) return false;

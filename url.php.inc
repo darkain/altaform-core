@@ -30,7 +30,7 @@ class afurl {
 
 		$this->part = explode('/', $this->parts['path']);
 		$this->url = '/';
-		foreach ($this->part as $key => $val) {
+		foreach ($this->part as $val) {
 			if (strlen($val)) $this->url .= urlencode($val) . '/';
 		}
 	}
