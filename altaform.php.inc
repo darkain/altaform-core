@@ -13,7 +13,10 @@ require_once('time.php.inc');
 require_once('_tbx/tbx_class.php');
 
 
+
+
 class altaform extends clsTinyButXtreme {
+
 	public function __construct() {
 		parent::__construct();
 
@@ -36,9 +39,13 @@ class altaform extends clsTinyButXtreme {
 	}
 
 
+
+
 	function cli() {
 		return (php_sapi_name() == 'cli' || (is_numeric($_SERVER['argc']) && $_SERVER['argc'] > 0));
 	}
+
+
 
 
 	function ok($die=true) {
@@ -48,9 +55,12 @@ class altaform extends clsTinyButXtreme {
 
 
 
+
 	public static function redirect($url, $type=301, $die=true) {
 		afurl::redirect($url, $type, $die);
 	}
+
+
 
 
 	public function tempnam($path, $prefix='', $suffix='') {
@@ -69,6 +79,7 @@ class altaform extends clsTinyButXtreme {
 
 
 
+
 	public function load($filename) {
 		$device	= $filename . '.' . afdevice::device();
 		if (file_exists($device)) return parent::load($device);
@@ -78,6 +89,7 @@ class altaform extends clsTinyButXtreme {
 
 		return parent::load($filename);
 	}
+
 
 
 
@@ -103,6 +115,8 @@ class altaform extends clsTinyButXtreme {
 	}
 
 
+
+
 	public function headerPage() {
 		global $site;
 
@@ -125,6 +139,8 @@ class altaform extends clsTinyButXtreme {
 	}
 
 
+
+
 	public function header($key=false, $data=false, $replace=false) {
 		if ($key === false) {
 			return $this->headerHTML()->headerPage();
@@ -140,9 +156,13 @@ class altaform extends clsTinyButXtreme {
 	}
 
 
+
+
 	public function headers($key, $data) {
 		$this->_header[$key] = $data;
 	}
+
+
 
 
 	public function footerHTML() {
@@ -162,6 +182,8 @@ class altaform extends clsTinyButXtreme {
 
 		return $this->render($root.'/footer_html.tpl');
 	}
+
+
 
 
 	public function footerPage() {
@@ -191,9 +213,13 @@ class altaform extends clsTinyButXtreme {
 	}
 
 
+
+
 	public function footer() {
 		return $this->footerPage()->footerHTML();
 	}
+
+
 
 
 	public function renderPage($filename, $field=false, $data=false) {
@@ -260,11 +286,14 @@ class altaform extends clsTinyButXtreme {
 
 
 
+
 	//Add a JavaScript file to the html header
 	public function script($path) {
 		$this->_script[] = ['path' => $path];
 		return $this;
 	}
+
+
 
 
 	//Add a Cascading Style Sheet file to the html header
@@ -274,11 +303,15 @@ class altaform extends clsTinyButXtreme {
 	}
 
 
+
+
 	//Add inline Cascading Style Sheet html header
 	public function sheet($styles) {
 		$this->_sheet[] = $styles;
 		return $this;
 	}
+
+
 
 
 	//Add extra custom meta tags to a page (such as Twitter Cards)
@@ -288,11 +321,14 @@ class altaform extends clsTinyButXtreme {
 	}
 
 
+
+
 	//Add extra custom meta tags to a page (such as Twitter Cards)
 	public function metas($meta) {
 		$this->_meta = array_merge($this->_meta, $meta);
 		return $this;
 	}
+
 
 
 
@@ -305,11 +341,14 @@ class altaform extends clsTinyButXtreme {
 	}
 
 
+
+
 	public function updateProfile($data) {
 		global $db, $user;
 		if (!$this->loggedIn()) return false;
 		return $db->updateId('pudl_user_profile', $data, 'user_id', $user);
 	}
+
 
 
 
@@ -320,6 +359,7 @@ class altaform extends clsTinyButXtreme {
 
 		return json_decode($string, true);
 	}
+
 
 
 
@@ -338,11 +378,13 @@ class altaform extends clsTinyButXtreme {
 
 
 
+
 	public function getUserPreference($path, $id=false, $default=false) {
 		$prefs = $this->getUserPreferences($id);
 		if (isset($prefs[ $path ])) return $prefs[ $path ];
 		return $default;
 	}
+
 
 
 
@@ -362,11 +404,13 @@ class altaform extends clsTinyButXtreme {
 
 
 
+
 	public function updateUserPreference($key, $value, $id=false) {
 		$prefs = self::getUserPreferences($id);
 		$prefs[$key] = $value;
 		return self::setUserPreferences($prefs, $id);
 	}
+
 
 
 
@@ -404,7 +448,11 @@ class altaform extends clsTinyButXtreme {
 	}
 
 
+
+
 	public function postLogin() {}
+
+
 
 
 	public function logout($session=false, $destroy=true) {
@@ -434,11 +482,15 @@ class altaform extends clsTinyButXtreme {
 	}
 
 
+
+
 	public function purgeSession($session=false) {
 		global $db;
 		if (empty($session)) $session = session_id();
 		$db->purge("AF-SESSION-$session");
 	}
+
+
 
 
 	public function loggedIn() {
@@ -447,9 +499,13 @@ class altaform extends clsTinyButXtreme {
 	}
 
 
+
+
 	public function requireLogin() {
 		if (!$this->loggedIn()) error401();
 	}
+
+
 
 
 	public function hasPermission($permission, $account=false) {
@@ -474,12 +530,16 @@ class altaform extends clsTinyButXtreme {
 	}
 
 
+
+
 	public function requirePermission($permission, $account=false) {
 		assert401(
 			$this->hasPermission($permission, $account),
 			'This page requires the following permission level: ' . $permission
 		);
 	}
+
+
 
 
 	public function permissions(&$account) {
@@ -506,6 +566,7 @@ class altaform extends clsTinyButXtreme {
 
 
 
+
 	//GET THE OBJECT TYPE, EITHER BY NUMBER OR NAME
 	//PASS IN A NUMBER TO GET A NAME
 	//PASS IN A NAME TO GET A NUMBER
@@ -519,15 +580,21 @@ class altaform extends clsTinyButXtreme {
 
 
 
+
 	//THIS IS DEPRICATED, REPLACED BY AFURL
 	public function cdnUrl($hash, $key='file_hash') {
 		return afurl::cdn($hash, $key);
 	}
 
+
+
+
 	//THIS IS DEPRICATED, REPLACED BY AFURL
 	public function cdnUrlAll(&$list, $key='img', $hashkey='file_hash') {
 		return afurl::cdnAll($list, $key, $hashkey);
 	}
+
+
 
 
 	protected function _customFormat(&$text, $style) {
@@ -552,6 +619,7 @@ class altaform extends clsTinyButXtreme {
 				parent::meth_Custom_Format($text, $style);
 		}
 	}
+
 
 
 
