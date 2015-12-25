@@ -3,8 +3,17 @@
 require_once('error.php.inc');
 
 
+
+//Set the internal character encoding to UTF-8
+mb_http_output('UTF-8');
+mb_regex_encoding('UTF-8');
+mb_internal_encoding('UTF-8');
+
+
+
 //Set the include path to make it easier to use include() and require()
 set_include_path(get_include_path() . PATH_SEPARATOR . getcwd());
+
 
 
 //we DONT need compression from PHP itself
@@ -21,21 +30,26 @@ if (!defined('PHP_VERSION_ID')) {
 }
 
 
+
 //Getvar Library (GET/POST variables)
 require_once('_getvar/getvar.php.inc');
 $get = new getvar;
+
 
 
 //Main Library
 require_once('common.php.inc');
 
 
+
 //Altaform Base Code
 require_once('altaform.php.inc');
 
 
+
 //Altaform Object Types
 require_once('types.php.inc');
+
 
 
 //URL Parser
@@ -60,6 +74,7 @@ $pos	= strpos($host, ':');
 if ($pos) $host = substr($host, 0, $pos);
 
 
+
 //Main Configuration File
 if (is_file("_config/$host/config.php.inc")) {
 	require_once("_config/$host/config.php.inc");
@@ -70,14 +85,17 @@ if (is_file("_config/$host/config.php.inc")) {
 }
 
 
+
 //Initialize afurl
 $afurl->_all();
+
 
 
 //Upgrade to HTTPS connection
 if (!$afurl->https  &&  !empty($site['secure'])  &&  $get->server('HTTP_UPGRADE_INSECURE_REQUESTS')) {
 	altaform::redirect( 'https' . substr($afurl->all, 4) );
 }
+
 
 
 //Set the time zone and locale
@@ -106,7 +124,6 @@ if (!empty($site['pudl'])  &&  is_array($site['pudl'])) {
 
 
 
-
 //Initialize all the things!
 if (isset($db)) {
 	$db->debugger('_pudl_debug');
@@ -127,8 +144,10 @@ $af = altaform::create();
 $af->login();
 
 
+
 //Are we a bad URL? If so, redirect!
 if (substr($afurl->uri,0,2) === '//') $af->redirect('/');
+
 
 
 //Parse the URL and load the page!
