@@ -18,10 +18,10 @@ function afError($header, $text, $log=false) {
 
 
 function error401($text='', $log=false) {
-	global $afurl, $get, $af;
+	global $afurl, $get;
 
 	if ($get->server('HTTP_REFERER') === $afurl->all) {
-		$af->redirect("$afurl->host$afurl->base/", 302);
+		$afurl->redirect("$afurl->host$afurl->base/", 302);
 	}
 
 	afError(
@@ -44,12 +44,12 @@ function error403($text='', $log=false) {
 
 
 function error404($text='', $log=false) {
-	global $afurl, $get, $af, $site;
+	global $afurl, $get, $site;
 
 	if (!empty($afurl)) {
 		if (empty($afurl->all)) $afurl->all = '';
 		if ($get->server('HTTP_REFERER') === $afurl->all) {
-			$af->redirect("$afurl->host$afurl->base/", 302);
+			$afurl->redirect("$afurl->host$afurl->base/", 302);
 		}
 
 		$text = htmlspecialchars($afurl->all) . '<br/>' . $text;
