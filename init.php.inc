@@ -109,6 +109,19 @@ setlocale(LC_CTYPE,
 
 
 
+//HTTP Options / origins
+if (!empty($site['origins'])  &&  strtolower($get->server('REQUEST_METHOD')) === 'options') {
+	if (in_array($get->server('ORIGIN'), $site['origins'])) {
+		header('Access-Control-Allow-Origin: '.$get->server('ORIGIN'));
+		header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
+		header('Access-Control-Allow-Headers: Content-Type, Cache-Control, X-Requested-With');
+		header('Access-Control-Allow-Credentials: true');
+	}
+	exit;
+}
+
+
+
 //PHP Universal Database Library (PUDL)
 if (!empty($site['pudl'])  &&  is_array($site['pudl'])) {
 	if (!isset($site['pudl']['type'])  &&  isset($site['pudl']['server'])) {
@@ -142,11 +155,6 @@ if (isset($db)) {
 //Initialize Altaform class
 $af = altaform::create();
 $af->login();
-
-
-
-//Are we a bad URL? If so, redirect!
-if (substr($afurl->uri,0,2) === '//') $af->redirect('/');
 
 
 

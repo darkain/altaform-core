@@ -22,14 +22,32 @@ class afurl {
 		$this->parts		= (array)parse_url($this->uri);
 		$this->query		= str_replace(' ', '+', $this->uri . (empty($this->parts['query']) ? '?' : '&'));
 
+		if (substr($this->uri, 0, 2) === '//') $this->redirect('/');
+
 		if (empty($this->parts['path'])) error404();
 
-		if (substr($this->parts['path'],  0, 1) !== '/') $this->parts['path']  = '/' . $this->parts['path'];
-		if (substr($this->parts['path'], -1, 1) !== '/') $this->parts['path'] .= '/';
-		if (substr($this->parts['path'],  1, 1) === '_') error500();
+		if (substr($this->parts['path'],  0, 1) !== '/') {
+			$this->parts['path']  = '/' . $this->parts['path'];
+		}
 
-		$this->part = explode('/', $this->parts['path']);
-		$this->url = '/';
+		assert500(
+			substr($this->parts['path'],  1, 1) !== '_',
+			'HACKING ATTEMPT'
+		);
+
+		if ($this->parts['path'] !== '/') {
+			if (substr($this->parts['path'], -1, 1) === '/') {
+				$this->redirect(
+					substr($this->parts['path'], 0, -1) .
+					(empty($this->parts['query']) ? '' : ('?'.$this->parts['query']))
+				);
+			}
+			$this->parts['path'] .= '/';
+		}
+
+
+		$this->part			= explode('/', $this->parts['path']);
+		$this->url			= '/';
 		foreach ($this->part as $val) {
 			if (strlen($val)) $this->url .= urlencode($val) . '/';
 		}
@@ -54,12 +72,12 @@ class afurl {
 
 	public function __invoke($path, $base=false) {
 		if (!is_array($path)) {
-			return ($base ? ($this->base.'/') : '') . $this->clean($path)  . '/';
+			return ($base ? ($this->base.'/') : '') . $this->clean($path);
 		}
 
 		$url = $base ? ($this->base.'/') : '';
 		foreach ($path as $item) $url .= $this->clean($item)  . '/';
-		return $url;
+		return rtrim($url, '/');
 	}
 
 
