@@ -489,7 +489,7 @@ class altaform extends clsTinyButXtreme {
 	public function purgeSession($session=false) {
 		global $db;
 		if (empty($session)) $session = session_id();
-		$db->purge("AF-SESSION-$session");
+		$db->sync()->purge("AF-SESSION-$session");
 	}
 
 
