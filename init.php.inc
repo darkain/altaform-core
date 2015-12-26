@@ -111,8 +111,8 @@ setlocale(LC_CTYPE,
 
 //HTTP Options / origins
 if (!empty($site['origins'])  &&  strtolower($get->server('REQUEST_METHOD')) === 'options') {
-	if (in_array($get->server('ORIGIN'), $site['origins'])) {
-		header('Access-Control-Allow-Origin: '.$get->server('ORIGIN'));
+	if (in_array($get->server('HTTP_ORIGIN'), $site['origins'])) {
+		header('Access-Control-Allow-Origin: '.$get->server('HTTP_ORIGIN'));
 		header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
 		header('Access-Control-Allow-Headers: Content-Type, Cache-Control, X-Requested-With');
 		header('Access-Control-Allow-Credentials: true');
