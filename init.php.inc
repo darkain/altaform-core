@@ -117,7 +117,7 @@ if (!empty($site['origins'])  &&  strtolower($get->server('REQUEST_METHOD')) ===
 		header('Access-Control-Allow-Headers: Content-Type, Cache-Control, X-Requested-With');
 		header('Access-Control-Allow-Credentials: true');
 	}
-	exit;
+	return;
 }
 
 
