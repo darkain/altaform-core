@@ -665,7 +665,7 @@ class altaform extends clsTinyButXtreme {
 
 		_af_log_error([
 			'time'		=> date('r'),
-			'file'		=> $this->_LastFile,
+			'file'		=> $this->filepath,
 			'details'	=> $text,
 			'url'		=> isset($afurl->all) ? $afurl->all : $get->server('REQUEST_URI'),
 			'mariadb'	=> !empty($db) ? $db->server() : '',
