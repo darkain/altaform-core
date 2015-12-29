@@ -139,15 +139,18 @@ function _af_log_error($data, $die=true) {
 		$val = json_encode($val);
 	} unset($val);
 
+	$server = $get->server('X-PHP-IP');
+
 	$arr = array_merge(['time'=>@date('r')], $data, [
 		'method'	=> $get->server('REQUEST_METHOD'),
 		'url'		=> !empty($afurl->all)	? $afurl->all			: $get->server('REQUEST_URI'),
 		'get'		=> !empty($_GET)		? json_encode($_GET)	: '',
 		'post'		=> !empty($_POST)		? json_encode($_POST)	: '',
+		'file'		=> !empty($_FILE)		? json_encode($_FILE)	: '',
 		'query'		=> !empty($db)			? $db->query()			: '',
 		'mariadb'	=> !empty($db)			? $db->server()			: '',
+		'server'	=> !empty($server)		? $server				: $get->server('SERVER_ADDR'),
 		'proxy'		=> $get->server('SERVER_ADDR'),
-		'server'	=> $get->server('X-PHP-IP'),
 		'remote'	=> $get->server('REMOTE_ADDR'),
 		'agent'		=> $get->server('HTTP_USER_AGENT'),
 		'referer'	=> $get->server('HTTP_REFERER'),
@@ -188,7 +191,7 @@ function _af_email_error($text, $title='') {
 
 	@mail(
 		$site['error_email'],
-		date('r') . ' ' . $title,
+		date('r') . ' ' . strip_tags($title),
 		$tag . "\r\n" . wordwrap($text, 75, "\r\n", true)
 	);
 }
