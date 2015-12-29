@@ -140,6 +140,7 @@ function _af_log_error($data, $die=true) {
 	} unset($val);
 
 	$arr = array_merge(['time'=>@date('r')], $data, [
+		'method'	=> $get->server('REQUEST_METHOD'),
 		'url'		=> !empty($afurl->all)	? $afurl->all			: $get->server('REQUEST_URI'),
 		'get'		=> !empty($_GET)		? json_encode($_GET)	: '',
 		'post'		=> !empty($_POST)		? json_encode($_POST)	: '',
@@ -149,6 +150,7 @@ function _af_log_error($data, $die=true) {
 		'server'	=> $get->server('X-PHP-IP'),
 		'remote'	=> $get->server('REMOTE_ADDR'),
 		'agent'		=> $get->server('HTTP_USER_AGENT'),
+		'referer'	=> $get->server('HTTP_REFERER'),
 	], $arr);
 
 	$out = str_replace("\n", "\r\n", print_r($arr, true)) . "\r\n";
