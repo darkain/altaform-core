@@ -7,6 +7,8 @@ $output	= [
 	'boot'					=> time(),
 	'memory'				=> 0,
 	'pid'					=> [],
+	'max_post_size'			=> ini_get('post_max_size'),
+	'max_file_size'			=> ini_get('upload_max_filesize'),
 ];
 
 
