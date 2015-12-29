@@ -26,30 +26,32 @@ class afurl {
 
 		if (empty($this->parts['path'])) error404();
 
-		if (substr($this->parts['path'],  0, 1) !== '/') {
+		if ($this->parts['path'][0] !== '/') {
 			$this->parts['path']  = '/' . $this->parts['path'];
 		}
 
+		if ($this->parts['path'] === '/') {
+			$this->url		= '/';
+			$this->part		= [];
+			return;		//EARLY OUT FOR HOMEPAGE, NO FOLDERS TO PROCESS!
+		}
+
 		assert500(
-			substr($this->parts['path'],  1, 1) !== '_',
+			$this->parts['path'][1] !== '_',
 			'HACKING ATTEMPT'
 		);
 
-		if ($this->parts['path'] !== '/') {
-			if (substr($this->parts['path'], -1, 1) === '/') {
-				$this->redirect(
-					substr($this->parts['path'], 0, -1) .
-					(empty($this->parts['query']) ? '' : ('?'.$this->parts['query']))
-				);
-			}
-			$this->parts['path'] .= '/';
+		if (substr($this->parts['path'], -1, 1) === '/') {
+			$this->redirect(
+				substr($this->parts['path'], 0, -1) .
+				(empty($this->parts['query']) ? '' : ('?'.$this->parts['query']))
+			);
 		}
 
-
-		$this->part			= explode('/', $this->parts['path']);
-		$this->url			= '/';
+		$this->part		= explode('/', $this->parts['path']);
+		$this->part[]	= '';
 		foreach ($this->part as $val) {
-			if (strlen($val)) $this->url .= urlencode($val) . '/';
+			if (strlen($val)) $this->url .= '/' . urlencode($val);
 		}
 	}
 
