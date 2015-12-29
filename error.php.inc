@@ -139,8 +139,6 @@ function _af_log_error($data, $die=true) {
 		$val = json_encode($val);
 	} unset($val);
 
-	$server = $get->server('X-PHP-IP');
-
 	$arr = array_merge(['time'=>@date('r')], $data, [
 		'method'	=> $get->server('REQUEST_METHOD'),
 		'url'		=> !empty($afurl->all)	? $afurl->all			: $get->server('REQUEST_URI'),
@@ -149,8 +147,8 @@ function _af_log_error($data, $die=true) {
 		'file'		=> !empty($_FILE)		? json_encode($_FILE)	: '',
 		'query'		=> !empty($db)			? $db->query()			: '',
 		'mariadb'	=> !empty($db)			? $db->server()			: '',
-		'server'	=> !empty($server)		? $server				: $get->server('SERVER_ADDR'),
-		'proxy'		=> $get->server('SERVER_ADDR'),
+		'instance'	=> $get->server('X-PHP-IP'),
+		'server'	=> $get->server('SERVER_ADDR'),
 		'remote'	=> $get->server('REMOTE_ADDR'),
 		'agent'		=> $get->server('HTTP_USER_AGENT'),
 		'referer'	=> $get->server('HTTP_REFERER'),
