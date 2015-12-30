@@ -84,6 +84,19 @@ class afurl {
 
 
 
+	public function user($user, $base=false) {
+		$user = empty($user['user_url']) ? $user['user_id'] : $user['user_url'];
+
+		if (is_bool($base)) return $this($user, $base);
+
+		$args = func_get_args();
+		$args[0] = $user;
+
+		return $this($args);
+	}
+
+
+
 	public function clean($fragment) {
 		return strtolower(urlencode($fragment));
 	}
@@ -93,14 +106,6 @@ class afurl {
 	public function vid($new_id=false) {
 		if ($new_id !== false) $this->id = afstring::int($new_id);
 		return $this->id;
-	}
-
-
-
-	public function user($user) {
-		return $this(
-			empty($user['user_url']) ? $user['user_id'] : $user['user_url']
-		);
 	}
 
 
