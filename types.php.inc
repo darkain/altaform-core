@@ -28,4 +28,6 @@ altaform::$types = [
 	21	=> 'favorite',
 	22	=> 'quote',
 	23	=> 'badge',
+	24	=> 'organizer',
+	25	=> 'chatroom',
 ];
