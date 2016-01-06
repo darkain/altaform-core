@@ -618,7 +618,7 @@ class altaform extends clsTinyButXtreme {
 			break;
 
 			default:
-				parent::meth_Custom_Format($text, $style);
+				parent::_customFormat($text, $style);
 		}
 	}
 
