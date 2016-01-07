@@ -505,6 +505,7 @@ class altaform extends clsTinyButXtreme {
 
 	public function requireLogin() {
 		if (!$this->loggedIn()) error401();
+		return $this;
 	}
 
 
@@ -539,6 +540,7 @@ class altaform extends clsTinyButXtreme {
 			$this->hasPermission($permission, $account),
 			'This page requires the following permission level: ' . $permission
 		);
+		return $this;
 	}
 
 
