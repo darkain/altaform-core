@@ -320,12 +320,18 @@ class afurl {
 
 
 
-	//301=PERM, 302=TEMP
+	//301 Moved Permanently
+	//302 Found (temporary)
+	//307 Temporary Redirect (keeps POST data)
+	//308 Permanent Redirect (keeps POST data)
 	public static function redirect($url, $type=301, $die=true) {
 		global $afurl;
 		if (is_array($url)) $url = $afurl($url, true);
 		header("Location: $url", true, $type);
-		echo("<script>top.location.href='$url';</script>");
+		echo '<html><head><meta http-equiv="refresh" content="0;URL=\'';
+		echo htmlspecialchars($url) . '\'" /></head><body>';
+		echo "<script>top.location.href='";
+		echo addslashes($url) . "';</script></body></html>";
 		if ($die) exit;
 	}
 
