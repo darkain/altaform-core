@@ -14,6 +14,14 @@ class aftime {
 
 
 
+	public static function get($data) {
+		if (is_int($data))		return $data;
+		if (ctype_digit($data))	return (int) $data;
+		return strtotime($data);
+	}
+
+
+
 	public static function from($offset, $precision=0) {
 		global $af;
 		if (!$precision) return $af->time() - $offset;
