@@ -41,7 +41,7 @@ class altaform extends clsTinyButXtreme {
 
 
 
-	function cli() {
+	public static function cli() {
 		global $get;
 		if (php_sapi_name() === 'cli') return true;
 		return ((int)$get->server('argc')) > 0;
@@ -50,9 +50,17 @@ class altaform extends clsTinyButXtreme {
 
 
 
-	function ok($die=true) {
+	public function ok($die=true) {
 		echo 'AF-OK';
 		if ($die) die();
+	}
+
+
+
+
+	public function json($data) {
+		if (!headers_sent()) header('Content-Type: application/json');
+		echo ($data instanceof pudlResult) ? $data->json() : json_encode($data);
 	}
 
 
