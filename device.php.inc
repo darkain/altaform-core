@@ -111,11 +111,12 @@ class afdevice {
 
 
 
-	static function set($device){ self::$device = $device; }
-	static function desktop()	{ return (self::device() === 'desktop'	); }
-	static function tablet()	{ return (self::device() === 'tablet'	); }
-	static function tv()		{ return (self::device() === 'tv'		); }
-	static function mobile()	{ return (self::device() === 'mobile'	); }
+	static function set($device)	{ self::$device = $device; }
+	static function desktop()		{ return (self::device() === 'desktop'	); }
+	static function tablet()		{ return (self::device() === 'tablet'	); }
+	static function tv()			{ return (self::device() === 'tv'		); }
+	static function mobile()		{ return (self::device() === 'mobile'	); }
+	static function redetect()		{ self::$device = false; return self::device(); }
 
 }
 
