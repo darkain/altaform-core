@@ -1,5 +1,8 @@
 <?php
 
+if (!$af->debug()) $af->requirePermission('staff,admin');
+
+
 $title = 'Server Status';
 
 $af->script($afurl->static.'/js/jquery.tablesorter.min.js');
