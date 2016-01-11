@@ -496,6 +496,9 @@ class altaform extends clsTinyButXtreme {
 
 	public function purgeSession($session=false) {
 		global $db;
+		//TODO:	FIND *ALL* SESSION FOR THIS USER AND PURGE THEM ALL!
+		//		RIGHT NOW INVALID CACHED DATA PERSISTS WITH THESE OTHER
+		//		SESSIONS
 		if (empty($session)) $session = session_id();
 		$db->sync()->purge("AF-SESSION-$session");
 	}
