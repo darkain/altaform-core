@@ -630,6 +630,10 @@ class altaform extends clsTinyButXtreme {
 				$text = strtolower(date('Y/M', $text));
 			break;
 
+			case 'linkify':
+				$text = afstring::linkify($text);
+			break;
+
 			default:
 				parent::_customFormat($text, $style);
 		}
