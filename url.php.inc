@@ -147,7 +147,7 @@ class afurl {
 
 
 	public function process() {
-		global $af;
+		global $af, $site;
 
 		//Recursion limit
 		static $recurse = 0;
@@ -163,6 +163,11 @@ class afurl {
 
 
 		$count = count($this->part) - 1;
+
+		if ($count === 2  &&  !empty($site['g_auth'][$this->part[1]])) {
+			return print($site['g_auth'][$this->part[1]] . ' ' . $this->part[1]);
+		}
+
 
 		for ($i=1; $i<$count; $i++) {
 
