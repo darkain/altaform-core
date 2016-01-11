@@ -78,7 +78,7 @@ class afurl {
 		}
 
 		$url = $base ? ($this->base.'/') : '';
-		foreach ($path as $item) $url .= $this->clean($item)  . '/';
+		foreach ($path as $item) $url .= $this->clean($item) . '/';
 		return rtrim($url, '/');
 	}
 
@@ -98,7 +98,9 @@ class afurl {
 
 
 	public function clean($fragment) {
-		return strtolower(urlencode($fragment));
+		return ($fragment instanceof afurlsafe)
+			? (string) $fragment
+			: strtolower(urlencode($fragment));
 	}
 
 
@@ -380,3 +382,11 @@ class afurl {
 
 
 $afurl = new afurl;
+
+
+
+class afurlsafe {
+	public function __construct($string) { $this->string = $string; }
+	public function __toString() { return $this->string; }
+	private $string;
+}
