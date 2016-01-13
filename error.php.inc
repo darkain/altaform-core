@@ -1,5 +1,8 @@
 <?php
 
+ini_set('display_errors', 'off');
+
+
 
 function afError($header, $text, $log=false) {
 	global $db;
