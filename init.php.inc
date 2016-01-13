@@ -96,7 +96,7 @@ if ($get->server('HTTP_UPGRADE_INSECURE_REQUESTS')) {
 	if (!$afurl->https  &&  !empty($site['secure'])) {
 		header('Vary: upgrade-insecure-requests');
 		header('Cache-Control: no-cache');
-		altaform::redirect('https'.substr($afurl->all, 4), 307);
+		$afurl->redirect('https'.substr($afurl->all, 4), 307);
 	}
 	if ($afurl->https) {
 		header('Content-Security-Policy: upgrade-insecure-requests');
