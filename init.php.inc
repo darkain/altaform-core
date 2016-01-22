@@ -147,13 +147,14 @@ if (!empty($site['pudl'])  &&  is_array($site['pudl'])) {
 
 
 //Initialize all the things!
+$dbsession = false;
 if (isset($db)) {
 	$db->debugger('_pudl_debug');
 	$get->pudl = $db;
 
 	//PUDL Session Handler
 	require_once('_pudl/pudlSession.php');
-	new pudlSession($db, 'pudl_session',
+	$dbsession = new pudlSession($db, 'pudl_session',
 		isset($site['session_name'])	? $site['session_name']		: false,
 		isset($site['session_domain'])	? $site['session_domain']	: false
 	);
@@ -162,7 +163,7 @@ if (isset($db)) {
 
 
 //Initialize Altaform class
-$af = altaform::create();
+$af = altaform::create( $dbsession );
 $af->login();
 
 

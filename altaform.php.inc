@@ -17,11 +17,12 @@ require_once('_tbx/tbx_class.php');
 
 class altaform extends clsTinyButXtreme {
 
-	public function __construct() {
+	public function __construct($dbsession=false) {
 		parent::__construct();
 
 		global $site;
 
+		$this->_session		= $dbsession;
 		self::$_time		= time();
 		self::$_path		= getcwd();
 		if (substr(self::$_path, -1) !== '/') self::$_path .= '/';
@@ -35,7 +36,7 @@ class altaform extends clsTinyButXtreme {
 
 
 	public static function create() {
-		return new self::$class();
+		return (new ReflectionClass(self::$class))->newInstanceArgs(func_get_args());
 	}
 
 
@@ -424,6 +425,15 @@ class altaform extends clsTinyButXtreme {
 
 
 
+	public function authenticate($user, $purge=true) {
+		if (is_array($user)) $user = $user['user_id'];
+		$this->_session->user($user, 'AF:USER_ID');
+		if ($purge) $this->purgeSession();
+	}
+
+
+
+
 	public function login($session=false) {
 		global $user, $db, $get;
 
@@ -446,14 +456,17 @@ class altaform extends clsTinyButXtreme {
 
 		if (empty($user)) {
 			$user = $db->cache(60*60)->rowId('pudl_user', 'user_id', 0);
-			if (empty($user)) return;
+		}
+
+		if (empty($user)) {
+			$user = ['user_id'=>0];
 		}
 
 		$user['user_session'] = $session;
 		if (empty($user['user_url'])) $user['user_url'] = $user['user_id'];
 
+		$this->authenticate($user, false);
 		$this->permissions($user);
-
 		$this->postLogin();
 	}
 
@@ -472,11 +485,11 @@ class altaform extends clsTinyButXtreme {
 
 		if (!empty($session)) {
 			$db->updateId('pudl_user', ['user_session'=>NULL], 'user_session', $session);
-			$this->purgeSession();
+			$this->authenticate(0);
 		}
 
 		$user = $db->rowId('pudl_user', 'user_id', 0);
-		$this->permissions($user);
+		if (!empty($user)) $this->permissions($user);
 
 		if ($destroy) {
 			if (ini_get('session.use_cookies')) {
@@ -722,6 +735,7 @@ class altaform extends clsTinyButXtreme {
 
 
 
+	private				$_session	= false;
 	private				$_script	= [];
 	private				$_style		= [];
 	private				$_sheet		= [];
@@ -733,5 +747,5 @@ class altaform extends clsTinyButXtreme {
 	public				$_footer	= 1;
 	public static		$types		= [];
 	public static		$class		= 'altaform';
-	public static		$version	= 'Altaform 1.6.0';
+	public static		$version	= 'Altaform 2.0.2';
 }
