@@ -98,10 +98,9 @@ if ($get->server('HTTP_UPGRADE_INSECURE_REQUESTS')) {
 		header('Cache-Control: no-cache');
 		$afurl->redirect('https'.substr($afurl->all, 4), 307);
 	}
-}
-
-if ($afurl->https  ||  !empty($site['secure'])) {
-	header('Content-Security-Policy: upgrade-insecure-requests');
+	if ($afurl->https) {
+		header('Content-Security-Policy: upgrade-insecure-requests');
+	}
 }
 
 
