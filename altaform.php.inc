@@ -484,7 +484,7 @@ class altaform extends clsTinyButXtreme {
 
 		if (!empty($session)) {
 			$db->updateId('pudl_user', ['user_session'=>NULL], 'user_session', $session);
-			$this->authenticate(0);
+			$this->authenticate(0, $destroy);
 		}
 
 		$user = $db->rowId('pudl_user', 'user_id', 0);
