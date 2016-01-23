@@ -444,13 +444,12 @@ class altaform extends clsTinyButXtreme {
 
 		if (!empty($session)) {
 			if ($id = (int) $get->session('AF:USER_ID')) {
-				$user = $db->cache(60*60, "AF-SESSION-$session")->row(
-					['us' => _pudl_user()],
-					[
-						'user_id'			=> $id,
-						'user_permission'	=> pudl::inSet('user', 'staff', 'admin'),
-					]
-				);
+				$user = $db->cache(60*60, 'AF-SESSION-'.$session)->row([
+					'us' => _pudl_user()
+				], [
+					'user_id'			=> $id,
+					'user_permission'	=> pudl::inSet('user', 'staff', 'admin'),
+				]);
 			}
 		}
 
