@@ -548,7 +548,7 @@ class altaform extends clsTinyButXtreme {
 		global $user, $db;
 
 		if (!is_array($permission)) $permission = explode(',', $permission);
-		if (empty($account)) $account = $user;
+		if (empty($account)) $account = &$user;
 
 		if (is_int($account)  ||  is_string($account)) {
 			$account = $db->rowId('pudl_user', 'user_id', $account);
