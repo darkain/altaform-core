@@ -571,7 +571,8 @@ class altaform extends clsTinyButXtreme {
 	public function requirePermission($permission, $account=false) {
 		assert401(
 			$this->hasPermission($permission, $account),
-			'This page requires the following permission level: ' . $permission
+			'This page requires the following permission level: ' .
+				(is_array($permission) ? implode(', ', $permission) : $permission)
 		);
 		return $this;
 	}
