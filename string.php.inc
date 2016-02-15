@@ -241,6 +241,12 @@ class afstring {
 
 
 
+	static function removeBreaks($string) {
+		return preg_replace('/[\pZ\pC]/u', ' ', $string);
+	}
+
+
+
 	static function language($input) {
 		foreach (self::$languages as $key => $val) {
 			preg_match_all($val, $input, $language[$key]);
