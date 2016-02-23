@@ -119,7 +119,7 @@ function assert500($item, $text='', $log=true) {
 
 
 function _af_log_error($data, $die=true) {
-	global $site, $af, $afurl, $db, $get;
+	global $site, $af, $afurl, $db, $get, $user;
 
 	//only print output once!
 	static $echo = false;
@@ -148,6 +148,7 @@ function _af_log_error($data, $die=true) {
 		'get'		=> !empty($_GET)		? json_encode($_GET)	: '',
 		'post'		=> !empty($_POST)		? json_encode($_POST)	: '',
 		'files'		=> !empty($_FILES)		? json_encode($_FILES)	: '',
+		'user'		=> !empty($user)		? json_encode($user)	: '',
 		'query'		=> !empty($db)			? $db->query()			: '',
 		'mariadb'	=> !empty($db)			? $db->server()			: '',
 		'instance'	=> $get->server('X-PHP-IP'),
