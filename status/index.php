@@ -77,7 +77,8 @@ if (!empty($list['wsrep_incoming_addresses'])) {
 	$list = explode(',', $list);
 	foreach ($list as $item) {
 		if (empty($item)) continue;
-		if (!in_array($item, $databases)) $databases[] = trim($item);
+		$item = trim($item);
+		if (!in_array($item, $databases)) $databases[] = $item;
 	}
 }
 
