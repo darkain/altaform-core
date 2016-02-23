@@ -696,7 +696,7 @@ class altaform extends clsTinyButXtreme {
 
 
 	//Log TinyButStrong error messages
-	function meth_Misc_Alert($Src, $Msg, $NoErrMsg=false, $SrcType=false) {
+	function meth_Misc_Alert($Src, $Msg, $NoErrMsg=false, $SrcType=false, $data='') {
 		global $db, $get, $afurl;
 
 		ob_start();
@@ -714,6 +714,7 @@ class altaform extends clsTinyButXtreme {
 			'remote'	=> $get->server('REMOTE_ADDR'),
 			'agent'		=> $get->server('HTTP_USER_AGENT'),
 			'tbx'		=> json_encode($Src),
+			'data'		=> !empty($data) ? json_encode($data) : '',
 		], $this->debug());
 
 		echo $text;
