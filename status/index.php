@@ -113,6 +113,10 @@ foreach ($databases as $item) {
 			'memory'	=> !empty($memory['Innodb_buffer_pool_bytes_data']) ? afstring::fromBytes($memory['Innodb_buffer_pool_bytes_data']) : NULL,
 			'delay'		=> sprintf('%0.4f', microtime(true) - $nstime),
 		];
+
+		if ($db instanceof pudlGalera) {
+			$db->onlineServer($item);
+		}
 	}
 }
 
