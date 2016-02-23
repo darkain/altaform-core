@@ -87,16 +87,17 @@ sort($databases);
 
 pudlMySqli::dieOnError(false);
 foreach ($databases as $item) {
-	$nstime = microtime(true);
-	$connect = new pudlMySqli(['server'=>$item]+$site['pudl']);
+	$name				= $item;
+	$nstime				= microtime(true);
+	$connect			= new pudlMySqli(['server'=>$name]+$site['pudl']);
 
 	if (!empty($replacers[0])  &&  !empty($replacers[1])) {
-		$item = str_replace($replacers[0], $replacers[1], $item);
+		$name = str_replace($replacers[0], $replacers[1], $name);
 	}
 
 	if ($connect->connectErrno()) {
 		$servers[] = [
-			'path'		=> $item,
+			'path'		=> $name,
 			'version'	=> $connect->connectError(),
 		];
 
@@ -106,7 +107,7 @@ foreach ($databases as $item) {
 		$memory			= $connect->status('Innodb_buffer_pool_bytes_data');
 
 		$servers[]		= [
-			'path'		=> $item,
+			'path'		=> $name,
 			'version'	=> !empty($version['version']) ? $version['version'] : NULL,
 			'boot'		=> !empty($uptime['Uptime']) ? $af->time() - $uptime['Uptime'] : NULL,
 			'uptime'	=> !empty($uptime['Uptime']) ? aftime::since($af->time() - $uptime['Uptime'], 60*60*24*365*7) : NULL,
