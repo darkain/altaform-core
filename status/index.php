@@ -76,8 +76,8 @@ if (!empty($list['wsrep_incoming_addresses'])) {
 	$list = str_replace(':3306', '', $list['wsrep_incoming_addresses']);
 	$list = explode(',', $list);
 	foreach ($list as $item) {
-		if (empty($item)) continue;
 		$item = trim($item);
+		if (empty($item)) continue;
 		if (!in_array($item, $databases)) $databases[] = $item;
 	}
 }
