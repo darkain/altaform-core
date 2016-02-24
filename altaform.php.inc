@@ -714,7 +714,7 @@ class altaform extends clsTinyButXtreme {
 			'remote'	=> $get->server('REMOTE_ADDR'),
 			'agent'		=> $get->server('HTTP_USER_AGENT'),
 			'tbx'		=> json_encode($Src),
-			'data'		=> !empty($data) ? json_encode($data) : '',
+			'data'		=> json_encode($data),
 		], $this->debug());
 
 		echo $text;

@@ -133,7 +133,7 @@ function _af_log_error($data, $die=true) {
 
 	$error = (ob_get_level()  &&  $die) ? htmlspecialchars(ob_get_clean()) : '';
 
-	$arr = debug_backtrace();
+	$arr = debug_backtrace(0);
 
 	foreach ($arr as &$val) {
 		foreach ($val as &$item) {
