@@ -107,9 +107,13 @@ class fileImporter {
 		global $af;
 
 		//ONLY SUPPORT JPEG / PNG / GIF FILES FOR NOW
-		switch ($image->getImageFormat()) {
-			case 'JPEG':  case 'PNG':  case 'GIF':  continue;
-			default: return false;
+		try {
+			switch (strtoupper($image->getImageFormat())) {
+				case 'JPEG':  case 'JPG':  case 'PNG':  case 'GIF':  continue;
+				default: return false;
+			}
+		} catch (ImagickException $exception) {
+			return false;
 		}
 
 		//BUILD DATA TO RETURN
@@ -165,7 +169,11 @@ class fileImporter {
 		$image->setImageOrientation(Imagick::ORIENTATION_TOPLEFT);
 
 		//SET'S THE IMAGES COLOR SPACE TO SRGB - ANDROID/IOS COMPATIBLITY
-		$image->profileImage('icc', file_get_contents($af->path().'_altaform/srgb.icc'));
+		try {
+			$image->profileImage('icc',
+				file_get_contents($af->path().'_altaform/srgb.icc')
+			);
+		} catch (ImagickException $exception) {}
 
 		//GET THE LONG EDGE OF THE IMAGE
 		$long = $image->getImageWidth() > $image->getImageHeight() ?
