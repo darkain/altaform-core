@@ -1,14 +1,5 @@
 <?php
 
-require_once('amazon.php.inc');
-
-
-use Aws\S3\S3Client;
-use Aws\S3\Enum\Group;
-use Aws\S3\Enum\CannedAcl;
-use Aws\Common\Enum\Region;
-
-
 
 class fileImporter {
 
@@ -20,7 +11,9 @@ class fileImporter {
 			return false;
 		}
 		$image->setFilename($path);
-		return self::processImage($image, $name);
+		$return = self::processImage($image, $name);
+		$image->clear();
+		return $return;
 	}
 
 
@@ -33,7 +26,9 @@ class fileImporter {
 		} catch (ImagickException $e) {
 			return false;
 		}
-		return self::processImage($image);
+		$return = self::processImage($image);
+		$image->clear();
+		return $return;
 	}
 
 
@@ -46,7 +41,9 @@ class fileImporter {
 		} catch (ImagickException $e) {
 			return false;
 		}
-		return self::processImage($image);
+		$return = self::processImage($image);
+		$image->clear();
+		return $return;
 	}
 
 
@@ -125,17 +122,15 @@ class fileImporter {
 		$data['name']		= basename(!empty($name) ? $name : $image->getFilename());
 		$data['file_hash']	= pudlFunction::unhex($data['hash']);
 
-		//UPLOAD ORIGINAL IMAGE TO AMAZON AWS S3
-		self::s3upload(
-			$image->getImageBlob(),
-			$data['hash'],
-			$image->getImageMimeType()
-		);
+
+		//SAVE THE FILE TO OUR STORAGE SYSTEM
+		self::write($data['hash'], $image->getImageBlob());
+
 
 		//RORATE THE IMAGE, IF NEEDED
 		switch ($image->getImageOrientation()) {
-			case Imagick::ORIENTATION_UNDEFINED: break;	//NOT SET
-			case Imagick::ORIENTATION_TOPLEFT: break;	//ALREADY CORRECT
+			case Imagick::ORIENTATION_UNDEFINED:	break;	//NOT SET
+			case Imagick::ORIENTATION_TOPLEFT:		break;	//ALREADY CORRECT
 
 			case Imagick::ORIENTATION_TOPRIGHT:
 				$image->flopImage();
@@ -223,8 +218,8 @@ class fileImporter {
 		$data['url']		= afurl::cdn($data['hash']);
 		$data['thumb_hash']	= pudlFunction::unhex($data['hash']);
 
-		//UPLOAD TO AMAZON AWS S3
-		self::s3upload($blob, $data['hash'], $resized->getImageMimeType());
+		//COPY BLOB TO IMAGE FILE SERVER
+		$data['good']		= self::write($data['hash'], $blob);
 
 		//CLEANUP / FREE RESOURCES
 		$resized->clear();
@@ -262,7 +257,9 @@ class fileImporter {
 
 		//LOCAL FILE, MUCH FASTER TO USE FILE SYSTEM THAN TO GENERATE A BLOB
 		if (!empty($path)) {
-			if (substr($path, 0, 1) === '/'  ||  substr($path, 0, 7) === 'file://') {
+			if (substr($path, 0, 1) === '/'		||
+				substr($path, 0, 3) === '../'	||
+				substr($path, 0, 7) === 'file://') {
 				return md5_file($path);
 			}
 		}
@@ -324,51 +321,11 @@ class fileImporter {
 
 
 
-
-	public static function s3client() {
-		global $site;
-
-		if (empty(self::$s3client)) {
-			self::$s3client = S3Client::factory([
-				'key'		=> $site['aws_key'],
-				'secret'	=> $site['aws_secret'],
-				'base_url'	=> $site['aws_url'],
-			]);
-		}
-
-		return self::$s3client;
-	}
-
-
-
-
-	public static function s3upload($body, $hash, $mime) {
-		global $site;
-
-		$client = self::s3client();
-
-		//EARLY OUT
-		if (empty($body)) return false;
-
-		//UPLOAD TO AMAZON AWS S3
-		$result = $client->putObject([
-			'Body'			=> $body,
-			'Bucket'		=> $site['aws_bucket'],
-			'Key'			=> afurl::cdnPath($hash),
-			'ContentType'	=> $mime,
-			'acl'			=> CannedAcl::PUBLIC_READ,
-			'GrantRead'		=> 'uri="' . Group::ALL_USERS . '"',
-			'CacheControl'	=> 'max-age=315360000, public',
-			'Expires'		=> gmdate('D, d M Y H:i:s T', strtotime('+10 years')),
-		]);
-
-		//WE CAN POLL THE OBJECT UNTIL IT IS ACCESSIBLE
-		$client->waitUntilObjectExists([
-			'Bucket'	=> $site['aws_bucket'],
-			'Key'		=> afurl::cdnPath($hash),
-		]);
-
-		return $result;
+	public static function write($hash, $blob) {
+		global $af, $afurl;
+		$path = $af->path() . 'files/' . $afurl->cdnPath($hash);
+		if (!@mkdir( substr($path, 0, -32), 0777, true )) return false;
+		return @file_put_contents($path, $blob);
 	}
 
 
@@ -383,11 +340,11 @@ class fileImporter {
 
 		//INSERT MAIN IMAGE
 		$db->insert('pudl_file', [
-			'file_hash'		=> pudlFunction::unhex($data['hash']),
-			'file_size'		=> $data['size'],
-			'file_uploaded'	=> $db->time(),
-			'file_name'		=> $data['name'],
-			'mime_id'		=> !empty($mime) ? $mime['mime_id'] : NULL,
+			'file_hash'				=> pudlFunction::unhex($data['hash']),
+			'file_size'				=> $data['size'],
+			'file_uploaded'			=> $db->time(),
+			'file_name'				=> $data['name'],
+			'mime_id'				=> !empty($mime) ? $mime['mime_id'] : NULL,
 		], 'file_hash=file_hash');
 
 		//INSERT EXIF DATA
@@ -402,28 +359,37 @@ class fileImporter {
 		//ASSOCIATE FILE WITH CURRENT USER, IF AVAILABLE
 		if (!empty($user['user_id'])) {
 			$db->insert('pudl_file_user', [
-				'file_hash'		=> pudlFunction::unhex($data['hash']),
-				'user_id'		=> $user['user_id'],
-				'user_time'		=> $db->time(),
+				'file_hash'			=> pudlFunction::unhex($data['hash']),
+				'user_id'			=> $user['user_id'],
+				'user_time'			=> $db->time(),
 			], 'file_hash=file_hash');
 		}
 
-		//INSERT THUMBNAIL IMAGES
+		self::databaseThumbs($data);
+	}
+
+
+
+	//INSERT THUMBNAIL IMAGES
+	public static function databaseThumbs($data) {
+		global $db;
+
+		if (empty($data)) return;
+
 		foreach ($data as $key => $item) {
 			if (((int)$key) < 1  ||  !is_array($item)) continue;
 
 			$db->insert('pudl_file_thumb', [
-				'file_hash'		=> pudlFunction::unhex($data['hash']),
-				'thumb_hash'	=> pudlFunction::unhex($item['hash']),
-				'thumb_size'	=> $item['size'],
-				'thumb_type'	=> $item['type'],
+				'file_hash'			=> pudlFunction::unhex($data['hash']),
+				'thumb_hash'		=> pudlFunction::unhex($item['hash']),
+				'thumb_size'		=> $item['size'],
+				'thumb_type'		=> $item['type'],
 			], 'thumb_hash=thumb_hash');
 		}
 	}
 
 
 
-	public static $thumbSize	= [50, 100, 150, 200];
-	public static $imageSize	= [800, 1280, 1920];
-	public static $s3client		= NULL;
+	public static $thumbSize		= [50, 100, 150, 200];
+	public static $imageSize		= [800, 1280, 1920];
 }
