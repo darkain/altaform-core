@@ -71,6 +71,16 @@ function error404($text='', $log=false) {
 
 
 
+function error405($text='', $log=true) {
+	afError(
+		'HTTP/1.0 405 Method Not Allowed',
+		"<div id=\"af-fatal\"><h1>ERROR: 405</h1>\n<h2>METHOD NOT ALLOWED</h2>\n<i>$text</i></div>\n",
+		$log
+	);
+}
+
+
+
 function error422($text='', $log=true) {
 	afError(
 		'HTTP/1.1 422 Unprocessable Entity',
@@ -103,6 +113,11 @@ function assert403($item, $text='', $log=false) {
 
 function assert404($item, $text='', $log=false) {
 	if (empty($item)) error404($text, $log);
+	return $item;
+}
+
+function assert405($item, $text='', $log=false) {
+	if (empty($item)) error405($text, $log);
 	return $item;
 }
 

@@ -42,6 +42,10 @@ class afurl {
 		);
 
 		if (substr($this->parts['path'], -1, 1) === '/') {
+			assert405(
+				$get->server('REQUEST_METHOD') !== 'POST',
+				'Attempting to redirect POST data. URL should not have trailing /'
+			);
 			$this->redirect(
 				substr($this->parts['path'], 0, -1) .
 				(empty($this->parts['query']) ? '' : ('?'.$this->parts['query']))
