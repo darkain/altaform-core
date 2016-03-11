@@ -35,7 +35,10 @@ foreach ($servers as &$server) {
 			'memory'	=> afstring::fromBytes( empty($json['memory']) ? 0 : $json['memory'] ),
 		] + $json;
 	} else {
-		$server = [ 'path' => $server ];
+		$server = [
+			'path'		=> $server,
+			'uptime'	=> 'offline',
+		];
 	}
 } unset($server);
 
