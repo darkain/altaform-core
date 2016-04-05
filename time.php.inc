@@ -1,15 +1,26 @@
 <?php
 
+
+define('AF_YEAR',  31536000);
+define('AF_MONTH',  2592000);
+define('AF_WEEK',    604800);
+define('AF_DAY',      86400);
+define('AF_HOUR',      3600);
+define('AF_MINUTE',      60);
+define('AF_SECOND',       1);
+
+
+
 class aftime {
 
-	// array of time period chunks
+	// ARRAY OF TIME PERIOD CHUNKS
 	public static $chunks = [
-		[31536000, 'year'],
-		[ 2592000, 'month'],
-		[  604800, 'week'],
-		[   86400, 'day'],
-		[    3600, 'hour'],
-		[      60, 'minute'],
+		[AF_YEAR,	'year'],
+		[AF_MONTH,	'month'],
+		[AF_WEEK,	'week'],
+		[AF_DAY,	'day'],
+		[AF_HOUR,	'hour'],
+		[AF_MINUTE,	'minute'],
 	];
 
 
