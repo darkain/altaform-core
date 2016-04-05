@@ -25,7 +25,7 @@ class afproduct {
 		} catch(Exception $e) {}
 
 		try {
-			$db->redis()->set("aws-product-$key", $data, (60*60*24));
+			$db->redis()->set("aws-product-$key", $data, (AF_DAY));
 		} catch (RedisException $e) {}
 
 		return self::https($data);

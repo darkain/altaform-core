@@ -31,7 +31,7 @@ foreach ($servers as &$server) {
 		$server = [
 			'path'		=> $server,
 			'delay'		=> sprintf('%0.4f', microtime(true) - $nstime),
-			'uptime'	=> str_replace('ago', '', aftime::since($json['boot'], 60*60*24*365*7)),
+			'uptime'	=> str_replace('ago', '', aftime::since($json['boot'], AF_YEAR*7)),
 			'memory'	=> afstring::fromBytes( empty($json['memory']) ? 0 : $json['memory'] ),
 		] + $json;
 	} else {
@@ -55,7 +55,7 @@ if ($db->redis() instanceof Redis) {
 		'path'			=> 'Redis-01',
 		'version'		=> $redis['redis_version'],
 		'boot'			=> $af->time() - $redis['uptime_in_seconds'],
-		'uptime'		=> aftime::since($af->time() - $redis['uptime_in_seconds'], 60*60*24*365*7),
+		'uptime'		=> aftime::since($af->time() - $redis['uptime_in_seconds'], AF_YEAR*7),
 		'memory'		=> afstring::fromBytes($redis['used_memory']),
 		'delay'			=> sprintf('%0.4f', microtime(true) - $nstime),
 	];
@@ -113,7 +113,7 @@ foreach ($databases as $item) {
 			'path'		=> $name,
 			'version'	=> !empty($version['version']) ? $version['version'] : NULL,
 			'boot'		=> !empty($uptime['Uptime']) ? $af->time() - $uptime['Uptime'] : NULL,
-			'uptime'	=> !empty($uptime['Uptime']) ? aftime::since($af->time() - $uptime['Uptime'], 60*60*24*365*7) : NULL,
+			'uptime'	=> !empty($uptime['Uptime']) ? aftime::since($af->time() - $uptime['Uptime'], AF_YEAR*7) : NULL,
 			'memory'	=> !empty($memory['Innodb_buffer_pool_bytes_data']) ? afstring::fromBytes($memory['Innodb_buffer_pool_bytes_data']) : NULL,
 			'delay'		=> sprintf('%0.4f', microtime(true) - $nstime),
 		];

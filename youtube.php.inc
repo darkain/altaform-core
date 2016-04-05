@@ -37,11 +37,11 @@ class afyoutube {
 		);
 
 		$seconds  =  (int)$matches[7];
-		$seconds += ((int)$matches[6]) * 60;
-		$seconds += ((int)$matches[5]) * 60*60;
-		$seconds += ((int)$matches[4]) * 60*60*24;
-		$seconds += ((int)$matches[3]) * 60*60*24*30;
-		$seconds += ((int)$matches[2]) * 60*60*24*365;
+		$seconds += ((int)$matches[6]) * AF_MINUTE;
+		$seconds += ((int)$matches[5]) * AF_HOUR;
+		$seconds += ((int)$matches[4]) * AF_DAY;
+		$seconds += ((int)$matches[3]) * AF_MONTH;
+		$seconds += ((int)$matches[2]) * AF_YEAR;
 
 		$db->insert('pudl_youtube', [
 			'youtube_id'			=> $id,
