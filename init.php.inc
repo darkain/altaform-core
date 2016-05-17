@@ -164,6 +164,7 @@ if (isset($db)) {
 
 //Initialize Altaform class
 $af = altaform::create( $dbsession );
+$db->time($af);
 $af->login();
 
 
