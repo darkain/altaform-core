@@ -282,14 +282,12 @@ class afurl {
 
 
 	public static function cdnHash($hash, $key='hash') {
-		if (empty($hash)) return false;
-		if (is_array($hash)) {
-			if (!empty($hash[$key]))			return $hash[$key];
-			if (!empty($hash['thumb_hash']))	return $hash['thumb_hash'];
-			if (!empty($hash['file_hash']))		return $hash['file_hash'];
-			return false;
-		}
-		return $hash;
+		if (empty($hash))					return false;
+		if (!is_array($hash))				return $hash;
+		if (!empty($hash[$key]))			return $hash[$key];
+		if (!empty($hash['thumb_hash']))	return $hash['thumb_hash'];
+		if (!empty($hash['file_hash']))		return $hash['file_hash'];
+		return false;
 	}
 
 
