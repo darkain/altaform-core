@@ -15,6 +15,9 @@ class afproduct {
 		$data = self::cached($key);
 		if (!empty($data)) return self::https($data);
 
+		//DISABLE ERROR REPORTING IN CASE OF CONNECTION TIMEOUT
+		$level = error_reporting(0);
+
 		try {
 			if (empty(self::$amazon)) {
 				self::$amazon = new AmazonECS($site['aws_key'], $site['aws_secret'], 'com', $site['aws_tag']);
@@ -27,6 +30,9 @@ class afproduct {
 		try {
 			$db->redis()->set("aws-product-$key", $data, (AF_DAY));
 		} catch (RedisException $e) {}
+
+		//TURN ERROR REPORTING BACK ON BECAUSE WE STILL NEED IT OTHERWISE
+		error_reporting($level);
 
 		return self::https($data);
 	}
