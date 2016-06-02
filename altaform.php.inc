@@ -1,15 +1,18 @@
 <?php
 
-//Extra string functions
-require_once('string.php.inc');
+//AUDIT LOGGING
+require_once('audit.php.inc');
 
-//Device detection
+//DEVICE DETECTION
 require_once('device.php.inc');
 
-//Extra time functions
+//EXTRA STRING FUNCTIONS
+require_once('string.php.inc');
+
+//EXTRA TIME FUNCTIONS
 require_once('time.php.inc');
 
-//TBX - the rendering system
+//TBX - THE RENDERING SYSTEM
 require_once('_tbx/tbx_class.php');
 
 
@@ -758,5 +761,5 @@ class altaform extends clsTinyButXtreme {
 	public				$_footer	= 1;
 	public static		$types		= [];
 	public static		$class		= 'altaform';
-	public static		$version	= 'Altaform 2.0.2';
+	public static		$version	= 'Altaform 2.0.3';
 }
