@@ -11,7 +11,7 @@ function afError($header, $text, $log=false) {
 
 	echo $text;
 
-	if ($log) _af_log_error(['details'=>$text], false);
+	if ($log) _af_log_error($text, false);
 
 	if (!empty($db)) $db->rollback();
 	flush();
@@ -156,6 +156,8 @@ function _af_log_error($data, $die=true) {
 		} unset($item);
 		$val = json_encode($val);
 	} unset($val);
+
+	if (!is_array($data)) $data = ['details'=>$data];
 
 	$arr = array_merge(['time'=>@date('r')], $data, [
 		'method'	=> $get->server('REQUEST_METHOD'),
