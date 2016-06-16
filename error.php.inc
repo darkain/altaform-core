@@ -134,7 +134,7 @@ function assert500($item, $text='', $log=true) {
 
 
 function _af_log_error($data, $die=true) {
-	global $site, $af, $afurl, $db, $get, $user;
+	global $site, $af, $afunit, $afurl, $db, $get, $user;
 
 	//only print output once!
 	static $echo = false;
@@ -169,7 +169,7 @@ function _af_log_error($data, $die=true) {
 		'query'		=> !empty($db)			? $db->query()			: '',
 		'mariadb'	=> !empty($db)			? $db->server()			: '',
 		'instance'	=> $get->server('X-PHP-IP'),
-		'server'	=> $get->server('SERVER_ADDR'),
+		'server'	=> $get->server('SERVER_ADDR') . (!empty($afunit)?" : Unit $afunit":''),
 		'remote'	=> $get->server('REMOTE_ADDR'),
 		'agent'		=> $get->server('HTTP_USER_AGENT'),
 		'referer'	=> $get->server('HTTP_REFERER'),
