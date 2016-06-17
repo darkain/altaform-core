@@ -168,7 +168,6 @@ function _af_log_error($data, $die=true) {
 		'user'		=> !empty($user)		? json_encode($user)	: '',
 		'query'		=> !empty($db)			? $db->query()			: '',
 		'mariadb'	=> !empty($db)			? $db->server()			: '',
-		'instance'	=> $get->server('X-PHP-IP'),
 		'server'	=> $get->server('SERVER_ADDR') . (!empty($afunit)?" : Unit $afunit":''),
 		'remote'	=> $get->server('REMOTE_ADDR'),
 		'agent'		=> $get->server('HTTP_USER_AGENT'),
