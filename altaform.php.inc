@@ -698,25 +698,17 @@ class altaform extends clsTinyButXtreme {
 
 
 
-	//Log TinyButStrong error messages
+	//Log TinyButXtreme error messages
 	function meth_Misc_Alert($Src, $Msg, $NoErrMsg=false, $SrcType=false, $data='') {
-		global $db, $get, $afurl;
-
 		ob_start();
 		$ret = parent::meth_Misc_Alert($Src, $Msg, $NoErrMsg, $SrcType);
 		$text = trim(ob_get_clean());
 
 		_af_log_error([
-			'time'		=> date('r'),
 			'file'		=> $this->filepath,
 			'details'	=> $text,
-			'url'		=> isset($afurl->all) ? $afurl->all : $get->server('REQUEST_URI'),
-			'mariadb'	=> !empty($db) ? $db->server() : '',
-			'proxy'		=> $get->server('SERVER_ADDR'),
-			'server'	=> $get->server('X-PHP-IP'),
-			'remote'	=> $get->server('REMOTE_ADDR'),
-			'agent'		=> $get->server('HTTP_USER_AGENT'),
 			'tbx'		=> json_encode($Src),
+			'msg'		=> json_encode($Msg),
 			'data'		=> json_encode($data),
 		], $this->debug());
 
