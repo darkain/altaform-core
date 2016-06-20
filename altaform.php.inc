@@ -62,6 +62,16 @@ class altaform extends clsTinyButXtreme {
 
 
 
+	public function jq() {
+		global $get;
+		if (!isset($get)) return false;
+		if (!is_a($get, 'getvar')) return false;
+		return $get->bool('jq');
+	}
+
+
+
+
 	public function json($data) {
 		if (!headers_sent()) header('Content-Type: application/json');
 		echo ($data instanceof pudlResult) ? $data->json() : json_encode($data);
@@ -157,6 +167,7 @@ class altaform extends clsTinyButXtreme {
 
 	public function header($key=false, $data=false, $replace=false) {
 		if ($key === false) {
+			if ($this->jq()) return $this;
 			return $this->headerHTML()->headerPage();
 		}
 
@@ -230,6 +241,7 @@ class altaform extends clsTinyButXtreme {
 
 
 	public function footer() {
+		if ($this->jq()) return $this;
 		return $this->footerPage()->footerHTML();
 	}
 
