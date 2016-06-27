@@ -178,7 +178,7 @@ class afurl {
 		for ($i=1; $i<$count; $i++) {
 
 			if (is_dir($this->part[$i])) {
-				chdir($this->part[$i]);
+				$this->chdir( $this->part[$i] );
 				if ($count-$i == 1) {
 					if (is_file('index.php'))	return 'index.php';
 					if (is_file('index.hh'))	return 'index.hh';
@@ -197,7 +197,7 @@ class afurl {
 				if (is_file('virtual.php'))		return $this->virtualize($i, 'virtual.php');
 				if (is_file('virtual.hh'))		return $this->virtualize($i, 'virtual.hh');
 				if (!is_dir('virtual'))			error404();
-				chdir($this->virtualize($i, 'virtual'));
+				$this->chdir( $this->virtualize($i, 'virtual') );
 				if ($count-$i == 1) {
 					if (is_file('index.php'))	return 'index.php';
 					if (is_file('index.hh'))	return 'index.hh';
@@ -209,7 +209,7 @@ class afurl {
 
 
 			if (is_dir('virtual')) {
-				chdir($this->virtualize($i, 'virtual'));
+				$this->chdir( $this->virtualize($i, 'virtual') );
 				continue;
 			}
 
@@ -342,6 +342,18 @@ class afurl {
 		echo "<script>top.location.href='";
 		echo addslashes($url) . "';</script></body></html>";
 		if ($die) exit;
+	}
+
+
+
+	//Move into a folder, and test security if needed
+	private function chdir($path) {
+		chdir($path);
+
+		if (is_file('_altaform.php.inc')) {
+			extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
+			require_once('_altaform.php.inc');
+		}
 	}
 
 
