@@ -54,7 +54,8 @@ class af_sidebar {
 			if (!empty($item['children'])) {
 				$af->loadString( $this->template['parent'] );
 				$af->field('menu', $item);
-				$text .= '<div>' . $af->renderToString();
+				$text .= '<div data-af-sidebar-menu="' . $item['menu_id'] . '">';
+				$text .= $af->renderToString();
 				$text .= $this->renderString($item['children']) . '</div>';
 
 			} else if (is_null($item['menu_text'])) {
