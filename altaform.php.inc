@@ -765,5 +765,5 @@ class altaform extends clsTinyButXtreme {
 	public				$_footer	= 1;
 	public static		$types		= [];
 	public static		$class		= 'altaform';
-	public static		$version	= 'Altaform 2.0.3';
+	public static		$version	= 'Altaform 2.1.0';
 }
