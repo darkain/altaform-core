@@ -181,7 +181,7 @@ class afurl {
 				$this->chdir( $this->part[$i] );
 				if ($count-$i == 1) {
 					if (is_file('index.php'))	return 'index.php';
-					if (is_file('index.hh'))	return 'index.hh';
+					if (is_file('index.hh'))	return $this->hhvm('index.hh');
 					if (is_file('index.tpl'))	return $af->renderPage('index.tpl');
 					error404();
 				}
@@ -192,15 +192,15 @@ class afurl {
 			if ($count-$i == 1) {
 				$file = $this->part[$i];
 				if (is_file("$file.php"))		return "$file.php";
-				if (is_file("$file.hh"))		return "$file.hh";
+				if (is_file("$file.hh"))		return $this->hhvm("$file.hh");
 				if (is_file("$file.tpl"))		return $af->renderPage("$file.tpl");
 				if (is_file('virtual.php'))		return $this->virtualize($i, 'virtual.php');
-				if (is_file('virtual.hh'))		return $this->virtualize($i, 'virtual.hh');
+				if (is_file('virtual.hh'))		return $this->virtualize($i, $this->hhvm('virtual.hh'));
 				if (!is_dir('virtual'))			error404();
 				$this->chdir( $this->virtualize($i, 'virtual') );
 				if ($count-$i == 1) {
 					if (is_file('index.php'))	return 'index.php';
-					if (is_file('index.hh'))	return 'index.hh';
+					if (is_file('index.hh'))	return $this->hhvm('index.hh');
 					if (is_file('index.tpl'))	return $af->renderPage('index.tpl');
 					error404();
 				}
@@ -215,7 +215,7 @@ class afurl {
 
 
 			if (is_file('virtual.php'))			return $this->virtualize($i, 'virtual.php');
-			if (is_file('virtual.hh'))			return $this->virtualize($i, 'virtual.hh');
+			if (is_file('virtual.hh'))			return $this->virtualize($i, $this->hhvm('virtual.hh'));
 
 			error404();
 		}
@@ -354,6 +354,13 @@ class afurl {
 			extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
 			require_once('_altaform.php.inc');
 		}
+	}
+
+
+
+	private function hhvm($path) {
+		if (defined('HHVM_VERSION')) return $path;
+		error500('HHVM_VERSION is not defined. Cannot execute HACK language code from PHP.');
 	}
 
 
