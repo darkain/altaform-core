@@ -225,7 +225,7 @@ class altaform extends clsTinyButXtreme {
 			$this->render($root.'/footer_page.tpl');
 		}
 
-		if ($this->hasPermission('staff,admin')  &&  $this->debug()  &&  file_exists($root.'/footer_admin.tpl')) {
+		if ($this->hasPermission(['staff','admin'])  &&  $this->debug()  &&  file_exists($root.'/footer_admin.tpl')) {
 			$this->load($root.'/footer_admin.tpl');
 			if (!empty($db)) {
 				$this->field('dbstats',		$db->stats());
