@@ -19,14 +19,14 @@ class fileImporter {
 
 
 
-	public static function importFile($file, $name='STREAM') {
+	public static function importFile($file, $name='STREAM', $hash=false) {
 		try {
 			$image = new Imagick();
 			$image->readImageFile($file, $name);
 		} catch (ImagickException $e) {
 			return false;
 		}
-		$return = self::processImage($image);
+		$return = self::processImage($image, false, $hash);
 		$image->clear();
 		return $return;
 	}
@@ -103,7 +103,7 @@ class fileImporter {
 
 
 
-	private static function processImage(&$image, $name=false) {
+	private static function processImage(&$image, $name=false, $hash=false) {
 		global $af;
 
 		//ONLY SUPPORT JPEG / PNG / GIF FILES FOR NOW
@@ -118,7 +118,7 @@ class fileImporter {
 
 		//BUILD DATA TO RETURN
 		$data['exif']		= self::getExif($image);
-		$data['hash']		= self::getHash($image);
+		$data['hash']		= self::getHash($image, $hash);
 		$data['url']		= afurl::cdn($data['hash']);
 		$data['size']		= $image->getImageLength();
 		$data['mime']		= $image->getImageMimeType();
@@ -260,7 +260,16 @@ class fileImporter {
 
 
 
-	private static function getHash(&$image) {
+	private static function getHash(&$image, $hash=false) {
+		if (!empty($hash)) {
+			if (is_string($hash)) return self::unhex($hash);
+			if (is_array($hash)) {
+				if (!empty($hash['hash']))			return self::unhex($hash['hash']);
+				if (!empty($hash['file_hash']))		return self::unhex($hash['file_hash']);
+				if (!empty($hash['thumb_hash']))	return self::unhex($hash['thumb_hash']);
+			}
+		}
+
 		$path = $image->getFilename();
 
 		//LOCAL FILE, MUCH FASTER TO USE FILE SYSTEM THAN TO GENERATE A BLOB
@@ -273,6 +282,14 @@ class fileImporter {
 		}
 
 		return md5($image->getImageBlob());
+	}
+
+
+
+
+	public static function unhex($hash) {
+		if (strlen($hash) !== 16) return $hash;
+		return bin2hex($hash);
 	}
 
 
