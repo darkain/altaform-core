@@ -62,6 +62,16 @@ class altaform extends clsTinyButXtreme {
 
 
 
+	public function jq() {
+		global $get;
+		if (!isset($get)) return false;
+		if (!is_a($get, 'getvar')) return false;
+		return $get->bool('jq');
+	}
+
+
+
+
 	public function json($data) {
 		if (!headers_sent()) header('Content-Type: application/json');
 		echo ($data instanceof pudlResult) ? $data->json() : json_encode($data);
@@ -157,6 +167,7 @@ class altaform extends clsTinyButXtreme {
 
 	public function header($key=false, $data=false, $replace=false) {
 		if ($key === false) {
+			if ($this->jq()) return $this;
 			return $this->headerHTML()->headerPage();
 		}
 
@@ -214,7 +225,7 @@ class altaform extends clsTinyButXtreme {
 			$this->render($root.'/footer_page.tpl');
 		}
 
-		if ($this->hasPermission('staff,admin')  &&  $this->debug()  &&  file_exists($root.'/footer_admin.tpl')) {
+		if ($this->hasPermission(['staff','admin'])  &&  $this->debug()  &&  file_exists($root.'/footer_admin.tpl')) {
 			$this->load($root.'/footer_admin.tpl');
 			if (!empty($db)) {
 				$this->field('dbstats',		$db->stats());
@@ -230,6 +241,7 @@ class altaform extends clsTinyButXtreme {
 
 
 	public function footer() {
+		if ($this->jq()) return $this;
 		return $this->footerPage()->footerHTML();
 	}
 
@@ -753,5 +765,5 @@ class altaform extends clsTinyButXtreme {
 	public				$_footer	= 1;
 	public static		$types		= [];
 	public static		$class		= 'altaform';
-	public static		$version	= 'Altaform 2.0.3';
+	public static		$version	= 'Altaform 2.1.0';
 }

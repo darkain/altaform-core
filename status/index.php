@@ -1,6 +1,6 @@
 <?php
 
-if (!$af->debug()) $af->requirePermission('staff,admin');
+if (!$af->debug()) $af->requirePermission(['staff','admin']);
 
 
 $title = 'Server Status';

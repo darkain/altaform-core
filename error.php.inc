@@ -160,18 +160,18 @@ function _af_log_error($data, $die=true) {
 	if (!is_array($data)) $data = ['details'=>$data];
 
 	$arr = array_merge(['time'=>@date('r')], $data, [
-		'method'	=> $get->server('REQUEST_METHOD'),
-		'url'		=> !empty($afurl->all)	? $afurl->all			: $get->server('REQUEST_URI'),
+		'method'	=> !empty($get) ? $get->server('REQUEST_METHOD') : '',
+		'url'		=> !empty($afurl->all)	? $afurl->all			: (!empty($get) ? $get->server('REQUEST_URI') : ''),
 		'get'		=> !empty($_GET)		? json_encode($_GET)	: '',
 		'post'		=> !empty($_POST)		? json_encode($_POST)	: '',
 		'files'		=> !empty($_FILES)		? json_encode($_FILES)	: '',
 		'user'		=> !empty($user)		? json_encode($user)	: '',
 		'query'		=> !empty($db)			? $db->query()			: '',
 		'mariadb'	=> !empty($db)			? $db->server()			: '',
-		'server'	=> $get->server('SERVER_ADDR') . (!empty($afunit)?" : Unit $afunit":''),
-		'remote'	=> $get->server('REMOTE_ADDR'),
-		'agent'		=> $get->server('HTTP_USER_AGENT'),
-		'referer'	=> $get->server('HTTP_REFERER'),
+		'server'	=> (!empty($get) ? $get->server('SERVER_ADDR') : '') . (!empty($afunit)?" : Unit $afunit":''),
+		'remote'	=> !empty($get) ? $get->server('REMOTE_ADDR') : '',
+		'agent'		=> !empty($get) ? $get->server('HTTP_USER_AGENT') : '',
+		'referer'	=> !empty($get) ? $get->server('HTTP_REFERER') : '',
 	], $arr);
 
 	$out = str_replace("\n", "\r\n", print_r($arr, true)) . "\r\n";
