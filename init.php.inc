@@ -69,15 +69,18 @@ if (!headers_sent()) {
 
 
 //Host Information for Config
-$host	= $get->server('HTTP_HOST');
+$host	= $get->server('HTTP_HOST', '');
 $pos	= strpos($host, ':');
 if ($pos) $host = substr($host, 0, $pos);
+assert500(afurl::validateDomain($host), 'Invalid Domain');
 
 
 
 //Main Configuration File
 if (is_file("_config/$host/config.php.inc")) {
 	require_once("_config/$host/config.php.inc");
+} else if (is_file("_config/$host")) {
+	require_once("_config/$host");
 } else if (is_file("_config/virtual/config.php.inc")) {
 	require_once("_config/virtual/config.php.inc");
 } else {

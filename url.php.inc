@@ -346,6 +346,17 @@ class afurl {
 
 
 
+	//SOURCE: http://stackoverflow.com/questions/1755144/how-to-validate-domain-name-in-php
+	public static function validateDomain($domain) {
+		if (!is_string($domain))	return false;
+		if (strlen($domain) < 1)	return false;
+		if (strlen($domain) > 253)	return false;
+		if (!preg_match('/^([a-z\d](-*[a-z\d])*)(\.([a-z\d](-*[a-z\d])*))*$/i', $domain)) return false;
+		return !!preg_match('/^[^\.]{1,63}(\.[^\.]{1,63})*$/', $domain);
+	}
+
+
+
 	//Move into a folder, and test security if needed
 	private function chdir($path) {
 		chdir($path);
