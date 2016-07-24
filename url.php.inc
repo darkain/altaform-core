@@ -55,7 +55,9 @@ class afurl {
 		$this->part		= explode('/', $this->parts['path']);
 		$this->part[]	= '';
 		foreach ($this->part as $val) {
-			if (strlen($val)) $this->url .= '/' . urlencode($val);
+			if (!strlen($val)) continue;
+			if ($val[0] === '.') error500('HACKING ATTEMPT');
+			$this->url .= '/' . urlencode($val);
 		}
 	}
 
