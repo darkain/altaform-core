@@ -36,12 +36,7 @@ class afurl {
 			return;		//EARLY OUT FOR HOMEPAGE, NO FOLDERS TO PROCESS!
 		}
 
-		assert500(
-			$this->parts['path'][1] !== '_',
-			'HACKING ATTEMPT'
-		);
-
-		if (substr($this->parts['path'], -1, 1) === '/') {
+		if (substr($this->parts['path'], -1) === '/') {
 			assert405(
 				$get->server('REQUEST_METHOD') !== 'POST',
 				'Attempting to redirect POST data. URL should not have trailing /'
@@ -56,7 +51,15 @@ class afurl {
 		$this->part[]	= '';
 		foreach ($this->part as $val) {
 			if (!strlen($val)) continue;
-			if ($val[0] === '.') error500('HACKING ATTEMPT');
+
+			assert500(
+				!in_array($val[0], ['.', '_', ' ', '?', '&', '#', '!', '@', '|',
+									',', ':', ';', '/', '$', '%', '^', '(', ')',
+									'-', '=', '+', '{', '}', '[', ']', '*', '"',
+									"'", '<', '>', '`', '~', '\\']),
+				'Invalid character in URL path'
+			);
+
 			$this->url .= '/' . urlencode($val);
 		}
 	}
