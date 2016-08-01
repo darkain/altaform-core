@@ -411,6 +411,7 @@ class afurl {
 	public $cdn			= '';
 	public $static		= '';
 	public $upload		= '';
+	public $push		= '';
 	public $virtual		= [];
 	public $id			= 0;
 	public $jq			= false;
