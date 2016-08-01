@@ -11,6 +11,8 @@ class afnode {
 		if (is_array($who)) $who = $who['user_id'];
 		if (empty($who)) return;
 
+		$message = json_encode($message);
+
 		$url = $afurl->push . '?' . http_build_query([
 			'time'		=> $af->time(),
 			'auth'		=> md5($af->time() . $message . $site['af_secret']),
