@@ -159,7 +159,8 @@ if (isset($db)) {
 	require_once('_pudl/pudlSession.php');
 	$dbsession = new pudlSession($db, 'pudl_session',
 		isset($site['session_name'])	? $site['session_name']		: false,
-		isset($site['session_domain'])	? $site['session_domain']	: false
+		isset($site['session_domain'])	? $site['session_domain']	: false,
+		$afurl->https
 	);
 }
 
