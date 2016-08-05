@@ -64,6 +64,7 @@ if (!headers_sent()) {
 	}
 	header('Content-Type: text/html; charset=utf-8');
 	header('Content-Language: en_US');
+	header('X-Altaform-Random: ' . substr(md5(mt_rand().microtime()), 0, mt_rand(1,32)) );
 }
 
 
