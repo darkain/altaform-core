@@ -472,9 +472,7 @@ class altaform extends clsTinyButXtreme {
 			$user = $db->cache(AF_HOUR)->rowId('pudl_user', 'user_id', 0);
 		}
 
-		if (empty($user)) {
-			$user = ['user_id'=>0];
-		}
+		if (empty($user)) $user = ['user_id'=>0];
 
 		$user['user_session'] = $session;
 		if (empty($user['user_url'])) $user['user_url'] = $user['user_id'];
@@ -497,25 +495,24 @@ class altaform extends clsTinyButXtreme {
 
 		if (empty($session)) $session = session_id();
 
-		if (!empty($session)) {
-			$db->updateId('pudl_user', ['user_session'=>NULL], 'user_session', $session);
-			$this->authenticate(0, $destroy);
-		}
+		$this->authenticate(0, $destroy);
 
 		$user = $db->rowId('pudl_user', 'user_id', 0);
-		if (!empty($user)) $this->permissions($user);
+		if (empty($user)) $user = ['user_id'=>0];
+		$this->permissions($user);
 
-		if ($destroy) {
-			if (ini_get('session.use_cookies')) {
-				$params = session_get_cookie_params();
-				setcookie(session_name(), '', $this->time() - 42000,
-					$params['path'], $params['domain'],
-					$params['secure'], $params['httponly']
-				);
-			}
-			session_unset();
-			session_destroy();
+		if (!$destroy) return;
+
+		if (ini_get('session.use_cookies')) {
+			$params = session_get_cookie_params();
+			setcookie(session_name(), '', $this->time() - 42000,
+				$params['path'],	$params['domain'],
+				$params['secure'],	$params['httponly']
+			);
 		}
+
+		session_unset();
+		session_destroy();
 	}
 
 
