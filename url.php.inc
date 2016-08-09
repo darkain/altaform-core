@@ -88,7 +88,11 @@ class afurl {
 		}
 
 		$url = $base ? ($this->base.'/') : '';
+
+		if (empty($path)) return $url;
+
 		foreach ($path as $item) $url .= $this->clean($item) . '/';
+
 		return rtrim($url, '/');
 	}
 
