@@ -131,7 +131,8 @@ class altaform extends clsTinyButXtreme {
 			$this->load($root.'/header_html.tpl');
 		}
 
-		$this->field('sheet',	implode(' ', $this->_sheet));
+		$this->field('sheet',	implode(' ',	$this->_sheet));
+		$this->field('robots',	implode(', ',	$this->_robots));
 		$this->block('script',	$this->_script);
 		$this->block('style',	$this->_style);
 		$this->block('meta',	$this->_meta);
@@ -617,6 +618,25 @@ class altaform extends clsTinyButXtreme {
 
 
 
+	public function robots($flag) {
+		$flag = (string) $flag;
+		$this->_robots[$flag] = $flag;
+		return $this;
+	}
+
+
+	//Reference: https://developers.google.com/webmasters/control-crawl-index/docs/robots_meta_tag
+	public function noindex()		{ return $this->robots('noindex'); }
+	public function nofollow()		{ return $this->robots('nofollow'); }
+	public function noarchive()		{ return $this->robots('noarchive'); }
+	public function nosnippet()		{ return $this->robots('nosnippet'); }
+	public function noodp()			{ return $this->robots('noodp'); }
+	public function notranslate()	{ return $this->robots('notranslate'); }
+	public function noimageindex()	{ return $this->robots('noimageindex'); }
+
+
+
+
 	//GET THE OBJECT TYPE, EITHER BY NUMBER OR NAME
 	//PASS IN A NUMBER TO GET A NAME
 	//PASS IN A NAME TO GET A NUMBER
@@ -757,6 +777,7 @@ class altaform extends clsTinyButXtreme {
 	private				$_sheet		= [];
 	private				$_meta		= [];
 	private				$_prefs		= [];
+	private				$_robots	= [];
 	protected			$_header	= [];
 	protected static	$_time		= 0;
 	protected static	$_path		= '';
