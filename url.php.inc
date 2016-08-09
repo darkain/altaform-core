@@ -42,7 +42,7 @@ class afurl {
 				'Attempting to redirect POST data. URL should not have trailing /'
 			);
 			$this->redirect(
-				substr($this->parts['path'], 0, -1) .
+				str_replace(' ', '+', substr($this->parts['path'], 0, -1)) .
 				(empty($this->parts['query']) ? '' : ('?'.$this->parts['query']))
 			);
 		}
