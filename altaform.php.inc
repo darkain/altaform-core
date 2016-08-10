@@ -74,13 +74,6 @@ class altaform extends clsTinyButXtreme {
 
 
 
-	public static function redirect($url, $type=301, $die=true) {
-		afurl::redirect($url, $type, $die);
-	}
-
-
-
-
 	public function tempnam($path, $prefix='', $suffix='') {
 		global $user;
 		if (substr($path, -1) !== '/'  &&  substr($path, -1) !== '\\') {
