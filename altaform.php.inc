@@ -23,16 +23,10 @@ class altaform extends clsTinyButXtreme {
 	public function __construct($dbsession=false) {
 		parent::__construct();
 
-		global $site;
-
 		$this->_session		= $dbsession;
 		self::$_time		= time();
 		self::$_path		= getcwd();
 		if (substr(self::$_path, -1) !== '/') self::$_path .= '/';
-
-		if (!empty($site['af_header'])) {
-			$this->_headers	= $site['af_header'];
-		}
 	}
 
 
