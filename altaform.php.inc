@@ -16,9 +16,26 @@ require_once('time.php.inc');
 require_once('_tbx/tbx_class.php');
 
 
+//LIST OF ALTAFORM TRAITS - USED TO HELP ORGANIZE CODE
+require_once('af_auth.php.inc');
+require_once('af_permission.php.inc');
+require_once('af_preference.php.inc');
+require_once('af_robots.php.inc');
+require_once('af_tbx.php.inc');
+require_once('af_template.php.inc');
+
 
 
 class altaform extends clsTinyButXtreme {
+	use af_auth;
+	use af_permission;
+	use af_preference;
+	use af_robots;
+	use af_tbx;
+	use af_template;
+
+
+
 
 	public function __construct($dbsession=false) {
 		parent::__construct();
@@ -56,6 +73,7 @@ class altaform extends clsTinyButXtreme {
 
 
 
+	//TODO: THIS IS DEPRECATED, AND SHOULD BE HANDLED BY $AFURL
 	public function jq() {
 		global $get;
 		if (!isset($get)) return false;
@@ -91,287 +109,7 @@ class altaform extends clsTinyButXtreme {
 
 
 
-	public function load($filename) {
-		$device	= $filename . '.' . afdevice::device();
-		if (file_exists($device)) return parent::load($device);
-
-		$pathed	= $this->path() . $device;
-		if (file_exists($pathed)) return parent::load($pathed);
-
-		return parent::load($filename);
-	}
-
-
-
-
-	public function headerHTML() {
-		global $site;
-
-		$device	= afdevice::device();
-		$root	= $this->path() . $site['root'];
-
-		if ($this->debug()  &&  file_exists($root.'/header_html_debug.tpl.'.$device)) {
-			$this->load($root.'/header_html_debug.tpl.'.$device);
-		} else if ($this->debug()  &&  file_exists($root.'/header_html_debug.tpl')) {
-			$this->load($root.'/header_html_debug.tpl');
-		} else {
-			$this->load($root.'/header_html.tpl');
-		}
-
-		$this->field('sheet',	implode(' ',	$this->_sheet));
-		$this->field('robots',	implode(', ',	$this->_robots));
-		$this->block('script',	$this->_script);
-		$this->block('style',	$this->_style);
-		$this->block('meta',	$this->_meta);
-		return $this->render();
-	}
-
-
-
-
-	public function headerPage() {
-		global $site;
-
-		$device	= afdevice::device();
-		$root	= $this->path() . $site['root'];
-
-		if ($this->debug()  &&  file_exists($root.'/header_page_debug.tpl.'.$device)) {
-			$this->load($root.'/header_page_debug.tpl.'.$device);
-		} else if ($this->debug()  &&  file_exists($root.'/header_page_debug.tpl')) {
-			$this->load($root.'/header_page_debug.tpl');
-		} else {
-			$this->load($root.'/header_page.tpl');
-		}
-
-		return $this->merge($this->_headers)->render();
-	}
-
-
-
-
-	public function header($key=false, $data=false, $replace=false) {
-		if ($key === false) {
-			if ($this->jq()) return $this;
-			return $this->headerHTML()->headerPage();
-		}
-
-		if ($replace  ||  empty($this->_headers[$key])) {
-			$this->_headers[$key]	= [$data];
-		} else {
-			$this->_headers[$key][]	= $data;
-		}
-
-		return $this;
-	}
-
-
-
-
-	public function headers($key, $data) {
-		$this->_headers[$key] = $data;
-		return $this;
-	}
-
-
-
-
-	public function footerHTML() {
-		global $site;
-
-		$device	= afdevice::device();
-		$root	= $this->path() . $site['root'];
-
-		if ($this->debug()) {
-			if (file_exists($root.'/footer_html_debug.tpl.'.$device)) {
-				return $this->load($root.'/footer_html_debug.tpl.'.$device);
-			}
-			if (file_exists($root.'/footer_html_debug.tpl')) {
-				return $this->render($root.'/footer_html_debug.tpl');
-			}
-		}
-
-		return $this->render($root.'/footer_html.tpl');
-	}
-
-
-
-
-	public function footerPage() {
-		global $site, $db;
-
-		$device	= afdevice::device();
-		$root	= $this->path() . $site['root'];
-
-		if ($this->debug()  &&  file_exists($root.'/footer_page_debug.tpl.'.$device)) {
-			$this->load($root.'/footer_page_debug.tpl.'.$device);
-		} else if ($this->debug()  &&  file_exists($root.'/footer_page_debug.tpl')) {
-			$this->load($root.'/footer_page_debug.tpl');
-		} else {
-			$this->load($root.'/footer_page.tpl');
-		}
-
-		$this->merge($this->_footers)->render();
-
-		if ($this->hasPermission(['staff','admin'])  &&  $this->debug()  &&  file_exists($root.'/footer_admin.tpl')) {
-			$this->load($root.'/footer_admin.tpl');
-			if (!empty($db)) {
-				$this->field('dbstats',		$db->stats());
-				$this->block('dbmisses',	$db->stats()['missed']);
-			}
-			$this->render();
-		}
-
-		return $this;
-	}
-
-
-
-
-	public function footer($key=false, $data=false, $replace=false) {
-		if ($key === false) {
-			if ($this->jq()) return $this;
-			return $this->footerPage()->footerHTML();
-		}
-
-		if ($replace  ||  empty($this->_footers[$key])) {
-			$this->_footers[$key]	= [$data];
-		} else {
-			$this->_footers[$key][]	= $data;
-		}
-
-		return $this;
-	}
-
-
-
-
-	public function footers($key, $data) {
-		$this->_footers[$key] = $data;
-		return $this;
-	}
-
-
-
-
-	public function renderPage($filename, $field=false, $data=false) {
-		global $title, $og;
-
-		//Allow device specific loading
-		$device	= $filename . '.' . afdevice::device();
-
-		//Pull the contents of the template BEFORE anything else!
-		$text = file_get_contents( file_exists($device) ? $device : $filename );
-
-		//PULL OUT REQUIRED PERMISSIONS TAG
-		preg_match("/\<permission[^>]*>(.*)\<\/permission\>/", $text, $matches);
-		if (!empty($matches[1])) {
-			if ($matches[1] === 'login') {
-				$this->requireLogin();
-			} else {
-				$this->requirePermission($matches[1]);
-			}
-			$text = preg_replace("/\<permission[^>]*>(.*)\<\/permission\>/", '', $text);
-		}
-
-		//PULL OUT TITLE TAG
-		preg_match("/\<title[^>]*>(.*)\<\/title\>/", $text, $matches);
-		if (!empty($matches[1])) {
-			$title = $this->renderString($matches[1]);
-			$text = preg_replace("/\<title[^>]*>(.*)\<\/title\>/", '', $text);
-		}
-
-		//PULL OUT DESCRIPTION TAG
-		preg_match("/\<description[^>]*>(.*)\<\/description\>/", $text, $matches);
-		if (!empty($matches[1])) {
-			$og['description'] = $this->renderString($matches[1]);
-			$text = preg_replace("/\<description[^>]*>(.*)\<\/description\>/", '', $text);
-		}
-
-		//PULL OUT IMAGE TAG
-		preg_match("/\<image[^>]*>(.*)\<\/image\>/", $text, $matches);
-		if (!empty($matches[1])) {
-			$og['image'] = $this->renderString($matches[1]);
-			$text = preg_replace("/\<image[^>]*>(.*)\<\/image\>/", '', $text);
-
-			if (!empty($og['twittername'])  &&  !empty($og['twitterdomain'])) {
-				$this->metas([
-					['name'=>'twitter:card',		'content'=>'photo'],
-					['name'=>'twitter:site',		'content'=>$og['twittername']],
-					['name'=>'twitter:domain',		'content'=>$og['twitterdomain']],
-					['name'=>'twitter:title',		'content'=>$title],
-					['name'=>'twitter:image',		'content'=>$og['image']],
-					['name'=>'twitter:description',	'content'=>$og['description']],
-				]);
-			}
-		}
-
-		//Render all the things!
-		$this->header()->loadString($text);
-			if ($field !== false  &&  $data !== false) {
-				$this->field($field, $data);
-			}
-		$this->render()->footer();
-
-		return $this;
-	}
-
-
-
-
-	//Link a JavaScript file in HTML header
-	public function script($path) {
-		$this->_script[] = ['path' => $path];
-		return $this;
-	}
-
-
-
-
-	//Link a Cascading Style Sheet file in HTML header
-	public function style($path) {
-		$this->_style[] = ['path' => $path];
-		return $this;
-	}
-
-
-
-
-	//Embed inline Cascading Style Sheet in HTML header
-	public function sheet($styles) {
-		$this->_sheet[] = $styles;
-		return $this;
-	}
-
-
-
-
-	//Embed inline Cascading Style Sheet in HTML header from file
-	public function css($file) {
-		$this->_sheet[] = file_get_contents($file, true);
-		return $this;
-	}
-
-
-
-
-	//Add extra custom meta tags to a page (such as Twitter Cards)
-	public function meta($meta) {
-		$this->_meta[] = $meta;
-		return $this;
-	}
-
-
-
-
-	//Add extra custom meta tags to a page (such as Twitter Cards)
-	public function metas($meta) {
-		$this->_meta = array_merge($this->_meta, $meta);
-		return $this;
-	}
-
-
-
-
+	//TODO: PLACE THIS IS DEDICATED AFUSER CLASS
 	public function updateUser($data) {
 		global $db, $user;
 		if (!$this->loggedIn()) return false;
@@ -383,269 +121,13 @@ class altaform extends clsTinyButXtreme {
 
 
 
+	//TODO: PLACE THIS IS DEDICATED AFUSER CLASS
 	public function updateProfile($data) {
 		global $db, $user;
 		if (!$this->loggedIn()) return false;
 		return $db->updateId('pudl_user_profile', $data, 'user_id', $user);
 	}
 
-
-
-
-	public function parseUserPreferences($string) {
-		if (PHP_VERSION_ID >= 50400) {
-			return json_decode($string, true, 512, JSON_BIGINT_AS_STRING);
-		}
-
-		return json_decode($string, true);
-	}
-
-
-
-
-	public function getUserPreferences($id=false) {
-		global $user, $db;
-		if (is_array($id)  &&  isset($id['user_id'])) $id = $id['user_id'];
-		if (!is_numeric($id)) $id = $user['user_id'];
-		$id = (int) $id;
-
-		if (isset($this->_prefs[$id])) return $this->_prefs[$id];
-
-		return $this->_prefs[$id] = self::parseUserPreferences(
-			$db->cellId('pudl_user_preference', 'preference', 'user_id', $id)
-		);
-	}
-
-
-
-
-	public function getUserPreference($path, $id=false, $default=false) {
-		$prefs = $this->getUserPreferences($id);
-		if (isset($prefs[ $path ])) return $prefs[ $path ];
-		return $default;
-	}
-
-
-
-
-	public function setUserPreferences($preferences, $id=false) {
-		global $user, $db;
-		if (is_array($id)) $id = $id['user_id'];
-		if (!is_numeric($id)) $id = $user['user_id'];
-		$id = (int) $id;
-
-		$this->_prefs[$id] = $preferences;
-
-		return $db->replace('pudl_user_preference', [
-			'user_id'		=> $id,
-			'preference'	=> json_encode($preferences)
-		], true);
-	}
-
-
-
-
-	public function updateUserPreference($key, $value, $id=false) {
-		$prefs = self::getUserPreferences($id);
-		$prefs[$key] = $value;
-		return self::setUserPreferences($prefs, $id);
-	}
-
-
-
-
-	public function authenticate($user, $purge=true) {
-		if (is_array($user)) $user = $user['user_id'];
-		$this->_session->user($user, 'AF:USER_ID');
-		if ($purge) $this->purgeSession();
-	}
-
-
-
-
-	public function login($session=false) {
-		global $user, $db, $get;
-
-		$user = false;
-		if (!isset($db)) return;
-
-		if (empty($session)) $session = session_id();
-
-		if (!empty($session)) {
-			if ($id = (int) $get->session('AF:USER_ID')) {
-				$user = $db->cache(AF_HOUR, 'AF-SESSION-'.$session)->row([
-					'us' => _pudl_user()
-				], [
-					'user_id'			=> $id,
-					'user_permission'	=> pudl::inSet('user', 'staff', 'admin'),
-				]);
-			}
-		}
-
-		if (empty($user)) {
-			$user = $db->cache(AF_HOUR)->rowId('pudl_user', 'user_id', 0);
-		}
-
-		if (empty($user)) $user = ['user_id'=>0];
-
-		$user['user_session'] = $session;
-		if (empty($user['user_url'])) $user['user_url'] = $user['user_id'];
-
-		$this->authenticate($user, false);
-		$this->permissions($user);
-		$this->postLogin();
-	}
-
-
-
-
-	public function postLogin() {}
-
-
-
-
-	public function logout($session=false, $destroy=true) {
-		global $user, $db;
-
-		if (empty($session)) $session = session_id();
-
-		$this->authenticate(0, $destroy);
-
-		$user = $db->rowId('pudl_user', 'user_id', 0);
-		if (empty($user)) $user = ['user_id'=>0];
-		$this->permissions($user);
-
-		if (!$destroy) return;
-
-		if (ini_get('session.use_cookies')) {
-			$params = session_get_cookie_params();
-			setcookie(session_name(), '', $this->time() - 42000,
-				$params['path'],	$params['domain'],
-				$params['secure'],	$params['httponly']
-			);
-		}
-
-		session_unset();
-		session_destroy();
-	}
-
-
-
-
-	public function purgeSession($session=false) {
-		global $db, $user;
-
-		if (empty($session)) $session = session_id();
-		$db->sync()->purge('AF-SESSION-'.$session);
-
-		if (empty($user['user_id'])) return;
-
-		$rows = $db->selectRows(
-			'id',
-			$this->_session->table(),
-			['user' => $user['user_id']]
-		);
-
-		foreach ($rows as $item) {
-			$db->purge('AF-SESSION-'.$item['id']);
-		}
-	}
-
-
-
-
-	public function loggedIn() {
-		global $user;
-		return !empty($user['user_id']);
-	}
-
-
-
-
-	public function requireLogin() {
-		if (!$this->loggedIn()) error401();
-		return $this;
-	}
-
-
-
-
-	public function hasPermission($permission, $account=false) {
-		global $user, $db;
-
-		if (!is_array($permission)) $permission = explode(',', $permission);
-		if (empty($account)) $account = &$user;
-
-		if (is_int($account)  ||  is_string($account)) {
-			$account = $db->rowId('pudl_user', 'user_id', $account);
-			if (empty($account)) return false;
-		}
-
-		if (empty($account['permission'])) $this->permissions($account);
-
-		foreach ($permission as $perm) {
-			$perm = trim($perm);
-			if (!empty($account['permission'][$perm])) return true;
-		}
-
-		return false;
-	}
-
-
-
-
-	public function requirePermission($permission, $account=false) {
-		assert401(
-			$this->hasPermission($permission, $account),
-			'This page requires the following permission level: ' .
-				(is_array($permission) ? implode(', ', $permission) : $permission)
-		);
-		return $this;
-	}
-
-
-
-
-	public function permissions(&$account) {
-		global $site;
-
-		//USER ACCESS RIGHTS
-		$account['permission'] = $site['permission'];
-
-		if (empty($account['user_permission'])) {
-			$account['user_permission'] = 'guest';
-		}
-
-		$permissions = explode(',', $account['user_permission']);
-		foreach ($permissions as $val) {
-			$account['permission'][$val] = 1;
-		}
-
-		if (!empty($account['user_adfree'])) {
-			if ($account['user_adfree'] > $this->time()) {
-				$account['permission']['adfree'] = 1;
-			}
-		}
-	}
-
-
-
-
-	public function robots($flag) {
-		$flag = (string) $flag;
-		$this->_robots[$flag] = $flag;
-		return $this;
-	}
-
-
-	//Reference: https://developers.google.com/webmasters/control-crawl-index/docs/robots_meta_tag
-	public function noindex()		{ return $this->robots('noindex'); }
-	public function nofollow()		{ return $this->robots('nofollow'); }
-	public function noarchive()		{ return $this->robots('noarchive'); }
-	public function nosnippet()		{ return $this->robots('nosnippet'); }
-	public function noodp()			{ return $this->robots('noodp'); }
-	public function notranslate()	{ return $this->robots('notranslate'); }
-	public function noimageindex()	{ return $this->robots('noimageindex'); }
 
 
 
@@ -664,53 +146,7 @@ class altaform extends clsTinyButXtreme {
 
 
 
-	//THIS IS DEPRICATED, REPLACED BY AFURL
-	public function cdnUrl($hash, $key='file_hash') {
-		return afurl::cdn($hash, $key);
-	}
-
-
-
-
-	//THIS IS DEPRICATED, REPLACED BY AFURL
-	public function cdnUrlAll(&$list, $key='img', $hashkey='file_hash') {
-		return afurl::cdnAll($list, $key, $hashkey);
-	}
-
-
-
-
-	protected function _customFormat(&$text, $style) {
-		switch ($style) {
-			case 'cdn':
-				$text = $this->cdnUrl($text);
-			break;
-
-			case 'url':
-				$text = afstring::url($text);
-			break;
-
-			case 'hex':
-				$text = bin2hex($text);
-			break;
-
-			//TODO: this is deprecated, instead date=Y/M,f=lower (to support ALL date formats)
-			case 'urldate':
-				$text = strtolower(date('Y/M', $text));
-			break;
-
-			case 'linkify':
-				$text = afstring::linkify($text);
-			break;
-
-			default:
-				parent::_customFormat($text, $style);
-		}
-	}
-
-
-
-
+	//TODO: PLACE THIS IS DEDICATED AFUSER CLASS
 	function queue($service, $type, $data) {
 		global $user, $db;
 
@@ -741,27 +177,6 @@ class altaform extends clsTinyButXtreme {
 
 
 
-	//Log TinyButXtreme error messages
-	function meth_Misc_Alert($Src, $Msg, $NoErrMsg=false, $SrcType=false, $data='') {
-		ob_start();
-		$ret = parent::meth_Misc_Alert($Src, $Msg, $NoErrMsg, $SrcType);
-		$text = trim(ob_get_clean());
-
-		_af_log_error([
-			'file'		=> $this->filepath,
-			'details'	=> $text,
-			'tbx'		=> json_encode($Src),
-			'msg'		=> json_encode($Msg),
-			'data'		=> json_encode($data),
-		], $this->debug());
-
-		echo $text;
-		return $ret;
-	}
-
-
-
-
 	public function path() {
 		return self::$_path;
 	}
@@ -784,19 +199,11 @@ class altaform extends clsTinyButXtreme {
 
 
 
-	private				$_session	= false;
-	private				$_script	= [];
-	private				$_style		= [];
-	private				$_sheet		= [];
-	private				$_meta		= [];
 	private				$_prefs		= [];
-	private				$_robots	= [];
-	protected			$_headers	= [];
-	protected			$_footers	= [];
 	protected static	$_time		= 0;
 	protected static	$_path		= '';
-	public				$_footer	= 1;
+	public				$_footer	= 1;		//TODO: THIS SHOULD BE MOVED INTO APPLICATION
 	public static		$types		= [];
 	public static		$class		= 'altaform';
-	public static		$version	= 'Altaform 2.1.3';
+	public static		$version	= 'Altaform 2.2.0';
 }
