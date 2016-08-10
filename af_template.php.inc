@@ -292,11 +292,18 @@ trait af_template {
 			$text	= preg_replace("/\<title[^>]*>(.*)\<\/title\>/", '', $text);
 		}
 
+		//PULL OUT STYLE TAG
+		preg_match("/\<style[^>]*>(.*)\<\/style\>/s", $text, $matches);
+		if (!empty($matches[1])) {
+			$this->sheet($this->renderString($matches[1]));
+			$text	= preg_replace("/\<style[^>]*>(.*)\<\/style\>/s", '', $text);
+		}
+
 		//PULL OUT DESCRIPTION TAG
-		preg_match("/\<description[^>]*>(.*)\<\/description\>/", $text, $matches);
+		preg_match("/\<description[^>]*>(.*)\<\/description\>/s", $text, $matches);
 		if (!empty($matches[1])) {
 			$og['description'] = $this->renderString($matches[1]);
-			$text	= preg_replace("/\<description[^>]*>(.*)\<\/description\>/", '', $text);
+			$text	= preg_replace("/\<description[^>]*>(.*)\<\/description\>/s", '', $text);
 		}
 
 		//PULL OUT IMAGE TAG
