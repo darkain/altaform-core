@@ -331,7 +331,7 @@ class altaform extends clsTinyButXtreme {
 
 
 
-	//Add a JavaScript file to the html header
+	//Link a JavaScript file in HTML header
 	public function script($path) {
 		$this->_script[] = ['path' => $path];
 		return $this;
@@ -340,7 +340,7 @@ class altaform extends clsTinyButXtreme {
 
 
 
-	//Add a Cascading Style Sheet file to the html header
+	//Link a Cascading Style Sheet file in HTML header
 	public function style($path) {
 		$this->_style[] = ['path' => $path];
 		return $this;
@@ -349,9 +349,18 @@ class altaform extends clsTinyButXtreme {
 
 
 
-	//Add inline Cascading Style Sheet html header
+	//Embed inline Cascading Style Sheet in HTML header
 	public function sheet($styles) {
 		$this->_sheet[] = $styles;
+		return $this;
+	}
+
+
+
+
+	//Embed inline Cascading Style Sheet in HTML header from file
+	public function css($file) {
+		$this->_sheet[] = file_get_contents($file, true);
 		return $this;
 	}
 
