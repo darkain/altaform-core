@@ -31,7 +31,7 @@ class altaform extends clsTinyButXtreme {
 		if (substr(self::$_path, -1) !== '/') self::$_path .= '/';
 
 		if (!empty($site['af_header'])) {
-			$this->_header	= $site['af_header'];
+			$this->_headers	= $site['af_header'];
 		}
 	}
 
@@ -156,11 +156,7 @@ class altaform extends clsTinyButXtreme {
 			$this->load($root.'/header_page.tpl');
 		}
 
-		foreach ($this->_header as $key => $val) {
-			$this->block($key, $val);
-		}
-
-		return $this->render();
+		return $this->merge($this->_headers)->render();
 	}
 
 
@@ -172,10 +168,10 @@ class altaform extends clsTinyButXtreme {
 			return $this->headerHTML()->headerPage();
 		}
 
-		if ($replace  ||  empty($this->_header[$key])) {
-			$this->_header[$key] = [$data];
+		if ($replace  ||  empty($this->_headers[$key])) {
+			$this->_headers[$key]	= [$data];
 		} else {
-			$this->_header[$key][] = $data;
+			$this->_headers[$key][]	= $data;
 		}
 
 		return $this;
@@ -185,7 +181,8 @@ class altaform extends clsTinyButXtreme {
 
 
 	public function headers($key, $data) {
-		$this->_header[$key] = $data;
+		$this->_headers[$key] = $data;
+		return $this;
 	}
 
 
@@ -221,10 +218,12 @@ class altaform extends clsTinyButXtreme {
 		if ($this->debug()  &&  file_exists($root.'/footer_page_debug.tpl.'.$device)) {
 			$this->load($root.'/footer_page_debug.tpl.'.$device);
 		} else if ($this->debug()  &&  file_exists($root.'/footer_page_debug.tpl')) {
-			$this->render($root.'/footer_page_debug.tpl');
+			$this->load($root.'/footer_page_debug.tpl');
 		} else {
-			$this->render($root.'/footer_page.tpl');
+			$this->load($root.'/footer_page.tpl');
 		}
+
+		$this->merge($this->_footers)->render();
 
 		if ($this->hasPermission(['staff','admin'])  &&  $this->debug()  &&  file_exists($root.'/footer_admin.tpl')) {
 			$this->load($root.'/footer_admin.tpl');
@@ -241,9 +240,27 @@ class altaform extends clsTinyButXtreme {
 
 
 
-	public function footer() {
-		if ($this->jq()) return $this;
-		return $this->footerPage()->footerHTML();
+	public function footer($key=false, $data=false, $replace=false) {
+		if ($key === false) {
+			if ($this->jq()) return $this;
+			return $this->footerPage()->footerHTML();
+		}
+
+		if ($replace  ||  empty($this->_footers[$key])) {
+			$this->_footers[$key]	= [$data];
+		} else {
+			$this->_footers[$key][]	= $data;
+		}
+
+		return $this;
+	}
+
+
+
+
+	public function footers($key, $data) {
+		$this->_footers[$key] = $data;
+		return $this;
 	}
 
 
@@ -778,7 +795,8 @@ class altaform extends clsTinyButXtreme {
 	private				$_meta		= [];
 	private				$_prefs		= [];
 	private				$_robots	= [];
-	protected			$_header	= [];
+	protected			$_headers	= [];
+	protected			$_footers	= [];
 	protected static	$_time		= 0;
 	protected static	$_path		= '';
 	public				$_footer	= 1;
