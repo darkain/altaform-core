@@ -9,9 +9,14 @@ https://developers.google.com/webmasters/control-crawl-index/docs/robots_meta_ta
 
 trait af_robots {
 
-	public function robots($flag) {
-		$flag = (string) $flag;
-		$this->_robots[$flag] = $flag;
+	public function robots($flags) {
+		if (is_string($flags)) $flags = explode(',', $flags);
+
+		foreach ($flags as $item) {
+			$item = trim((string)$item);
+			$this->_robots[$item] = $item;
+		}
+
 		return $this;
 	}
 
