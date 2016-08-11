@@ -76,14 +76,14 @@ trait af_template {
 	////////////////////////////////////////////////////////////////////////////
 	//LOAD A TEMPLATE FILE - OVERRIDE DEFAULT TBX LOADER
 	////////////////////////////////////////////////////////////////////////////
-	public function load($filename) {
-		$device	= $filename . '.' . afdevice::device();
+	public function load($file) {
+		$device	= $file . '.' . afdevice::device();
 		if (file_exists($device)) return parent::load($device);
 
 		$pathed	= $this->path() . $device;
 		if (file_exists($pathed)) return parent::load($pathed);
 
-		return parent::load($filename);
+		return parent::load($file);
 	}
 
 
@@ -268,14 +268,17 @@ trait af_template {
 	////////////////////////////////////////////////////////////////////////////
 	//RENDER AN ENTIRE PAGE
 	////////////////////////////////////////////////////////////////////////////
-	public function renderPage($filename, $merge=false) {
+	public function renderPage($file, $merge=false) {
 		global $title, $og;
 
 		//Allow device specific loading
-		$device	= $filename . '.' . afdevice::device();
+		$device	= $file . '.' . afdevice::device();
 
 		//Pull the contents of the template BEFORE anything else!
-		$text = file_get_contents( file_exists($device) ? $device : $filename );
+		$text = @file_get_contents( file_exists($device) ? $device : $file );
+		if ($text === false) {
+			trigger_error('Unable to load template file: '.$file, E_USER_ERROR);
+		}
 
 		//PULL OUT REQUIRED PERMISSIONS TAG
 		preg_match("/\<permission[^>]*>(.*)\<\/permission\>/", $text, $matches);
