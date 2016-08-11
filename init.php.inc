@@ -73,19 +73,21 @@ if (!headers_sent()) {
 $host	= $get->server('HTTP_HOST', '');
 $pos	= strpos($host, ':');
 if ($pos) $host = substr($host, 0, $pos);
-assert500(afurl::validateDomain($host), 'Invalid Domain');
+assert500(afurl::validateDomain($host), 'Invalid Domain: ' . $host);
 
 
 
 //Main Configuration File
-if (is_file("_config/$host/config.php.inc")) {
-	require_once("_config/$host/config.php.inc");
-} else if (is_file("_config/$host")) {
-	require_once("_config/$host");
-} else if (is_file("_config/virtual/config.php.inc")) {
-	require_once("_config/virtual/config.php.inc");
+if (is_file('_config/'.$host.'/config.php.inc')) {
+	require_once('_config/'.$host.'/config.php.inc');
+} else if (is_file('_config/'.$host)) {
+	require_once('_config/'.$host);
+} else if (is_file('_config/virtual/config.php.inc')) {
+	require_once('_config/virtual/config.php.inc');
+} else if (is_file('_config/virtual.php.inc')) {
+	require_once('_config/virtual.php.inc');
 } else {
-	error500('Unknown Domain: ' . $get->server('HTTP_HOST'));
+	error500('Unknown Domain: ' . $host);
 }
 
 
@@ -176,8 +178,8 @@ if (isset($db)) {
 
 
 //Initialize Altaform class
-$af = altaform::create( $dbsession );
-$db->time($af);
+$af = altaform::create($dbsession);
+if (isset($db)) $db->time($af);
 $af->login();
 
 
