@@ -8,9 +8,11 @@ trait af_tbx {
 	//CUSTOM TEMPLATE FORMATS
 	////////////////////////////////////////////////////////////////////////////
 	protected function _customFormat(&$text, $style) {
+		global $afurl;
+
 		switch ($style) {
 			case 'cdn':
-				$text = $this->cdnUrl($text);
+				$text = $this->cdn($text);
 			break;
 
 			case 'url':
