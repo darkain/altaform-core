@@ -122,7 +122,6 @@ trait af_template {
 
 
 
-
 	////////////////////////////////////////////////////////////////////////////
 	//NO PARAMS - RENDER HTML FOOTER TEMPLATES
 	//PARAMS - ADD OPTIONS TO HTML FOOTER TEMPLATES (deprecated)
