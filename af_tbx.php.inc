@@ -12,7 +12,7 @@ trait af_tbx {
 
 		switch ($style) {
 			case 'cdn':
-				$text = $this->cdn($text);
+				$text = $afurl->cdn($text);
 			break;
 
 			case 'url':
