@@ -274,7 +274,7 @@ register_shutdown_function('_af_fatal_error');
 
 
 
-function _pudl_debug($db, $result=NULL) {
+function _pudl_debug($callback, $db, $result=NULL) {
 	_af_log_error([
 		'error'		=> $db->errno(),
 		'details'	=> $db->error(),
