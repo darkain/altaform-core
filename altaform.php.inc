@@ -202,7 +202,6 @@ class altaform extends clsTinyButXtreme {
 	private				$_prefs		= [];
 	protected static	$_time		= 0;
 	protected static	$_path		= '';
-	public				$_footer	= 1;		//TODO: THIS SHOULD BE MOVED INTO APPLICATION
 	public static		$types		= [];
 	public static		$class		= 'altaform';
 	public static		$version	= 'Altaform 2.2.0';
