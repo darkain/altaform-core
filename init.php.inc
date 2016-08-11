@@ -59,7 +59,7 @@ require_once('url.php.inc');
 
 //Set the content type for this document to HTML with UTF-8 encoding
 if (!headers_sent()) {
-	if (strpos($get->server('HTTP_USER_AGENT'), 'MSIE') !== false) {
+	if (strpos($get->server('HTTP_USER_AGENT'), ' Trident/')) {
 		header('X-UA-Compatible: IE=edge,chrome=1');
 	}
 	header('Content-Type: text/html; charset=utf-8');
@@ -95,15 +95,23 @@ $afurl->_all();
 
 
 
-//Upgrade to HTTPS connection
+//Upgrade to HTTPS connection (modern)
 if ($get->server('HTTP_UPGRADE_INSECURE_REQUESTS')) {
-	if (!$afurl->https  &&  !empty($site['secure'])) {
-		header('Vary: upgrade-insecure-requests');
-		header('Cache-Control: no-cache');
-		$afurl->redirect('https'.substr($afurl->all, 4), 307);
-	}
 	if ($afurl->https) {
 		header('Content-Security-Policy: upgrade-insecure-requests');
+	} else if (!empty($site['secure'])) {
+		$afurl->redirectSecure();
+	}
+
+//Upgrade to HTTPS connection (legacy)
+} else if (!$afurl->https  &&  !empty($site['secure'])) {
+	$agent		= $get->server('HTTP_USER_AGENT');
+
+	$secure_ua	= [	' Trident/',	' Firefox/',	' AppleWebKit/',
+					' Konqueror/',	' Iceweasel/'];
+
+	foreach ($secure_ua as $ua) {
+		if (strpos($agent, $ua)) $afurl->redirectSecure();
 	}
 }
 

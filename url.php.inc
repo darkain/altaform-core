@@ -346,12 +346,26 @@ class afurl {
 	public static function redirect($url, $type=301, $die=true) {
 		global $afurl;
 		if (is_array($url)) $url = $afurl($url, true);
-		header("Location: $url", true, $type);
+		if (!headers_sent()) header("Location: $url", true, $type);
 		echo '<html><head><meta http-equiv="refresh" content="0;URL=\'';
 		echo htmlspecialchars($url) . '\'" /></head><body>';
 		echo "<script>top.location.href='";
 		echo addslashes($url) . "';</script></body></html>";
 		if ($die) exit;
+	}
+
+
+
+	public function redirectSecure() {
+		if (!headers_sent()) {
+			header('Vary: upgrade-insecure-requests');
+			header('Cache-Control: no-cache');
+		}
+
+		$this->redirect(
+			'https' . substr($this->all, strlen($this->protocol)),
+			307
+		);
 	}
 
 
