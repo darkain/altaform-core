@@ -40,9 +40,12 @@ trait af_template {
 	////////////////////////////////////////////////////////////////////////////
 	//EMBED INLINE CASCADING STYLE SHEET IN HTML HEADER FROM FILE
 	////////////////////////////////////////////////////////////////////////////
-	//TODO: IF FILE DOESN'T EXIST, ERROR OUT
 	public function css($file) {
-		$this->_sheet[] = file_get_contents($file, true);
+		$data = @file_get_contents($file, true);
+		if ($data === false) {
+			trigger_error('Unable to load CSS file: '.$file, E_USER_ERROR);
+		}
+		$this->_sheet[] = $data;
 		return $this;
 	}
 
