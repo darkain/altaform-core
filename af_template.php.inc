@@ -271,10 +271,10 @@ trait af_template {
 	public function renderPage($file, $merge=false) {
 		global $title, $og;
 
-		//Allow device specific loading
+		//ALLOW DEVICE SPECIFIC LOADING
 		$device	= $file . '.' . afdevice::device();
 
-		//Pull the contents of the template BEFORE anything else!
+		//PULL THE CONTENTS OF THE TEMPLATE BEFORE ANYTHING ELSE!
 		$text = @file_get_contents( file_exists($device) ? $device : $file );
 		if ($text === false) {
 			trigger_error('Unable to load template file: '.$file, E_USER_ERROR);
@@ -330,7 +330,7 @@ trait af_template {
 			}
 		}
 
-		//Render all the things!
+		//RENDER ALL THE THINGS!
 		return $this
 			->header()
 				->loadString($text)
