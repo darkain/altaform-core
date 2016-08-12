@@ -1,22 +1,18 @@
 <?php
 
-class afnode {
+trait af_node {
 
-	static function push($message, $who=false) {
-		global $af, $afurl, $site, $user;
+	function push($message) {
+		global $af, $afurl, $site;
 
 		if (empty($afurl->push)) return;
-
-		if ($who === false)		$who = $user;
-		if (tbx_array($who))	$who = $who['user_id'];
-		if (empty($who)) return;
 
 		$message = json_encode($message);
 
 		$url = $afurl->push . '?' . http_build_query([
 			'time'		=> $af->time(),
 			'auth'		=> md5($af->time() . $message . $site['af_secret']),
-			'user'		=> (int) $who,
+			'user'		=> (int) $this->user_id,
 			'message'	=> $message,
 		]);
 

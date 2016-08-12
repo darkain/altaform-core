@@ -1,5 +1,6 @@
 <?php
 
+require_once('af_node.php.inc');
 require_once('af_object_array.php.inc');
 require_once('af_permission.php.inc');
 require_once('af_preference.php.inc');
@@ -7,6 +8,7 @@ require_once('af_preference.php.inc');
 
 
 class afuser extends af_object_array {
+	use af_node;
 	use af_permission;
 	use af_preference;
 
