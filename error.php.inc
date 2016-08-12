@@ -142,7 +142,7 @@ function _af_log_error($data, $die=true) {
 	$echo = true;
 
 
-	if (!isset($af)  ||  $af->hasPermission('admin')) {
+	if (!isset($user)  ||  $user->hasPermission('admin')) {
 		$site['debug'] = true;
 	}
 
@@ -152,12 +152,12 @@ function _af_log_error($data, $die=true) {
 
 	foreach ($arr as &$val) {
 		foreach ($val as &$item) {
-			if (is_array($item)  ||  is_object($item)) $item = [];
+			if (tbx_array($item)  ||  is_object($item)) $item = [];
 		} unset($item);
 		$val = json_encode($val);
 	} unset($val);
 
-	if (!is_array($data)) $data = ['details'=>$data];
+	if (!tbx_array($data)) $data = ['details'=>$data];
 
 	$arr = array_merge(['time'=>@date('r')], $data, [
 		'method'	=> !empty($get) ? $get->server('REQUEST_METHOD') : '',
@@ -200,7 +200,7 @@ function _af_email_error($text, $title='') {
 	if (empty($site['error_email'])) return;
 
 	$tag = !empty($site['error_tag']) ? $site['error_tag'] : '';
-	if (is_array($tag)) {
+	if (tbx_array($tag)) {
 		$tag = '@'.implode("\r\n@", $tag);
 	} else if (!empty($tag)) {
 		$tag = '@' . $tag;

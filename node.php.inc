@@ -7,8 +7,8 @@ class afnode {
 
 		if (empty($afurl->push)) return;
 
-		if ($who === false) $who = $user;
-		if (is_array($who)) $who = $who['user_id'];
+		if ($who === false)		$who = $user;
+		if (tbx_array($who))	$who = $who['user_id'];
 		if (empty($who)) return;
 
 		$message = json_encode($message);

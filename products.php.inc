@@ -82,7 +82,7 @@ class afproduct {
 	static function https($data) {
 		global $afurl;
 
-		if (!is_array($data)) return $data;
+		if (!tbx_array($data)) return $data;
 
 		if ($afurl->https  &&  !empty($data['Items']['Item'])) {
 			foreach ($data['Items']['Item'] as &$item) {

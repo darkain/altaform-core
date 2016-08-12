@@ -60,16 +60,16 @@ class fileImporter {
 	//NOTE:	12 byte minimum file size pulled from PHP comments:
 	//		http://php.net/manual/en/function.exif-imagetype.php
 	public static function upload($form=false, $database=true) {
-		if (empty($_FILES)  ||  !is_array($_FILES)) {
+		if (empty($_FILES)  ||  !tbx_array($_FILES)) {
 			return false;
 		} else if (empty($form)) {
 			$data = reset($_FILES);
-		} else if (isset($_FILES[$form])  &&  is_array($_FILES[$form])) {
+		} else if (isset($_FILES[$form])  &&  tbx_array($_FILES[$form])) {
 			$data = $_FILES[$form];
 		}
 
 		if ( empty($data))				return false;
-		if (!is_array($data))			return false;
+		if (!tbx_array($data))			return false;
 		if (!empty($data['error']))		return false;
 		if ( empty($data['size']))		return false;
 		if ( empty($data['name']))		return false;
@@ -263,7 +263,7 @@ class fileImporter {
 	private static function getHash(&$image, $hash=false) {
 		if (!empty($hash)) {
 			if (is_string($hash)) return self::unhex($hash);
-			if (is_array($hash)) {
+			if (tbx_array($hash)) {
 				if (!empty($hash['hash']))			return self::unhex($hash['hash']);
 				if (!empty($hash['file_hash']))		return self::unhex($hash['file_hash']);
 				if (!empty($hash['thumb_hash']))	return self::unhex($hash['thumb_hash']);
@@ -339,7 +339,7 @@ class fileImporter {
 			$data = trim($data);
 			$data = preg_replace('/[\x00-\x1F]/', '', $data);
 			$data = mb_convert_encoding($data, 'UTF-8', 'UTF-8');
-		} else if (is_array($data)) {
+		} else if (tbx_array($data)) {
 			foreach ($data as &$item) self::exifClean($item);
 		}
 	}
@@ -402,7 +402,7 @@ class fileImporter {
 		if (empty($data)) return;
 
 		foreach ($data as $key => $item) {
-			if (((int)$key) < 1  ||  !is_array($item)) continue;
+			if (((int)$key) < 1  ||  !tbx_array($item)) continue;
 
 			$db->insert('pudl_file_thumb', [
 				'file_hash'			=> pudlFunction::unhex($data['hash']),

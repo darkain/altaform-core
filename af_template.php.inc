@@ -234,7 +234,7 @@ trait af_template {
 	//RENDER PAGE FOOTER
 	////////////////////////////////////////////////////////////////////////////
 	public function footerPage() {
-		global $site, $db;
+		global $site, $db, $user;
 
 		$device	= afdevice::device();
 		$root	= $this->path() . $site['root'];
@@ -249,7 +249,9 @@ trait af_template {
 
 		$this->merge($this->_footers)->render();
 
-		if ($this->hasPermission(['staff','admin'])  &&  $this->debug()  &&  file_exists($root.'/footer_admin.tpl')) {
+		if ($user->hasPermission(['staff','admin'])
+		  &&  $this->debug()
+		  &&  file_exists($root.'/footer_admin.tpl')) {
 			$this->load($root.'/footer_admin.tpl');
 			if (!empty($db)) {
 				$this->field('dbstats',		$db->stats());
@@ -268,7 +270,7 @@ trait af_template {
 	//RENDER AN ENTIRE PAGE
 	////////////////////////////////////////////////////////////////////////////
 	public function renderPage($file, $merge=false) {
-		global $title, $og;
+		global $title, $og, $user;
 
 		//ALLOW DEVICE SPECIFIC LOADING
 		$device	= $file . '.' . afdevice::device();
@@ -283,9 +285,9 @@ trait af_template {
 		preg_match("/\<permission[^>]*>(.*)\<\/permission\>/", $text, $matches);
 		if (!empty($matches[1])) {
 			if ($matches[1] === 'login') {
-				$this->requireLogin();
+				$user->requireLogin();
 			} else {
-				$this->requirePermission($matches[1]);
+				$user->requirePermission($matches[1]);
 			}
 			$text = preg_replace("/\<permission[^>]*>(.*)\<\/permission\>/", '', $text);
 		}

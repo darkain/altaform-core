@@ -83,7 +83,7 @@ class afurl {
 
 
 	public function __invoke($path, $base=false) {
-		if (!is_array($path)) {
+		if (!tbx_array($path)) {
 			return ($base ? ($this->base.'/') : '') . $this->clean($path);
 		}
 
@@ -129,8 +129,8 @@ class afurl {
 	public function reparse($prepend=[], $append=[], $replace=false) {
 		if (empty($prepend)  &&  empty($append)) return;
 
-		if (!is_array($prepend))	$prepend	= [$prepend];
-		if (!is_array($append))		$append		= [$append];
+		if (!tbx_array($prepend))	$prepend	= [$prepend];
+		if (!tbx_array($append))	$append		= [$append];
 		if ($replace)				$this->part	= [];
 
 		$prepend	= array_reverse($prepend);
@@ -261,7 +261,7 @@ class afurl {
 
 
 	public static function cdnAll(&$list, $key='img', $hashkey='hash') {
-		if (!is_array($list)) return false;
+		if (!tbx_array($list)) return false;
 		if (empty($key)) $key = 'img';
 		foreach ($list as &$val) {
 			$val[$key] = self::cdn($val, $hashkey);
@@ -293,7 +293,7 @@ class afurl {
 
 	public static function cdnHash($hash, $key='hash') {
 		if (empty($hash))					return false;
-		if (!is_array($hash))				return $hash;
+		if (!tbx_array($hash))				return $hash;
 		if (!empty($hash[$key]))			return $hash[$key];
 		if (!empty($hash['thumb_hash']))	return $hash['thumb_hash'];
 		if (!empty($hash['file_hash']))		return $hash['file_hash'];
@@ -345,7 +345,7 @@ class afurl {
 	//308 Permanent Redirect (keeps POST data)
 	public static function redirect($url, $type=301, $die=true) {
 		global $afurl;
-		if (is_array($url)) $url = $afurl($url, true);
+		if (tbx_array($url)) $url = $afurl($url, true);
 		if (!headers_sent()) header("Location: $url", true, $type);
 		echo '<html><head><meta http-equiv="refresh" content="0;URL=\'';
 		echo htmlspecialchars($url) . '\'" /></head><body>';

@@ -5,7 +5,7 @@ class af_sidebar {
 
 
 	public function __construct($data=true) {
-		if (is_array($data)) $this->data = $data;
+		if (tbx_array($data)) $this->data = $data;
 		if ($data === true) $this->fetch()->process();
 	}
 

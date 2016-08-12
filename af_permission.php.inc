@@ -1,28 +1,19 @@
 <?php
 
 
-//TODO: PLACE THIS IS DEDICATED AFUSER CLASS
-
-
 trait af_permission {
 
 
-	public function hasPermission($permission, $account=false) {
-		global $user, $db;
+	public function hasPermission($permission) {
+		if (empty($this->permission)) $this->permissions();
 
-		if (!is_array($permission)) $permission = explode(',', $permission);
-		if (empty($account)) $account = &$user;
-
-		if (is_int($account)  ||  is_string($account)) {
-			$account = $db->rowId('pudl_user', 'user_id', $account);
-			if (empty($account)) return false;
+		if (!tbx_array($permission)) {
+			$permission = explode(',', $permission);
 		}
-
-		if (empty($account['permission'])) $this->permissions($account);
 
 		foreach ($permission as $perm) {
 			$perm = trim($perm);
-			if (!empty($account['permission'][$perm])) return true;
+			if (!empty($this->permission[$perm])) return true;
 		}
 
 		return false;
@@ -30,12 +21,16 @@ trait af_permission {
 
 
 
+	public function isAdmin() { return $this->hasPermission('admin'); }
+	public function isStaff() { return $this->hasPermission(['staff','admin']); }
 
-	public function requirePermission($permission, $account=false) {
+
+
+	public function requirePermission($permission) {
 		assert401(
-			$this->hasPermission($permission, $account),
-			'This page requires the following permission level: ' .
-				(is_array($permission) ? implode(', ', $permission) : $permission)
+			$this->hasPermission($permission),
+			'This page requires the following permission level: '
+			. (tbx_array($permission) ? implode(', ', $permission) : $permission)
 		);
 		return $this;
 	}
@@ -43,26 +38,35 @@ trait af_permission {
 
 
 
-	public function permissions(&$account) {
-		global $site;
+	public function requireAdmin() { return $this->requirePermission('admin'); }
+	public function requireStaff() { return $this->requirePermission(['staff','admin']); }
+
+
+
+
+	public function permissions() {
+		global $af, $site;
 
 		//USER ACCESS RIGHTS
-		$account['permission'] = $site['permission'];
+		$this->permission = $site['permission'];
 
-		if (empty($account['user_permission'])) {
-			$account['user_permission'] = 'guest';
+		if (empty($this->user_permission)) {
+			$this->user_permission = 'guest';
 		}
 
-		$permissions = explode(',', $account['user_permission']);
+		$permissions = explode(',', $this->user_permission);
 		foreach ($permissions as $val) {
-			$account['permission'][$val] = 1;
+			$val = trim($val);
+			$this->permission[$val] = 1;
 		}
 
-		if (!empty($account['user_adfree'])) {
-			if ($account['user_adfree'] > $this->time()) {
-				$account['permission']['adfree'] = 1;
+		if (!empty($this->user_adfree)) {
+			if ($this->user_adfree > $af->time()) {
+				$this->permission['adfree'] = 1;
 			}
 		}
+
+		return $this;
 	}
 
 

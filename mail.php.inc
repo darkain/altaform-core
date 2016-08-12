@@ -30,38 +30,38 @@ class afmail {
 
 		$mail->msgHTML($body);
 
-		if (isset($headers['to'])  &&  is_array($headers['to'])) {
+		if (isset($headers['to'])  &&  tbx_array($headers['to'])) {
 			$mail->AddAddress( reset($headers['to']), end($headers['to']) );
 		} else if (!empty($headers['to'])) {
 			$mail->AddAddress($headers['to']);
 		}
 
-		if (isset($headers['cc'])  &&  is_array($headers['cc'])) {
+		if (isset($headers['cc'])  &&  tbx_array($headers['cc'])) {
 			$mail->AddCC( reset($headers['cc']), end($headers['cc']) );
 		} else if (!empty($headers['cc'])) {
 			$mail->AddCC($headers['cc']);
 		}
 
-		if (isset($headers['bcc'])  &&  is_array($headers['bcc'])) {
+		if (isset($headers['bcc'])  &&  tbx_array($headers['bcc'])) {
 			$mail->AddBCC( reset($headers['bcc']), end($headers['bcc']) );
 		} else if (!empty($headers['bcc'])) {
 			$mail->AddBCC($headers['bcc']);
 		}
 
-		if (isset($headers['reply'])  &&  is_array($headers['reply'])) {
+		if (isset($headers['reply'])  &&  tbx_array($headers['reply'])) {
 			$mail->AddReplyTo( reset($headers['reply']), end($headers['reply']) );
 		} else if (!empty($headers['reply'])) {
 			$mail->AddReplyTo($headers['reply']);
 		}
 
-		if (isset($headers['from'])  &&  is_array($headers['from'])) {
+		if (isset($headers['from'])  &&  tbx_array($headers['from'])) {
 			$mail->SetFrom( reset($headers['from']), end($headers['from']) );
 		} else if (!empty($headers['from'])) {
 			$mail->SetFrom($headers['from']);
 		}
 
 		if (!empty($headers['return'])) {
-			$mail->Sender = is_array($headers['return']) ? reset($headers['return']) : $headers['return'];
+			$mail->Sender = tbx_array($headers['return']) ? reset($headers['return']) : $headers['return'];
 		}
 
 		if (!empty($site['af_smtp'])) {

@@ -148,9 +148,9 @@ if (!empty($site['origins'])) {
 
 
 //PHP Universal Database Library (PUDL)
-if (!empty($site['pudl'])  &&  is_array($site['pudl'])) {
+if (!empty($site['pudl'])  &&  tbx_array($site['pudl'])) {
 	if (!isset($site['pudl']['type'])  &&  isset($site['pudl']['server'])) {
-		$site['pudl']['type'] = is_array($site['pudl']['server']) ? 'Galera' : 'MySqli';
+		$site['pudl']['type'] = tbx_array($site['pudl']['server']) ? 'Galera' : 'MySqli';
 	}
 	if (!empty($site['pudl']['type'])) {
 		$pudltype = 'pudl'.$site['pudl']['type'];

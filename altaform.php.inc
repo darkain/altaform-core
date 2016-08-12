@@ -12,14 +12,15 @@ require_once('string.php.inc');
 //EXTRA TIME FUNCTIONS
 require_once('time.php.inc');
 
+//ALTAFORM USER
+require_once('user.php.inc');
+
 //TBX - THE RENDERING SYSTEM
 require_once('_tbx/tbx_class.php');
 
 
 //LIST OF ALTAFORM TRAITS - USED TO HELP ORGANIZE CODE
 require_once('af_auth.php.inc');
-require_once('af_permission.php.inc');
-require_once('af_preference.php.inc');
 require_once('af_robots.php.inc');
 require_once('af_tbx.php.inc');
 require_once('af_template.php.inc');
@@ -28,8 +29,6 @@ require_once('af_template.php.inc');
 
 class altaform extends clsTinyButXtreme {
 	use af_auth;
-	use af_permission;
-	use af_preference;
 	use af_robots;
 	use af_tbx;
 	use af_template;
@@ -105,29 +104,6 @@ class altaform extends clsTinyButXtreme {
 			microtime(true)
 		]) . $suffix;
 	}
-
-
-
-
-	//TODO: PLACE THIS IS DEDICATED AFUSER CLASS
-	public function updateUser($data) {
-		global $db, $user;
-		if (!$this->loggedIn()) return false;
-		$return = $db->updateId('pudl_user', $data, 'user_id', $user);
-		$this->purgeSession();
-		return $return;
-	}
-
-
-
-
-	//TODO: PLACE THIS IS DEDICATED AFUSER CLASS
-	public function updateProfile($data) {
-		global $db, $user;
-		if (!$this->loggedIn()) return false;
-		return $db->updateId('pudl_user_profile', $data, 'user_id', $user);
-	}
-
 
 
 

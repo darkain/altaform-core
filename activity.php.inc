@@ -76,7 +76,7 @@ class afactivity {
 	public static function uid($userid) {
 		global $user;
 		if (!empty($userid)) {
-			if (is_array($userid)) return (int) $userid['user_id'];
+			if (tbx_array($userid)) return (int) $userid['user_id'];
 			return (int) $userid;
 		}
 		if (!empty($user['user_id'])) return (int) $user['user_id'];

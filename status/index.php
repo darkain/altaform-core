@@ -1,6 +1,6 @@
 <?php
 
-if (!$af->debug()) $af->requirePermission(['staff','admin']);
+if (!$af->debug()) $user->requirePermission(['staff','admin']);
 
 
 $title = 'Server Status';
@@ -9,7 +9,7 @@ $af->script($afurl->static.'/js/jquery.tablesorter.min.js');
 $af->style($afurl->static.'/css/theme.blue.css');
 
 
-if (empty($servers)  ||  !is_array($servers)) {
+if (empty($servers)  ||  !tbx_array($servers)) {
 	error500('NO SERVERS SPECIFIED, OR INVALID SERVER FORMAT');
 }
 

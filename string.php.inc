@@ -80,7 +80,7 @@ class afstring {
 
 
 	static function implode($array) {
-		if (empty($array)  ||  !is_array($array)) return '';
+		if (empty($array)  ||  !tbx_array($array)) return '';
 		if (count($array) === 1) return reset($array);
 		if (count($array) === 2) return reset($array) . ' and ' . end($array);
 		$last = array_pop($array);

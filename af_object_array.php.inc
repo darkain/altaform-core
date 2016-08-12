@@ -1,0 +1,91 @@
+<?php
+
+
+class af_object_array implements ArrayAccess, Iterator {
+
+	protected function _replace(&$array) {
+		$this->_object_array = &$array;
+	}
+
+
+	protected function _clone($array) {
+		$this->_object_array[] = [];
+		foreach($array as $key => $value) {
+			$this->_object_array[$key]	= $value;
+		}
+	}
+
+
+	public function __set($key, $value) {
+		$this->_object_array[$key]		= $value;
+	}
+
+
+	public function offsetSet($key, $value) {
+		if (is_null($key)) {
+			$this->_object_array[]		= $value;
+		} else {
+			$this->_object_array[$key]	= $value;
+		}
+	}
+
+
+	public function &__get($key) {
+		return $this->_object_array[$key];
+	}
+
+
+	public function offsetGet($key) {
+		return $this->_object_array[$key];
+	}
+
+
+	public function __isset($key) {
+		return isset($this->_object_array[$key]);
+	}
+
+
+	public function offsetExists($key) {
+		return isset($this->_object_array[$key]);
+	}
+
+
+	public function __unset($key) {
+		unset($this->_object_array[$key]);
+	}
+
+
+	public function offsetUnset($key) {
+		unset($this->_object_array[$key]);
+	}
+
+
+	public function rewind() {
+		reset($this->_object_array);
+	}
+
+
+	public function current() {
+		return current($this->_object_array);
+	}
+
+
+	public function key() {
+		return key($this->_object_array);
+	}
+
+
+	public function next() {
+		return next($this->_object_array);
+	}
+
+
+	public function valid() {
+		$key = key($this->_object_array);
+		return ($key !== NULL && $key !== FALSE);
+	}
+
+
+	private $_object_array = [];
+
+}

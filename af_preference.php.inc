@@ -1,69 +1,72 @@
 <?php
 
 
-//TODO: PLACE THIS IS DEDICATED AFUSER CLASS
-
-
 trait af_preference {
 
 
-	public function parseUserPreferences($string) {
+	public static function parsePreferences($data) {
+		if (empty($data)) return [];
+
 		if (PHP_VERSION_ID >= 50400) {
-			return json_decode($string, true, 512, JSON_BIGINT_AS_STRING);
+			return json_decode($data, true, 512, JSON_BIGINT_AS_STRING);
 		}
 
-		return json_decode($string, true);
+		return json_decode($data, true);
 	}
 
 
 
 
-	public function getUserPreferences($id=false) {
-		global $user, $db;
-		if (is_array($id)  &&  isset($id['user_id'])) $id = $id['user_id'];
-		if (!is_numeric($id)) $id = $user['user_id'];
-		$id = (int) $id;
+	public function getPreferences() {
+		if (!empty($this->_prefs)) return $this->_prefs;
 
-		if (isset($this->_prefs[$id])) return $this->_prefs[$id];
+		if (!empty($this->preference)) {
+			return $this->_prefs = $this->parsePreferences($this->preference);
+		}
 
-		return $this->_prefs[$id] = self::parseUserPreferences(
-			$db->cellId('pudl_user_preference', 'preference', 'user_id', $id)
+		return $this->_prefs = $this->parsePreferences(
+			$db->cellId('pudl_user_preference', 'preference', 'user_id', $this)
 		);
 	}
 
 
 
 
-	public function getUserPreference($path, $id=false, $default=false) {
-		$prefs = $this->getUserPreferences($id);
-		if (isset($prefs[ $path ])) return $prefs[ $path ];
-		return $default;
+	public function getPreference($name, $default=false) {
+		$prefs = $this->getPreferences();
+		return isset($prefs[$name]) ? $prefs[$name] : $default;
 	}
 
 
 
 
-	public function setUserPreferences($preferences, $id=false) {
-		global $user, $db;
-		if (is_array($id)) $id = $id['user_id'];
-		if (!is_numeric($id)) $id = $user['user_id'];
-		$id = (int) $id;
+	public function hasPreference($name) {
+		$prefs = $this->getPreferences();
+		return isset($prefs[$name]);
+	}
 
-		$this->_prefs[$id] = $preferences;
+
+
+
+	public function setPreferences($preferences) {
+		global $db;
+
+		$this->_prefs		= $preferences;
+		$this->preference	= json_encode($preferences);
 
 		return $db->replace('pudl_user_preference', [
-			'user_id'		=> $id,
-			'preference'	=> json_encode($preferences)
+			'user_id'		=> $this,
+			'preference'	=> $this->preference,
 		], true);
 	}
 
 
 
 
-	public function updateUserPreference($key, $value, $id=false) {
-		$prefs = self::getUserPreferences($id);
+	public function updatePreference($key, $value) {
+		$prefs = $this->getPreferences();
 		$prefs[$key] = $value;
-		return self::setUserPreferences($prefs, $id);
+		return $this->setPreferences($prefs);
 	}
 
 
