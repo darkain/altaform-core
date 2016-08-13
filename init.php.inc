@@ -70,24 +70,21 @@ if (!headers_sent()) {
 
 
 //Host Information for Config
-$host	= $get->server('HTTP_HOST', '');
-$pos	= strpos($host, ':');
-if ($pos) $host = substr($host, 0, $pos);
-assert500(afurl::validateDomain($host), 'Invalid Domain: ' . $host);
+assert500(afurl::validateDomain($afurl->domain), 'Invalid Domain: ' . $afurl->domain);
 
 
 
 //Main Configuration File
-if (is_file('_config/'.$host.'/config.php.inc')) {
-	require_once('_config/'.$host.'/config.php.inc');
-} else if (is_file('_config/'.$host)) {
-	require_once('_config/'.$host);
+if (is_file('_config/'.$afurl->domain.'/config.php.inc')) {
+	require_once('_config/'.$afurl->domain.'/config.php.inc');
+} else if (is_file('_config/'.$afurl->domain)) {
+	require_once('_config/'.$afurl->domain);
 } else if (is_file('_config/virtual/config.php.inc')) {
 	require_once('_config/virtual/config.php.inc');
 } else if (is_file('_config/virtual.php.inc')) {
 	require_once('_config/virtual.php.inc');
 } else {
-	error500('Unknown Domain: ' . $host);
+	error500('Unknown Domain: ' . $afurl->domain);
 }
 
 
@@ -147,36 +144,36 @@ if (!empty($site['origins'])) {
 
 
 
-//PHP Universal Database Library (PUDL)
+//Initialize all the things!
 if (!empty($site['pudl'])  &&  tbx_array($site['pudl'])) {
 	require_once('_pudl/pudl.php');
+	require_once('_pudl/pudlSession.php');
 	$db = pudl::instance($site['pudl']);
 
-	if (!empty($data['connected'])) call_user_func($data['connected']);
-}
-
-
-
-//Initialize all the things!
-$dbsession = false;
-if (isset($db)) {
 	$db->on('debug', '_pudl_debug');
 	$get->pudl = $db;
 
-	//PUDL Session Handler
-	require_once('_pudl/pudlSession.php');
-	$dbsession = new pudlSession($db, 'pudl_session',
-		isset($site['session_name'])	? $site['session_name']		: false,
-		isset($site['session_domain'])	? $site['session_domain']	: false,
-		$afurl->https
+	if (!empty($site['pudl']['connected'])) {
+		call_user_func($site['pudl']['connected']);
+	}
+
+	$db->time(
+		$af = altaform::create(
+			new pudlSession($db, 'pudl_session',
+				isset($site['session_name'])	? $site['session_name']		: false,
+				isset($site['session_domain'])	? $site['session_domain']	: false,
+				$afurl->https
+			)
+		)
 	);
+
+} else {
+	$af = altaform::create();
 }
 
 
 
-//Initialize Altaform class
-$af = altaform::create($dbsession);
-if (isset($db)) $db->time($af);
+//Process current user session
 $af->login();
 
 
@@ -184,7 +181,7 @@ $af->login();
 //Parse the URL and load the page!
 while ($afurl->reparse) {
 	$afurl->reparse = false;
-	$afpath = $afurl->process();
-	if (is_string($afpath)) require($afpath);
+	$afurl->path = $afurl->process();
+	if (is_string($afurl->path)) require($afurl->path);
 	chdir($afurl->directory);
 }

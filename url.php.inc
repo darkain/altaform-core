@@ -425,6 +425,7 @@ class afurl {
 	public $url;
 
 	//SET DYNAMICALLY OR BY CONFIG
+	public $path		= '';
 	public $base		= '';
 	public $cdn			= '';
 	public $static		= '';
