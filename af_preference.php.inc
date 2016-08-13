@@ -18,6 +18,8 @@ trait af_preference {
 
 
 	public function getPreferences() {
+		global $db;
+
 		if (!empty($this->_prefs)) return $this->_prefs;
 
 		if (!empty($this->preference)) {
