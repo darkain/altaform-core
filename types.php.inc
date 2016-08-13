@@ -1,7 +1,7 @@
 <?php
 
 //NOTE: THIS FILE IS AUTO-GENERATED. DO NOT EDIT DIRECTLY
-//      GENERATE THIS SCRIPT VIA /admin/buildtypes/
+//      GENERATE THIS SCRIPT VIA /admin/buildtypes
 
 
 altaform::$types = [
@@ -30,4 +30,6 @@ altaform::$types = [
 	23	=> 'badge',
 	24	=> 'organizer',
 	25	=> 'chatroom',
+	26	=> 'panel',
+	27	=> 'panelroom',
 ];
