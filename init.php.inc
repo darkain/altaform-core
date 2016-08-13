@@ -149,15 +149,10 @@ if (!empty($site['origins'])) {
 
 //PHP Universal Database Library (PUDL)
 if (!empty($site['pudl'])  &&  tbx_array($site['pudl'])) {
-	if (!isset($site['pudl']['type'])  &&  isset($site['pudl']['server'])) {
-		$site['pudl']['type'] = tbx_array($site['pudl']['server']) ? 'Galera' : 'MySqli';
-	}
-	if (!empty($site['pudl']['type'])) {
-		$pudltype = 'pudl'.$site['pudl']['type'];
-		require_once('_pudl/'.$pudltype.'.php');
-		$db = $pudltype::instance($site['pudl']);
-		if (!empty($site['pudl']['connected'])) call_user_func($site['pudl']['connected']);
-	}
+	require_once('_pudl/pudl.php');
+	$db = pudl::instance($site['pudl']);
+
+	if (!empty($data['connected'])) call_user_func($data['connected']);
 }
 
 
