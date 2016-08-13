@@ -3,13 +3,22 @@
 
 class af_object_array implements ArrayAccess, Iterator {
 
-	protected function _replace(&$array) {
+	public function _replace(&$array) {
 		$this->_object_array = &$array;
 	}
 
 
-	protected function _clone($array) {
+	public function _clone($array) {
 		$this->_object_array[] = [];
+		if (empty($array)) return;
+		foreach($array as $key => $value) {
+			$this->_object_array[$key]	= $value;
+		}
+	}
+
+
+	public function _merge($array) {
+		if (empty($array)) return;
 		foreach($array as $key => $value) {
 			$this->_object_array[$key]	= $value;
 		}
