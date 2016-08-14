@@ -18,8 +18,9 @@ trait af_auth {
 	public function login($session=false) {
 		global $user, $db, $get;
 
+		if (empty($db)) return $user = new afuser();
+
 		$user = false;
-		if (!isset($db)) return;
 
 		if (empty($session)) $session = session_id();
 
@@ -48,6 +49,7 @@ trait af_auth {
 		$this->authenticate($user, false);
 		$user->permissions();
 		$this->postLogin();
+		return $user;
 	}
 
 
