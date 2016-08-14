@@ -217,7 +217,7 @@ trait af_template {
 
 		if ($this->debug()) {
 			if (file_exists($root.'/footer_html_debug.tpl.'.$device)) {
-				return $this->load($root.'/footer_html_debug.tpl.'.$device);
+				return $this->render($root.'/footer_html_debug.tpl.'.$device);
 			}
 			if (file_exists($root.'/footer_html_debug.tpl')) {
 				return $this->render($root.'/footer_html_debug.tpl');
