@@ -54,8 +54,10 @@ class af_object_array implements ArrayAccess, Iterator {
 	}
 
 
-	public function offsetExists($key) {
-		return isset($this->_object_array[$key]);
+	public function offsetExists($key, $isset=true) {
+		return $isset
+			? isset($this->_object_array[$key])
+			: array_key_exists($key, $this->_object_array);
 	}
 
 
