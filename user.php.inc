@@ -21,15 +21,15 @@ class afuser extends af_object_array {
 		if (is_array($item)) {
 			$this->_replace($item);
 
-		} else if (is_a($item, 'Iterable')) {
-			$this->_clone($item());
-
 		} else if (is_a($item, 'pudlResult')) {
 			$this->_clone($item());
 
-		} else if ($fetch  &&  !empty($item)) {
+		} else if (is_a($item, 'Traversable')) {
+			$this->_clone($item);
+
+		} else if ($fetch  &&  (is_int($item)  ||  ctype_digit($item))) {
 			$this->_clone(
-				$db->cache(AF_HOUR)->rowId('pudl_user', 'user_id', $item)
+				$db->cache(AF_HOUR)->rowId('pudl_user', 'user_id', (int)$item)
 			);
 
 		} else if (!empty($item)) {
@@ -37,8 +37,8 @@ class afuser extends af_object_array {
 		}
 
 
-		//SET DEFAULT USER ID
-		if (empty($this->user_id)) $this->user_id = 0;
+		//SET DEFAULT USER ID AND FORCE INTEGER
+		$this->user_id = (empty($this->user_id)) ? 0 : (int) $this->user_id;
 	}
 
 

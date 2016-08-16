@@ -36,12 +36,7 @@ trait af_auth {
 			}
 		}
 
-		if (empty($user)) {
-			$data = $db->cache(AF_HOUR)->rowId('pudl_user', 'user_id', 0);
-			if (!empty($data)) $user = new afuser($data);
-		}
-
-		if (empty($user)) $user = new afuser();
+		if (empty($user)) $user = new afuser(0, true);
 
 		$user->user_session = $session;
 		if (empty($user->user_url)) $user->user_url = $user->user_id;
@@ -65,7 +60,7 @@ trait af_auth {
 
 		$this->authenticate(0, $destroy);
 
-		$user = new afuser($db->rowId('pudl_user', 'user_id', 0));
+		$user = new afuser(0, true);
 		$user->permissions($user);
 
 		if (!$destroy) return;
@@ -95,6 +90,8 @@ trait af_auth {
 		$db->sync()->purge('AF-SESSION-'.$session);
 
 		if (empty($user['user_id'])) return;
+
+		$db->uncache()->rowId('pudl_user', 'user_id', (int)$user['user_id']);
 
 		$rows = $db->selectRows(
 			'id',
