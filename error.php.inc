@@ -238,7 +238,7 @@ set_error_handler(function($errno, $errstr, $errfile=NULL, $errline=NULL) {
 		'line'		=> $errline,
 	], $die);
 
-	return false;
+	return true;
 });
 
 
