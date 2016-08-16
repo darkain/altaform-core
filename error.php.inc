@@ -2,6 +2,8 @@
 
 ini_set('display_errors', 'off');
 
+if (!empty($site['debug'])) error_reporting(E_ALL);
+
 
 
 function afError($header, $text, $log=false) {
@@ -152,12 +154,12 @@ function _af_log_error($data, $die=true) {
 
 	foreach ($arr as &$val) {
 		foreach ($val as &$item) {
-			if (tbx_array($item)  ||  is_object($item)) $item = [];
+			if (is_array($item)  ||  is_object($item)) $item = [];
 		} unset($item);
 		$val = json_encode($val);
 	} unset($val);
 
-	if (!tbx_array($data)) $data = ['details'=>$data];
+	if (!is_array($data)) $data = ['details'=>$data];
 
 	$arr = array_merge(['time'=>@date('r')], $data, [
 		'method'	=> !empty($get) ? $get->server('REQUEST_METHOD') : '',
@@ -216,7 +218,7 @@ function _af_email_error($text, $title='') {
 
 
 
-function _af_error_handler($errno, $errstr, $errfile=NULL, $errline=NULL) {
+set_error_handler(function($errno, $errstr, $errfile=NULL, $errline=NULL) {
 	global $af;
 
 	if (!error_reporting()) return false;
@@ -237,12 +239,11 @@ function _af_error_handler($errno, $errstr, $errfile=NULL, $errline=NULL) {
 	], $die);
 
 	return false;
-}
-set_error_handler('_af_error_handler');
+});
 
 
 
-function _af_log_exception($e) {
+set_exception_handler(function($e) {
 	if (!error_reporting()) return false;
 
 	_af_log_error([
@@ -251,17 +252,16 @@ function _af_log_exception($e) {
 		'file'		=> $e->getFile(),
 		'line'		=> $e->getLine(),
 	]);
-}
-set_exception_handler('_af_log_exception');
+});
 
 
 
-function _af_fatal_error() {
-	if (!error_reporting()) return false;
+register_shutdown_function(function() {
+	if (!error_reporting()) return;
 
 	$e = error_get_last();
 
-	if ($e['type'] !== E_ERROR  &&  $e['type'] !== E_PARSE ) return;
+	if ($e['type'] !== E_ERROR  &&  $e['type'] !== E_PARSE) return;
 
 	_af_log_error([
 		'error'		=> $e['type'],
@@ -269,8 +269,7 @@ function _af_fatal_error() {
 		'file'		=> $e['file'],
 		'line'		=> $e['line'],
 	]);
-}
-register_shutdown_function('_af_fatal_error');
+});
 
 
 
