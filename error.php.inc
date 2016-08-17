@@ -166,6 +166,7 @@ function _af_log_error($data, $die=true) {
 	$arr = array_merge(['time'=>@date('r')], $data, [
 		'method'	=> !empty($get) ? $get->server('REQUEST_METHOD') : '',
 		'url'		=> !empty($afurl->all)	? $afurl->all			: (!empty($get) ? $get->server('REQUEST_URI') : ''),
+		'cwd'		=> getcwd(),
 		'get'		=> !empty($_GET)		? json_encode($_GET)	: '',
 		'post'		=> !empty($_POST)		? json_encode($_POST)	: '',
 		'files'		=> !empty($_FILES)		? json_encode($_FILES)	: '',
