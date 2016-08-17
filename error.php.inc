@@ -11,7 +11,7 @@ function afError($header, $text, $log=false) {
 
 	if (!headers_sent()) header($header);
 
-	echo $text;
+	echo is_array($text) ? implode("\n", $text) : $text;
 
 	if ($log) _af_log_error($text, false);
 
@@ -22,33 +22,35 @@ function afError($header, $text, $log=false) {
 
 
 
-function error401($text='', $log=false) {
+function error401($text='', $log=false, $details=false) {
 	global $afurl, $get;
 
 	if ($get->server('HTTP_REFERER') === $afurl->all) {
 		$afurl->redirect("$afurl->host$afurl->base/", 302);
 	}
 
-	afError(
-		'HTTP/1.0 401 Authorization Required',
-		"<div id=\"af-fatal\"><h1>ERROR: 401</h1>\n<h2>AUTHORIZATION REQUIRED</h2>\n<i>$text</i></div>\n",
-		$log
-	);
+	afError('HTTP/1.0 401 File Not Found', [
+		'<div id="af-fatal"><h1>ERROR: 404</h1>',
+		'<h2>AUTHORIZATION REQUIRED</h2>',
+		'<h3>' . $details . '</h3>',
+		'<i>' . $text . '</i></div>',
+	], $log);
 }
 
 
 
-function error403($text='', $log=false) {
-	afError(
-		'HTTP/1.0 403 Forbidden',
-		"<div id=\"af-fatal\"><h1>ERROR: 403</h1>\n<h2>FORBIDDEN</h2>\n<i>$text</i></div>\n",
-		$log
-	);
+function error403($text='', $log=false, $details=false) {
+	afError('HTTP/1.0 403 File Not Found', [
+		'<div id="af-fatal"><h1>ERROR: 404</h1>',
+		'<h2>FORBIDDEN</h2>',
+		'<h3>' . $details . '</h3>',
+		'<i>' . $text . '</i></div>',
+	], $log);
 }
 
 
 
-function error404($text='', $log=false) {
+function error404($text='', $log=false, $details=false) {
 	global $afurl, $get, $site;
 
 	if (!empty($afurl)) {
@@ -64,73 +66,73 @@ function error404($text='', $log=false) {
 		}
 	}
 
-	afError(
-		'HTTP/1.0 404 File Not Found',
-		"<div id=\"af-fatal\"><h1>ERROR: 404</h1>\n<h2>FILE NOT FOUND</h2>\n<i>$text</i></div>\n",
-		$log
-	);
+	afError('HTTP/1.0 404 File Not Found', [
+		'<div id="af-fatal"><h1>ERROR: 404</h1>',
+		'<h2>FILE NOT FOUND</h2>',
+		'<h3>' . $details . '</h3>',
+		'<i>' . $text . '</i></div>',
+	], $log);
 }
 
 
 
-function error405($text='', $log=true) {
-	afError(
-		'HTTP/1.0 405 Method Not Allowed',
-		"<div id=\"af-fatal\"><h1>ERROR: 405</h1>\n<h2>METHOD NOT ALLOWED</h2>\n<i>$text</i></div>\n",
-		$log
-	);
+function error405($text='', $log=true, $details=false) {
+	afError('HTTP/1.0 404 File Not Found', [
+		'<div id="af-fatal"><h1>ERROR: 405</h1>',
+		'<h2>METHOD NOT ALLOWED</h2>',
+		'<h3>' . $details . '</h3>',
+		'<i>' . $text . '</i></div>',
+	], $log);
 }
 
 
 
-function error422($text='', $log=true) {
-	afError(
-		'HTTP/1.1 422 Unprocessable Entity',
-		"<div id=\"af-fatal\"><h1>ERROR: 422</h1>\n<h2>UNPROCESSABLE ENTITY</h2>\n<i>$text</i></div>\n",
-		$log
-	);
+function error422($text='', $log=true, $details=false) {
+	afError('HTTP/1.0 422 File Not Found', [
+		'<div id="af-fatal"><h1>ERROR: 422</h1>',
+		'<h2>UNPROCESSABLE ENTITY</h2>',
+		'<h3>' . $details . '</h3>',
+		'<i>' . $text . '</i></div>',
+	], $log);
 }
 
 
 
-function error500($text='', $log=true) {
-	afError(
-		'HTTP/1.0 500 Internal Server Error',
-		"<div id=\"af-fatal\"><h1>ERROR: 500</h1>\n<h2>INTERNAL SERVER ERROR</h2>\n<i>$text</i></div>\n",
-		$log
-	);
+function error500($text='', $log=true, $details=false) {
+	if (is_array($details)) $details = $details['details'];
+
+	afError('HTTP/1.0 500 File Not Found', [
+		'<div id="af-fatal"><h1>ERROR: 500</h1>',
+		'<h2>INTERNAL SERVER ERROR</h2>',
+		'<h3>' . $details . '</h3>',
+		'<i>' . $text . '</i></div>',
+	], $log);
 }
 
 
 
 function assert401($item, $text='', $log=false) {
-	if (empty($item)) error401($text, $log);
-	return $item;
+	return (empty($item) && $item!=='') ? error401($text, $log) : $item;
 }
 
 function assert403($item, $text='', $log=false) {
-	if (empty($item)) error403($text, $log);
-	return $item;
+	return (empty($item) && $item!=='') ? error403($text, $log) : $item;
 }
 
 function assert404($item, $text='', $log=false) {
-	if (empty($item)) error404($text, $log);
-	return $item;
+	return (empty($item) && $item!=='') ? error404($text, $log) : $item;
 }
 
 function assert405($item, $text='', $log=false) {
-	if (empty($item)) error405($text, $log);
-	return $item;
+	return (empty($item) && $item!=='') ? error405($text, $log) : $item;
 }
 
 function assert422($item, $text='', $log=true) {
-	if (empty($item)) error422($text, $log);
-	return $item;
+	return (empty($item) && $item!=='') ? error422($text, $log) : $item;
 }
 
 function assert500($item, $text='', $log=true) {
-	if (empty($item)) error500($text, $log);
-	return $item;
+	return (empty($item) && $item!=='') ? error500($text, $log) : $item;
 }
 
 
@@ -170,10 +172,10 @@ function _af_log_error($data, $die=true) {
 		'user'		=> !empty($user)		? json_encode($user)	: '',
 		'query'		=> !empty($db)			? $db->query()			: '',
 		'mariadb'	=> !empty($db)			? $db->server()			: '',
-		'server'	=> (!empty($get) ? $get->server('SERVER_ADDR') : '') . (!empty($afunit)?" : Unit $afunit":''),
-		'remote'	=> !empty($get) ? $get->server('REMOTE_ADDR') : '',
-		'agent'		=> !empty($get) ? $get->server('HTTP_USER_AGENT') : '',
-		'referer'	=> !empty($get) ? $get->server('HTTP_REFERER') : '',
+		'server'	=> (!empty($get)		? $get->server('SERVER_ADDR') : '') . (!empty($afunit)?" : Unit $afunit":''),
+		'remote'	=> !empty($get)			? $get->server('REMOTE_ADDR') : '',
+		'agent'		=> !empty($get)			? $get->server('HTTP_USER_AGENT') : '',
+		'referer'	=> !empty($get)			? $get->server('HTTP_REFERER') : '',
 	], $arr);
 
 	$out = str_replace("\n", "\r\n", print_r($arr, true)) . "\r\n";
@@ -188,10 +190,10 @@ function _af_log_error($data, $die=true) {
 	if (!empty($db)) $db->rollback();
 
 	if (!empty($site['debug'])  &&  $die) {
-		error500("<pre style=\"text-align:left\">$out</pre>$error<br/><br/>");
+		error500("<pre style=\"text-align:left\">$out</pre>$error<br/><br/>", true, $arr);
 	}
 
-	if ($die) error500();
+	if ($die) error500('', true, $arr);
 }
 
 
