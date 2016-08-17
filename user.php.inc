@@ -98,4 +98,19 @@ class afuser extends af_object_array {
 		return $this;
 	}
 
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	//COMPARE ITEM TO SEE IF IT IS THE CURRENT USER
+	////////////////////////////////////////////////////////////////////////////
+	function is($item) {
+		if (empty($item))		return false;
+		if (is_array($item))	$item = $item['user_id'];
+		if (is_object($item))	$item = $item->user_id;
+		$item = (int) $item;
+		if ($item === 0)		return false;
+		return $this->user_id === $item;
+	}
+
 }
