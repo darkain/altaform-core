@@ -129,6 +129,11 @@ class af_object_array implements ArrayAccess, Iterator {
 	}
 
 
+	public function __debugInfo() {
+		return $this->_object_array;
+	}
+
+
 	private $_object_array = [];
 
 }
