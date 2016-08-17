@@ -4,13 +4,13 @@
 class af_object_array implements ArrayAccess, Iterator {
 
 	public function __construct(&$array=NULL, $clone=false) {
-		if (!is_array($array)) return;
+		if (!is_array($array)  &&  !is_a($array, 'Traversable')) return;
 		$clone ? $this->_clone($array) : $this->_replace($array);
 	}
 
 
 	public function _replace(&$array) {
-		if (is_a($array, 'ArrayAccess')) return $this->_clone($array);
+		if (is_a($array, 'Traversable')) return $this->_clone($array);
 		$this->_object_array = &$array;
 	}
 
