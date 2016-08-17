@@ -32,7 +32,7 @@ class af_object_array implements ArrayAccess, Iterator {
 	}
 
 
-	public function _get() {
+	public function &_get() {
 		return $this->_object_array;
 	}
 
