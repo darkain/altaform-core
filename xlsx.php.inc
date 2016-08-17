@@ -159,7 +159,7 @@ class af_xlsx extends af_object_array {
 					zip_entry_read($entry, zip_entry_filesize($entry))
 				);
 
-			} else if (substr($file,0,13) === 'xl/worksheets'  &&  empty($this->sheet)) {
+			} else if ($file === 'xl/worksheets/sheet1.xml'  &&  empty($this->sheet)) {
 				$this->sheet = simplexml_load_string(
 					zip_entry_read($entry, zip_entry_filesize($entry))
 				);
@@ -168,11 +168,13 @@ class af_xlsx extends af_object_array {
 
 		zip_close($zip);
 
-		if (empty($this->strings)  ||  !isset($this->sheet->sheetData->row)) {
-			return trigger_error(
-				'CANNOT READ XLSX FILE - ' . $filename
-			);
-		}
+		if (empty($this->strings)) return trigger_error(
+			'CANNOT READ XLSX STRINGS - ' . $filename
+		);
+
+		if (empty($this->sheet)) return trigger_error(
+			'CANNOT READ XLSX SHEET - ' . $filename
+		);
 
 		return true;
 	}
