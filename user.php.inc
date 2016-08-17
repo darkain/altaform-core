@@ -113,4 +113,14 @@ class afuser extends af_object_array {
 		return $this->user_id === $item;
 	}
 
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	//GET THE URL OF THE CURRENT USER
+	////////////////////////////////////////////////////////////////////////////
+	function url() {
+		return empty($this->user_url) ? $this->user_id : $this->user_url;
+	}
+
 }
