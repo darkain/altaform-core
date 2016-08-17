@@ -32,6 +32,11 @@ class af_object_array implements ArrayAccess, Iterator {
 	}
 
 
+	public function _get() {
+		return $this->_object_array;
+	}
+
+
 	public function __set($key, $value) {
 		$this->_object_array[$key]		= $value;
 	}
