@@ -32,7 +32,7 @@ function error401($text='', $log=false, $details=false) {
 	afError('HTTP/1.0 401 File Not Found', [
 		'<div id="af-fatal"><h1>ERROR: 404</h1>',
 		'<h2>AUTHORIZATION REQUIRED</h2>',
-		'<h3>' . $details . '</h3>',
+		'<h3>' . htmlspecialchars($details) . '</h3>',
 		'<i>' . $text . '</i></div>',
 	], $log);
 }
@@ -43,7 +43,7 @@ function error403($text='', $log=false, $details=false) {
 	afError('HTTP/1.0 403 File Not Found', [
 		'<div id="af-fatal"><h1>ERROR: 404</h1>',
 		'<h2>FORBIDDEN</h2>',
-		'<h3>' . $details . '</h3>',
+		'<h3>' . htmlspecialchars($details) . '</h3>',
 		'<i>' . $text . '</i></div>',
 	], $log);
 }
@@ -69,7 +69,7 @@ function error404($text='', $log=false, $details=false) {
 	afError('HTTP/1.0 404 File Not Found', [
 		'<div id="af-fatal"><h1>ERROR: 404</h1>',
 		'<h2>FILE NOT FOUND</h2>',
-		'<h3>' . $details . '</h3>',
+		'<h3>' . htmlspecialchars($details) . '</h3>',
 		'<i>' . $text . '</i></div>',
 	], $log);
 }
@@ -80,7 +80,7 @@ function error405($text='', $log=true, $details=false) {
 	afError('HTTP/1.0 404 File Not Found', [
 		'<div id="af-fatal"><h1>ERROR: 405</h1>',
 		'<h2>METHOD NOT ALLOWED</h2>',
-		'<h3>' . $details . '</h3>',
+		'<h3>' . htmlspecialchars($details) . '</h3>',
 		'<i>' . $text . '</i></div>',
 	], $log);
 }
@@ -91,7 +91,7 @@ function error422($text='', $log=true, $details=false) {
 	afError('HTTP/1.0 422 File Not Found', [
 		'<div id="af-fatal"><h1>ERROR: 422</h1>',
 		'<h2>UNPROCESSABLE ENTITY</h2>',
-		'<h3>' . $details . '</h3>',
+		'<h3>' . htmlspecialchars($details) . '</h3>',
 		'<i>' . $text . '</i></div>',
 	], $log);
 }
@@ -104,7 +104,7 @@ function error500($text='', $log=true, $details=false) {
 	afError('HTTP/1.0 500 File Not Found', [
 		'<div id="af-fatal"><h1>ERROR: 500</h1>',
 		'<h2>INTERNAL SERVER ERROR</h2>',
-		'<h3>' . $details . '</h3>',
+		'<h3>' . htmlspecialchars($details) . '</h3>',
 		'<i>' . $text . '</i></div>',
 	], $log);
 }
