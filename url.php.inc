@@ -3,6 +3,7 @@
 require_once('_closure/closure.php');
 
 
+
 class afurl {
 	use closures;
 
@@ -389,6 +390,14 @@ class afurl {
 			extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
 			require_once('_altaform.php.inc');
 		}
+	}
+
+
+
+	//PUDL integration
+	public function pudl_getId($column) {
+		if (isset($this->virtual[0])) return $this->virtual[0];
+		return $this->id;
 	}
 
 
