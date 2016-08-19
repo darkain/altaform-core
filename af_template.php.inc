@@ -249,15 +249,15 @@ trait af_template {
 
 		$this->merge($this->_footers)->render();
 
-		if ($user->hasPermission(['staff','admin'])
-		  &&  $this->debug()
-		  &&  file_exists($root.'/footer_admin.tpl')) {
-			$this->load($root.'/footer_admin.tpl');
-			if (!empty($db)) {
-				$this->field('dbstats',		$db->stats());
-				$this->block('dbmisses',	$db->stats()['missed']);
+		if ($user->isStaff()  &&  $this->debug()) {
+			if (file_exists($root.'/footer_admin.tpl')) {
+				$this->load($root.'/footer_admin.tpl');
+				if (!empty($db)) {
+					$this->field('dbstats',		$db->stats());
+					$this->block('dbmisses',	$db->stats()['missed']);
+				}
+				$this->render();
 			}
-			$this->render();
 		}
 
 		return $this;

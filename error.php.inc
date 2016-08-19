@@ -146,7 +146,7 @@ function _af_log_error($data, $die=true) {
 	$echo = true;
 
 
-	if (!isset($user)  ||  $user->hasPermission('admin')) {
+	if (!isset($user)  ||  $user->isAdmin()) {
 		$site['debug'] = true;
 	}
 
