@@ -76,7 +76,7 @@ class af_xlsx extends af_object_array {
 		}
 
 		if (!$this->validate()) {
-			trigger_error('XLSX FAILED DATA VALIDATION');
+			throw afException('XLSX FAILED DATA VALIDATION');
 			return false;
 		}
 
@@ -147,9 +147,10 @@ class af_xlsx extends af_object_array {
 	protected function _openfile($filename) {
 		$zip = zip_open($filename);
 
-		if (!is_resource($zip)) return trigger_error(
-			'CANNOT OPEN XLSX FILE - ' . $filename
-		);
+		if (!is_resource($zip)) {
+			throw afException('CANNOT OPEN XLSX FILE - ' . $filename);
+			return;
+		}
 
 		while ($entry = zip_read($zip)) {
 			$file = zip_entry_name($entry);
@@ -168,13 +169,15 @@ class af_xlsx extends af_object_array {
 
 		zip_close($zip);
 
-		if (empty($this->strings)) return trigger_error(
-			'CANNOT READ XLSX STRINGS - ' . $filename
-		);
+		if (empty($this->strings)) {
+			throw afException('CANNOT READ XLSX STRINGS - ' . $filename);
+			return;
+		}
 
-		if (empty($this->sheet)) return trigger_error(
-			'CANNOT READ XLSX SHEET - ' . $filename
-		);
+		if (empty($this->sheet)) {
+			throw afException('CANNOT READ XLSX SHEET - ' . $filename);
+			return;
+		}
 
 		return true;
 	}
@@ -193,7 +196,7 @@ class af_xlsx extends af_object_array {
 			$column	= preg_replace('/\d/', '', $item->attributes()->r);
 			$name	= $this->_string($item->v);
 			$header	= $this->_translate($name);
-			if ($header === false) trigger_error('UNKNOWN HEADER: ' . $name);
+			if ($header === false) throw afException('UNKNOWN HEADER: ' . $name);
 			if (is_string($header)) $this->header[$column] = $header;
 		}
 	}

@@ -6,6 +6,10 @@ if (!empty($site['debug'])) error_reporting(E_ALL);
 
 
 
+class afException extends Exception {}
+
+
+
 function afError($header, $text, $log=false) {
 	global $db;
 
