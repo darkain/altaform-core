@@ -16,7 +16,7 @@ require_once('time.php.inc');
 require_once('user.php.inc');
 
 //TBX - THE RENDERING SYSTEM
-require_once('_tbx/tbx_class.php');
+require_once('_tbx/tbx.php.inc');
 
 
 //LIST OF ALTAFORM TRAITS - USED TO HELP ORGANIZE CODE
@@ -27,7 +27,7 @@ require_once('af_template.php.inc');
 
 
 
-class altaform extends clsTinyButXtreme {
+class altaform extends tbx {
 	use af_auth;
 	use af_robots;
 	use af_tbx;
