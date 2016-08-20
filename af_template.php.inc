@@ -43,7 +43,7 @@ trait af_template {
 	public function css($file) {
 		$data = @file_get_contents($file, true);
 		if ($data === false) {
-			throw afException('Unable to load CSS file: '.$file);
+			throw new afException('Unable to load CSS file: '.$file);
 		}
 		$this->_sheet[] = $data;
 		return $this;
@@ -278,7 +278,7 @@ trait af_template {
 		//PULL THE CONTENTS OF THE TEMPLATE BEFORE ANYTHING ELSE!
 		$text = @file_get_contents( file_exists($device) ? $device : $file );
 		if ($text === false) {
-			throw afException('Unable to load template file: '.$file);
+			throw new afException('Unable to load template file: '.$file);
 		}
 
 		//PULL OUT REQUIRED PERMISSIONS TAG
