@@ -119,7 +119,8 @@ class afuser extends af_object_array {
 	////////////////////////////////////////////////////////////////////////////
 	//PUDL INTEGRATION
 	////////////////////////////////////////////////////////////////////////////
-	public function pudl_getId($column) {
+	public function pudl_getId($column=true) {
+		if ($column === true) return ['user_id' => $this->user_id];
 		return $this->user_id;
 	}
 

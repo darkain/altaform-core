@@ -395,7 +395,8 @@ class afurl {
 
 
 	//PUDL integration
-	public function pudl_getId($column) {
+	public function pudl_getId($column=true) {
+		if ($column === true) return false;
 		if (isset($this->virtual[0])) return $this->virtual[0];
 		return $this->id;
 	}
