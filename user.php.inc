@@ -16,21 +16,17 @@ class afuser extends af_object_array {
 
 
 	public function __construct($item=false, $fetch=false) {
-		global $db;
-
 		if (is_array($item)) {
-			$this->_replace($item);
+			$fetch ? $this->fetch($item)	: $this->_replace($item);
 
 		} else if (is_a($item, 'pudlResult')) {
-			$this->_clone($item());
+			$fetch ? $this->fetch($item())	: $this->_clone($item());
 
 		} else if (is_a($item, 'Traversable')) {
-			$this->_clone($item);
+			$fetch ? $this->fetch($item)	: $this->_clone($item);
 
 		} else if ($fetch  &&  (is_int($item)  ||  ctype_digit($item))) {
-			$this->_clone(
-				$db->cache(AF_HOUR)->rowId('pudl_user', 'user_id', (int)$item)
-			);
+			$this->fetch($item);
 
 		} else if (!empty($item)) {
 			$this->user_id = $item;
@@ -144,6 +140,21 @@ class afuser extends af_object_array {
 	public function assert404() { assert404($this->user_id); return $this; }
 
 
+
+
+	////////////////////////////////////////////////////////////////////////////
+	//FETCH DATA FROM DATABASE
+	////////////////////////////////////////////////////////////////////////////
+	protected function fetch($id) {
+		global $db;
+
+		if (is_array($id))	$id = $id['user_id'];
+		if (is_object($id))	$id = $id->user_id;
+
+		$this->_clone(
+			$db->cache(AF_HOUR)->rowId('pudl_user', 'user_id', (int)$id)
+		);
+	}
 }
 
 
