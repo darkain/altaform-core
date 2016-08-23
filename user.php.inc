@@ -104,7 +104,7 @@ class afuser extends af_object_array {
 	////////////////////////////////////////////////////////////////////////////
 	//COMPARE ITEM TO SEE IF IT IS THE CURRENT USER
 	////////////////////////////////////////////////////////////////////////////
-	function is($item) {
+	public function is($item) {
 		if (empty($item))		return false;
 		if (is_array($item))	$item = $item['user_id'];
 		if (is_object($item))	$item = $item->user_id;
@@ -130,8 +130,44 @@ class afuser extends af_object_array {
 	////////////////////////////////////////////////////////////////////////////
 	//GET THE URL OF THE CURRENT USER
 	////////////////////////////////////////////////////////////////////////////
-	function url() {
+	public function url() {
 		return empty($this->user_url) ? $this->user_id : $this->user_url;
 	}
 
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	//SHORTCUT FUNCTIONS FOR ERROR CHECKING
+	////////////////////////////////////////////////////////////////////////////
+	public function assert401() { assert401($this->user_id); return $this; }
+	public function assert404() { assert404($this->user_id); return $this; }
+
+
+}
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+//SHORTCUT CLASS FOR AUTOMATIC ERROR HANDLING, THROWS ERROR 401 ON UNKNOWN USER
+////////////////////////////////////////////////////////////////////////////////
+class afuser401 extends afuser {
+	public function __construct($id) {
+		parent::__construct($id, true);
+		$this->assert401();
+	}
+}
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+//SHORTCUT CLASS FOR AUTOMATIC ERROR HANDLING, THROWS ERROR 404 ON UNKNOWN USER
+////////////////////////////////////////////////////////////////////////////////
+class afuser404 extends afuser {
+	public function __construct($id) {
+		parent::__construct($id, true);
+		$this->assert404();
+	}
 }
