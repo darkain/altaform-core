@@ -29,8 +29,8 @@ trait af_auth {
 				$data = $db->cache(AF_HOUR, 'AF-SESSION-'.$session)->row([
 					'us' => _pudl_user()
 				], [
-					'user_id'			=> $id,
-					'user_permission'	=> pudl::inSet($this->_authtype),
+					'user_id' => $id,
+					pudl::find('user_permission', $this->_authtype),
 				]);
 				if (!empty($data)) $user = new afuser($data);
 			}
