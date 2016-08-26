@@ -96,7 +96,7 @@ class af_sidebar {
 		'child'			=>
 			'<a href="[var.afurl.base][menu.menu_url]">' .
 				'[menu.menu_text] ' .
-				'<em class="small">[menu.menu_subtext;magnet=em]</em>' .
+				'<em class="small">[menu.menu_subtext;noerr;magnet=em]</em>' .
 			'</a>',
 	];
 }
