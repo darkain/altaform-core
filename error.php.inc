@@ -34,7 +34,7 @@ function error401($text='', $log=false, $details=false) {
 	}
 
 	afError('HTTP/1.0 401 File Not Found', [
-		'<div id="af-fatal"><h1>ERROR: 404</h1>',
+		'<div id="af-fatal"><h1>ERROR: 401</h1>',
 		'<h2>AUTHORIZATION REQUIRED</h2>',
 		'<h3>' . htmlspecialchars($details) . '</h3>',
 		'<i>' . $text . '</i></div>',
@@ -45,7 +45,7 @@ function error401($text='', $log=false, $details=false) {
 
 function error403($text='', $log=false, $details=false) {
 	afError('HTTP/1.0 403 File Not Found', [
-		'<div id="af-fatal"><h1>ERROR: 404</h1>',
+		'<div id="af-fatal"><h1>ERROR: 403</h1>',
 		'<h2>FORBIDDEN</h2>',
 		'<h3>' . htmlspecialchars($details) . '</h3>',
 		'<i>' . $text . '</i></div>',
