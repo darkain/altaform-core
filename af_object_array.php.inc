@@ -37,23 +37,88 @@ class af_object_array implements ArrayAccess, Iterator {
 	}
 
 
-	public function _push($item) {
-		return array_push($this->_object_array, $item);
+	public function _count() {
+		return count($this->_object_array);
+	}
+
+
+	public function _push() {
+		$args = func_get_args();
+		array_unshift($args, $this->_object_array);
+		return call_user_func_array('array_push', $args);
 	}
 
 
 	public function _pop() {
-		return array_pop($this->_object_array);
+		$args = func_get_args();
+		array_unshift($args, $this->_object_array);
+		return call_user_func_array('array_pop', $args);
 	}
 
 
 	public function _shift() {
-		return array_shift($this->_object_array);
+		$args = func_get_args();
+		array_unshift($args, $this->_object_array);
+		return call_user_func_array('array_shift', $args);
 	}
 
 
-	public function _unshift($item) {
-		return array_unshift($this->_object_array, $item);
+	public function _unshift() {
+		$args = func_get_args();
+		array_unshift($args, $this->_object_array);
+		return call_user_func_array('array_unshift', $args);
+	}
+
+
+	public function _diff() {
+		$args = func_get_args();
+		array_unshift($args, $this->_object_array);
+		return call_user_func_array('array_diff', $args);
+	}
+
+
+	public function _diff_assoc() {
+		$args = func_get_args();
+		array_unshift($args, $this->_object_array);
+		return call_user_func_array('array_diff_assoc', $args);
+	}
+
+
+	public function _diff_key() {
+		$args = func_get_args();
+		array_unshift($args, $this->_object_array);
+		return call_user_func_array('array_diff_key', $args);
+	}
+
+
+	public function _intersect() {
+		$args = func_get_args();
+		array_unshift($args, $this->_object_array);
+		return call_user_func_array('array_intersect', $args);
+	}
+
+
+	public function _intersect_assoc() {
+		$args = func_get_args();
+		array_unshift($args, $this->_object_array);
+		return call_user_func_array('array_intersect_assoc', $args);
+	}
+
+
+	public function _intersect_key() {
+		$args = func_get_args();
+		array_unshift($args, $this->_object_array);
+		return call_user_func_array('array_intersect_key', $args);
+	}
+
+
+	public function _keys($search_value=null, $strict=false) {
+		return array_keys($this->_object_array, $search_value, $strict);
+	}
+
+
+	public function _slice($offset, $length=NULL, $preserve_keys=false) {
+		return array_slice($this->_object_array, $offset, $length, $preserve_keys);
 	}
 
 
