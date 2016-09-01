@@ -57,7 +57,7 @@ class afuser extends af_object_array {
 		global $af, $db;
 		if (!$this->loggedIn()) return false;
 		$return = $db->updateId('pudl_user', $data, 'user_id', $this);
-		$af->purgeSession();
+		$af->purgeSession(false, $this);
 		return $return;
 	}
 

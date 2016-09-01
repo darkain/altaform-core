@@ -83,20 +83,23 @@ trait af_auth {
 	////////////////////////////////////////////////////////////////////////////
 	//DESTROY ALL INSTANCES OF THIS SESSION ACROSS DATABASE CLUSTER AND REDIS
 	////////////////////////////////////////////////////////////////////////////
-	public function purgeSession($session=false) {
+	public function purgeSession($session=false, $account=false) {
 		global $db, $user;
 
-		if (empty($session)) $session = session_id();
-		$db->sync()->purge('AF-SESSION-'.$session);
+		if ($account === false) {
+			$account = $user;
+			if (empty($session)) $session = session_id();
+			$db->sync()->purge('AF-SESSION-'.$session);
+		}
 
-		if (empty($user['user_id'])) return;
+		if (empty($account['user_id'])) return;
 
-		$db->uncache()->rowId('pudl_user', 'user_id', (int)$user['user_id']);
+		$db->uncache()->rowId('pudl_user', 'user_id', (int)$account['user_id']);
 
 		$rows = $db->selectRows(
 			'id',
 			$this->_session->table(),
-			['user' => $user['user_id']]
+			['user' => $account['user_id']]
 		);
 
 		foreach ($rows as $item) {
