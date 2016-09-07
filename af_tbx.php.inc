@@ -38,27 +38,4 @@ trait af_tbx {
 	}
 
 
-
-
-	////////////////////////////////////////////////////////////////////////////
-	//LOG TBX ERROR MESSAGES
-	////////////////////////////////////////////////////////////////////////////
-	function meth_Misc_Alert($Src, $Msg, $NoErrMsg=false, $SrcType=false, $data='') {
-		ob_start();
-		$ret = parent::meth_Misc_Alert($Src, $Msg, $NoErrMsg, $SrcType);
-		$text = trim(ob_get_clean());
-
-		_af_log_error([
-			'file'		=> $this->filepath,
-			'details'	=> $text,
-			'tbx'		=> json_encode($Src),
-			'msg'		=> json_encode($Msg),
-			'data'		=> json_encode($data),
-		], $this->debug());
-
-		echo $text;
-		return $ret;
-	}
-
-
 }
