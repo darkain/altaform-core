@@ -95,7 +95,12 @@ trait af_template {
 	////////////////////////////////////////////////////////////////////////////
 	public function header($key=false, $data=false, $replace=false) {
 		if ($key === false) {
-			if ($this->jq()) return $this;
+			if ($this->jq()) {
+				foreach ($this->_sheet as $sheet) {
+					echo '<style>' . $sheet . '</style>';
+				}
+				return $this;
+			}
 			return $this->headerHTML()->headerPage();
 		}
 
