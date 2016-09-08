@@ -300,10 +300,12 @@ trait af_template {
 		}
 
 		//PULL OUT STYLE TAG
-		preg_match("/\<style[^>]*>(.*)\<\/style\>/s", $text, $matches);
-		if (!empty($matches[1])) {
-			$this->sheet($this->renderString($matches[1]));
-			$text	= preg_replace("/\<style[^>]*>(.*)\<\/style\>/s", '', $text);
+		if (!$this->jq()) {
+			preg_match("/\<style[^>]*>(.*)\<\/style\>/s", $text, $matches);
+			if (!empty($matches[1])) {
+				$this->sheet($this->renderString($matches[1]));
+				$text	= preg_replace("/\<style[^>]*>(.*)\<\/style\>/s", '', $text);
+			}
 		}
 
 		//PULL OUT DESCRIPTION TAG
