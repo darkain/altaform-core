@@ -70,4 +70,100 @@ trait af_permission {
 	}
 
 
+
+
+	public function hasAccess($access) {
+		if (empty($this->access)) $this->access();
+
+		if (!tbx_array($access)) {
+			$access = explode(',', $access);
+			foreach ($access as &$item) $item = trim($item);
+		}
+
+		foreach ($access as $item) {
+			if (!empty($this->access[$item])) return true;
+		}
+
+		return false;
+	}
+
+
+
+
+	public function requireAccess($access) {
+		assert401(
+			$this->hasAccess($access),
+			'This page requires the following permission level: '
+			. (tbx_array($access) ? implode(', ', $access) : $access)
+		);
+		return $this;
+	}
+
+
+
+
+	public function access() {
+		global $db;
+
+		if (isset($this->access)) return $this;
+
+		$this->access	= [];
+		$access			= $db->rowsId('pudl_user_access', $this);
+
+		foreach ($access as $item) {
+			$this->access[ $item['user_access'] ] = true;
+		}
+
+		return $this;
+	}
+
+
+
+
+	public function hasAccessPermission($access, $permission) {
+		return $this->hasAccess($access)
+			|| $this->hasPermission($permission);
+	}
+
+
+
+
+	public function hasAccessAdmin($access) {
+		return $this->hasAccessPermission($access, 'admin');
+	}
+
+
+
+
+	public function hasAccessStaff($access) {
+		return $this->hasAccessPermission($access, ['staff','admin']);
+	}
+
+
+
+
+	public function requireAccessPermission($access, $permission) {
+		assert401(
+			$this->hasAccessPermission($access, $permission),
+			'This page requires the following permission level: '
+			. (tbx_array($access)		? implode(', ', $access)		: $access)
+			. (tbx_array($permission)	? implode(', ', $permission)	: $permission)
+		);
+		return $this;
+	}
+
+
+
+
+	public function requireAccessAdmin($access) {
+		return $this->requireAccessPermission($access, 'admin');
+	}
+
+
+
+
+	public function requireAccessStaff($access) {
+		return $this->requireAccessPermission($access, ['staff','admin']);
+	}
+
 }
