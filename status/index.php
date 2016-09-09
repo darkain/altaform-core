@@ -92,7 +92,7 @@ pudlMySqli::dieOnError(false);
 foreach ($databases as $item) {
 	$name				= $item;
 	$nstime				= microtime(true);
-	$connect			= new pudlMySqli(['server'=>$name]+$site['pudl']);
+	$connect			= new pudlMySqli([$db, 'server'=>$name, 'backup'=>'']);
 
 	if (!empty($replacers[0])  &&  !empty($replacers[1])) {
 		$name = str_replace($replacers[0], $replacers[1], $name);
