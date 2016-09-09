@@ -157,6 +157,8 @@ if (!empty($site['pudl'])  &&  tbx_array($site['pudl'])) {
 		call_user_func($site['pudl']['connected']);
 	}
 
+	unset($site['pudl']);
+
 	$db->time(
 		$af = altaform::create(
 			new pudlSession($db, 'pudl_session',
