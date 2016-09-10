@@ -36,7 +36,7 @@ trait af_auth {
 			}
 		}
 
-		if (empty($user)) $user = new afuser(0, true);
+		if (empty($user)) $user = new afanonymous;
 
 		$user->user_session = $session;
 		if (empty($user->user_url)) $user->user_url = $user->user_id;
@@ -60,7 +60,7 @@ trait af_auth {
 
 		$this->authenticate(0, $destroy);
 
-		$user = new afuser(0, true);
+		$user = new afanonymous;
 		$user->permissions($user);
 
 		if (!$destroy) return;
