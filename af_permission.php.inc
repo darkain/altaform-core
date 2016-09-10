@@ -147,6 +147,7 @@ trait af_permission {
 			$this->hasAccessPermission($access, $permission),
 			'This page requires the following permission level: '
 			. (tbx_array($access)		? implode(', ', $access)		: $access)
+			. ', '
 			. (tbx_array($permission)	? implode(', ', $permission)	: $permission)
 		);
 		return $this;
