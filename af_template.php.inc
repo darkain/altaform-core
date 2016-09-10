@@ -16,6 +16,32 @@ trait af_template {
 
 
 	////////////////////////////////////////////////////////////////////////////
+	//EMBED INLINE JAVASCRIPT IN HTML HEADER
+	////////////////////////////////////////////////////////////////////////////
+	public function javascript($script) {
+		$this->_js[] = $script;
+		return $this;
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	//EMBED INLINE JAVASCRIPT IN HTML HEADER FROM FILE
+	////////////////////////////////////////////////////////////////////////////
+	public function js($file) {
+		$data = @file_get_contents($file, true);
+		if ($data === false) {
+			throw new afException('Unable to load JS file: '.$file);
+		}
+		$this->_js[] = $data;
+		return $this;
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
 	//LINK A CASCADING STYLE SHEET FILE IN HTML HEADER
 	////////////////////////////////////////////////////////////////////////////
 	public function style($path) {
@@ -30,7 +56,7 @@ trait af_template {
 	//EMBED INLINE CASCADING STYLE SHEET IN HTML HEADER
 	////////////////////////////////////////////////////////////////////////////
 	public function sheet($styles) {
-		$this->_sheet[] = $styles;
+		$this->_css[] = $styles;
 		return $this;
 	}
 
@@ -45,7 +71,7 @@ trait af_template {
 		if ($data === false) {
 			throw new afException('Unable to load CSS file: '.$file);
 		}
-		$this->_sheet[] = $data;
+		$this->_css[] = $data;
 		return $this;
 	}
 
@@ -96,9 +122,8 @@ trait af_template {
 	public function header($key=false, $data=false, $replace=false) {
 		if ($key === false) {
 			if ($this->jq()) {
-				foreach ($this->_sheet as $sheet) {
-					echo '<style>' . $sheet . '</style>';
-				}
+				echo '<script>'	. implode("\n", $this->_js)		. '</script>';
+				echo '<style>'	. implode("\n", $this->_css)	. '</style>';
 				return $this;
 			}
 			return $this->headerHTML()->headerPage();
@@ -177,12 +202,14 @@ trait af_template {
 			$this->load($root.'/header_html.tpl');
 		}
 
-		$this->field('sheet',	implode(' ',	$this->_sheet));
-		$this->field('robots',	implode(', ',	$this->_robots));
-		$this->block('script',	$this->_script);
-		$this->block('style',	$this->_style);
-		$this->block('meta',	$this->_meta);
-		return $this->render();
+		return $this
+			->field('js',		implode("\n",	$this->_js))
+			->field('css',		implode("\n",	$this->_css))
+			->field('robots',	implode(', ',	$this->_robots))
+			->block('script',	$this->_script)
+			->block('style',	$this->_style)
+			->block('meta',		$this->_meta)
+			->render();
 	}
 
 
@@ -350,9 +377,10 @@ trait af_template {
 
 
 
+	private $_js		= [];
+	private $_css		= [];
 	private $_script	= [];
 	private $_style		= [];
-	private $_sheet		= [];
 	private $_meta		= [];
 	private $_headers	= [];
 	private $_footers	= [];
