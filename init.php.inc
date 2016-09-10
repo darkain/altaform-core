@@ -148,6 +148,7 @@ if (!empty($site['origins'])) {
 if (!empty($site['pudl'])  &&  tbx_array($site['pudl'])) {
 	require_once('_pudl/pudl.php');
 	require_once('_pudl/pudlSession.php');
+	require_once('user.php.inc');
 	$db = pudl::instance($site['pudl']);
 
 	$db->on('debug', '_pudl_debug');
@@ -170,8 +171,10 @@ if (!empty($site['pudl'])  &&  tbx_array($site['pudl'])) {
 	);
 
 } else {
+	require_once('user.php.inc');
 	$af = altaform::create();
 }
+
 
 
 

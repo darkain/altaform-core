@@ -12,9 +12,6 @@ require_once('string.php.inc');
 //EXTRA TIME FUNCTIONS
 require_once('time.php.inc');
 
-//ALTAFORM USER
-require_once('user.php.inc');
-
 //TBX - THE RENDERING SYSTEM
 require_once('_tbx/tbx.php.inc');
 

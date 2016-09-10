@@ -7,7 +7,15 @@ require_once('af_preference.php.inc');
 
 
 
-class afuser extends af_object_array {
+if (interface_exists('pudlId')) {
+	interface afuser_interface extends pudlId {}
+} else {
+	interface afuser_interface {}
+}
+
+
+
+class afuser extends af_object_array implements afuser_interface {
 	use af_node;
 	use af_permission;
 	use af_preference;
@@ -118,7 +126,7 @@ class afuser extends af_object_array {
 	////////////////////////////////////////////////////////////////////////////
 	//PUDL INTEGRATION
 	////////////////////////////////////////////////////////////////////////////
-	public function pudl_getId($column=true) {
+	public function pudlId($column=true) {
 		if ($column === true) return ['user_id' => $this->user_id];
 		return $this->user_id;
 	}
