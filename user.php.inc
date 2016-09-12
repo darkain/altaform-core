@@ -15,7 +15,7 @@ if (interface_exists('pudlId')) {
 
 
 
-class afuser extends af_object_array implements afuser_interface {
+class afuser extends af_object_array implements afuser_interface, af_url {
 	use af_node;
 	use af_permission;
 	use af_preference;

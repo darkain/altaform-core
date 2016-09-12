@@ -1,6 +1,11 @@
 <?php
 
+
 require_once('_closure/closure.php');
+
+
+
+interface af_url { public function url(); }
 
 
 
@@ -84,7 +89,7 @@ class afurl {
 
 
 	public function __invoke($path, $base=false) {
-		if (!tbx_array($path)) {
+		if ($path instanceof af_url  ||  !tbx_array($path)) {
 			return ($base ? ($this->base.'/') : '') . $this->clean($path);
 		}
 
@@ -113,6 +118,9 @@ class afurl {
 
 
 	public function clean($fragment) {
+		if ($fragment instanceof af_url) {
+			$fragment = $fragment->url();
+		}
 		return ($fragment instanceof afurlsafe)
 			? (string) $fragment
 			: strtolower(urlencode($fragment));
