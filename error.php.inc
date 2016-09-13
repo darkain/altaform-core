@@ -33,7 +33,7 @@ function error401($text='', $log=false, $details=false) {
 		$afurl->redirect("$afurl->host$afurl->base/", 302);
 	}
 
-	afError('HTTP/1.0 401 File Not Found', [
+	afError('HTTP/1.0 401 Unauthorized', [
 		'<div id="af-fatal"><h1>ERROR: 401</h1>',
 		'<h2>AUTHORIZATION REQUIRED</h2>',
 		'<h3>' . htmlspecialchars($details) . '</h3>',
@@ -44,7 +44,7 @@ function error401($text='', $log=false, $details=false) {
 
 
 function error403($text='', $log=false, $details=false) {
-	afError('HTTP/1.0 403 File Not Found', [
+	afError('HTTP/1.0 403 Forbidden', [
 		'<div id="af-fatal"><h1>ERROR: 403</h1>',
 		'<h2>FORBIDDEN</h2>',
 		'<h3>' . htmlspecialchars($details) . '</h3>',
@@ -81,7 +81,7 @@ function error404($text='', $log=false, $details=false) {
 
 
 function error405($text='', $log=true, $details=false) {
-	afError('HTTP/1.0 404 File Not Found', [
+	afError('HTTP/1.0 405 Method Not Allowed', [
 		'<div id="af-fatal"><h1>ERROR: 405</h1>',
 		'<h2>METHOD NOT ALLOWED</h2>',
 		'<h3>' . htmlspecialchars($details) . '</h3>',
@@ -92,7 +92,7 @@ function error405($text='', $log=true, $details=false) {
 
 
 function error422($text='', $log=true, $details=false) {
-	afError('HTTP/1.0 422 File Not Found', [
+	afError('HTTP/1.0 422 Unprocessable Entity', [
 		'<div id="af-fatal"><h1>ERROR: 422</h1>',
 		'<h2>UNPROCESSABLE ENTITY</h2>',
 		'<h3>' . htmlspecialchars($details) . '</h3>',
@@ -105,7 +105,7 @@ function error422($text='', $log=true, $details=false) {
 function error500($text='', $log=true, $details=false) {
 	if (is_array($details)) $details = $details['details'];
 
-	afError('HTTP/1.0 500 File Not Found', [
+	afError('HTTP/1.0 500 Internal Server Error', [
 		'<div id="af-fatal"><h1>ERROR: 500</h1>',
 		'<h2>INTERNAL SERVER ERROR</h2>',
 		'<h3>' . htmlspecialchars($details) . '</h3>',
