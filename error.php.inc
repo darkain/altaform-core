@@ -19,7 +19,7 @@ class aferror {
 
 		if (!headers_sent()) header($header);
 
-		$title = $header;
+		$title = str_replace('HTTP/1.1 ', '', $header);
 
 		$data = $log ? self::log($text, false) : self::process($text);
 
