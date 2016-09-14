@@ -1,6 +1,14 @@
 <?php
 
 
+define('AF_STAGE_NONE',		0);
+define('AF_STAGE_HEADER',	1);
+define('AF_STAGE_BODY',		2);
+define('AF_STAGE_FOOTER',	3);
+define('AF_STAGE_COMPLETE',	4);
+
+
+
 trait af_template {
 
 
@@ -191,6 +199,9 @@ trait af_template {
 	public function headerHTML() {
 		global $site;
 
+		if ($this->_stage !== AF_STAGE_NONE) return;
+		$this->_stage = AF_STAGE_HEADER;
+
 		$device	= afdevice::device();
 		$root	= $this->path() . $site['root'];
 
@@ -221,6 +232,8 @@ trait af_template {
 	public function headerPage() {
 		global $site;
 
+		if ($this->_stage !== AF_STAGE_HEADER) return;
+
 		$device	= afdevice::device();
 		$root	= $this->path() . $site['root'];
 
@@ -232,7 +245,11 @@ trait af_template {
 			$this->load($root.'/header_page.tpl');
 		}
 
-		return $this->merge($this->_headers)->render();
+		$this->merge($this->_headers)->render();
+
+		$this->_stage = AF_STAGE_BODY;
+
+		return $this;
 	}
 
 
@@ -244,19 +261,25 @@ trait af_template {
 	public function footerHTML() {
 		global $site;
 
+		if ($this->_stage !== AF_STAGE_FOOTER) return;
+
 		$device	= afdevice::device();
 		$root	= $this->path() . $site['root'];
+		$ok		= false;
 
 		if ($this->debug()) {
 			if (file_exists($root.'/footer_html_debug.tpl.'.$device)) {
-				return $this->render($root.'/footer_html_debug.tpl.'.$device);
-			}
-			if (file_exists($root.'/footer_html_debug.tpl')) {
-				return $this->render($root.'/footer_html_debug.tpl');
+				$ok = $this->render($root.'/footer_html_debug.tpl.'.$device);
+			} else if (file_exists($root.'/footer_html_debug.tpl')) {
+				$ok = $this->render($root.'/footer_html_debug.tpl');
 			}
 		}
 
-		return $this->render($root.'/footer_html.tpl');
+		if (!$ok) $this->render($root.'/footer_html.tpl');
+
+		$this->_stage = AF_STAGE_COMPLETE;
+
+		return $this;
 	}
 
 
@@ -267,6 +290,9 @@ trait af_template {
 	////////////////////////////////////////////////////////////////////////////
 	public function footerPage() {
 		global $site, $db, $user;
+
+		if ($this->_stage !== AF_STAGE_BODY) return;
+		$this->_stage = AF_STAGE_FOOTER;
 
 		$device	= afdevice::device();
 		$root	= $this->path() . $site['root'];
@@ -377,6 +403,14 @@ trait af_template {
 
 
 
+	////////////////////////////////////////////////////////////////////////////
+	//GET THE CURRENT PAGE RENDERING STAGE
+	////////////////////////////////////////////////////////////////////////////
+	public function stage() { return $this->_stage; }
+
+
+
+
 	private $_js		= [];
 	private $_css		= [];
 	private $_script	= [];
@@ -384,5 +418,6 @@ trait af_template {
 	private $_meta		= [];
 	private $_headers	= [];
 	private $_footers	= [];
+	private $_stage		= AF_STAGE_NONE;
 
 }
