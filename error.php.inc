@@ -15,9 +15,11 @@ class aferror {
 
 
 	public static function render($header, $text, $log=false, $template=false) {
-		global $db, $af, $site;
+		global $db, $af, $site, $title;
 
 		if (!headers_sent()) header($header);
+
+		$title = $header;
 
 		$data = $log ? self::log($text, false) : self::process($text);
 
