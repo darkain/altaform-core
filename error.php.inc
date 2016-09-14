@@ -170,7 +170,7 @@ class aferror {
 
 
 function error401($text='', $log=false, $details=false) {
-	aferror::render('HTTP/1.0 401 Unauthorized', [
+	aferror::render('HTTP/1.1 401 Unauthorized', [
 		'<div id="af-fatal"><h1>ERROR: 401</h1>',
 		'<h2>AUTHORIZATION REQUIRED</h2>',
 		'<h3>' . htmlspecialchars($details) . '</h3>',
@@ -181,7 +181,7 @@ function error401($text='', $log=false, $details=false) {
 
 
 function error403($text='', $log=false, $details=false) {
-	aferror::render('HTTP/1.0 403 Forbidden', [
+	aferror::render('HTTP/1.1 403 Forbidden', [
 		'<div id="af-fatal"><h1>ERROR: 403</h1>',
 		'<h2>FORBIDDEN</h2>',
 		'<h3>' . htmlspecialchars($details) . '</h3>',
@@ -207,7 +207,7 @@ function error404($text='', $log=false, $details=false) {
 		}
 	}
 
-	aferror::render('HTTP/1.0 404 File Not Found', [
+	aferror::render('HTTP/1.1 404 File Not Found', [
 		'<div id="af-fatal"><h1>ERROR: 404</h1>',
 		'<h2>FILE NOT FOUND</h2>',
 		'<h3>' . htmlspecialchars($details) . '</h3>',
@@ -218,7 +218,7 @@ function error404($text='', $log=false, $details=false) {
 
 
 function error405($text='', $log=true, $details=false) {
-	aferror::render('HTTP/1.0 405 Method Not Allowed', [
+	aferror::render('HTTP/1.1 405 Method Not Allowed', [
 		'<div id="af-fatal"><h1>ERROR: 405</h1>',
 		'<h2>METHOD NOT ALLOWED</h2>',
 		'<h3>' . htmlspecialchars($details) . '</h3>',
@@ -229,7 +229,7 @@ function error405($text='', $log=true, $details=false) {
 
 
 function error422($text='', $log=true, $details=false) {
-	aferror::render('HTTP/1.0 422 Unprocessable Entity', [
+	aferror::render('HTTP/1.1 422 Unprocessable Entity', [
 		'<div id="af-fatal"><h1>ERROR: 422</h1>',
 		'<h2>UNPROCESSABLE ENTITY</h2>',
 		'<h3>' . htmlspecialchars($details) . '</h3>',
@@ -242,7 +242,7 @@ function error422($text='', $log=true, $details=false) {
 function error500($text='', $log=true, $details=false) {
 	if (is_array($details)) $details = $details['details'];
 
-	aferror::render('HTTP/1.0 500 Internal Server Error', [
+	aferror::render('HTTP/1.1 500 Internal Server Error', [
 		'<div id="af-fatal"><h1>ERROR: 500</h1>',
 		'<h2>INTERNAL SERVER ERROR</h2>',
 		'<h3>' . htmlspecialchars($details) . '</h3>',
