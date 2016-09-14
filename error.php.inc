@@ -71,15 +71,15 @@ class aferror {
 			$val = json_encode($val);
 		} unset($val);
 
+		if (!is_array($data)) $data = ['details'=>$data];
+
 		foreach ($data as $key => &$val) {
 			if (!is_int($key)) continue;
-			foreach ($val as &$item) {
+			if (is_array($val)) foreach ($val as &$item) {
 				if (is_array($item)  ||  is_object($item)) $item = [];
 			} unset($item);
 			$val = json_encode($val);
 		} unset($val);
-
-		if (!is_array($data)) $data = ['details'=>$data];
 
 		$arr = array_merge(['time'=>@date('r')], $data, [
 			'method'	=> !empty($get) ? $get->server('REQUEST_METHOD') : '',
