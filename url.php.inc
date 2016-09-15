@@ -104,6 +104,15 @@ class afurl {
 
 
 
+	public function build($path, $query=false, $host=false) {
+		$return = ($host ? $this->host : '') . $this($path, true);
+		if (empty($query))		return $return;
+		if (is_string($query))	return $return . '?' . $query;
+		return $return . '?' . http_build_query($query);
+	}
+
+
+
 	public function user($user, $base=false) {
 		$user = empty($user['user_url']) ? $user['user_id'] : $user['user_url'];
 
