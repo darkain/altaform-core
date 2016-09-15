@@ -1,4 +1,10 @@
 <?php
+
+//Enable PHP Output Buffering
+ob_start();
+
+
+
 //PHP Error handling functions
 require_once('error.php.inc');
 
@@ -189,4 +195,12 @@ while ($afurl->reparse) {
 	$afurl->path = $afurl->process();
 	if (is_string($afurl->path)) require($afurl->path);
 	chdir($afurl->directory);
+}
+
+
+
+//Flush PHP Output Buffer
+$i=20;
+while ($i--  &&  ob_get_level()){
+	ob_end_flush();
 }
