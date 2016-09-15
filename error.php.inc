@@ -25,25 +25,19 @@ class aferror {
 
 		if (!empty($template)  &&  $af instanceof altaform  &&  !empty($site['root'])) {
 			if (is_file($af->path().$site['root'].'/'.$template)) {
-				$ok = $af->renderPage($af->path().$site['root'].'/'.$template, [
-					'error' => [
-						'header'	=> $header,
-						'text'		=> $text,
-						'details'	=> $data,
-					]
-				]);
+				$ok = self::renderFile(
+					$af->path().$site['root'].'/'.$template,
+					$header, $text, $data
+				);
 			}
 		}
 
 		if (empty($ok)  &&  $af instanceof altaform  &&  !empty($site['root'])) {
 			if (is_file($af->path().$site['root'].'/error.tpl')) {
-				$ok = $af->renderPage($af->path().$site['root'].'/error.tpl', [
-					'error' => [
-						'header'	=> $header,
-						'text'		=> $text,
-						'details'	=> $data,
-					]
-				]);
+				$ok = self::renderFile(
+					$af->path().$site['root'].'/error.tpl',
+					$header, $text, $data
+				);
 			}
 		}
 
@@ -54,6 +48,21 @@ class aferror {
 		if ($db instanceof pudl) $db->rollback();
 		flush();
 		die();
+	}
+
+
+
+
+	public static function renderFile($file, $header, $text, $data) {
+		global $af;
+
+		return $af->resetStage()->renderPage($file, [
+			'error' => [
+				'header'	=> $header,
+				'text'		=> $text,
+				'details'	=> $data,
+			]
+		]);
 	}
 
 
@@ -125,7 +134,7 @@ class aferror {
 		$out = str_replace("\n", "\r\n", print_r($arr, true)) . "\r\n";
 
 		@file_put_contents(
-			(isset($af)?$af->path():'') . '_log/' . @date('Y-m-d'),
+			($af instanceof altaform ? $af->path() : '') . '_log/' . @date('Y-m-d'),
 			$out, FILE_APPEND
 		);
 
@@ -288,7 +297,7 @@ set_error_handler(function($errno, $errstr, $errfile=NULL, $errline=NULL) {
 	switch ($errno) {
 		case E_WARNING:		case E_USER_WARNING:
 		case E_NOTICE:		case E_USER_NOTICE:
-			$die = (!empty($af) && is_object($af)) ? $af->debug() : false;
+			$die = ($af instanceof altaform) ? $af->debug() : false;
 	}
 
 	aferror::log([

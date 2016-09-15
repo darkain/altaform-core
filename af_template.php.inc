@@ -411,6 +411,17 @@ trait af_template {
 
 
 
+	////////////////////////////////////////////////////////////////////////////
+	//RESET THE CURRENT STAGE - USED BY ERROR HANGLER
+	////////////////////////////////////////////////////////////////////////////
+	public function resetStage() {
+		$this->_stage = AF_STAGE_NONE;
+		return $this;
+	}
+
+
+
+
 	private $_js		= [];
 	private $_css		= [];
 	private $_script	= [];
