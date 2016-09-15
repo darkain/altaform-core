@@ -199,7 +199,7 @@ trait af_template {
 	public function headerHTML() {
 		global $site;
 
-		if ($this->_stage !== AF_STAGE_NONE) return;
+		if ($this->_stage !== AF_STAGE_NONE) return $this;
 		$this->_stage = AF_STAGE_HEADER;
 
 		$device	= afdevice::device();
@@ -232,7 +232,7 @@ trait af_template {
 	public function headerPage() {
 		global $site;
 
-		if ($this->_stage !== AF_STAGE_HEADER) return;
+		if ($this->_stage !== AF_STAGE_HEADER) return $this;
 
 		$device	= afdevice::device();
 		$root	= $this->path() . $site['root'];
@@ -261,7 +261,7 @@ trait af_template {
 	public function footerHTML() {
 		global $site;
 
-		if ($this->_stage !== AF_STAGE_FOOTER) return;
+		if ($this->_stage !== AF_STAGE_FOOTER) return $this;
 
 		$device	= afdevice::device();
 		$root	= $this->path() . $site['root'];
@@ -291,7 +291,7 @@ trait af_template {
 	public function footerPage() {
 		global $site, $db, $user;
 
-		if ($this->_stage !== AF_STAGE_BODY) return;
+		if ($this->_stage !== AF_STAGE_BODY) return $this;
 		$this->_stage = AF_STAGE_FOOTER;
 
 		$device	= afdevice::device();
