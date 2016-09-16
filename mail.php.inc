@@ -28,7 +28,12 @@ class afmail {
 		if (!isset($headers['priority']))	$headers['priority']	= 3;
 
 
-		$mail->msgHTML($body);
+		//THIS FIXES URLS STARTING WITHOUT PROTOCOL, THEN ADDS BODY TO EMAIL
+		$mail->msgHTML(str_replace(
+			['"//',							"'//"],
+			['"'.$afurl->protocol.'://',	"'".$afurl->protocol.'://'],
+			$body
+		));
 
 		if (isset($headers['to'])  &&  tbx_array($headers['to'])) {
 			$mail->AddAddress( reset($headers['to']), end($headers['to']) );
@@ -82,7 +87,7 @@ class afmail {
 		$mail->WordWrap	= 80;
 
 		$return = $mail->send();
-
+af_dump( $mail->ErrorInfo );
 		if (!empty($path)) @unlink($path);
 
 		if (!$return  &&  $af->debug()) {
