@@ -87,7 +87,7 @@ class afmail {
 		$mail->WordWrap	= 80;
 
 		$return = $mail->send();
-af_dump( $mail->ErrorInfo );
+
 		if (!empty($path)) @unlink($path);
 
 		if (!$return  &&  $af->debug()) {
