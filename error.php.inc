@@ -287,7 +287,7 @@ function assert500($item, $text='', $log=true) {
 
 
 
-set_error_handler(function($errno, $errstr, $errfile=NULL, $errline=NULL) {
+set_error_handler(function($errno, $errstr, $errfile=NULL, $errline=NULL, $errcontext=[], $backtrace=[]) {
 	global $af;
 
 	if (!error_reporting()) return false;
@@ -300,7 +300,7 @@ set_error_handler(function($errno, $errstr, $errfile=NULL, $errline=NULL) {
 			$die = ($af instanceof altaform) ? $af->debug() : false;
 	}
 
-	aferror::log([
+	aferror::log($backtrace + [
 		'error'		=> $errno,
 		'details'	=> $errstr,
 		'file'		=> $errfile,
