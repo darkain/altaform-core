@@ -342,6 +342,20 @@ register_shutdown_function(function() {
 
 
 
+function _pudl_log($callback, $db, $result=NULL) {
+	global $af;
+
+	$path = $af instanceof altaform ? $af->path() : '';
+
+	@file_put_contents(
+		$path . '_log/' . @date('Y-m-d') . '-query',
+		$db->query() . "\n",
+		FILE_APPEND
+	);
+}
+
+
+
 function _pudl_debug($callback, $db, $result=NULL) {
 	aferror::log([
 		'error'		=> $db->errno(),

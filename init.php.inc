@@ -157,7 +157,8 @@ if (!empty($site['pudl'])  &&  tbx_array($site['pudl'])) {
 	require_once('user.php.inc');
 	$db = pudl::instance($site['pudl']);
 
-	$db->on('debug', '_pudl_debug');
+	$db->on('log',		'_pudl_log');
+	$db->on('debug',	'_pudl_debug');
 	$get->pudl = $db;
 
 	if (!empty($site['pudl']['connected'])) {
