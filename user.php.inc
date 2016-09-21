@@ -5,7 +5,8 @@ require_once('af_object_array.php.inc');
 require_once('af_permission.php.inc');
 require_once('af_preference.php.inc');
 
-
+//TODO:	ADD A TRAIT FOR 'ATTRIBUTES'
+//		CURRENTLY ONLY ATTRIBUTE IS UNVERIFIED PASSWORD
 
 if (interface_exists('pudlId')) {
 	interface afuser_interface extends pudlId {}

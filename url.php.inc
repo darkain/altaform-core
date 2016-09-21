@@ -388,11 +388,16 @@ class afurl {
 
 
 
+	//TODO:	RENAME THIS FUNCTION TO 'secure', SINCE IT'LL HANDLE ALL
+	//		SSL, TLS, HTTPS, HSTS RELATED CONFIG PROCESSING
 	public function hsts() {
 		global $site;
 
 		if (headers_sent()) return;
 
+		//TODO:	REDO ALL $site['secure'] TO BE A SINGLE COMPLICATED ARRAY
+		//		THIS WILL FORCE DEVELOPERS INTO RESEARCHING HOW TO ENABLE
+		//		HSTS, AND TO BE ABSOLUTELY 100% SURE THEY WANT IT
 		header('Content-Security-Policy: upgrade-insecure-requests');
 
 		if (empty($site['hsts'])) return;
