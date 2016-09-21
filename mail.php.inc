@@ -2,7 +2,7 @@
 
 class afmail {
 
-	static function send($headers, $subject, $body, $attach=false) {
+	public static function send($headers, $subject, $body, $attach=false) {
 		global $site, $afurl, $af;
 
 		require_once('_phpmailer/class.phpmailer.php');
@@ -100,7 +100,20 @@ class afmail {
 
 
 
-	static function encode($address) {
+	public static function render($headers, $subject, $template, $merge=false, $attach=false) {
+		global $af;
+
+		$body  = $af->headerEmail();
+		$body .= $af->load($template)->merge($merge)->renderToString();
+		$body .= $af->footerEmail();
+
+		return self::send($header, $subject, $template, $attach);
+	}
+
+
+
+
+	public static function encode($address) {
 		$str = '';
 
 		$len = strlen($address);
@@ -118,7 +131,7 @@ class afmail {
 
 
 
-	static function validdns($domain) {
+	public static function validdns($domain) {
 		if (checkdnsrr($domain . '.', 'MX')) return true;
 		if (checkdnsrr($domain . '.', 'A' )) return true;
 		return false;
@@ -139,7 +152,7 @@ class afmail {
 
 	##################################################################################
 
-	static function validate($email, &$matches=false) {
+	public static function validate($email, &$matches=false) {
 		if (empty($email)  ||  !is_string($email)) return false;
 
 

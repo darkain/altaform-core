@@ -256,6 +256,26 @@ trait af_template {
 
 
 	////////////////////////////////////////////////////////////////////////////
+	//RENDER PAGE HEADER
+	////////////////////////////////////////////////////////////////////////////
+	public function headerEmail() {
+		global $site;
+
+		$root	= $this->path() . $site['root'];
+
+		if ($this->debug()  &&  file_exists($root.'/header_email_debug.tpl')) {
+			$this->load($root.'/header_email_debug.tpl');
+		} else {
+			$this->load($root.'/header_email.tpl');
+		}
+
+		return $this->renderToString();
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
 	//RENDER HTML FOOTER
 	////////////////////////////////////////////////////////////////////////////
 	public function footerHTML() {
@@ -319,6 +339,26 @@ trait af_template {
 		}
 
 		return $this;
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	//RENDER HTML FOOTER
+	////////////////////////////////////////////////////////////////////////////
+	public function footerEmail() {
+		global $site;
+
+		$root	= $this->path() . $site['root'];
+
+		if ($this->debug()  &&  file_exists($root.'/footer_email_debug.tpl')) {
+			$this->load($root.'/footer_email_debug.tpl');
+		} else {
+			$this->load($root.'/footer_email.tpl');
+		}
+
+		return $this->renderToString();
 	}
 
 
