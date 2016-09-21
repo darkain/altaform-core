@@ -102,9 +102,8 @@ $afurl->_all();
 
 //Upgrade to HTTPS connection (modern)
 if ($get->server('HTTP_UPGRADE_INSECURE_REQUESTS')) {
-	$afurl->hsts();
 	if ($afurl->https) {
-		header('Content-Security-Policy: upgrade-insecure-requests');
+		$afurl->hsts();
 	} else if (!empty($site['secure'])) {
 		$afurl->redirectSecure();
 	}
@@ -119,7 +118,6 @@ if ($get->server('HTTP_UPGRADE_INSECURE_REQUESTS')) {
 
 	foreach ($secure_ua as $ua) {
 		if (strpos($agent, $ua)  &&  !strpos($agent, 'windows nt 5.')) {
-			$afurl->hsts();
 			$afurl->redirectSecure();
 		}
 	}

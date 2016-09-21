@@ -390,7 +390,12 @@ class afurl {
 
 	public function hsts() {
 		global $site;
-		if (empty($site['hsts'])  ||  headers_sent()) return;
+
+		if (headers_sent()) return;
+
+		header('Content-Security-Policy: upgrade-insecure-requests');
+
+		if (empty($site['hsts'])) return;
 		header(
 			'Strict-Transport-Security: max-age=' .
 			((int) $site['hsts']) .
