@@ -110,13 +110,14 @@ if ($get->server('HTTP_UPGRADE_INSECURE_REQUESTS')) {
 
 //Upgrade to HTTPS connection (legacy)
 } else if (!$afurl->https  &&  !empty($site['secure'])) {
-	$agent		= $get->server('HTTP_USER_AGENT');
+	$agent		= strtolower($get->server('HTTP_USER_AGENT'));
 
-	$secure_ua	= [	' Trident/',	' Firefox/',	' AppleWebKit/',
-					' Konqueror/',	' Iceweasel/'];
+	$secure_ua	= [	'trident/',		'firefox/',		'applewebkit/',
+					'konqueror/',	'iceweasel/',
+					'bot/',			'spider/'];
 
 	foreach ($secure_ua as $ua) {
-		if (strpos($agent, $ua)  &&  !strpos($agent, ' Windows NT 5.')) {
+		if (strpos($agent, $ua)  &&  !strpos($agent, 'windows nt 5.')) {
 			$afurl->redirectSecure();
 		}
 	}
