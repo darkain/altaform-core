@@ -388,6 +388,18 @@ class afurl {
 
 
 
+	public function hsts() {
+		global $site;
+		if (empty($site['hsts'])  ||  headers_sent()) return;
+		header(
+			'Strict-Transport-Security: max-age=' .
+			((int) $site['hsts']) .
+			'; includeSubDomains'
+		);
+	}
+
+
+
 	//SOURCE: http://stackoverflow.com/questions/1755144/how-to-validate-domain-name-in-php
 	public static function validateDomain($domain) {
 		if (!is_string($domain))	return false;
