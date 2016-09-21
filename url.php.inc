@@ -417,13 +417,22 @@ class afurl {
 
 
 	//Move into a folder, and test security if needed
-	private function chdir($path) {
-		chdir($path);
+	private function chdir($__path) {
+		chdir($__path);
 
-		if (is_file('_altaform.php.inc')) {
-			extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
-			require_once('_altaform.php.inc');
-		}
+		if (!is_file('_altaform.php.inc')) return;
+
+		$__keys = array_keys($GLOBALS);
+		extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
+		require_once('_altaform.php.inc');
+
+		$list = get_defined_vars();
+
+		$__keys[] = '__path';
+		$__keys[] = '__keys';
+		foreach ($__keys as $key) unset($list[$key]);
+
+		foreach ($list as $key => $val) $GLOBALS[$key] = $val;
 	}
 
 
