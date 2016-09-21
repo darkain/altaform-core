@@ -69,16 +69,7 @@ class aferror {
 
 
 	public static function process($data) {
-		global $afunit, $afurl, $db, $get, $user;
-
-		$arr = debug_backtrace(0);
-
-		foreach ($arr as &$val) {
-			foreach ($val as &$item) {
-				if (is_array($item)  ||  is_object($item)) $item = [];
-			} unset($item);
-			$val = json_encode($val);
-		} unset($val);
+		global $afdevice, $afurl, $db, $get, $user;
 
 		if (!is_array($data)) $data = ['details'=>$data];
 
@@ -90,31 +81,40 @@ class aferror {
 			$val = json_encode($val);
 		} unset($val);
 
-		$arr = array_merge(['time'=>@date('r')], $data, [
-			'method'	=> !empty($get) ? $get->server('REQUEST_METHOD') : '',
-			'url'		=> !empty($afurl->all)	? $afurl->all			: (!empty($get) ? $get->server('REQUEST_URI') : ''),
-			'cwd'		=> getcwd(),
-			'get'		=> !empty($_GET)		? json_encode($_GET)	: '',
-			'post'		=> !empty($_POST)		? json_encode($_POST)	: '',
-			'files'		=> !empty($_FILES)		? json_encode($_FILES)	: '',
-			'user'		=> !empty($user)		? json_encode($user)	: '',
-			'query'		=> !empty($db)			? $db->query()			: '',
-			'mariadb'	=> !empty($db)			? $db->server()			: '',
-			'server'	=> (!empty($get)		? $get->server('SERVER_ADDR') : '') . (!empty($afunit)?" : Unit $afunit":''),
-			'remote'	=> !empty($get)			? $get->server('REMOTE_ADDR') : '',
-			'agent'		=> !empty($get)			? $get->server('HTTP_USER_AGENT') : '',
-			'referer'	=> !empty($get)			? $get->server('HTTP_REFERER') : '',
-		], $arr);
+		if (!empty($get)) {
+			$address = (empty($get) ? '' :
+				($get->server('REQUEST_METHOD') . ' ' . $get->server('SERVER_PROTOCOL') . ' '))
+				. (!empty($afurl->all) ? $afurl->all : $get->server('REQUEST_URI'));
+		} else {
+			$address = !empty($afurl->all) ? $afurl->all : '';
+		}
 
-		ksort($arr, SORT_NATURAL);
+		$return = array_merge($data, [
+			'address'		=> $address,
+			'error-time'	=> @date('r'),
+			'error-path'	=> getcwd(),
+			'var-get'		=> !empty($_GET)	? json_encode($_GET)				: '',
+			'var-post'		=> !empty($_POST)	? json_encode($_POST)				: '',
+			'var-files'		=> !empty($_FILES)	? json_encode($_FILES)				: '',
+			'var-user'		=> !empty($user)	? json_encode($user)				: '',
+			'query'			=> !empty($db)		? $db->query()						: '',
+			'ip-database'	=> !empty($db)		? $db->server()						: '',
+			'ip-address'	=> !empty($get)		? $get->server('X-PHP-IP')			: '',
+			'ip-server'		=> !empty($get)		? $get->server('SERVER_ADDR')		: '',
+			'ip-remote'		=> !empty($get)		? $get->server('REMOTE_ADDR')		: '',
+			'user-agent'	=> !empty($get)		? $get->server('HTTP_USER_AGENT')	: '',
+			'user-referer'	=> !empty($get)		? $get->server('HTTP_REFERER')		: '',
+			'user-device'	=> !empty($afdevice)? $afdevice() : '',
+		]);
 
-		return $arr;
+		ksort($return, SORT_NATURAL);
+		return $return;
 	}
 
 
 
 
-	public static function log($data, $die=true) {
+	public static function log($data, $die=true, $backtrace=[]) {
 		global $site, $af, $db, $user;
 
 		//ONLY LOG ERROR ONCE!
@@ -122,6 +122,7 @@ class aferror {
 		if ($echo) return false;
 		$echo = true;
 
+		if (empty($backtrace)) $backtrace = debug_backtrace(0);
 
 		if (!($user instanceof afuser)  ||  $user->isAdmin()) {
 			$site['debug'] = true;
@@ -129,9 +130,14 @@ class aferror {
 
 		$error = (ob_get_level()  &&  $die) ? htmlspecialchars(ob_get_clean()) : '';
 
-		$arr = self::process($data);
+		$arr = $arrout = self::process($data);
 
-		$out = str_replace("\n", "\r\n", print_r($arr, true)) . "\r\n";
+		$arrout += $backtrace;
+		foreach ($arrout as $key => &$value) if (is_int($key)) {
+			$value = json_encode($value, JSON_UNESCAPED_SLASHES);
+		}
+
+		$out = str_replace("\n", "\r\n", print_r($arrout, true)) . "\r\n";
 
 		@file_put_contents(
 			($af instanceof altaform ? $af->path() : '') . '_log/' . @date('Y-m-d'),
@@ -144,11 +150,35 @@ class aferror {
 
 		if (!$die) return $arr;
 
-		if (empty($site['debug'])) {
-			error500('', true, $arr);
-		} else {
-			error500("<pre style=\"text-align:left\">$out</pre>$error<br/><br/>", true, $arr);
+
+		if (empty($site['debug'])) return error500('', true, $arr);
+
+
+		$html = '<table class="af-debug-backtrace">';
+
+		foreach ($backtrace as $key => $value) {
+			$html .= '<tr><td>' . ($key+1) . '</td><td class="nobr">Line: ';
+			$html .= array_key_exists('line', $value) ? $value['line'] : '?';
+			$html .= '</td><td>File: ';
+			$html .= array_key_exists('file', $value) ? $value['file'] : '?';
+			if (!empty($value['function'])) {
+				$html .= '<br/>' . $value['function'] . '(';
+				if (!empty($value['args'])) {
+					$html .= substr(json_encode($value['args'],JSON_UNESCAPED_SLASHES), 1, -1);
+				}
+				$html .= ')';
+			}
+			$html .= '</td></tr>';
 		}
+
+		foreach ($arr as $key => $value) {
+			$html .= '<tr><td colspan="2" class="nobr">' . $key . '</td>';
+			$html .= '<td>' . $value . '</td></tr>';
+		}
+
+		$html .= '</table>';
+
+		error500($html, true, $arr);
 	}
 
 
@@ -300,12 +330,12 @@ set_error_handler(function($errno, $errstr, $errfile=NULL, $errline=NULL, $errco
 			$die = ($af instanceof altaform) ? $af->debug() : false;
 	}
 
-	aferror::log($backtrace + [
-		'error'		=> $errno,
-		'details'	=> $errstr,
-		'file'		=> $errfile,
-		'line'		=> $errline,
-	], $die);
+	aferror::log([
+		'error-code'	=> $errno,
+		'details'		=> $errstr,
+		'error-file'	=> $errfile,
+		'error-line'	=> $errline,
+	], $die, $backtrace);
 
 	return true;
 });
@@ -316,10 +346,10 @@ set_exception_handler(function($e) {
 	if (!error_reporting()) return false;
 
 	aferror::log($e->getTrace()+[
-		'error'		=> get_class($e),
-		'details'	=> $e->getMessage(),
-		'file'		=> $e->getFile(),
-		'line'		=> $e->getLine(),
+		'error-code'	=> get_class($e),
+		'details'		=> $e->getMessage(),
+		'error-file'	=> $e->getFile(),
+		'error-line'	=> $e->getLine(),
 	]);
 });
 
@@ -333,10 +363,10 @@ register_shutdown_function(function() {
 	if ($e['type'] !== E_ERROR  &&  $e['type'] !== E_PARSE) return;
 
 	aferror::log([
-		'error'		=> $e['type'],
-		'details'	=> $e['message'],
-		'file'		=> $e['file'],
-		'line'		=> $e['line'],
+		'error-code'	=> $e['type'],
+		'details'		=> $e['message'],
+		'error-file'	=> $e['file'],
+		'error-line'	=> $e['line'],
 	]);
 });
 
@@ -358,8 +388,8 @@ function _pudl_log($callback, $db, $result=NULL) {
 
 function _pudl_debug($callback, $db, $result=NULL) {
 	aferror::log([
-		'error'		=> $db->errno(),
-		'details'	=> $db->error(),
-		'result'	=> ($result instanceof pudlResult) ? $result->error() : 'NULL',
+		'error-code'	=> $db->errno(),
+		'details'		=> $db->error(),
+		'result'		=> ($result instanceof pudlResult) ? $result->error() : 'NULL',
 	]);
 }
