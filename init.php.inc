@@ -116,7 +116,7 @@ if ($get->server('HTTP_UPGRADE_INSECURE_REQUESTS')) {
 					' Konqueror/',	' Iceweasel/'];
 
 	foreach ($secure_ua as $ua) {
-		if (strpos($agent, $ua)  &&  !strpos($agent, ' Windows NT 5.; ')) {
+		if (strpos($agent, $ua)  &&  !strpos($agent, ' Windows NT 5.')) {
 			$afurl->redirectSecure();
 		}
 	}
