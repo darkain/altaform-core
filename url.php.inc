@@ -388,24 +388,22 @@ class afurl {
 
 
 
-	//TODO:	RENAME THIS FUNCTION TO 'secure', SINCE IT'LL HANDLE ALL
-	//		SSL, TLS, HTTPS, HSTS RELATED CONFIG PROCESSING
-	public function hsts() {
-		global $site;
-
+	//HANDLE SSL, TLS, HTTPS, HSTS RELATED CONFIG PROCESSING
+	public function secure($data) {
 		if (headers_sent()) return;
-
-		//TODO:	REDO ALL $site['secure'] TO BE A SINGLE COMPLICATED ARRAY
-		//		THIS WILL FORCE DEVELOPERS INTO RESEARCHING HOW TO ENABLE
-		//		HSTS, AND TO BE ABSOLUTELY 100% SURE THEY WANT IT
 		header('Content-Security-Policy: upgrade-insecure-requests');
 
-		if (empty($site['hsts'])) return;
-		header(
-			'Strict-Transport-Security: max-age=' .
-			((int) $site['hsts']) .
-			'; includeSubDomains'
-		);
+		if (empty($data['max-age'])) return;
+
+		$header = 'max-age=' . (int) $data['max-age'];
+
+		if (in_array('includeSubDomains', $data)) {
+			$header .= '; includeSubDomains';
+		}
+
+		if (in_array('preload', $data)) $header .= '; preload';
+
+		header('Strict-Transport-Security: ' . $header);
 	}
 
 

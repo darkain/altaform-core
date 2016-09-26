@@ -103,7 +103,7 @@ $afurl->_all();
 //Upgrade to HTTPS connection (modern)
 if ($get->server('HTTP_UPGRADE_INSECURE_REQUESTS')) {
 	if ($afurl->https) {
-		$afurl->hsts();
+		$afurl->secure(isset($site['secure']) ? $site['secure'] : false);
 	} else if (!empty($site['secure'])) {
 		$afurl->redirectSecure();
 	}
@@ -124,7 +124,7 @@ if ($get->server('HTTP_UPGRADE_INSECURE_REQUESTS')) {
 
 //HSTS - HTTP Strict Transport Security
 } else if ($afurl->https) {
-	$afurl->hsts();
+	$afurl->secure(isset($site['secure']) ? $site['secure'] : false);
 }
 
 
