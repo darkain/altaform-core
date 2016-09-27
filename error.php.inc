@@ -78,7 +78,7 @@ class aferror {
 			if (is_array($val)) foreach ($val as &$item) {
 				if (is_array($item)  ||  is_object($item)) $item = [];
 			} unset($item);
-			$val = json_encode($val);
+			$val = json_encode($val, JSON_UNESCAPED_SLASHES);
 		} unset($val);
 
 		if (!empty($get)) {
@@ -93,10 +93,10 @@ class aferror {
 			'address'		=> $address,
 			'error-time'	=> @date('r'),
 			'error-path'	=> getcwd(),
-			'var-get'		=> !empty($_GET)	? json_encode($_GET)				: '',
-			'var-post'		=> !empty($_POST)	? json_encode($_POST)				: '',
-			'var-files'		=> !empty($_FILES)	? json_encode($_FILES)				: '',
-			'var-user'		=> !empty($user)	? json_encode($user)				: '',
+			'var-get'		=> !empty($_GET)	? json_encode($_GET,	JSON_UNESCAPED_SLASHES) : '',
+			'var-post'		=> !empty($_POST)	? json_encode($_POST,	JSON_UNESCAPED_SLASHES) : '',
+			'var-files'		=> !empty($_FILES)	? json_encode($_FILES,	JSON_UNESCAPED_SLASHES) : '',
+			'var-user'		=> !empty($user)	? json_encode($user,	JSON_UNESCAPED_SLASHES) : '',
 			'query'			=> !empty($db)		? $db->query()						: '',
 			'ip-database'	=> !empty($db)		? $db->server()						: '',
 			'ip-address'	=> !empty($get)		? $get->server('X-PHP-IP')			: '',
@@ -164,7 +164,10 @@ class aferror {
 			if (!empty($value['function'])) {
 				$html .= '<br/>' . $value['function'] . '(';
 				if (!empty($value['args'])) {
-					$html .= substr(json_encode($value['args'],JSON_UNESCAPED_SLASHES), 1, -1);
+					$html .= substr(
+						json_encode($value['args'], JSON_UNESCAPED_SLASHES),
+						1, -1
+					);
 				}
 				$html .= ')';
 			}
