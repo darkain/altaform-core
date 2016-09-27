@@ -69,7 +69,7 @@ class aferror {
 
 
 	public static function process($data) {
-		global $afdevice, $afurl, $db, $get, $user;
+		global $af, $afdevice, $afurl, $db, $get, $user;
 
 		if (!is_array($data)) $data = ['details'=>$data];
 
@@ -102,6 +102,7 @@ class aferror {
 			'ip-address'	=> !empty($get)		? $get->server('X-PHP-IP')			: '',
 			'ip-server'		=> !empty($get)		? $get->server('SERVER_ADDR')		: '',
 			'ip-remote'		=> !empty($get)		? $get->server('REMOTE_ADDR')		: '',
+			'template'		=> !empty($af)		? $af->filepath						: '',
 			'user-agent'	=> !empty($get)		? $get->server('HTTP_USER_AGENT')	: '',
 			'user-referer'	=> !empty($get)		? $get->server('HTTP_REFERER')		: '',
 			'user-device'	=> !empty($afdevice)? $afdevice() : '',
