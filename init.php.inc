@@ -129,6 +129,16 @@ if ($get->server('HTTP_UPGRADE_INSECURE_REQUESTS')) {
 
 
 
+//Disable Frames
+if (!headers_sent()) {
+	header(
+		'X-Frame-Options: ' .
+		(empty($site['frames']) ? 'SAMEORIGIN' : $site['frames'])
+	);
+}
+
+
+
 //Set the time zone and locale
 date_default_timezone_set(
 	empty($site['timezone']) ? 'UTC' : $site['timezone']
