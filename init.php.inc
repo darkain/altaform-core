@@ -68,9 +68,9 @@ if (!headers_sent()) {
 	if (strpos($get->server('HTTP_USER_AGENT'), ' Trident/')) {
 		header('X-UA-Compatible: IE=edge,chrome=1');
 	}
-	header('Content-Type: text/html; charset=utf-8');
 	header('Content-Language: en_US');
-	header('X-Altaform-Random: ' . substr(md5(mt_rand().microtime()), 0, mt_rand(1,32)));
+	header('Content-Type: text/html; charset=utf-8');
+	header('X-Content-Type-Options: nosniff');
 }
 
 
@@ -133,7 +133,7 @@ if ($get->server('HTTP_UPGRADE_INSECURE_REQUESTS')) {
 if (!headers_sent()) {
 	header(
 		'X-Frame-Options: ' .
-		(empty($site['frames']) ? 'SAMEORIGIN' : $site['frames'])
+		(empty($site['frames']) ? 'sameorigin' : $site['frames'])
 	);
 }
 
