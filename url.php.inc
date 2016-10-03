@@ -18,7 +18,7 @@ class afurl {
 
 		$this->directory	= getcwd();
 		$this->uri			= urldecode($get->server('REQUEST_URI', ''));
-		$this->domain		= $get->server('HTTP_HOST', '');
+		$this->domain		= reset(explode(':', $get->server('HTTP_HOST', '')));
 		$this->referer		= $get->server('HTTP_REFERER', '');
 		$this->https		= strtolower($get->server('HTTPS'));
 		$this->https		= $this->https !== 'off'  &&  !empty($this->https);
