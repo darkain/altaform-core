@@ -159,9 +159,9 @@ class aferror {
 
 		foreach ($backtrace as $key => $value) {
 			$html .= '<tr><td>' . ($key+1) . '</td><td class="nobr">Line: ';
-			$html .= array_key_exists('line', $value) ? $value['line'] : '?';
+			$html .= htmlspecialchars(array_key_exists('line', $value) ? $value['line'] : '?');
 			$html .= '</td><td>File: ';
-			$html .= array_key_exists('file', $value) ? $value['file'] : '?';
+			$html .= htmlspecialchars(array_key_exists('file', $value) ? $value['file'] : '?');
 			if (!empty($value['function'])) {
 				$html .= '<br/>' . $value['function'] . '(';
 				if (!empty($value['args'])) {
@@ -178,8 +178,8 @@ class aferror {
 		}
 
 		foreach ($arr as $key => $value) {
-			$html .= '<tr><td colspan="2" class="nobr">' . $key . '</td>';
-			$html .= '<td>' . $value . '</td></tr>';
+			$html .= '<tr><td colspan="2" class="nobr">' . htmlspecialchars($key) . '</td>';
+			$html .= '<td>' . htmlspecialchars($value) . '</td></tr>';
 		}
 
 		$html .= '</table>';
