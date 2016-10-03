@@ -130,8 +130,12 @@ trait af_template {
 	public function header($key=false, $data=false, $replace=false) {
 		if ($key === false) {
 			if ($this->jq()) {
-				echo '<script>'	. implode("\n", $this->_js)		. '</script>';
-				echo '<style>'	. implode("\n", $this->_css)	. '</style>';
+				if (!empty($this->_js)) {
+					echo '<script>'	. implode("\n", $this->_js)	. "</script>\n";
+				}
+				if (!empty($this->_css)) {
+					echo '<style>'	. implode("\n", $this->_css). "</style>\n";
+				}
 				return $this;
 			}
 			return $this->headerHTML()->headerPage();
