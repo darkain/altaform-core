@@ -16,9 +16,11 @@ class afurl {
 	public function __construct() {
 		global $get;
 
+		$host = explode(':', $get->server('HTTP_HOST', ''));
+
 		$this->directory	= getcwd();
 		$this->uri			= urldecode($get->server('REQUEST_URI', ''));
-		$this->domain		= reset(explode(':', $get->server('HTTP_HOST', '')));
+		$this->domain		= count($host) === 2 ? reset($host) : $get->server('HTTP_HOST', '');
 		$this->referer		= $get->server('HTTP_REFERER', '');
 		$this->https		= strtolower($get->server('HTTPS'));
 		$this->https		= $this->https !== 'off'  &&  !empty($this->https);
@@ -190,7 +192,7 @@ class afurl {
 		//Reset virtual pathing, in case this is a reprocess
 		$this->virtual = [];
 
-		//	load our home page!!
+		//load our home page!!
 		if (count($this->part) < 3) {
 			return $this->reparse($this->homepage);
 		}
@@ -208,9 +210,9 @@ class afurl {
 			if (is_dir($this->part[$i])) {
 				$this->chdir( $this->part[$i] );
 				if ($count-$i == 1) {
-					if (is_file('index.php'))	return 'index.php';
-					if (is_file('index.hh'))	return $this->hhvm('index.hh');
-					if (is_file('index.tpl'))	return $af->renderPage('index.tpl');
+					if (is_file('_index.php'))	return '_index.php';
+					if (is_file('_index.hh'))	return $this->hhvm('_index.hh');
+					if (is_file('_index.tpl'))	return $af->renderPage('_index.tpl');
 					error404();
 				}
 				continue;
@@ -222,28 +224,28 @@ class afurl {
 				if (is_file("$file.php"))		return "$file.php";
 				if (is_file("$file.hh"))		return $this->hhvm("$file.hh");
 				if (is_file("$file.tpl"))		return $af->renderPage("$file.tpl");
-				if (is_file('virtual.php'))		return $this->virtualize($i, 'virtual.php');
-				if (is_file('virtual.hh'))		return $this->virtualize($i, $this->hhvm('virtual.hh'));
-				if (!is_dir('virtual'))			error404();
-				$this->chdir( $this->virtualize($i, 'virtual') );
+				if (is_file('_virtual.php'))	return $this->virtualize($i, '_virtual.php');
+				if (is_file('_virtual.hh'))		return $this->virtualize($i, $this->hhvm('_virtual.hh'));
+				if (!is_dir('_virtual'))			error404();
+				$this->chdir( $this->virtualize($i, '_virtual') );
 				if ($count-$i == 1) {
-					if (is_file('index.php'))	return 'index.php';
-					if (is_file('index.hh'))	return $this->hhvm('index.hh');
-					if (is_file('index.tpl'))	return $af->renderPage('index.tpl');
+					if (is_file('_index.php'))	return '_index.php';
+					if (is_file('_index.hh'))	return $this->hhvm('_index.hh');
+					if (is_file('_index.tpl'))	return $af->renderPage('_index.tpl');
 					error404();
 				}
 				continue;
 			}
 
 
-			if (is_dir('virtual')) {
-				$this->chdir( $this->virtualize($i, 'virtual') );
+			if (is_dir('_virtual')) {
+				$this->chdir( $this->virtualize($i, '_virtual') );
 				continue;
 			}
 
 
-			if (is_file('virtual.php'))			return $this->virtualize($i, 'virtual.php');
-			if (is_file('virtual.hh'))			return $this->virtualize($i, $this->hhvm('virtual.hh'));
+			if (is_file('_virtual.php'))		return $this->virtualize($i, '_virtual.php');
+			if (is_file('_virtual.hh'))			return $this->virtualize($i, $this->hhvm('_virtual.hh'));
 
 			error404();
 		}
