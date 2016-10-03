@@ -166,7 +166,9 @@ class aferror {
 				$html .= '<br/>' . $value['function'] . '(';
 				if (!empty($value['args'])) {
 					$html .= substr(
-						json_encode($value['args'], JSON_UNESCAPED_SLASHES),
+						htmlspecialchars(
+							json_encode($value['args'], JSON_UNESCAPED_SLASHES)
+						),
 						1, -1
 					);
 				}
