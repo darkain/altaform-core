@@ -366,11 +366,19 @@ class afurl {
 	public static function redirect($url, $type=301, $die=true) {
 		global $afurl;
 		if (tbx_array($url)) $url = $afurl($url, true);
+
+		assert422(
+			empty(array_intersect(
+				str_split($url),
+				["\r", "\n", "\t", "\0", '<', '>']
+			))
+		);
+
 		if (!headers_sent()) header("Location: $url", true, $type);
 		echo '<html><head><meta http-equiv="refresh" content="0;URL=\'';
 		echo htmlspecialchars($url) . '\'" /></head><body>';
 		echo "<script>top.location.href='";
-		echo addslashes($url) . "';</script></body></html>";
+		echo htmlspecialchars(addslashes($url)) . "';</script></body></html>";
 		if ($die) exit;
 	}
 
