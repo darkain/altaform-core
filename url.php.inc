@@ -423,7 +423,7 @@ class afurl {
 
 	//Move into a folder, and test security if needed
 	private function chdir($__path) {
-		chdir($__path);
+		assert500(@chdir($__path), 'Unable to enter directory');
 
 		if (!is_file('_altaform.php.inc')) return;
 
