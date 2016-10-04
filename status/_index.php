@@ -141,5 +141,5 @@ foreach ($offline as $item) {
 // OUTPUT ALL THE THINGS !!!
 ////////////////////////////////////////////////////////////
 $af->header();
-	$af->renderBlock('index.tpl', 'server', $servers);
+	$af->renderBlock('_index.tpl', 'server', $servers);
 $af->footer();
