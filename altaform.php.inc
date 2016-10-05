@@ -1,5 +1,8 @@
 <?php
 
+//IP ADDRESS RELATED FUNCTIONS
+require_once('af_ip.php.inc');
+
 //AUDIT LOGGING
 require_once('audit.php.inc');
 
