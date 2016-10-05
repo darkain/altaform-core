@@ -260,7 +260,7 @@ class af_xlsx extends af_object_array {
 	//STORE ERROR MESSAGE
 	////////////////////////////////////////////////////////////////////////////
 	protected function invalid($text, $row) {
-		$this->errors[] = ' - ERROR: ' . $text . ' - ROW NUMBER: ' . $row;
+		$this->errors[] = '• ROW: ' . $row . ' - ' . $text;
 	}
 
 
