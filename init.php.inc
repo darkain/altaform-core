@@ -85,10 +85,10 @@ if (is_file('_config/'.$afurl->domain.'/config.php.inc')) {
 	require_once('_config/'.$afurl->domain.'/config.php.inc');
 } else if (is_file('_config/'.$afurl->domain)) {
 	require_once('_config/'.$afurl->domain);
-} else if (is_file('_config/virtual/config.php.inc')) {
-	require_once('_config/virtual/config.php.inc');
-} else if (is_file('_config/virtual.php.inc')) {
-	require_once('_config/virtual.php.inc');
+} else if (is_file('_config/_virtual/config.php.inc')) {
+	require_once('_config/_virtual/config.php.inc');
+} else if (is_file('_config/_virtual.php.inc')) {
+	require_once('_config/_virtual.php.inc');
 } else {
 	error500('Unknown Domain: ' . $afurl->domain);
 }
