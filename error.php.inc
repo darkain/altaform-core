@@ -351,12 +351,12 @@ set_error_handler(function($errno, $errstr, $errfile=NULL, $errline=NULL, $errco
 set_exception_handler(function($e) {
 	if (!error_reporting()) return false;
 
-	aferror::log($e->getTrace()+[
+	aferror::log([
 		'error-code'	=> get_class($e),
 		'details'		=> $e->getMessage(),
 		'error-file'	=> $e->getFile(),
 		'error-line'	=> $e->getLine(),
-	]);
+	], true, $e->getTrace());
 });
 
 
