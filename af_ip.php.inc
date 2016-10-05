@@ -14,10 +14,22 @@ class af_ip {
 
 
 	public static function inCidr($address, $cidr) {
-		list($network, $mask) = split('/', $cidr);
-		$mask = (int) $mask;
-		$mask = ~((1 << (32 - $mask)) - 1);
-		return (ip2long($address) & $mask) === (ip2long($network) & $mask);
+		if (!is_array($cidr)) $cidr = [$cidr];
+		if (empty($address)) return false;
+		$address = ip2long(trim($address));
+		foreach ($cidr as $item) {
+			list($network, $mask) = split('/', $item);
+			$network	= ip2long(trim($network));
+			$mask		= ~((1 << (32 - (int)trim($mask))) - 1);
+			if (($address & $mask) === ($network & $mask)) return true;
+		}
+		return false;
+	}
+
+
+
+	public static function addressInCidr($cidr) {
+		return self::inCidr(self::address(), $cidr);
 	}
 
 
