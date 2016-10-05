@@ -75,8 +75,13 @@ class af_xlsx extends af_object_array {
 			$this->_body($value, $columns);
 		}
 
-		if (!$this->validate()) {
-			throw new afException('XLSX FAILED DATA VALIDATION');
+		$this->validate();
+
+		if (!empty($this->errors)) {
+			throw new afException(
+				"XLSX FAILED DATA VALIDATION\n" .
+				implode("\n", $this->errors)
+			);
 			return false;
 		}
 
@@ -250,9 +255,21 @@ class af_xlsx extends af_object_array {
 
 
 
+
+	////////////////////////////////////////////////////////////////////////////
+	//STORE ERROR MESSAGE
+	////////////////////////////////////////////////////////////////////////////
+	protected function invalid($text, $row) {
+		$this->errors[] = ' - ERROR: ' . $text . ' - ROW NUMBER: ' . $row;
+	}
+
+
+
+
 	protected $sheet		= [];
 	protected $strings		= [];
 	protected $header		= [];
+	protected $errors		= [];
 	protected $translate	= false;
 
 }
