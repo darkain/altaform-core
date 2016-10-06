@@ -125,37 +125,6 @@ class altaform extends tbx {
 
 
 
-	//TODO: PLACE THIS IS DEDICATED AFUSER CLASS
-	function queue($service, $type, $data) {
-		global $user, $db;
-
-		if (empty($data)) {
-			$db->delete('pudl_queue', [
-				'queue_user'	=> $user['user_id'],
-				'queue_service'	=> $service,
-				'queue_type'	=> $type,
-			]);
-			return;
-		}
-
-		//TODO: CONVERT THIS OVER TO NEW DYANMIC COLUMN FORMAT
-		$db->insert('pudl_queue', [
-				'queue_user'	=> $user['user_id'],
-				'queue_service'	=> $service,
-				'queue_type'	=> $type,
-				'queue_time'	=> $this->time(),
-				'queue_message'	=> json_encode($data),
-			], [
-				'queue_time'	=> $this->time(),
-				'queue_message'	=> json_encode($data),
-				'queue_count'	=> pudl::_increment(1),
-			]
-		);
-	}
-
-
-
-
 	public function path() {
 		return self::$_path;
 	}

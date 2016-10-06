@@ -170,6 +170,40 @@ class afuser extends af_object_array implements afuser_interface, af_url {
 
 
 	////////////////////////////////////////////////////////////////////////////
+	//ADD OR DELETE AN ITEM FROM THE USER'S MESSAGE QUEUE
+	////////////////////////////////////////////////////////////////////////////
+	function queue($service, $type, $data=false) {
+		global $db;
+
+		if ($data === false) {
+			$db->delete('pudl_queue', [
+				'queue_user'	=> $this->user_id,
+				'queue_service'	=> $service,
+				'queue_type'	=> $type,
+			]);
+			return;
+		}
+
+		if (!is_array($data)) $data = [$data];
+
+		$db->insert('pudl_queue', [
+				'queue_user'	=> $this->user_id,
+				'queue_service'	=> $service,
+				'queue_type'	=> $type,
+				'queue_time'	=> $this->time(),
+				'queue_message'	=> $data,
+			], [
+				'queue_time'	=> $this->time(),
+				'queue_message'	=> $data,
+				'queue_count'	=> pudl::_increment(1),
+			]
+		);
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
 	//CREATE NEW USER ACCOUNT WITH GIVEN DATA
 	////////////////////////////////////////////////////////////////////////////
 	public static function create($data) {
