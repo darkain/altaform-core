@@ -184,7 +184,7 @@ class afuser extends af_object_array implements afuser_interface, af_url {
 			return;
 		}
 
-		if (!is_array($data)) $data = [$data];
+		if (!tbx_array($data)) $data = [$data];
 
 		$db->insert('pudl_queue', [
 				'queue_user'	=> $this->user_id,
