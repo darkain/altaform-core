@@ -17,10 +17,11 @@ class afurl {
 		global $get;
 
 		$host = explode(':', $get->server('HTTP_HOST', ''));
+		if (empty($host[0])) $host = explode(':', $get->server('SERVER_ADDR', ''));
 
 		$this->directory	= getcwd();
 		$this->uri			= urldecode($get->server('REQUEST_URI', ''));
-		$this->domain		= count($host) === 2 ? reset($host) : $get->server('HTTP_HOST', '');
+		$this->domain		= reset($host);
 		$this->referer		= $get->server('HTTP_REFERER', '');
 		$this->https		= strtolower($get->server('HTTPS'));
 		$this->https		= $this->https !== 'off'  &&  !empty($this->https);
