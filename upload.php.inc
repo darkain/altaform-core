@@ -349,7 +349,7 @@ class fileImporter {
 	public static function write($hash, $blob) {
 		global $af, $afurl;
 		$path = $af->path() . 'files/' . $afurl->cdnPath($hash);
-		@mkdir( substr($path, 0, -32), 0777, true );
+		af_fs::mkdir(substr($path, 0, -32));
 		return @file_put_contents($path, $blob);
 	}
 

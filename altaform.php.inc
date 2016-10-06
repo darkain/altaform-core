@@ -1,5 +1,8 @@
 <?php
 
+//FILE SYSTEM RELATED FUNCTIONS
+require_once('af_fs.php.inc');
+
 //IP ADDRESS RELATED FUNCTIONS
 require_once('af_ip.php.inc');
 
