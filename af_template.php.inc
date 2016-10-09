@@ -26,8 +26,8 @@ trait af_template {
 	////////////////////////////////////////////////////////////////////////////
 	//EMBED INLINE JAVASCRIPT IN HTML HEADER
 	////////////////////////////////////////////////////////////////////////////
-	public function javascript($script) {
-		$this->_js[] = $script;
+	public function javascript($script, $merge=false) {
+		$this->_js[] = [$script, $merge];
 		return $this;
 	}
 
@@ -37,12 +37,12 @@ trait af_template {
 	////////////////////////////////////////////////////////////////////////////
 	//EMBED INLINE JAVASCRIPT IN HTML HEADER FROM FILE
 	////////////////////////////////////////////////////////////////////////////
-	public function js($file) {
+	public function js($file, $merge=false) {
 		$data = @file_get_contents($file, true);
 		if ($data === false) {
 			throw new afException('Unable to load JS file: '.$file);
 		}
-		$this->_js[] = $data;
+		$this->_js[] = [$data, $merge];
 		return $this;
 	}
 
@@ -63,8 +63,8 @@ trait af_template {
 	////////////////////////////////////////////////////////////////////////////
 	//EMBED INLINE CASCADING STYLE SHEET IN HTML HEADER
 	////////////////////////////////////////////////////////////////////////////
-	public function sheet($styles) {
-		$this->_css[] = $styles;
+	public function sheet($styles, $merge=false) {
+		$this->_css[] = [$styles, $merge];
 		return $this;
 	}
 
@@ -74,12 +74,12 @@ trait af_template {
 	////////////////////////////////////////////////////////////////////////////
 	//EMBED INLINE CASCADING STYLE SHEET IN HTML HEADER FROM FILE
 	////////////////////////////////////////////////////////////////////////////
-	public function css($file) {
+	public function css($file, $merge=false) {
 		$data = @file_get_contents($file, true);
 		if ($data === false) {
 			throw new afException('Unable to load CSS file: '.$file);
 		}
-		$this->_css[] = $data;
+		$this->_css[] = [$data, $merge];
 		return $this;
 	}
 
@@ -129,20 +129,15 @@ trait af_template {
 	////////////////////////////////////////////////////////////////////////////
 	public function header($key=false, $data=false, $replace=false) {
 		if ($key === false) {
-			if ($this->jq()) {
-				if (!empty($this->_js)) {
-					echo '<script>'	. implode("\n", $this->_js)	. "</script>\n";
-				}
-				if (!empty($this->_css)) {
-					echo '<style>'	. implode("\n", $this->_css). "</style>\n";
-				}
-				return $this;
-			}
-			return $this->headerHTML()->headerPage();
-		}
+			if (!$this->jq()) return $this->headerHTML()->headerPage();
 
-		if ($replace  ||  empty($this->_headers[$key])) {
+			list($js, $css) = $this->prerender();
+			if ($js  !== '') echo '<script>' . $js . '</script>';
+			if ($css !== '') echo '<style>' . $css . '</style>';
+
+		} else if ($replace  ||  empty($this->_headers[$key])) {
 			$this->_headers[$key]	= [$data];
+
 		} else {
 			$this->_headers[$key][]	= $data;
 		}
@@ -209,6 +204,11 @@ trait af_template {
 		$device	= afdevice::device();
 		$root	= $this->path() . $site['root'];
 
+
+		//NOTE: PRERENDER MUST COME BEFORE LOAD, SINCE IT LOADS/RENDERS TOO
+		list ($js, $css) = $this->prerender();
+
+
 		if ($this->debug()  &&  file_exists($root.'/header_html_debug.tpl.'.$device)) {
 			$this->load($root.'/header_html_debug.tpl.'.$device);
 		} else if ($this->debug()  &&  file_exists($root.'/header_html_debug.tpl')) {
@@ -218,9 +218,9 @@ trait af_template {
 		}
 
 		return $this
-			->field('js',		implode("\n",	$this->_js))
-			->field('css',		implode("\n",	$this->_css))
-			->field('robots',	implode(', ',	$this->_robots))
+			->field('js',		$js)
+			->field('css',		$css)
+			->field('robots',	implode(', ', $this->_robots))
 			->block('script',	$this->_script)
 			->block('style',	$this->_style)
 			->block('meta',		$this->_meta)
@@ -461,6 +461,32 @@ trait af_template {
 	public function resetStage() {
 		$this->_stage = AF_STAGE_NONE;
 		return $this;
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	//PRE-RENDER JAVASCRIPT AND CSS FOR HTML HEADER
+	////////////////////////////////////////////////////////////////////////////
+	protected function prerender() {
+		$return = ['', ''];
+
+		//PRE-RENDER JAVASCRIPT
+		foreach ($this->_js as $item) {
+			$return[0] .= $this	->loadString($item[0])
+								->merge($item[1])
+								->renderToString();
+		}
+
+		//PRE-RENDER CASCADING STYLE SHEETS
+		foreach ($this->_css as $item) {
+			$return[1] .= $this	->loadString($item[0])
+								->merge($item[1])
+								->renderToString();
+		}
+
+		return $return;
 	}
 
 
