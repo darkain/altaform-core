@@ -152,5 +152,5 @@ class altaform extends tbx {
 	protected static	$_path		= '';
 	public static		$types		= [];
 	public static		$class		= 'altaform';
-	public static		$version	= 'Altaform 2.5.0';
+	public static		$version	= 'Altaform-Core 2.5.0';
 }
