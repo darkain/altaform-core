@@ -1,0 +1,1 @@
+<?php $af->noindex()->nofollow();
