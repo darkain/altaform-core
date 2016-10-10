@@ -210,6 +210,8 @@ class afurl {
 
 			if (is_dir($this->part[$i])) {
 				$this->chdir( $this->part[$i] );
+				if ($this->reparse) return true;
+
 				if ($count-$i == 1) {
 					if (is_file('_index.php'))	return '_index.php';
 					if (is_file('_index.hh'))	return $this->hhvm('_index.hh');
@@ -228,7 +230,10 @@ class afurl {
 				if (is_file('_virtual.php'))	return $this->virtualize($i, '_virtual.php');
 				if (is_file('_virtual.hh'))		return $this->virtualize($i, $this->hhvm('_virtual.hh'));
 				if (!is_dir('_virtual'))		error404();
+
 				$this->chdir( $this->virtualize($i, '_virtual') );
+				if ($this->reparse) return true;
+
 				if ($count-$i == 1) {
 					if (is_file('_index.php'))	return '_index.php';
 					if (is_file('_index.hh'))	return $this->hhvm('_index.hh');
@@ -241,6 +246,7 @@ class afurl {
 
 			if (is_dir('_virtual')) {
 				$this->chdir( $this->virtualize($i, '_virtual') );
+				if ($this->reparse) return true;
 				continue;
 			}
 
