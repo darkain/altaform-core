@@ -5,7 +5,7 @@ class afgeo {
 	static $_geoloc = [];
 
 
-	static function geolocate($location) {
+	public static function geolocate($location) {
 		global $db;
 
 		if (empty($location)) return false;
@@ -23,7 +23,7 @@ class afgeo {
 
 
 
-	static function geoip($ipaddress=false) {
+	public static function geoip($ipaddress=false) {
 		if ($ipaddress === false) $ipaddress = self::ipaddress();
 		if ($ipaddress === false) return false;
 
@@ -40,13 +40,13 @@ class afgeo {
 
 
 
-	static function ipaddress() {
+	public static function ipaddress() {
 		return af_ip::address();
 	}
 
 
 
-	static function centerMap() {
+	public static function centerMap() {
 		global $user, $get;
 
 		//Specific map center requested by URL
