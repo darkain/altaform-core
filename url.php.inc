@@ -183,6 +183,12 @@ class afurl {
 
 
 
+	public function finalize() {
+		return ($this->reparse = NULL);
+	}
+
+
+
 	public function process() {
 		global $af, $site;
 
@@ -210,7 +216,7 @@ class afurl {
 
 			if (is_dir($this->part[$i])) {
 				$this->chdir( $this->part[$i] );
-				if ($this->reparse) return true;
+				if ($this->reparse  ||  $this->reparse === NULL) return true;
 
 				if ($count-$i == 1) {
 					if (is_file('_index.php'))	return '_index.php';
@@ -232,7 +238,7 @@ class afurl {
 				if (!is_dir('_virtual'))		error404();
 
 				$this->chdir( $this->virtualize($i, '_virtual') );
-				if ($this->reparse) return true;
+				if ($this->reparse  ||  $this->reparse === NULL) return true;
 
 				if ($count-$i == 1) {
 					if (is_file('_index.php'))	return '_index.php';
@@ -246,7 +252,7 @@ class afurl {
 
 			if (is_dir('_virtual')) {
 				$this->chdir( $this->virtualize($i, '_virtual') );
-				if ($this->reparse) return true;
+				if ($this->reparse  ||  $this->reparse === NULL) return true;
 				continue;
 			}
 
