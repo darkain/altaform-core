@@ -444,7 +444,7 @@ class afurl {
 
 		$__keys = array_keys($GLOBALS);
 		extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
-		require_once('_altaform.php.inc');
+		require('_altaform.php.inc');
 
 		$list = get_defined_vars();
 
