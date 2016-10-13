@@ -122,6 +122,13 @@ abstract class	db_object
 	////////////////////////////////////////////////////////////////////////////
 	public function update($data) {
 		global $db;
+
+		if (tbs_array($data)) {
+			foreach ($data as $key => $item) {
+				$this->{$key} = $item;
+			}
+		}
+
 		return $db->updateId($this->_table, $data, $this);
 	}
 
