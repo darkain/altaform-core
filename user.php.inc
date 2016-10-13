@@ -8,10 +8,10 @@ require_once('af_preference.php.inc');
 //TODO:	ADD A TRAIT FOR 'ATTRIBUTES'
 //		CURRENTLY ONLY ATTRIBUTE IS UNVERIFIED PASSWORD
 
-if (interface_exists('pudlId')) {
-	interface afuser_interface extends pudlId {}
-} else {
+if (!interface_exists('pudlId')) {
 	interface afuser_interface {}
+} else {
+	interface afuser_interface extends pudlId {}
 }
 
 
