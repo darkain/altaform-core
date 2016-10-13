@@ -2,63 +2,28 @@
 
 
 require_once('af_node.php.inc');
-require_once('af_object_array.php.inc');
 require_once('af_permission.php.inc');
 require_once('af_preference.php.inc');
+require_once('db_object.php.inc');
 
 //TODO:	ADD A TRAIT FOR 'ATTRIBUTES'
 //		CURRENTLY ONLY ATTRIBUTE IS UNVERIFIED PASSWORD
 
-if (!interface_exists('pudlId')) {
-	interface afuser_interface {}
-} else {
-	interface afuser_interface extends pudlId {}
-}
-
-
 
 
 class			afuser
-	extends		af_object_array
-	implements	afuser_interface,	af_url {
-	use			af_permission,		af_node,	af_preference;
+	extends		db_object
+	implements	af_url {
+	use			af_node,	af_permission,		af_preference;
 
 
 
 
+	////////////////////////////////////////////////////////////////////////////
+	//PASS THE TABLE, COLUMN, AND ITEM INFO TO DB_OBJECT CONSTRUCTOR
+	////////////////////////////////////////////////////////////////////////////
 	public function __construct($item=false, $fetch=false) {
-		if (is_array($item)) {
-			$fetch ? $this->fetch($item)		: $this->_replace($item);
-
-		} else if (is_a($item, 'pudlResult')) {
-			$fetch ? $this->fetch($item())		: $this->_clone($item());
-
-		} else if (is_a($item, 'afurl')) {
-			$fetch ? $this->fetch($item->id)	: $this->_clone(['user_id'=>$item->id]);
-
-		} else if (is_a($item, 'Traversable')) {
-			$fetch ? $this->fetch($item)		: $this->_clone($item);
-
-		} else if ($fetch  &&  (is_int($item)  ||  ctype_digit($item))) {
-			$this->fetch($item);
-
-		} else if (!empty($item)) {
-			$this->user_id = $item;
-		}
-
-
-		//SET DEFAULT USER ID AND FORCE INTEGER
-		$this->user_id = (empty($this->user_id)) ? 0 : (int) $this->user_id;
-	}
-
-
-
-
-	////////////////////////////////////////////////////////////////////////////
-	//IF CONVERTING CLASS TO STRING, RETURNS THE CURRENT USER ID NUMBER
-	////////////////////////////////////////////////////////////////////////////
-	public function __toString() {
-		return (string) $this->user_id;
+		parent::__construct('pudl_user', 'user_id', $item, $fetch);
 	}
 
 
@@ -68,9 +33,9 @@ class			afuser
 	//UPDATE THE USER TABLE IN THE DATABASE
 	////////////////////////////////////////////////////////////////////////////
 	public function update($data) {
-		global $af, $db;
+		global $af;
 		if (!$this->loggedIn()) return false;
-		$return = $db->updateId('pudl_user', $data, 'user_id', $this);
+		$return = parent::update($data);
 		$af->purgeSession(false, $this);
 		return $return;
 	}
@@ -84,7 +49,7 @@ class			afuser
 	public function profile($data) {
 		global $db;
 		if (!$this->loggedIn()) return false;
-		return $db->updateId('pudl_user_profile', $data, 'user_id', $this);
+		return $db->updateId('pudl_user_profile', $data, $this);
 	}
 
 
@@ -112,45 +77,11 @@ class			afuser
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//COMPARE ITEM TO SEE IF IT IS THE CURRENT USER
-	////////////////////////////////////////////////////////////////////////////
-	public function is($item) {
-		if (empty($item))		return false;
-		if (is_array($item))	$item = $item['user_id'];
-		if (is_object($item))	$item = $item->user_id;
-		$item = (int) $item;
-		if ($item === 0)		return false;
-		return $this->user_id === $item;
-	}
-
-
-
-
-	////////////////////////////////////////////////////////////////////////////
-	//PUDL INTEGRATION
-	////////////////////////////////////////////////////////////////////////////
-	public function pudlId() {
-		return ['user_id' => $this->user_id];
-	}
-
-
-
-
-	////////////////////////////////////////////////////////////////////////////
 	//GET THE URL OF THE CURRENT USER
 	////////////////////////////////////////////////////////////////////////////
 	public function url() {
 		return empty($this->user_url) ? $this->user_id : $this->user_url;
 	}
-
-
-
-
-	////////////////////////////////////////////////////////////////////////////
-	//SHORTCUT FUNCTIONS FOR ERROR CHECKING
-	////////////////////////////////////////////////////////////////////////////
-	public function assert401() { assert401($this->user_id); return $this; }
-	public function assert404() { assert404($this->user_id); return $this; }
 
 
 
@@ -205,29 +136,31 @@ class			afuser
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//CREATE NEW USER ACCOUNT WITH GIVEN DATA
+	//HOW LONG SHOULD THE FETCHED DATA BE CACHED FOR (IN SECONDS)
 	////////////////////////////////////////////////////////////////////////////
-	public static function create($data) {
+	protected function _fetchCache() { return AF_HOUR; }
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	//CREATE NEW USER ACCOUNT WITH THE GIVEN DATA
+	////////////////////////////////////////////////////////////////////////////
+	public static function create($data=false) {
 		global $db;
-		return new afuser($db->insert('pudl_user', $data), true);
+		return self::get($db->insert('pudl_user', $data));
 	}
 
 
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//FETCH DATA FROM DATABASE
+	//GET A USER ACCOUNT FROM DATABASE FOR A GIVEN ID NUMBER
 	////////////////////////////////////////////////////////////////////////////
-	protected function fetch($id) {
-		global $db;
-
-		if (is_array($id))	$id = $id['user_id'];
-		if (is_object($id))	$id = $id->user_id;
-
-		$this->_clone(
-			$db->cache(AF_HOUR)->rowId('pudl_user', 'user_id', (int)$id)
-		);
+	public static function get($id) {
+		return new afuser($id, true);
 	}
+
 }
 
 
