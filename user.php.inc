@@ -190,10 +190,10 @@ class afuser extends af_object_array implements afuser_interface, af_url {
 				'queue_user'	=> $this->user_id,
 				'queue_service'	=> $service,
 				'queue_type'	=> $type,
-				'queue_time'	=> $this->time(),
+				'queue_time'	=> $db->time(),
 				'queue_message'	=> $data,
 			], [
-				'queue_time'	=> $this->time(),
+				'queue_time'	=> $db->time(),
 				'queue_message'	=> $data,
 				'queue_count'	=> pudl::_increment(1),
 			]
