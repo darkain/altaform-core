@@ -128,8 +128,7 @@ class afuser extends af_object_array implements afuser_interface, af_url {
 	//PUDL INTEGRATION
 	////////////////////////////////////////////////////////////////////////////
 	public function pudlId() {
-		if ($column === true) return ['user_id' => $this->user_id];
-		return $this->user_id;
+		return ['user_id' => $this->user_id];
 	}
 
 
