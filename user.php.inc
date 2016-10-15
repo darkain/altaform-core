@@ -91,7 +91,10 @@ class			afuser
 	////////////////////////////////////////////////////////////////////////////
 	public function setPassword($account, $password) {
 		global $db;
-		$db->insert('pudl_user_auth', [
+
+		$this->auth_account = $account;
+
+		return $db->insert('pudl_user_auth', [
 			'user_id'		=> $this->user_id,
 			'auth_account'	=> $account,
 			'auth_password'	=> password_hash($password, PASSWORD_DEFAULT),
