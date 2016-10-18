@@ -37,6 +37,11 @@ if (!defined('PHP_VERSION_ID')) {
 
 
 
+//PUDL Interfaces
+require_once('_pudl/pudlInterfaces.php');
+
+
+
 //Getvar Library (GET/POST variables)
 require_once('_getvar/getvar.php.inc');
 $get = new getvar;
