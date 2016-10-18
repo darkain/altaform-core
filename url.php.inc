@@ -62,12 +62,8 @@ class afurl {
 			if (!strlen($val)) continue;
 
 			assert500(
-				!in_array($val[0], ['.', '_', ' ', '?', '&', '#', '!', '@', '|',
-									',', ':', ';', '/', '$', '%', '^', '(', ')',
-									'-', '=', '+', '{', '}', '[', ']', '*', '"',
-									"'", '<', '>', '`', '~', ' ',
-									"\t", "\r", "\n", "\0", "\\"]),
-				'Invalid character in URL path'
+				!in_array($val[0], ['.', '+', '-', '_', ' ', "\t", "\n", "\r", "\0", "\x0B", "\\"]),
+				'Invalid character in URL path: 0x' . ord($val[0])
 			);
 
 			$this->url .= '/' . urlencode($val);
@@ -214,21 +210,30 @@ class afurl {
 
 		for ($i=1; $i<$count; $i++) {
 
+			//FORCE VIRTUAL PATHING IF SPECIAL CHARACTERS ARE FOUND
+			//SPECIAL CHARACTER ALLOWED: [SPACE] ! + - . _ (ALL OTHERS FORCE VITUAL PATHING)
+			if (preg_match('/[^\x21\x2B\x2D\x2E\x5F 0-9a-zA-Z]/', $this->part[$i])) {
+				if (is_dir('_virtual')) {
+					$this->chdir( $this->virtualize($i, '_virtual') );
+					if ($this->reparse  ||  $this->reparse === NULL) return true;
+					if ($count-$i === 1) return $this->index();
+				}
+
+				if (is_file('_virtual.php'))	return $this->virtualize($i, '_virtual.php');
+				if (is_file('_virtual.hh'))		return $this->virtualize($i, $this->hhvm('_virtual.hh'));
+				error404();
+			}
+
+
 			if (is_dir($this->part[$i])) {
 				$this->chdir( $this->part[$i] );
 				if ($this->reparse  ||  $this->reparse === NULL) return true;
-
-				if ($count-$i == 1) {
-					if (is_file('_index.php'))	return '_index.php';
-					if (is_file('_index.hh'))	return $this->hhvm('_index.hh');
-					if (is_file('_index.tpl'))	return $af->renderPage('_index.tpl');
-					error404();
-				}
+				if ($count-$i === 1) return $this->index();
 				continue;
 			}
 
 
-			if ($count-$i == 1) {
+			if ($count-$i === 1) {
 				$file = $this->part[$i];
 				if (is_file("$file.php"))		return "$file.php";
 				if (is_file("$file.hh"))		return $this->hhvm("$file.hh");
@@ -240,13 +245,7 @@ class afurl {
 				$this->chdir( $this->virtualize($i, '_virtual') );
 				if ($this->reparse  ||  $this->reparse === NULL) return true;
 
-				if ($count-$i == 1) {
-					if (is_file('_index.php'))	return '_index.php';
-					if (is_file('_index.hh'))	return $this->hhvm('_index.hh');
-					if (is_file('_index.tpl'))	return $af->renderPage('_index.tpl');
-					error404();
-				}
-				continue;
+				return $this->index();
 			}
 
 
@@ -459,6 +458,17 @@ class afurl {
 		foreach ($__keys as $key) unset($list[$key]);
 
 		foreach ($list as $key => $val) $GLOBALS[$key] = $val;
+	}
+
+
+
+	//Process index file, if available
+	private function index() {
+		global $af;
+		if (is_file('_index.php'))	return '_index.php';
+		if (is_file('_index.hh'))	return $this->hhvm('_index.hh');
+		if (is_file('_index.tpl'))	return $af->renderPage('_index.tpl');
+		error404();
 	}
 
 
