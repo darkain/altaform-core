@@ -28,14 +28,14 @@ abstract class	db_object
 		if (is_array($item)) {
 			$fetch ? $this->fetch($item)		: $this->_replace($item);
 
-		} else if (is_a($item, 'pudlResult')) {
-			$fetch ? $this->fetch($item())		: $this->_clone($item());
-
 		} else if (is_a($item, 'afurl')) {
-			$fetch ? $this->fetch($item->id)	: $this->_clone([$column=>$item->id]);
+			$this->fetch($item->id);
 
 		} else if (is_a($item, 'getvar')) {
-			$fetch ? $this->fetch($item->id())	: $this->_clone([$column=>$item->id()]);
+			$this->fetch($item->id());
+
+		} else if (is_a($item, 'pudlResult')) {
+			$fetch ? $this->fetch($item())		: $this->_clone($item());
 
 		} else if (is_a($item, 'Traversable')) {
 			$fetch ? $this->fetch($item)		: $this->_clone($item);
