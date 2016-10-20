@@ -122,7 +122,7 @@ $afurl->_all();
 
 //Disable implicit debugging
 if (is_object($afconfig->debug)) {
-	$afconfig->debug = true;
+	$afconfig->debug = false;
 }
 
 
