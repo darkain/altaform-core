@@ -196,13 +196,11 @@ trait af_template {
 	//RENDER HTML HEADER
 	////////////////////////////////////////////////////////////////////////////
 	public function headerHTML() {
-		global $site;
-
 		if ($this->_stage !== AF_STAGE_NONE) return $this;
 		$this->_stage = AF_STAGE_HEADER;
 
 		$device	= afdevice::device();
-		$root	= $this->path() . $site['root'];
+		$root	= $this->path() . $this->config->root;
 
 
 		//NOTE: PRERENDER MUST COME BEFORE LOAD, SINCE IT LOADS/RENDERS TOO
@@ -234,12 +232,10 @@ trait af_template {
 	//RENDER PAGE HEADER
 	////////////////////////////////////////////////////////////////////////////
 	public function headerPage() {
-		global $site;
-
 		if ($this->_stage !== AF_STAGE_HEADER) return $this;
 
 		$device	= afdevice::device();
-		$root	= $this->path() . $site['root'];
+		$root	= $this->path() . $this->config->root;
 
 		if ($this->debug()  &&  file_exists($root.'/header_page_debug.tpl.'.$device)) {
 			$this->load($root.'/header_page_debug.tpl.'.$device);
@@ -263,9 +259,7 @@ trait af_template {
 	//RENDER PAGE HEADER
 	////////////////////////////////////////////////////////////////////////////
 	public function headerEmail() {
-		global $site;
-
-		$root	= $this->path() . $site['root'];
+		$root	= $this->path() . $this->config->root;
 
 		if ($this->debug()  &&  file_exists($root.'/header_email_debug.tpl')) {
 			$this->load($root.'/header_email_debug.tpl');
@@ -283,12 +277,10 @@ trait af_template {
 	//RENDER HTML FOOTER
 	////////////////////////////////////////////////////////////////////////////
 	public function footerHTML() {
-		global $site;
-
 		if ($this->_stage !== AF_STAGE_FOOTER) return $this;
 
 		$device	= afdevice::device();
-		$root	= $this->path() . $site['root'];
+		$root	= $this->path() . $this->config->root;
 		$ok		= false;
 
 		if ($this->debug()) {
@@ -313,13 +305,13 @@ trait af_template {
 	//RENDER PAGE FOOTER
 	////////////////////////////////////////////////////////////////////////////
 	public function footerPage() {
-		global $site, $db, $user;
+		global $db, $user;
 
 		if ($this->_stage !== AF_STAGE_BODY) return $this;
 		$this->_stage = AF_STAGE_FOOTER;
 
 		$device	= afdevice::device();
-		$root	= $this->path() . $site['root'];
+		$root	= $this->path() . $this->config->root;
 
 		if ($this->debug()  &&  file_exists($root.'/footer_page_debug.tpl.'.$device)) {
 			$this->load($root.'/footer_page_debug.tpl.'.$device);
@@ -352,9 +344,7 @@ trait af_template {
 	//RENDER HTML FOOTER
 	////////////////////////////////////////////////////////////////////////////
 	public function footerEmail() {
-		global $site;
-
-		$root	= $this->path() . $site['root'];
+		$root	= $this->path() . $this->config->root;
 
 		if ($this->debug()  &&  file_exists($root.'/footer_email_debug.tpl')) {
 			$this->load($root.'/footer_email_debug.tpl');

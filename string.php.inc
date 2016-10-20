@@ -138,28 +138,24 @@ class afstring {
 
 
 	public static function encrypt($data, $secret=false) {
-		global $site;
-		if (empty($secret)) $secret = $site['af_secret'];
+		global $af;
+		if (empty($secret)) $secret = $af->config->afkey();
 		$key	= pack('H*', $secret);
 		$size	= mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
 		$iv		= mcrypt_create_iv($size, MCRYPT_RAND);
 		$cipher	= mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $key, $data, MCRYPT_MODE_CBC, $iv);
 		$encode = base64_encode($iv . $cipher);
-		$encode = str_replace('+', '-', $encode);
-		$encode = str_replace('/', '_', $encode);
-		$encode = str_replace('=', '~', $encode);
+		$encode = str_replace(['+', '/', '='], ['-', '_', '~'], $encode);
 		return $encode;
 	}
 
 
 	public static function decrypt($data, $secret=false) {
-		global $site;
+		global $af;
 		if (empty($data)) return false;
-		if (empty($secret)) $secret = $site['af_secret'];
+		if (empty($secret)) $secret = $af->config->afkey();
 		$key	= pack('H*', $secret);
-		$data	= str_replace('-', '+', $data);
-		$data	= str_replace('_', '/', $data);
-		$data	= str_replace('~', '=', $data);
+		$data	= str_replace(['-', '_', '~'], ['+', '/', '='], $data);
 		$data	= @base64_decode($data, true);
 		if (empty($data)) return false;
 		$size	= mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);

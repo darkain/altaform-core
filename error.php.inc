@@ -1,13 +1,7 @@
 <?php
 
-ini_set('display_errors', 'off');
-
-if (!empty($site['debug'])) error_reporting(E_ALL);
-
-
 
 class afException extends Exception {}
-
 
 
 
@@ -15,7 +9,7 @@ class aferror {
 
 
 	public static function render($header, $text, $log=false, $template=false) {
-		global $db, $af, $site, $title;
+		global $db, $af, $title;
 
 		if (!headers_sent()) header($header);
 
@@ -23,19 +17,19 @@ class aferror {
 
 		$data = $log ? self::log($text, false) : self::process($text);
 
-		if (!empty($template)  &&  $af instanceof altaform  &&  !empty($site['root'])) {
-			if (is_file($af->path().$site['root'].'/'.$template)) {
+		if (!empty($template)  &&  $af instanceof altaform  &&  !empty($afconfig->root)) {
+			if (is_file($af->path().$afconfig->root.'/'.$template)) {
 				$ok = self::renderFile(
-					$af->path().$site['root'].'/'.$template,
+					$af->path().$afconfig->root.'/'.$template,
 					$header, $text, $data
 				);
 			}
 		}
 
-		if (empty($ok)  &&  $af instanceof altaform  &&  !empty($site['root'])) {
-			if (is_file($af->path().$site['root'].'/error.tpl')) {
+		if (empty($ok)  &&  $af instanceof altaform  &&  !empty($afconfig->root)) {
+			if (is_file($af->path().$afconfig->root.'/error.tpl')) {
 				$ok = self::renderFile(
-					$af->path().$site['root'].'/error.tpl',
+					$af->path().$afconfig->root.'/error.tpl',
 					$header, $text, $data
 				);
 			}
@@ -116,7 +110,7 @@ class aferror {
 
 
 	public static function log($data, $die=true, $backtrace=[]) {
-		global $site, $af, $db, $user;
+		global $af, $db, $user, $afconfig;
 
 		//ONLY LOG ERROR ONCE!
 		static $echo = false;
@@ -126,7 +120,7 @@ class aferror {
 		if (empty($backtrace)) $backtrace = debug_backtrace(0);
 
 		if (!($user instanceof afuser)  ||  $user->isAdmin()) {
-			$site['debug'] = true;
+			$afconfig->debug = true;
 		}
 
 		$error = (ob_get_level()  &&  $die) ? htmlspecialchars(ob_get_clean()) : '';
@@ -152,7 +146,7 @@ class aferror {
 		if (!$die) return $arr;
 
 
-		if (empty($site['debug'])) return error500('', true, $arr);
+		if (empty($afconfig->debug)) return error500('', true, $arr);
 
 
 		$html = '<table class="af-debug-backtrace">';
@@ -191,11 +185,11 @@ class aferror {
 
 
 	public static function email($text, $title='') {
-		global $site;
+		global $afconfig;
 
-		if (empty($site['error_email'])) return;
+		if (empty($afconfig->error['email'])) return;
 
-		$tag = !empty($site['error_tag']) ? $site['error_tag'] : '';
+		$tag = !empty($afconfig->error['tag']) ? $afconfig->error['tag'] : '';
 		if (tbx_array($tag)) {
 			$tag = '@'.implode("\r\n@", $tag);
 		} else if (!empty($tag)) {
@@ -204,7 +198,7 @@ class aferror {
 		$tag = str_replace('@@', '@', trim($tag));
 
 		@mail(
-			$site['error_email'],
+			$afconfig->error['email'],
 			date('r') . ' ' . strip_tags($title),
 			$tag . "\r\n" . wordwrap($text, 75, "\r\n", true)
 		);
@@ -237,7 +231,7 @@ function error403($text='', $log=false, $details=false) {
 
 
 function error404($text='', $log=false, $details=false) {
-	global $afurl, $get, $site;
+	global $afurl, $get, $afconfig;
 
 	if (!empty($afurl)) {
 		if (empty($afurl->all)) $afurl->all = '';
@@ -247,7 +241,7 @@ function error404($text='', $log=false, $details=false) {
 
 		$text = htmlspecialchars($afurl->all) . '<br/>' . $text;
 
-		if (!empty($site['debug'])) {
+		if (!empty($afconfig->debug)) {
 			$text .= '<br/><pre>' . print_r($afurl,true) . '</pre>';
 		}
 	}
@@ -324,7 +318,7 @@ function assert500($item, $text='', $log=true) {
 
 
 set_error_handler(function($errno, $errstr, $errfile=NULL, $errline=NULL, $errcontext=[], $backtrace=[]) {
-	global $af;
+	global $afconfig;
 
 	if (!error_reporting()) return false;
 
@@ -333,7 +327,9 @@ set_error_handler(function($errno, $errstr, $errfile=NULL, $errline=NULL, $errco
 	switch ($errno) {
 		case E_WARNING:		case E_USER_WARNING:
 		case E_NOTICE:		case E_USER_NOTICE:
-			$die = ($af instanceof altaform) ? $af->debug() : false;
+			$die = ($afconfig instanceof af_config)
+				? !!$afconfig->debug
+				: false;
 	}
 
 	aferror::log([

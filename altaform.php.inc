@@ -1,5 +1,8 @@
 <?php
 
+//ALTAFORM CONFIGURATION
+require_once('af_config.php.inc');
+
 //FILE SYSTEM RELATED FUNCTIONS
 require_once('af_fs.php.inc');
 
@@ -40,19 +43,31 @@ class altaform extends tbx {
 
 
 	public function __construct($dbsession=false) {
+		global $afconfig;
+
 		parent::__construct();
 
+		$afconfig->af		= $this;
+		$this->config		= $afconfig;
 		$this->_session		= $dbsession;
+		$this->hhvm			= defined('HHVM_VERSION') ? 'HHVM' : 'PHP';
+
+		//TODO: THESE PROBABLY SHOULD NO LONGER BE STATIC!!
 		self::$_time		= time();
 		self::$_path		= getcwd();
+
 		if (substr(self::$_path, -1) !== '/') self::$_path .= '/';
+
+		//REPORT *ALL* ERRORS, WARNINGS, NOTICES ON DEVELOPMENT SERVERS
+		if ($this->debug()) error_reporting(E_ALL);
 	}
 
 
 
 
 	public static function create() {
-		return (new ReflectionClass(self::$class))->newInstanceArgs(func_get_args());
+		return (new ReflectionClass(self::$class))
+				->newInstanceArgs(func_get_args());
 	}
 
 
@@ -87,8 +102,11 @@ class altaform extends tbx {
 
 
 	public function json($data) {
-		if (!headers_sent()) header('Content-Type: application/json');
-		echo ($data instanceof pudlResult) ? $data->json() : json_encode($data);
+		$this->contentType('json');
+
+		echo ($data instanceof pudlResult)
+				? $data->json()
+				: json_encode($data);
 	}
 
 
@@ -106,6 +124,31 @@ class altaform extends tbx {
 			rand(),
 			microtime(true)
 		]) . $suffix;
+	}
+
+
+
+
+	public function contentType($extension) {
+		global $db;
+
+		if (headers_sent()) return $this;
+
+		$list	= explode('.', $extension);
+		$ext	= end($list);
+
+		$type = $db->cellId(
+			'pudl_mimetype',
+			'mime_type',
+			'mime_ext',
+			$ext
+		);
+
+		header('Content-Type: ' . (
+			$type!==false ? $type : ('application/'.$ext)
+		));
+
+		return $this;
 	}
 
 
@@ -140,14 +183,14 @@ class altaform extends tbx {
 
 
 	public function debug() {
-		global $site;
-		return (!empty($site['debug']));
+		return !empty($this->config->debug);
 	}
 
 
 
 
 	private				$_prefs		= [];
+	public				$config		= NULL;
 	protected static	$_time		= 0;
 	protected static	$_path		= '';
 	public static		$types		= [];

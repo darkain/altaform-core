@@ -186,7 +186,7 @@ class afurl {
 
 
 	public function process() {
-		global $af, $site;
+		global $af;
 
 		//Recursion limit
 		static $recurse = 0;
@@ -195,16 +195,27 @@ class afurl {
 		//Reset virtual pathing, in case this is a reprocess
 		$this->virtual = [];
 
-		//load our home page!!
-		if (count($this->part) < 3) {
+		//Number of items in URL path
+		$count = count($this->part) - 1;
+
+		//Load our home page!!
+		if ($count < 2) {
 			return $this->reparse($this->homepage);
 		}
 
 
-		$count = count($this->part) - 1;
-
-		if ($count === 2  &&  !empty($site['g_auth'][$this->part[1]])) {
-			return print($site['g_auth'][$this->part[1]] . ' ' . $this->part[1]);
+		//Handle Google Domain Authentication
+		if ($count === 2  &&  substr($this->part[1], 0, 6) === 'google') {
+			if (!empty($af->config->google['auth'])) {
+				$auth = &$af->config->google['auth'];
+				switch (true) {
+					case is_string($auth)  &&  $this->part[1] === $auth:
+					case tbx_array($auth)  &&  in_array($this->part[1], $auth):
+						echo 'google-site-verification: ';
+						echo $this->part[1];
+					return false;
+				}
+			}
 		}
 
 

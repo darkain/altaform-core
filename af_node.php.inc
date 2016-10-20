@@ -3,7 +3,7 @@
 trait af_node {
 
 	function push($message) {
-		global $af, $afurl, $site;
+		global $af, $afurl;
 
 		if (empty($afurl->push)) return;
 
@@ -11,7 +11,7 @@ trait af_node {
 
 		$url = $afurl->push . '?' . http_build_query([
 			'time'		=> $af->time(),
-			'auth'		=> md5($af->time() . $message . $site['af_secret']),
+			'auth'		=> $af->config->auth($message),
 			'user'		=> (int) $this->user_id,
 			'message'	=> $message,
 		]);

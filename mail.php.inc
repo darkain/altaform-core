@@ -3,7 +3,7 @@
 class afmail {
 
 	public static function send($headers, $subject, $body, $attach=false) {
-		global $site, $afurl, $af;
+		global $afurl, $af;
 
 		require_once('_phpmailer/class.phpmailer.php');
 		require_once('_phpmailer/class.smtp.php');
@@ -22,7 +22,7 @@ class afmail {
 			}
 		}
 
-		if (!isset($headers['from']))		$headers['from']		= $site['af_email'];
+		if (!isset($headers['from']))		$headers['from']		= $af->config->af_email;
 		if (!isset($headers['return']))		$headers['return']		= $headers['from'];
 		if (!isset($headers['reply']))		$headers['reply']		= $headers['from'];
 		if (!isset($headers['priority']))	$headers['priority']	= 3;
@@ -69,11 +69,11 @@ class afmail {
 			$mail->Sender = tbx_array($headers['return']) ? reset($headers['return']) : $headers['return'];
 		}
 
-		if (!empty($site['af_smtp'])) {
+		if (!empty($af->config->smtp)) {
 			$mail->IsSMTP();
-			$mail->Host	= $site['af_smtp'];
+			$mail->Host			= $af->config->smtp;
 
-			$mail->SMTPOptions = ['ssl' => [
+			$mail->SMTPOptions	= ['ssl' => [
 				'verify_peer'		=> false,
 				'verify_peer_name'	=> false,
 				'allow_self_signed'	=> true,

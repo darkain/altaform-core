@@ -100,21 +100,43 @@ if (is_file('_config/'.$afurl->domain.'/config.php.inc')) {
 
 
 
+if (is_file($afconfig->root . '/_altaform.php.inc')) {
+	$__cwd = getcwd();
+	chdir($afconfig->root);
+	require('_altaform.php.inc');
+	chdir($__cwd);
+	unset($__cwd);
+}
+
+
+
 //Initialize afurl
 $afurl->_all();
+
+
+
+//Disable implicit debugging
+if (is_object($afconfig->debug)) {
+	$afconfig->debug = true;
+}
+
+
+
+//Disable automatic error display
+ini_set('display_errors', 'off');
 
 
 
 //Upgrade to HTTPS connection (modern)
 if ($get->server('HTTP_UPGRADE_INSECURE_REQUESTS')) {
 	if ($afurl->https) {
-		$afurl->secure(isset($site['secure']) ? $site['secure'] : false);
-	} else if (!empty($site['secure'])) {
+		$afurl->secure($afconfig->secure);
+	} else if (!empty($afconfig->secure)) {
 		$afurl->redirectSecure();
 	}
 
 //Upgrade to HTTPS connection (legacy)
-} else if (!$afurl->https  &&  !empty($site['secure'])) {
+} else if (!$afurl->https  &&  !empty($afconfig->secure)) {
 	$agent		= strtolower($get->server('HTTP_USER_AGENT'));
 
 	$secure_ua	= [	'trident/',		'firefox/',		'applewebkit/',
@@ -129,35 +151,27 @@ if ($get->server('HTTP_UPGRADE_INSECURE_REQUESTS')) {
 
 //HSTS - HTTP Strict Transport Security
 } else if ($afurl->https) {
-	$afurl->secure(isset($site['secure']) ? $site['secure'] : false);
+	$afurl->secure($afconfig->secure);
 }
 
 
 
 //Disable Frames
 if (!headers_sent()) {
-	header(
-		'X-Frame-Options: ' .
-		(empty($site['frames']) ? 'sameorigin' : $site['frames'])
-	);
+	header('X-Frame-Options: ' . $afconfig->frames);
 }
 
 
 
-//Set the time zone and locale
-date_default_timezone_set(
-	empty($site['timezone']) ? 'UTC' : $site['timezone']
-);
-
-setlocale(LC_CTYPE,
-	empty($site['ctype']) ? 'en_US.UTF-8' : $site['ctype']
-);
+//Set the time zone and locale (localization)
+date_default_timezone_set(	$afconfig->timezone);
+setlocale(LC_CTYPE,			$afconfig->locale);
 
 
 
 //HTTP Options / origins
-if (!empty($site['origins'])) {
-	if (in_array($get->server('HTTP_ORIGIN'), $site['origins'])) {
+if (!empty( $get->server('HTTP_ORIGIN') )) {
+	if (in_array($get->server('HTTP_ORIGIN'), $afconfig->origins)) {
 		header('Access-Control-Allow-Origin: '.$get->server('HTTP_ORIGIN'));
 		header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
 		header('Access-Control-Allow-Headers: Content-Type, Cache-Control, X-Requested-With');
@@ -171,27 +185,28 @@ if (!empty($site['origins'])) {
 
 
 //Initialize all the things!
-if (!empty($site['pudl'])  &&  tbx_array($site['pudl'])) {
+if (!empty($afconfig->pudl)  &&  tbx_array($afconfig->pudl)) {
 	require_once('_pudl/pudl.php');
 	require_once('_pudl/pudlSession.php');
 	require_once('user.php.inc');
-	$db = pudl::instance($site['pudl']);
+	$db = pudl::instance($afconfig->pudl);
 
 	$db->on('log',		'_pudl_log');
 	$db->on('debug',	'_pudl_debug');
 	$get->pudl = $db;
 
-	if (!empty($site['pudl']['connected'])) {
-		call_user_func($site['pudl']['connected']);
+	if (!empty($afconfig->pudl['connected'])) {
+		call_user_func($afconfig->pudl['connected']);
 	}
 
-	unset($site['pudl']);
+	//Hide PUDL config from $afconfig
+	$afconfig->pudl = [];
 
 	$db->time(
 		$af = altaform::create(
 			new pudlSession($db, 'pudl_session',
-				isset($site['session_name'])	? $site['session_name']		: false,
-				isset($site['session_domain'])	? $site['session_domain']	: false,
+				$afconfig->session['name'],
+				$afconfig->session['domain'],
 				$afurl->https
 			)
 		)

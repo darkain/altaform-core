@@ -44,12 +44,17 @@ class			afuser
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//UPDATE THE PROFILE TABLE IN THE DATABASE
+	//LOAD OR UPDATE THE PROFILE TABLE IN THE DATABASE
 	////////////////////////////////////////////////////////////////////////////
-	public function profile($data) {
+	public function profile($data=false) {
 		global $db;
 		if (!$this->loggedIn()) return false;
-		return $db->updateId('pudl_user_profile', $data, $this);
+
+		if ($data !== false) {
+			return $db->updateId('pudl_user_profile', $data, $this);
+		}
+
+		$this->_merge($db->rowId('pudl_user_profile', $this));
 	}
 
 

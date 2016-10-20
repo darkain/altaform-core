@@ -19,9 +19,9 @@ class afyoutube {
 
 
 	public static function import($id) {
-		global $db, $site;
+		global $db, $afconfig;
 
-		$path = 'https://www.googleapis.com/youtube/v3/videos?id=' . $id . '&part=snippet,contentDetails&key=' . $site['g_server_key'];
+		$path = 'https://www.googleapis.com/youtube/v3/videos?id=' . $id . '&part=snippet,contentDetails&key=' . $afconfig->google['server_key'];
 		$data = @file_get_contents($path);
 		$json = @json_decode($data, true);
 

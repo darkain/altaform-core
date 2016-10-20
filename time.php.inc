@@ -88,19 +88,18 @@ class aftime {
 
 
 	public static function nearestZone($lat, $lon) {
-		global $af, $site;
+		global $af;
 
 		$path  = 'https://maps.googleapis.com/maps/api/timezone/json';
 		$path .= "?location=$lat,$lon";
 		$path .= '&timestamp=' . $af->time();
 		$path .= '&sensor=false';
-		$path .= '&key=' . $site['g_server_key'];
+		$path .= '&key=' . $af->config->google['server_key'];
 
 		$data = @file_get_contents($path);
 		$json = @json_decode($data, true);
 
-		if (!empty($json)) return $json;
-		return false;
+		return !empty($json) ? $json : false;
 	}
 
 

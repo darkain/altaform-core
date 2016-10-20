@@ -45,10 +45,10 @@ trait af_permission {
 
 
 	public function permissions() {
-		global $af, $site;
+		global $af;
 
-		//USER ACCESS RIGHTS
-		$this->permission = $site['permission'];
+		//DEFAULT USER ACCESS RIGHTS
+		$this->permission = $af->config->permission;
 
 		if (empty($this->user_permission)) {
 			$this->user_permission = 'guest';

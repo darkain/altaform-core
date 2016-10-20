@@ -9,13 +9,14 @@ use Aws\Common\Enum\Region;
 
 
 function s3client() {
-	global $site;
+	global $afconfig;
+
 	static $client = false;
 
 	if (empty($client)) $client = S3Client::factory([
-		'key'		=> $site['aws_key'],
-		'secret'	=> $site['aws_secret'],
-		'base_url'	=> $site['aws_url'],
+		'key'		=> $afconfig->amazon['key'],
+		'secret'	=> $afconfig->amazon['secret'],
+		'base_url'	=> $afconfig->amazon['url'],
 	]);
 
 	return $client;

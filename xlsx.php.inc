@@ -30,7 +30,7 @@ class af_xlsx extends af_object_array {
 	////////////////////////////////////////////////////////////////////////////
 	//CALLED AFTER VALIDATE() - GREAT FOR INHERITING THIS CLASS
 	////////////////////////////////////////////////////////////////////////////
-	public function process() {}
+	public function process() { return true; }
 
 
 
@@ -49,13 +49,15 @@ class af_xlsx extends af_object_array {
 	//PARSE THE XLSX/ZIP FILE
 	////////////////////////////////////////////////////////////////////////////
 	public function parse($file=false) {
-		global $site;
-		$site['debug'] = true;
+		global $af;
+		$af->config->debug = true;
+
 
 		//OPEN XLSX/ZIP FILE
 		if (!empty($file)) {
 			if (!$this->_openfile($file)) return false;
 		}
+
 
 		//LOOP THROUGH EACH ROW AND READ CONTENTS
 		foreach ($this->sheet->sheetData->row as $key => $value) {
@@ -75,6 +77,8 @@ class af_xlsx extends af_object_array {
 			$this->_body($value, $columns);
 		}
 
+
+		//VALIDATE CONTENTS OF FILE
 		$this->validate();
 
 		if (!empty($this->errors)) {
@@ -85,8 +89,9 @@ class af_xlsx extends af_object_array {
 			return false;
 		}
 
-		$this->process();
-		return true;
+
+		//PROCESS CONTENTS OF FILE
+		return $this->process();
 	}
 
 

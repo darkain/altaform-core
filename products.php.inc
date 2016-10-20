@@ -6,7 +6,7 @@ require_once('_products/lib/AmazonECS.class.php');
 class afproduct {
 
 	static function search($search, $key=false, $category='All', $group='Small,Images') {
-		global $site, $db;
+		global $afconfig, $db;
 
 		if (!$db->redis()) return false;
 
@@ -20,11 +20,22 @@ class afproduct {
 
 		try {
 			if (empty(self::$amazon)) {
-				self::$amazon = new AmazonECS($site['aws_key'], $site['aws_secret'], 'com', $site['aws_tag']);
-				self::$amazon->returnType(AmazonECS::RETURN_TYPE_ARRAY);
+				self::$amazon = new AmazonECS(
+						$afconfig->amazon['key'],
+						$afconfig->amazon['secret'],
+						'com',
+						$afconfig->amazon['tag']
+					);
+
+				self::$amazon->returnType(
+					AmazonECS::RETURN_TYPE_ARRAY
+				);
 			}
 
-			$data = self::$amazon->category($category)->responseGroup($group)->search($search);
+			$data = self::$amazon
+				->category($category)
+				->responseGroup($group)
+				->search($search);
 		} catch(Exception $e) {}
 
 		try {
