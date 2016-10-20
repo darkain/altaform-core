@@ -228,6 +228,7 @@ class afurl {
 					$this->chdir( $this->virtualize($i, '_virtual') );
 					if ($this->reparse  ||  $this->reparse === NULL) return true;
 					if ($count-$i === 1) return $this->index();
+					continue;
 				}
 
 				if (is_file('_virtual.php'))	return $this->virtualize($i, '_virtual.php');
