@@ -1,5 +1,10 @@
 <?php
 
+//Enable automatic error display
+ini_set('display_errors', 'on');
+
+
+
 //Enable PHP Output Buffering
 ob_start();
 

@@ -17,19 +17,19 @@ class aferror {
 
 		$data = $log ? self::log($text, false) : self::process($text);
 
-		if (!empty($template)  &&  $af instanceof altaform  &&  !empty($afconfig->root)) {
-			if (is_file($af->path().$afconfig->root.'/'.$template)) {
+		if (!empty($template)  &&  $af instanceof altaform  &&  !empty($af->config->root)) {
+			if (is_file($af->path().$af->config->root.'/'.$template)) {
 				$ok = self::renderFile(
-					$af->path().$afconfig->root.'/'.$template,
+					$af->path().$af->config->root.'/'.$template,
 					$header, $text, $data
 				);
 			}
 		}
 
-		if (empty($ok)  &&  $af instanceof altaform  &&  !empty($afconfig->root)) {
-			if (is_file($af->path().$afconfig->root.'/error.tpl')) {
+		if (empty($ok)  &&  $af instanceof altaform  &&  !empty($af->config->root)) {
+			if (is_file($af->path().$af->config->root.'/error.tpl')) {
 				$ok = self::renderFile(
-					$af->path().$afconfig->root.'/error.tpl',
+					$af->path().$af->config->root.'/error.tpl',
 					$header, $text, $data
 				);
 			}
