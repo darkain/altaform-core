@@ -14,7 +14,7 @@ function s3client() {
 	static $client = false;
 
 	if (empty($client)) $client = S3Client::factory([
-		'key'		=> $afconfig->amazon['key'],
+		'key'		=> $afconfig->amazon['id'],
 		'secret'	=> $afconfig->amazon['secret'],
 		'base_url'	=> $afconfig->amazon['url'],
 	]);
