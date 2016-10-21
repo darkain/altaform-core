@@ -15,6 +15,9 @@ class			af_config
 		//Debugging is initially on, and disabled by init
 		$this->debug		= $this;
 
+		//Default to "online" mode
+		$this->offline		= false;
+
 		//Default site title
 		$this->title		= 'Altaform';
 
