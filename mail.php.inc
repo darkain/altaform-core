@@ -22,7 +22,7 @@ class afmail {
 			}
 		}
 
-		if (!isset($headers['from']))		$headers['from']		= $af->config->af_email;
+		if (!isset($headers['from']))		$headers['from']		= $af->config->email;
 		if (!isset($headers['return']))		$headers['return']		= $headers['from'];
 		if (!isset($headers['reply']))		$headers['reply']		= $headers['from'];
 		if (!isset($headers['priority']))	$headers['priority']	= 3;
