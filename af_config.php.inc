@@ -52,6 +52,7 @@ class			af_config
 			'user'			=> 0,
 			'staff'			=> 0,
 			'admin'			=> 0,
+			'debug'			=> 0,
 			'adfree'		=> 0,
 		];
 	}
