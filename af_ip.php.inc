@@ -16,9 +16,9 @@ class af_ip {
 	public static function inCidr($address, $cidr) {
 		if (!is_array($cidr)) $cidr = [$cidr];
 		if (empty($address)) return false;
-		$address = ip2long(trim($address));
+		$address		= ip2long(trim($address));
 		foreach ($cidr as $item) {
-			list($network, $mask) = split('/', $item);
+			list($network, $mask) = explode('/', $item, 2);
 			$network	= ip2long(trim($network));
 			$mask		= ~((1 << (32 - (int)trim($mask))) - 1);
 			if (($address & $mask) === ($network & $mask)) return true;
