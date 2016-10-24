@@ -84,7 +84,7 @@ class aferror {
 		}
 
 		$return = array_merge($data, [
-			'address'		=> $address,
+			'address'		=> !empty($data['address']) ? $data['address'] : $address,
 			'error-time'	=> @date('r'),
 			'error-path'	=> getcwd(),
 			'var-get'		=> !empty($_GET)	? json_encode($_GET,			JSON_UNESCAPED_SLASHES) : '',
@@ -202,6 +202,20 @@ class aferror {
 			date('r') . ' ' . strip_tags($title),
 			$tag . "\r\n" . wordwrap($text, 75, "\r\n", true)
 		);
+	}
+
+
+
+
+	public static function javascript() {
+		global $get;
+
+		self::log([
+			'address'		=> $get('url'),
+			'details'		=> 'JavaScript: ' . $get('message'),
+			'error-file'	=> $get('file'),
+			'error-line'	=> $get('line') . ':' . $get('col'),
+		], false);
 	}
 }
 
