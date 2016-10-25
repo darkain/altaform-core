@@ -403,9 +403,10 @@ class afurl {
 
 		if (!headers_sent()) header("Location: $url", true, $type);
 		echo '<html><head><meta http-equiv="refresh" content="0;URL=\'';
-		echo htmlspecialchars($url) . '\'" /></head><body>';
+		echo htmlspecialchars($url,TBX_SPECIAL_CHARS) . '\'" /></head><body>';
 		echo "<script>top.location.href='";
-		echo htmlspecialchars(addslashes($url)) . "';</script></body></html>";
+		echo htmlspecialchars(addslashes($url),TBX_SPECIAL_CHARS);
+		echo "';</script></body></html>";
 		if ($die) exit;
 	}
 

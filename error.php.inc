@@ -131,7 +131,7 @@ class aferror {
 		}
 
 		$error = (ob_get_level()  &&  $die)
-			? htmlspecialchars(ob_get_clean(),ENT_SUBSTITUTE)
+			? htmlspecialchars(ob_get_clean(),TBX_SPECIAL_CHARS)
 			: '';
 
 		$arr = $arrout = self::process($data);
@@ -164,12 +164,12 @@ class aferror {
 			$html .= '<tr><td>' . ($key+1) . '</td><td class="nobr">Line: ';
 			$html .= htmlspecialchars(
 				array_key_exists('line', $value) ? $value['line'] : '?',
-				ENT_SUBSTITUTE
+				TBX_SPECIAL_CHARS
 			);
 			$html .= '</td><td>File: ';
 			$html .= htmlspecialchars(
 				array_key_exists('file', $value) ? $value['file'] : '?',
-				ENT_SUBSTITUTE
+				TBX_SPECIAL_CHARS
 			);
 			if (!empty($value['function'])) {
 				$html .= '<br/>' . $value['function'] . '(';
@@ -177,7 +177,7 @@ class aferror {
 					$html .= substr(
 						htmlspecialchars(
 							json_encode($value['args'], JSON_UNESCAPED_SLASHES),
-							ENT_SUBSTITUTE
+							TBX_SPECIAL_CHARS
 						),
 						1, -1
 					);
@@ -189,9 +189,9 @@ class aferror {
 
 		foreach ($arr as $key => $value) {
 			$html .= '<tr><td colspan="2" class="nobr">';
-			$html .= htmlspecialchars($key,ENT_SUBSTITUTE);
+			$html .= htmlspecialchars($key,TBX_SPECIAL_CHARS);
 			$html .= '</td><td>';
-			$html .= htmlspecialchars($value,ENT_SUBSTITUTE);
+			$html .= htmlspecialchars($value,TBX_SPECIAL_CHARS);
 			$html .= '</td></tr>';
 		}
 
@@ -245,7 +245,7 @@ function error401($text='', $log=false, $details=false) {
 	aferror::render('HTTP/1.1 401 Unauthorized', [
 		'<div id="af-fatal"><h1>ERROR: 401</h1>',
 		'<h2>AUTHORIZATION REQUIRED</h2>',
-		'<h3>' . htmlspecialchars($details,ENT_SUBSTITUTE) . '</h3>',
+		'<h3>' . htmlspecialchars($details,TBX_SPECIAL_CHARS) . '</h3>',
 		'<i>' . $text . '</i></div>',
 	], $log, 'error401.tpl');
 }
@@ -256,7 +256,7 @@ function error403($text='', $log=false, $details=false) {
 	aferror::render('HTTP/1.1 403 Forbidden', [
 		'<div id="af-fatal"><h1>ERROR: 403</h1>',
 		'<h2>FORBIDDEN</h2>',
-		'<h3>' . htmlspecialchars($details,ENT_SUBSTITUTE) . '</h3>',
+		'<h3>' . htmlspecialchars($details,TBX_SPECIAL_CHARS) . '</h3>',
 		'<i>' . $text . '</i></div>',
 	], $log, 'error403.tpl');
 }
@@ -272,7 +272,7 @@ function error404($text='', $log=false, $details=false) {
 			$afurl->redirect("$afurl->host$afurl->base/", 302);
 		}
 
-		$text = htmlspecialchars($afurl->all,ENT_SUBSTITUTE) . '<br/>' . $text;
+		$text = htmlspecialchars($afurl->all,TBX_SPECIAL_CHARS) . '<br/>' . $text;
 
 		if (!empty($afconfig->debug)) {
 			$text .= '<br/><pre>' . print_r($afurl,true) . '</pre>';
@@ -282,7 +282,7 @@ function error404($text='', $log=false, $details=false) {
 	aferror::render('HTTP/1.1 404 File Not Found', [
 		'<div id="af-fatal"><h1>ERROR: 404</h1>',
 		'<h2>FILE NOT FOUND</h2>',
-		'<h3>' . htmlspecialchars($details,ENT_SUBSTITUTE) . '</h3>',
+		'<h3>' . htmlspecialchars($details,TBX_SPECIAL_CHARS) . '</h3>',
 		'<i>' . $text . '</i></div>',
 	], $log, 'error404.tpl');
 }
@@ -293,7 +293,7 @@ function error405($text='', $log=true, $details=false) {
 	aferror::render('HTTP/1.1 405 Method Not Allowed', [
 		'<div id="af-fatal"><h1>ERROR: 405</h1>',
 		'<h2>METHOD NOT ALLOWED</h2>',
-		'<h3>' . htmlspecialchars($details,ENT_SUBSTITUTE) . '</h3>',
+		'<h3>' . htmlspecialchars($details,TBX_SPECIAL_CHARS) . '</h3>',
 		'<i>' . $text . '</i></div>',
 	], $log, 'error405.tpl');
 }
@@ -304,7 +304,7 @@ function error422($text='', $log=true, $details=false) {
 	aferror::render('HTTP/1.1 422 Unprocessable Entity', [
 		'<div id="af-fatal"><h1>ERROR: 422</h1>',
 		'<h2>UNPROCESSABLE ENTITY</h2>',
-		'<h3>' . htmlspecialchars($details,ENT_SUBSTITUTE) . '</h3>',
+		'<h3>' . htmlspecialchars($details,TBX_SPECIAL_CHARS) . '</h3>',
 		'<i>' . $text . '</i></div>',
 	], $log, 'error422.tpl');
 }
@@ -317,7 +317,7 @@ function error500($text='', $log=true, $details=false) {
 	aferror::render('HTTP/1.1 500 Internal Server Error', [
 		'<div id="af-fatal"><h1>ERROR: 500</h1>',
 		'<h2>INTERNAL SERVER ERROR</h2>',
-		'<h3>' . htmlspecialchars($details,ENT_SUBSTITUTE) . '</h3>',
+		'<h3>' . htmlspecialchars($details,TBX_SPECIAL_CHARS) . '</h3>',
 		'<i>' . $text . '</i></div>',
 	], $log, 'error500.tpl');
 }
