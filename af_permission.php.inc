@@ -134,31 +134,31 @@ trait af_permission {
 
 
 
-	public function hasAccessPermission($access, $permission) {
-		return $this->hasAccess($access)
+	public function hasAccessPermission($access, $permission, $id=false) {
+		return $this->hasAccess($access, $id)
 			|| $this->hasPermission($permission);
 	}
 
 
 
 
-	public function hasAccessAdmin($access) {
-		return $this->hasAccessPermission($access, 'admin');
+	public function hasAccessAdmin($access, $id=false) {
+		return $this->hasAccessPermission($access, 'admin', $id);
 	}
 
 
 
 
-	public function hasAccessStaff($access) {
-		return $this->hasAccessPermission($access, ['staff','admin']);
+	public function hasAccessStaff($access, $id=false) {
+		return $this->hasAccessPermission($access, ['staff','admin'], $id);
 	}
 
 
 
 
-	public function requireAccessPermission($access, $permission) {
+	public function requireAccessPermission($access, $permission, $id=false) {
 		assert401(
-			$this->hasAccessPermission($access, $permission),
+			$this->hasAccessPermission($access, $permission, $id),
 			'This page requires the following permission level: '
 			. (tbx_array($access)		? implode(', ', $access)		: $access)
 			. ', '
@@ -170,15 +170,15 @@ trait af_permission {
 
 
 
-	public function requireAccessAdmin($access) {
-		return $this->requireAccessPermission($access, 'admin');
+	public function requireAccessAdmin($access, $id=false) {
+		return $this->requireAccessPermission($access, 'admin', $id);
 	}
 
 
 
 
-	public function requireAccessStaff($access) {
-		return $this->requireAccessPermission($access, ['staff','admin']);
+	public function requireAccessStaff($access, $id=false) {
+		return $this->requireAccessPermission($access, ['staff','admin'], $id);
 	}
 
 }
