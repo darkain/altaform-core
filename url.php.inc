@@ -198,6 +198,9 @@ class afurl {
 		//Number of items in URL path
 		$count = count($this->part) - 1;
 
+		//Store path information for debugging
+		$this->redirected[] = array_slice($this->part, 1, $count-1);
+
 		//Load our home page!!
 		if ($count < 2) {
 			return $this->reparse($this->homepage);
@@ -524,6 +527,7 @@ class afurl {
 	public $upload		= '';
 	public $push		= '';
 	public $virtual		= [];
+	public $redirected	= [];
 	public $id			= 0;
 	public $jq			= false;
 	public $reparse		= true;

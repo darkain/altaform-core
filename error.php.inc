@@ -102,6 +102,13 @@ class aferror {
 			'user-device'	=> !empty($afdevice)? $afdevice() : '',
 		]);
 
+		if (!empty($afurl->redirected)) {
+			$return['redirected'] = json_encode(
+				$afurl->redirected,
+				JSON_UNESCAPED_SLASHES
+			);
+		}
+
 		ksort($return, SORT_NATURAL);
 		return $return;
 	}
