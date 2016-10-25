@@ -89,8 +89,11 @@ trait af_permission {
 		}
 
 		if ($id !== false) {
+			if ($id instanceof db_object) $id = $id->id();
+			else if (tbx_array($id)) $id = $id['object_id'];
+
 			$row = $db->row('pudl_object_access', [
-				'object_id'			=> tbx_array($id) ? $id['object_id'] : $id,
+				'object_id'			=> $id,
 				'object_type_id'	=> $af->type(reset($access)),
 				'user_id'			=> $this->id(),
 			]);
