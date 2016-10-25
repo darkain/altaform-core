@@ -336,6 +336,21 @@ function assert500($item, $text='', $log=true) {
 	return (empty($item) && $item!=='') ? error500($text, $log) : $item;
 }
 
+function assertRead($item, $text='', $log=false) {
+	return ($item !== true && !in_array($item, ['read', 'write', 'grant']))
+		? error401($text, $log) : $item;
+}
+
+function assertWrite($item, $text='', $log=false) {
+	return ($item !== true && !in_array($item, ['write', 'grant']))
+		? error401($text, $log) : $item;
+}
+
+function assertGrant($item, $text='', $log=false) {
+	return ($item !== true && !in_array($item, ['grant']))
+		? error401($text, $log) : $item;
+}
+
 
 
 set_error_handler(function($errno, $errstr, $errfile=NULL, $errline=NULL, $errcontext=[], $backtrace=[]) {
