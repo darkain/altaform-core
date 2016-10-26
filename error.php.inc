@@ -102,6 +102,13 @@ class aferror {
 			'user-device'	=> !empty($afdevice)? $afdevice() : '',
 		]);
 
+		if (!empty($afurl->redirected)) {
+			$return['redirected'] = json_encode(
+				$afurl->redirected,
+				JSON_UNESCAPED_SLASHES
+			);
+		}
+
 		ksort($return, SORT_NATURAL);
 		return $return;
 	}
@@ -123,7 +130,9 @@ class aferror {
 			$afconfig->debug = true;
 		}
 
-		$error = (ob_get_level()  &&  $die) ? htmlspecialchars(ob_get_clean()) : '';
+		$error = (ob_get_level()  &&  $die)
+			? htmlspecialchars(ob_get_clean(),TBX_SPECIAL_CHARS)
+			: '';
 
 		$arr = $arrout = self::process($data);
 
@@ -153,15 +162,22 @@ class aferror {
 
 		foreach ($backtrace as $key => $value) {
 			$html .= '<tr><td>' . ($key+1) . '</td><td class="nobr">Line: ';
-			$html .= htmlspecialchars(array_key_exists('line', $value) ? $value['line'] : '?');
+			$html .= htmlspecialchars(
+				array_key_exists('line', $value) ? $value['line'] : '?',
+				TBX_SPECIAL_CHARS
+			);
 			$html .= '</td><td>File: ';
-			$html .= htmlspecialchars(array_key_exists('file', $value) ? $value['file'] : '?');
+			$html .= htmlspecialchars(
+				array_key_exists('file', $value) ? $value['file'] : '?',
+				TBX_SPECIAL_CHARS
+			);
 			if (!empty($value['function'])) {
 				$html .= '<br/>' . $value['function'] . '(';
 				if (!empty($value['args'])) {
 					$html .= substr(
 						htmlspecialchars(
-							json_encode($value['args'], JSON_UNESCAPED_SLASHES)
+							json_encode($value['args'], JSON_UNESCAPED_SLASHES),
+							TBX_SPECIAL_CHARS
 						),
 						1, -1
 					);
@@ -172,8 +188,11 @@ class aferror {
 		}
 
 		foreach ($arr as $key => $value) {
-			$html .= '<tr><td colspan="2" class="nobr">' . htmlspecialchars($key) . '</td>';
-			$html .= '<td>' . htmlspecialchars($value) . '</td></tr>';
+			$html .= '<tr><td colspan="2" class="nobr">';
+			$html .= htmlspecialchars($key,TBX_SPECIAL_CHARS);
+			$html .= '</td><td>';
+			$html .= htmlspecialchars($value,TBX_SPECIAL_CHARS);
+			$html .= '</td></tr>';
 		}
 
 		$html .= '</table>';
@@ -226,7 +245,7 @@ function error401($text='', $log=false, $details=false) {
 	aferror::render('HTTP/1.1 401 Unauthorized', [
 		'<div id="af-fatal"><h1>ERROR: 401</h1>',
 		'<h2>AUTHORIZATION REQUIRED</h2>',
-		'<h3>' . htmlspecialchars($details) . '</h3>',
+		'<h3>' . htmlspecialchars($details,TBX_SPECIAL_CHARS) . '</h3>',
 		'<i>' . $text . '</i></div>',
 	], $log, 'error401.tpl');
 }
@@ -237,7 +256,7 @@ function error403($text='', $log=false, $details=false) {
 	aferror::render('HTTP/1.1 403 Forbidden', [
 		'<div id="af-fatal"><h1>ERROR: 403</h1>',
 		'<h2>FORBIDDEN</h2>',
-		'<h3>' . htmlspecialchars($details) . '</h3>',
+		'<h3>' . htmlspecialchars($details,TBX_SPECIAL_CHARS) . '</h3>',
 		'<i>' . $text . '</i></div>',
 	], $log, 'error403.tpl');
 }
@@ -253,7 +272,7 @@ function error404($text='', $log=false, $details=false) {
 			$afurl->redirect("$afurl->host$afurl->base/", 302);
 		}
 
-		$text = htmlspecialchars($afurl->all) . '<br/>' . $text;
+		$text = htmlspecialchars($afurl->all,TBX_SPECIAL_CHARS) . '<br/>' . $text;
 
 		if (!empty($afconfig->debug)) {
 			$text .= '<br/><pre>' . print_r($afurl,true) . '</pre>';
@@ -263,7 +282,7 @@ function error404($text='', $log=false, $details=false) {
 	aferror::render('HTTP/1.1 404 File Not Found', [
 		'<div id="af-fatal"><h1>ERROR: 404</h1>',
 		'<h2>FILE NOT FOUND</h2>',
-		'<h3>' . htmlspecialchars($details) . '</h3>',
+		'<h3>' . htmlspecialchars($details,TBX_SPECIAL_CHARS) . '</h3>',
 		'<i>' . $text . '</i></div>',
 	], $log, 'error404.tpl');
 }
@@ -274,7 +293,7 @@ function error405($text='', $log=true, $details=false) {
 	aferror::render('HTTP/1.1 405 Method Not Allowed', [
 		'<div id="af-fatal"><h1>ERROR: 405</h1>',
 		'<h2>METHOD NOT ALLOWED</h2>',
-		'<h3>' . htmlspecialchars($details) . '</h3>',
+		'<h3>' . htmlspecialchars($details,TBX_SPECIAL_CHARS) . '</h3>',
 		'<i>' . $text . '</i></div>',
 	], $log, 'error405.tpl');
 }
@@ -285,7 +304,7 @@ function error422($text='', $log=true, $details=false) {
 	aferror::render('HTTP/1.1 422 Unprocessable Entity', [
 		'<div id="af-fatal"><h1>ERROR: 422</h1>',
 		'<h2>UNPROCESSABLE ENTITY</h2>',
-		'<h3>' . htmlspecialchars($details) . '</h3>',
+		'<h3>' . htmlspecialchars($details,TBX_SPECIAL_CHARS) . '</h3>',
 		'<i>' . $text . '</i></div>',
 	], $log, 'error422.tpl');
 }
@@ -298,7 +317,7 @@ function error500($text='', $log=true, $details=false) {
 	aferror::render('HTTP/1.1 500 Internal Server Error', [
 		'<div id="af-fatal"><h1>ERROR: 500</h1>',
 		'<h2>INTERNAL SERVER ERROR</h2>',
-		'<h3>' . htmlspecialchars($details) . '</h3>',
+		'<h3>' . htmlspecialchars($details,TBX_SPECIAL_CHARS) . '</h3>',
 		'<i>' . $text . '</i></div>',
 	], $log, 'error500.tpl');
 }
@@ -327,6 +346,21 @@ function assert422($item, $text='', $log=true) {
 
 function assert500($item, $text='', $log=true) {
 	return (empty($item) && $item!=='') ? error500($text, $log) : $item;
+}
+
+function assertRead($item, $text='', $log=false) {
+	return ($item !== true && !in_array($item, ['read', 'write', 'grant']))
+		? error401($text, $log) : $item;
+}
+
+function assertWrite($item, $text='', $log=false) {
+	return ($item !== true && !in_array($item, ['write', 'grant']))
+		? error401($text, $log) : $item;
+}
+
+function assertGrant($item, $text='', $log=false) {
+	return ($item !== true && !in_array($item, ['grant']))
+		? error401($text, $log) : $item;
 }
 
 
@@ -362,7 +396,7 @@ set_exception_handler(function($e) {
 	if (!error_reporting()) return false;
 
 	aferror::log([
-		'error-code'	=> get_class($e),
+		'error-code'	=> get_class($e) . ':' . $e->getCode(),
 		'details'		=> $e->getMessage(),
 		'error-file'	=> $e->getFile(),
 		'error-line'	=> $e->getLine(),

@@ -198,6 +198,9 @@ class afurl {
 		//Number of items in URL path
 		$count = count($this->part) - 1;
 
+		//Store path information for debugging
+		$this->redirected[] = array_slice($this->part, 1, $count-1);
+
 		//Load our home page!!
 		if ($count < 2) {
 			return $this->reparse($this->homepage);
@@ -400,9 +403,10 @@ class afurl {
 
 		if (!headers_sent()) header("Location: $url", true, $type);
 		echo '<html><head><meta http-equiv="refresh" content="0;URL=\'';
-		echo htmlspecialchars($url) . '\'" /></head><body>';
+		echo htmlspecialchars($url,TBX_SPECIAL_CHARS) . '\'" /></head><body>';
 		echo "<script>top.location.href='";
-		echo htmlspecialchars(addslashes($url)) . "';</script></body></html>";
+		echo htmlspecialchars(addslashes($url),TBX_SPECIAL_CHARS);
+		echo "';</script></body></html>";
 		if ($die) exit;
 	}
 
@@ -524,6 +528,7 @@ class afurl {
 	public $upload		= '';
 	public $push		= '';
 	public $virtual		= [];
+	public $redirected	= [];
 	public $id			= 0;
 	public $jq			= false;
 	public $reparse		= true;
