@@ -82,8 +82,16 @@ class altaform extends tbx {
 
 
 
-	public function ok($die=true) {
+	public static function ok($die=true) {
 		echo 'AF-OK';
+		if ($die) die();
+	}
+
+
+
+
+	public static function refresh($die=true) {
+		echo 'AF-REFRESH';
 		if ($die) die();
 	}
 
