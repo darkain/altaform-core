@@ -229,6 +229,8 @@ class aferror {
 	public static function javascript() {
 		global $get;
 
+		if ($get('message') === 'Script error.') return;
+
 		self::log([
 			'address'		=> $get('url'),
 			'details'		=> 'JavaScript: ' . $get('message'),
