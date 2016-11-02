@@ -231,6 +231,10 @@ class aferror {
 
 		if ($get('message') === 'Script error.') return;
 
+		if (preg_match('/bot|crawl|slurp|spider/i', $get->server('HTTP_USER_AGENT'))) {
+			return;
+		}
+
 		self::log([
 			'address'		=> $get('url'),
 			'details'		=> 'JavaScript: ' . $get('message'),
