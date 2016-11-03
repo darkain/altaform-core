@@ -63,6 +63,7 @@ class af_sidebar {
 
 			} else {
 				$af->loadString( $this->template['child'] );
+				$af->field('base', empty($item['menu_target']) ? $this->base : '');
 				$af->field('menu', $item);
 				$text .= $af->renderToString();
 			}
@@ -75,6 +76,7 @@ class af_sidebar {
 
 	public function render() {
 		echo $this->renderString();
+		return $this;
 	}
 
 
@@ -86,15 +88,23 @@ class af_sidebar {
 
 
 
+	public function base($base) {
+		$this->base = $base;
+		return $this;
+	}
+
+
+
 	private	$data		= [];
 	private	$menu		= [];
+	private $base		= '';
 
 	public	$template	= [
 		'break'			=> '<hr/>',
 		'parent'		=> '<span><i>&#9658;</i> [menu.menu_text]</span>',
 
 		'child'			=>
-			'<a href="[var.afurl.base][menu.menu_url]" target="[menu.menu_target;magnet=#]">' .
+			'<a href="[var.afurl.base][base][menu.menu_url]" target="[menu.menu_target;magnet=#]">' .
 				'[menu.menu_text] ' .
 				'<em class="small">[menu.menu_subtext;noerr;magnet=em]</em>' .
 			'</a>',
