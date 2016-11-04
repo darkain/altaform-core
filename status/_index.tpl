@@ -26,9 +26,9 @@
 					<span> - [server.type;noerr;magnet=span]</span>
 					<span> - [server.arch;noerr;magnet=span]</span>
 				</td>
-				<td class="center">[server.boot;noerr;date=Y-m-d @ h:i:s]</td>
-				<td class="center">[server.uptime;noerr]</td>
-				<td class="right">[server.memory;noerr]</td>
+				<td class="nobr center">[server.boot;noerr;date=Y-m-d @ h:i:s]</td>
+				<td class="nobr center">[server.uptime;noerr]</td>
+				<td class="nobr right">[server.memory;noerr]</td>
 				<td class="right">[server.delay;noerr]</td>
 			</tr>
 		</tbody>

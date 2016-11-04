@@ -101,7 +101,7 @@ foreach ($databases as $item) {
 	if ($connect->connectErrno()) {
 		$servers[] = [
 			'path'		=> $name,
-			'version'	=> $connect->connectError(),
+			'version'	=> $connect->connectErrno() . ' : ' . $connect->connectError(),
 		];
 
 	} else {
