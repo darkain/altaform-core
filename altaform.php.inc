@@ -47,14 +47,15 @@ class altaform extends tbx {
 
 		parent::__construct();
 
-		$afconfig->af		= $this;
-		$this->config		= $afconfig;
-		$this->_session		= $dbsession;
-		$this->hhvm			= defined('HHVM_VERSION') ? 'HHVM' : 'PHP';
+		$afconfig->af				= $this;
+		$this->config				= $afconfig;
+		$this->_session				= $dbsession;
+		$this->hhvm					= defined('HHVM_VERSION') ? 'HHVM' : 'PHP';
+		$this->_headers['notice']	= [];
 
 		//TODO: THESE PROBABLY SHOULD NO LONGER BE STATIC!!
-		self::$_time		= time();
-		self::$_path		= getcwd();
+		self::$_time				= time();
+		self::$_path				= getcwd();
 
 		if (substr(self::$_path, -1) !== '/') self::$_path .= '/';
 
