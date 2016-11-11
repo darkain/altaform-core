@@ -376,7 +376,7 @@ function assertGrant($item, $text='', $log=false) {
 set_error_handler(function($errno, $errstr, $errfile=NULL, $errline=NULL, $errcontext=[], $backtrace=[]) {
 	global $afconfig;
 
-	if (!error_reporting()) return false;
+	if (!(error_reporting()  &  $errno)) return false;
 
 	$die = true;
 
@@ -395,7 +395,7 @@ set_error_handler(function($errno, $errstr, $errfile=NULL, $errline=NULL, $errco
 		'error-line'	=> $errline,
 	], $die, $backtrace);
 
-	return true;
+	return $die;
 });
 
 
