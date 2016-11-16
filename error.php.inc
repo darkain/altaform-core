@@ -121,6 +121,10 @@ class aferror {
 	public static function log($data, $die=true, $backtrace=[]) {
 		global $af, $db, $user, $afconfig;
 
+		if (!defined('TBX_SPECIAL_CHARS')) {
+			define('TBX_SPECIAL_CHARS', ENT_NOQUOTES|ENT_HTML5);
+		}
+
 		//ONLY LOG ERROR ONCE!
 		static $echo = false;
 		if ($echo) return false;
