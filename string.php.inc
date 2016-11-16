@@ -20,17 +20,25 @@ class afstring {
 
 
 	public static function int($string) {
-		if (is_int($string)) return $string;
-		if (!is_string($string)) return 0;
+		if (is_int($string))		return $string;
+		if (!is_string($string))	return 0;
 		$string = trim($string);
-		if (!ctype_digit($string)) return 0;
+		if (!ctype_digit($string))	return 0;
 		return (int) $string;
 	}
 
 
+	public static function currency($value) {
+		return (float) preg_replace(
+			'/^[\$\s\x{A2}-\x{A5}\x{20A0}-\x{20CF}\x{10192}]+/u',
+			'', $value
+		);
+	}
+
+
 	public static function string($value) {
-		if (is_string($value)) return $value;
-		if (!is_object($value)) return @(string)$value;
+		if (is_string($value))	return $value;
+		if (!is_object($value))	return @(string)$value;
 
 		if (method_exists($value,'__toString')) {
 			return $value->__toString();
