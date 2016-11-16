@@ -105,12 +105,20 @@ if (is_file('_config/'.$afurl->domain.'/config.php.inc')) {
 
 
 
+//Load additional configuation file
 if (is_file($afconfig->root . '/_altaform.php.inc')) {
 	$__cwd = getcwd();
 	chdir($afconfig->root);
 	require('_altaform.php.inc');
 	chdir($__cwd);
 	unset($__cwd);
+}
+
+
+
+//Set default flags for Getvar
+if (isset($afconfig->getvar)) {
+	$get->flags($afconfig->getvar);
 }
 
 
