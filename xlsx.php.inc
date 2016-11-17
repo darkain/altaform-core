@@ -271,6 +271,7 @@ class af_xlsx extends af_object_array {
 	////////////////////////////////////////////////////////////////////////////
 	protected function invalid($text, $row) {
 		$this->errors[] = '• ROW: ' . $row . ' - ' . $text;
+		return false;
 	}
 
 
