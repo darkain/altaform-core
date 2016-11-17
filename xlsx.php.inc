@@ -128,6 +128,11 @@ class af_xlsx extends af_object_array {
 		if (empty($name)) return true;
 		if (empty($this->translate)) return $name;
 
+		if (is_array($this->translate)) {
+			if (!isset($this->translate[$name])) return false;
+			return $this->translate[$name];
+		}
+
 		$item = $db->cell([
 			's' => 'pudl_translate',
 			't' => 'pudl_translate_type'
