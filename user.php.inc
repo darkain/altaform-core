@@ -169,6 +169,17 @@ class			afuser
 		return new afuser($id, true);
 	}
 
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	//GET A USER ACCOUNT FROM DATABASE FOR A GIVEN ID NUMBER
+	////////////////////////////////////////////////////////////////////////////
+	public static function select($clause) {
+		global $db;
+		return new afuser($db->row('pudl_user', $clause));
+	}
+
 }
 
 
