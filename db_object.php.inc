@@ -97,7 +97,7 @@ abstract class	db_object
 	//COMPARE ITEM TO SEE IF IT IS THE CURRENT OBJECT INSTANCE
 	////////////////////////////////////////////////////////////////////////////
 	public function is($item) {
-		if (empty($item)) return false;
+		if (empty($item)  &&  !is_bool($item)) return false;
 
 		if (is_array($item)) {
 			if (empty($item[$this->_column])) return false;
