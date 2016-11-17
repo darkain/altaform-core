@@ -79,7 +79,7 @@ class af_xlsx extends af_object_array {
 
 
 		//VALIDATE CONTENTS OF FILE
-		$this->validate();
+		$valid = $this->validate();
 
 		if (!empty($this->errors)) {
 			throw new afException(
@@ -91,7 +91,7 @@ class af_xlsx extends af_object_array {
 
 
 		//PROCESS CONTENTS OF FILE
-		return $this->process();
+		return $valid ? $this->process() : false;
 	}
 
 
@@ -270,7 +270,8 @@ class af_xlsx extends af_object_array {
 	//STORE ERROR MESSAGE
 	////////////////////////////////////////////////////////////////////////////
 	protected function invalid($text, $row=0) {
-		$this->errors[] = '• ROW: ' . $row . ' - ' . $text;
+		if ($row) $text = '• ROW: ' . $row . ' - ' . $text;
+		$this->errors[] = $text;
 		return false;
 	}
 
