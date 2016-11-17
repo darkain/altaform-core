@@ -106,12 +106,15 @@ abstract class	db_object
 		} else if (is_object($item)) {
 			if (empty($item->{$this->_column})) return false;
 			$item = $item->{$this->_column};
+
+		} else if ($item === true) {
+			return $this->id() > 0;
 		}
 
 		$item = (int) $item;
 		if ($item === 0) return false;
 
-		return $item === ((int)(string)$this);
+		return $item === $this->id();
 	}
 
 
