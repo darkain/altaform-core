@@ -109,6 +109,9 @@ abstract class	db_object
 
 		} else if ($item === true) {
 			return $this->id() > 0;
+
+		} else if ($item === false) {
+			return $this->id() === 0;
 		}
 
 		$item = (int) $item;
