@@ -127,9 +127,13 @@ foreach ($databases as $item) {
 
 
 $offline = $db->offlineServers();
-foreach ($offline as $item) {
+foreach ($offline as $name => $time) {
 	$servers[] = [
-		'path'			=> $item,
+		'path'			=> $name,
+		'boot'			=> $time,
+		'memory'		=> '0 Bytes',
+		'delay'			=> '0.0000',
+		'uptime'		=> 'OFFLINE',
 		'version'		=> 'OFFLINE',
 	];
 }
