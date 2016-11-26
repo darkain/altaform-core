@@ -16,10 +16,10 @@ if ($user->loggedIn()) {
 ////////////////////////////////////////////////////////////////////////////////
 assert401(
 	$auth = $db->row([
-		'ua'=>'pudl_user_auth',
-		'us'=>'pudl_user',
+		'ua' => 'pudl_user_auth',
+		'us' => 'pudl_user',
 	], [
-		'auth_account' => $get,
+		'auth_account' => $get->auth_account,
 		'us.user_id=ua.user_id',
 	]),
 	'Invalid Email Address or Password'
