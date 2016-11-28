@@ -235,10 +235,13 @@ class aferror {
 	public static function javascript() {
 		global $get;
 
+		// GENERIC ERROR MESSAGE IN JS FILE NOT HOSTED BY US (CROSS-SITE)
 		if ($get('message') === 'Script error.') return;
 
+		// https://github.com/getsentry/raven-js/issues/756
 		if (strpos($get('message'), "evaluating 'elt.parentNode'")) return;
 
+		// IGNORE ERRORS FROM BOTS. THEY ARE TERRIBAD AT PROCESSING SCRIPTS PROPERLY
 		if (preg_match('/bot|crawl|slurp|spider/i', $get->server('HTTP_USER_AGENT'))) {
 			return;
 		}
