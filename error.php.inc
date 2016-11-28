@@ -237,6 +237,8 @@ class aferror {
 
 		if ($get('message') === 'Script error.') return;
 
+		if (strpos($get('message'), "evaluating 'elt.parentNode'")) return;
+
 		if (preg_match('/bot|crawl|slurp|spider/i', $get->server('HTTP_USER_AGENT'))) {
 			return;
 		}
