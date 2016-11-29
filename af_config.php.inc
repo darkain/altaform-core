@@ -63,8 +63,18 @@ class			af_config
 
 
 
-	public function __invoke($data) {
-		$this->_merge($data);
+	public function __invoke($data, $value=false) {
+		if (empty($data)) return;
+
+		if (func_num_args() === 1) {
+			$this->_merge($data);
+
+		} else if (is_array($this->{$data})) {
+			$this->{$data} = array_merge($this->{$data}, $value);
+
+		} else {
+			$this->{$data} = $value;
+		}
 	}
 
 
