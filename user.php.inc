@@ -110,6 +110,51 @@ class			afuser
 
 
 	////////////////////////////////////////////////////////////////////////////
+	//VALIDATE A GIVEN PASSWORD BASED ON CONFIGURATION DATA
+	////////////////////////////////////////////////////////////////////////////
+	public static function validatePassword($password) {
+		global $afconfig;
+
+		if (!is_string($password)) {
+			return 'Invalid password format';
+		}
+
+		if (empty($password)) {
+			return 'No password specified';
+		}
+
+		if (strlen($password) < $afconfig->password['length']) {
+			return 'Password must be at least '
+				. $afconfig->password['length']
+				. ' characters long';
+		}
+
+		if ($afconfig->password['upper']) {
+			if (!preg_match('/[a-z]/', $password)  ||  !preg_match('/[A-Z]/', $password)) {
+				return 'Password must contain both upper and lower case letters';
+			}
+		}
+
+		if ($afconfig->password['number']) {
+			if (!preg_match('/[0-9]/', $password)) {
+				return 'Password must contain numbers';
+			}
+		}
+
+		if ($afconfig->password['symbol']) {
+			if (!preg_match('/[^0-9a-zA-Z]/', $password)) {
+				return 'Password must contain special character symbols';
+			}
+		}
+
+		return true;
+	}
+
+//public static generate password
+
+
+
+	////////////////////////////////////////////////////////////////////////////
 	//ADD OR DELETE AN ITEM FROM THE USER'S MESSAGE QUEUE
 	////////////////////////////////////////////////////////////////////////////
 	function queue($service, $type, $data=false) {

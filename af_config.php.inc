@@ -47,6 +47,14 @@ class			af_config
 			'domain'		=> false,
 		];
 
+		//Defaults for password complexity
+		$this->password		= [
+			'length'		=> 6,		//Minimum length
+			'upper'			=> true,	//Require upper+lower case
+			'number'		=> true,	//Require numbers
+			'symbol'		=> false,	//Require special chararacters
+		];
+
 		//Default all permissions are disabled
 		$this->permission	= [
 			'banned'		=> 0,
