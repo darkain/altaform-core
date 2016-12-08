@@ -200,6 +200,7 @@ class altaform extends tbx {
 
 	private				$_prefs		= [];
 	public				$config		= NULL;
+	public				$title		= '';
 	protected static	$_time		= 0;
 	protected static	$_path		= '';
 	public static		$types		= [];

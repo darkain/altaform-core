@@ -93,9 +93,6 @@ $db->commit();
 ////////////////////////////////////////////////////////////////////////////////
 $af	->header()
 		->load('index.tpl')
-			->merge([
-				'user'		=> $user,
-				'password'	=> $password,
-			])
+			->field('password', $password)
 		->render()
 	->footer();

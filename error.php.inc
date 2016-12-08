@@ -9,11 +9,13 @@ class aferror {
 
 
 	public static function render($header, $text, $log=false, $template=false) {
-		global $db, $af, $title;
+		global $db, $af;
 
 		if (!headers_sent()) header($header);
 
-		$title = str_replace('HTTP/1.1 ', '', $header);
+		if ($af instanceof altaform) {
+			$af->title = str_replace('HTTP/1.1 ', '', $header);
+		}
 
 		$data = $log ? self::log($text, false) : self::process($text);
 

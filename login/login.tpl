@@ -1,6 +1,6 @@
 <main>
 	<h2>Login</h2>
-	<form id="login" method="post" action="[var.afurl.base]/login/auth"><div>
+	<form id="login" method="post" action="[afurl.base]/login/auth"><div>
 		<input type="text" name="auth_account"
 			placeholder="Account" />
 		<br />

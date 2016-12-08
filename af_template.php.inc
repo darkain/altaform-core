@@ -108,16 +108,47 @@ trait af_template {
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//LOAD A TEMPLATE FILE - OVERRIDE DEFAULT TBX LOADER
+	//LOAD A TEMPLATE FILE - OVERRIDE DEFAULT TBX FILE LOADER
 	////////////////////////////////////////////////////////////////////////////
 	public function load($file) {
+		global $afurl, $og, $user;
+
 		$device	= $file . '.' . afdevice::device();
 		if (file_exists($device)) return parent::load($device);
 
 		$pathed	= $this->path() . $device;
 		if (file_exists($pathed)) return parent::load($pathed);
 
-		return parent::load($file);
+		parent::load($file, false);
+
+		$this->merge([
+			'af'	=> $this,
+			'afurl'	=> $afurl,
+			'og'	=> $og,
+			'user'	=> $user,
+		]);
+
+		return $this('var,onload');
+	}
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	//LOAD A TEMPLATE STRING - OVERRIDE DEFAULT TBX STRING LOADER
+	////////////////////////////////////////////////////////////////////////////
+	public function loadString($template, $onload=true) {
+		global $afurl, $og, $user;
+
+		parent::loadString($template, false);
+
+		$this->merge([
+			'af'	=> $this,
+			'afurl'	=> $afurl,
+			'og'	=> $og,
+			'user'	=> $user,
+		]);
+
+		return $this('var,onload');
 	}
 
 
@@ -362,7 +393,7 @@ trait af_template {
 	//RENDER AN ENTIRE PAGE
 	////////////////////////////////////////////////////////////////////////////
 	public function renderPage($file, $merge=false) {
-		global $title, $og, $user;
+		global $og, $user;
 
 		//ALLOW DEVICE SPECIFIC LOADING
 		$device	= $file . '.' . afdevice::device();
@@ -387,8 +418,8 @@ trait af_template {
 		//PULL OUT TITLE TAG
 		preg_match("/\<title[^>]*>(.*)\<\/title\>/", $text, $matches);
 		if (!empty($matches[1])) {
-			$title	= $this->renderString($matches[1]);
-			$text	= preg_replace("/\<title[^>]*>(.*)\<\/title\>/", '', $text);
+			$this->title	= $this->renderString($matches[1]);
+			$text			= preg_replace("/\<title[^>]*>(.*)\<\/title\>/", '', $text);
 		}
 
 		//PULL OUT STYLE TAG
@@ -418,7 +449,7 @@ trait af_template {
 					['name'=>'twitter:card',		'content'=>'photo'],
 					['name'=>'twitter:site',		'content'=>$og['twittername']],
 					['name'=>'twitter:domain',		'content'=>$og['twitterdomain']],
-					['name'=>'twitter:title',		'content'=>$title],
+					['name'=>'twitter:title',		'content'=>$this->title],
 					['name'=>'twitter:image',		'content'=>$og['image']],
 					['name'=>'twitter:description',	'content'=>$og['description']],
 				]);

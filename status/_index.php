@@ -3,7 +3,7 @@
 if (!$af->debug()) $user->requireStaff();
 
 
-$title = 'Server Status';
+$af->title = 'Server Status';
 
 $af->script($afurl->static.'/js/jquery.tablesorter.min.js');
 $af->style($afurl->static.'/css/theme.blue.css');

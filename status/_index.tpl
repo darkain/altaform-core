@@ -3,7 +3,7 @@
 </style>
 
 <main class="af-default">
-	<h1 class="af-header">[var.title]</h1>
+	<h1 class="af-header">[af.title]</h1>
 
 	<table class="tablesorter-blue">
 		<thead>
