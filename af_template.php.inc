@@ -110,7 +110,7 @@ trait af_template {
 	////////////////////////////////////////////////////////////////////////////
 	//LOAD A TEMPLATE FILE - OVERRIDE DEFAULT TBX FILE LOADER
 	////////////////////////////////////////////////////////////////////////////
-	public function load($file) {
+	public function load($file, $onload=true) {
 		global $afurl, $og, $user;
 
 		$device	= $file . '.' . afdevice::device();
@@ -121,12 +121,14 @@ trait af_template {
 
 		parent::load($file, false);
 
-		$this->merge([
-			'af'	=> $this,
-			'afurl'	=> $afurl,
-			'og'	=> $og,
-			'user'	=> $user,
-		]);
+		if ($onload) {
+			$this->merge([
+				'af'	=> $this,
+				'afurl'	=> $afurl,
+				'og'	=> $og,
+				'user'	=> $user,
+			]);
+		}
 
 		return $this('var,onload');
 	}
