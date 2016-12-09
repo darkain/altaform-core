@@ -107,50 +107,35 @@ trait af_template {
 
 
 
+
 	////////////////////////////////////////////////////////////////////////////
 	//LOAD A TEMPLATE FILE - OVERRIDE DEFAULT TBX FILE LOADER
 	////////////////////////////////////////////////////////////////////////////
-	public function load($file, $onload=true) {
+	public function onload(&$text) {
 		global $afurl, $og, $user;
 
+		$this('af',		$this,	$text);
+		$this('afurl',	$afurl,	$text);
+		$this('og',		$og,	$text);
+		$this('user',	$user,	$text);
+
+		return parent::onload($text);
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	//LOAD A TEMPLATE FILE - OVERRIDE DEFAULT TBX FILE LOADER
+	////////////////////////////////////////////////////////////////////////////
+	public function load($file) {
 		$device	= $file . '.' . afdevice::device();
 		if (file_exists($device)) return parent::load($device);
 
 		$pathed	= $this->path() . $device;
 		if (file_exists($pathed)) return parent::load($pathed);
 
-		parent::load($file, false);
-
-		if ($onload) {
-			$this->merge([
-				'af'	=> $this,
-				'afurl'	=> $afurl,
-				'og'	=> $og,
-				'user'	=> $user,
-			]);
-		}
-
-		return $this('var,onload');
-	}
-
-
-
-	////////////////////////////////////////////////////////////////////////////
-	//LOAD A TEMPLATE STRING - OVERRIDE DEFAULT TBX STRING LOADER
-	////////////////////////////////////////////////////////////////////////////
-	public function loadString($template, $onload=true) {
-		global $afurl, $og, $user;
-
-		parent::loadString($template, false);
-
-		$this->merge([
-			'af'	=> $this,
-			'afurl'	=> $afurl,
-			'og'	=> $og,
-			'user'	=> $user,
-		]);
-
-		return $this('var,onload');
+		return parent::load($file);
 	}
 
 
