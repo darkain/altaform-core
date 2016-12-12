@@ -43,12 +43,13 @@ class altaform extends tbx {
 
 
 	public function __construct($dbsession=false) {
-		global $afconfig;
+		global $afconfig, $afdevice;
 
 		parent::__construct();
 
 		$afconfig->af				= $this;
 		$this->config				= $afconfig;
+		$this->afdevice				= $afdevice;
 		$this->_session				= $dbsession;
 		$this->hhvm					= defined('HHVM_VERSION') ? 'HHVM' : 'PHP';
 		$this->_headers['notice']	= [];
@@ -200,6 +201,7 @@ class altaform extends tbx {
 
 	private				$_prefs		= [];
 	public				$config		= NULL;
+	public				$device		= NULL;
 	public				$title		= '';
 	protected static	$_time		= 0;
 	protected static	$_path		= '';
