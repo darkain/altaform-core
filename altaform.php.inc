@@ -49,7 +49,7 @@ class altaform extends tbx {
 
 		$afconfig->af				= $this;
 		$this->config				= $afconfig;
-		$this->afdevice				= $afdevice;
+		$this->device				= $afdevice;
 		$this->_session				= $dbsession;
 		$this->hhvm					= defined('HHVM_VERSION') ? 'HHVM' : 'PHP';
 		$this->_headers['notice']	= [];
