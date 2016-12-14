@@ -37,6 +37,8 @@ class afdevice {
 
 	public function __invoke() { return self::device(); }
 
+	public function __toString() { return self::device(); }
+
 
 	static function device() {
 		global $get;
