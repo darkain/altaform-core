@@ -32,6 +32,15 @@ class af_object_array implements ArrayAccess, Iterator {
 	}
 
 
+	public function _append($array) {
+		if (empty($array)) return;
+		foreach($array as $key => $value) {
+			if (isset($this->_object_array[$key])) continue;
+			$this->_object_array[$key]	= $value;
+		}
+	}
+
+
 	public function &_get() {
 		return $this->_object_array;
 	}
