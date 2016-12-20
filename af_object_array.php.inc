@@ -203,6 +203,16 @@ class af_object_array implements ArrayAccess, Iterator {
 	}
 
 
+	public function extract($keys) {
+		$return = [];
+		if (!is_array($keys)) $keys = func_get_args();
+		foreach ($keys as $item) {
+			$return[$item] = $this->_object_array[$item];
+		}
+		return $return;
+	}
+
+
 	public function __debugInfo() {
 		return $this->_object_array;
 	}
