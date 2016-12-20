@@ -142,7 +142,7 @@ abstract class	db_object
 	////////////////////////////////////////////////////////////////////////////
 	public function delete() {
 		global $db;
-		$db->deleteId($this->_table, $this);
+		return $db->deleteId($this->_table, $this);
 	}
 
 
