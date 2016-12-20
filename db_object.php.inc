@@ -97,7 +97,9 @@ abstract class	db_object
 	//COMPARE ITEM TO SEE IF IT IS THE CURRENT OBJECT INSTANCE
 	////////////////////////////////////////////////////////////////////////////
 	public function is($item) {
-		if (empty($item)  &&  !is_bool($item)) return false;
+		if ($item === true)		return $this->id() > 0;
+		if ($item === false)	return $this->id() === 0;
+		if (empty($item))		return false;
 
 		if (is_array($item)) {
 			if (empty($item[$this->_column])) return false;
@@ -106,12 +108,6 @@ abstract class	db_object
 		} else if (is_object($item)) {
 			if (empty($item->{$this->_column})) return false;
 			$item = $item->{$this->_column};
-
-		} else if ($item === true) {
-			return $this->id() > 0;
-
-		} else if ($item === false) {
-			return $this->id() === 0;
 		}
 
 		$item = (int) $item;
@@ -184,8 +180,8 @@ abstract class	db_object
 	////////////////////////////////////////////////////////////////////////////
 	//SHORTCUT FUNCTIONS FOR ERROR CHECKING
 	////////////////////////////////////////////////////////////////////////////
-	public function assert401() { assert401((string)$this); return $this; }
-	public function assert404() { assert404((string)$this); return $this; }
+	public function assert401($text=false) { assert401((string)$this, $text); return $this; }
+	public function assert404($text=false) { assert404((string)$this, $text); return $this; }
 
 
 
