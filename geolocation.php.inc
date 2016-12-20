@@ -10,7 +10,7 @@ class afgeo {
 		global $af;
 
 		if ($longitude === false) {
-			$geocode = self::geocode($latitude);
+			$geocode = is_object($latitude) ? $latitude : self::geocode($latitude);
 			if (empty($geocode->results[0]->geometry->location)) return false;
 			$latitude	= $geocode->results[0]->geometry->location->lat;
 			$longitude	= $geocode->results[0]->geometry->location->lng;
