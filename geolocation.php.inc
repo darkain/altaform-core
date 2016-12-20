@@ -5,6 +5,43 @@ class afgeo {
 	static $_geoloc = [];
 
 
+
+	public static function timezone($latitude, $longitude=false) {
+		global $af;
+
+		if ($longitude === false) {
+			$geocode = self::geocode($latitude);
+			if (empty($geocode->results[0]->geometry->location)) return false;
+			$latitude	= $geocode->results[0]->geometry->location->lat;
+			$longitude	= $geocode->results[0]->geometry->location->lng;
+		}
+
+		$url  = 'https://maps.googleapis.com/maps/api/timezone/json';
+		$url .= '?location=' . (float)$latitude . ',' . (float)$longitude;
+		$url .= '&timestamp=' . $af->time();
+		$url .= '&key=' . $af->config->google['timezone'];
+
+		return @json_decode(
+			@file_get_contents($url)
+		);
+	}
+
+
+
+	public static function geocode($location) {
+		global $af;
+
+		$url  = 'https://maps.googleapis.com/maps/api/geocode/json';
+		$url .= '?address=' . rawurlencode($location);
+		$url .= '&key=' . $af->config->google['geocoding'];
+
+		return @json_decode(
+			@file_get_contents($url)
+		);
+	}
+
+
+
 	public static function geolocate($location) {
 		global $db;
 
