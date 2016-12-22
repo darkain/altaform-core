@@ -244,7 +244,9 @@ class aferror {
 		if (strpos($get('message'), "evaluating 'elt.parentNode'")) return;
 
 		// IGNORE ERRORS FROM BOTS. THEY ARE TERRIBAD AT PROCESSING SCRIPTS PROPERLY
-		if (preg_match('/bot|crawl|slurp|spider/i', $get->server('HTTP_USER_AGENT'))) {
+		if (preg_match(
+			'/bot|crawl|slurp|spider|ucbrowser/i',
+			$get->server('HTTP_USER_AGENT'))) {
 			return;
 		}
 
