@@ -238,6 +238,7 @@ class aferror {
 		global $get;
 
 		// GENERIC ERROR MESSAGE IN JS FILE NOT HOSTED BY US (CROSS-SITE)
+		if ($get('message') === 'Script error') return;
 		if ($get('message') === 'Script error.') return;
 
 		// https://github.com/getsentry/raven-js/issues/756
