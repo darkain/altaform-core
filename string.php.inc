@@ -133,6 +133,36 @@ class afstring {
 
 
 
+	public static function doublespace($string) {
+		$count = strlen($string);
+
+		for ($i=0; $i<$count-1; $i++) {
+			switch ($string[$i]) {
+				case ' ': case "\n": case "\r": case "\t": case "\0": case "\x0B":
+					switch ($string[$i+1]) {
+						case ' ': case "\n": case "\r": case "\t": case "\0": case "\x0B":
+							return preg_replace('/\s\s+/', ' ', $string);
+					}
+					continue;
+
+				default:
+					continue;
+			}
+		}
+
+		return $string;
+	}
+
+
+
+
+	public static function doubletrim($string) {
+		return self::doublespace( self::trim($string) );
+	}
+
+
+
+
 	public static function slash($value) {
 		return str_replace('/', '⁄', $value);
 	}
