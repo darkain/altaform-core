@@ -101,16 +101,16 @@ class af_xlsx extends af_object_array {
 	//READ THE STRING VALUE FROM THE XLSX STRINGS TABLE
 	////////////////////////////////////////////////////////////////////////////
 	protected function _string($id) {
-		$item = $this->strings->si[(int)$id];
+		$item	= $this->strings->si[(int)$id];
 
 		if (!empty($item->t)) {
-			return trim(preg_replace('/\s\s+/', ' ', $item->t));
+			return afstring::doubletrim($item->t);
 		}
 
 		if (!empty($item->r)) {
 			$return = '';
 			foreach ($item->r as $part) $return .= $part->t;
-			return trim(preg_replace('/\s\s+/', ' ', $return));
+			return afstring::doubletrim($return);
 		}
 
 		return '';
