@@ -167,7 +167,7 @@ class altaform extends tbx {
 	//GET THE OBJECT TYPE, EITHER BY NUMBER OR NAME
 	//PASS IN A NUMBER TO GET A NAME
 	//PASS IN A NAME TO GET A NUMBER
-	public function type($name) {
+	public static function type($name) {
 		if (is_int($name)  ||  ctype_digit($name)) {
 			$name = (int) $name;
 			return !empty(self::$types[$name]) ? self::$types[$name] : false;
