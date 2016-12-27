@@ -244,6 +244,9 @@ class aferror {
 		// https://github.com/getsentry/raven-js/issues/756
 		if (strpos($get('message'), "evaluating 'elt.parentNode'")) return;
 
+		// IGNORE JQUERY UI ERRORS - THIS LIBRARY IS RANDOMLY BUGGY
+		if (strpos($get('url'), 'jquery-ui.min.js')) return;
+
 		// IGNORE ERRORS FROM BOTS. THEY ARE TERRIBAD AT PROCESSING SCRIPTS PROPERLY
 		if (preg_match(
 			'/bot|crawl|slurp|spider|ucbrowser/i',
