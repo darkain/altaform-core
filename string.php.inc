@@ -14,9 +14,13 @@ if (!function_exists('random_int')) {
 
 
 class afstring {
+
+
 	public static function url($string) {
 		return strtolower(urlencode($string));
 	}
+
+
 
 
 	public static function int($string) {
@@ -28,12 +32,16 @@ class afstring {
 	}
 
 
+
+
 	public static function currency($value) {
 		return (float) preg_replace(
 			'/^[\$\s\x{A2}-\x{A5}\x{20A0}-\x{20CF}\x{10192}]+/u',
 			'', $value
 		);
 	}
+
+
 
 
 	public static function string($value) {
@@ -50,13 +58,93 @@ class afstring {
 	}
 
 
+
+
+	public static function ltrim($string) {
+		$count = strlen($string);
+
+		for ($i=0; $i<$count; $i++) {
+			switch ($string[$i]) {
+				case ' ': case "\n": case "\r": case "\t": case "\0": case "\x0B":
+					continue;
+
+				default:
+					if ($i === 0) return $string;
+					return substr($string, $i);
+			}
+		}
+
+		return '';
+	}
+
+
+
+
+	public static function rtrim($string) {
+		$count = strlen($string);
+
+		for ($i=$count-1; $i>=0; $i--) {
+			switch ($string[$i]) {
+				case ' ': case "\n": case "\r": case "\t": case "\0": case "\x0B":
+					continue;
+
+				default:
+					if ($i === $count-1) return $string;
+					return substr($string, 0, $i+1);
+			}
+		}
+
+		return '';
+	}
+
+
+
+
+	public static function trim($string) {
+		$count = strlen($string);
+
+		for ($begin=0; $begin<$count; $begin++) {
+			switch ($string[$begin]) {
+				case ' ': case "\n": case "\r": case "\t": case "\0": case "\x0B":
+					continue;
+
+				default:
+					break 2;
+			}
+		}
+
+		for ($end=$count-1; $end>=$begin; $end--) {
+			switch ($string[$end]) {
+				case ' ': case "\n": case "\r": case "\t": case "\0": case "\x0B":
+					continue;
+
+				default:
+					break 2;
+			}
+		}
+
+		if ($begin > 0  ||  $end < $count-1) {
+			return substr($string, $begin, $end-$begin+1);
+		}
+
+		return $string;
+	}
+
+
+
+
 	public static function slash($value) {
 		return str_replace('/', '⁄', $value);
 	}
 
+
+
+
 	public static function unslash($value) {
 		return str_replace('⁄', '/', $value);
 	}
+
+
 
 
 	public static function striphtml($string, $length=false) {
@@ -69,9 +157,13 @@ class afstring {
 	}
 
 
+
+
 	public static function stripwhitespace($string) {
 		return str_replace(['+', ' ', "\t", "\r", "\n", "\0", "\x0B"], '', $string);
 	}
+
+
 
 
 	public static function truncateword($string, $length) {
@@ -79,6 +171,8 @@ class afstring {
 		if (strlen($string) <= $length) return $string;
 		return preg_replace('/\s+?(\S+)?$/', '', substr($string, 0, $length+1));
 	}
+
+
 
 
 	public static function linkify($string) {
@@ -94,6 +188,8 @@ class afstring {
 	}
 
 
+
+
 	public static function implode($array) {
 		if (empty($array)  ||  !tbx_array($array)) return '';
 		if (count($array) === 1) return reset($array);
@@ -103,11 +199,15 @@ class afstring {
 	}
 
 
+
+
 	public static function embed($path, $mimetype=false) {
 		$text = '';
 		if (!empty($mimetype)) $text .= "data:$mimetype;base64,";
 		return $text . base64_encode(file_get_contents($path));
 	}
+
+
 
 
 	public static function regex($string) {
@@ -134,6 +234,8 @@ class afstring {
 	}
 
 
+
+
 	//GENERATE NEW RANDOM PASSWORD OF $length CHARACTERS
 	public static function password($length=16) {
 		$password	= '';
@@ -143,6 +245,8 @@ class afstring {
 		}
 		return $password;
 	}
+
+
 
 
 	public static function encrypt($data, $secret=false) {
@@ -156,6 +260,8 @@ class afstring {
 		$encode = str_replace(['+', '/', '='], ['-', '_', '~'], $encode);
 		return $encode;
 	}
+
+
 
 
 	public static function decrypt($data, $secret=false) {
@@ -175,9 +281,12 @@ class afstring {
 
 
 
+
 	public static function maxDigits($value, $digits) {
 		return round($value, max(0, $digits-strlen((string)round($value))));
 	}
+
+
 
 
 	public static function fromBytes($value, $format=false, $sep=' ') {
@@ -211,6 +320,8 @@ class afstring {
 	}
 
 
+
+
 	public static function toBytes($string) {
 		$value	= (float)trim($string);
 		$rest	= trim(substr($string, strlen((string)$value)));
@@ -239,9 +350,11 @@ class afstring {
 
 
 
+
 	public static function ascii($string) {
 		return mb_check_encoding($string, 'ASCII');
 	}
+
 
 
 
@@ -251,9 +364,11 @@ class afstring {
 
 
 
+
 	public static function toAscii($string) {
 		return @iconv('UTF-8', 'ASCII//TRANSLIT', $string);
 	}
+
 
 
 
@@ -263,9 +378,11 @@ class afstring {
 
 
 
+
 	public static function removeBreaks($string) {
 		return preg_replace('/[\pZ\pC]/u', ' ', $string);
 	}
+
 
 
 
@@ -288,6 +405,8 @@ class afstring {
 	}
 
 
+
+
 	public static $languages = [
 		'eng' => '/[a-z]/i',
 		'jpn' => '/[\x{3040}-\x{30ff}]/u',
@@ -298,6 +417,9 @@ class afstring {
 	];
 
 
+
+
 	public static $allowed =
 		'^/(01234=abcdefghijklmnopqrstuvwxyz-ABCDEFGHIJKLMNOPQRSTUVWXYZ+56789)\$';
+
 }
