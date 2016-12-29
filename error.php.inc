@@ -249,7 +249,7 @@ class aferror {
 
 		// IGNORE ERRORS FROM BOTS. THEY ARE TERRIBAD AT PROCESSING SCRIPTS PROPERLY
 		if (preg_match(
-			'/bot|crawl|slurp|spider|ucbrowser/i',
+			'/bot|crawl|slurp|spider|ucbrowser|wkhtmltopdf/i',
 			$get->server('HTTP_USER_AGENT'))) {
 			return;
 		}
