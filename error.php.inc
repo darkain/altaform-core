@@ -245,7 +245,7 @@ class aferror {
 		if (strpos($get('message'), "evaluating 'elt.parentNode'")) return;
 
 		// IGNORE JQUERY UI ERRORS - THIS LIBRARY IS RANDOMLY BUGGY
-		if (strpos($get('url'), 'jquery-ui.min.js')) return;
+		if (strpos($get('file'), 'jquery-ui.min.js')) return;
 
 		// IGNORE ERRORS FROM BOTS. THEY ARE TERRIBAD AT PROCESSING SCRIPTS PROPERLY
 		if (preg_match(
