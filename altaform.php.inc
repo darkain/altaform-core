@@ -51,12 +51,10 @@ class altaform extends tbx {
 		$this->config				= $afconfig;
 		$this->device				= $afdevice;
 		$this->_session				= $dbsession;
+		$this->_time				= time();
+		$this->_path				= getcwd();
 		$this->hhvm					= defined('HHVM_VERSION') ? 'HHVM' : 'PHP';
 		$this->_headers['notice']	= [];
-
-		//TODO: THESE PROBABLY SHOULD NO LONGER BE STATIC!!
-		self::$_time				= time();
-		self::$_path				= getcwd();
 
 		if (substr(self::$_path, -1) !== '/') self::$_path .= '/';
 
@@ -200,11 +198,11 @@ class altaform extends tbx {
 
 
 	private				$_prefs		= [];
+	protected			$_time		= 0;
+	protected			$_path		= '';
 	public				$config		= NULL;
 	public				$device		= NULL;
 	public				$title		= '';
-	protected static	$_time		= 0;
-	protected static	$_path		= '';
 	public static		$types		= [];
 	public static		$class		= 'altaform';
 	public static		$version	= 'Altaform-Core 2.6.0';
