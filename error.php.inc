@@ -244,6 +244,9 @@ class aferror {
 		// https://github.com/getsentry/raven-js/issues/756
 		if (strpos($get('message'), "evaluating 'elt.parentNode'")) return;
 
+		// IGNORE ISSUES WITH CriOS INSERTED JAVASCRIPT FILE
+		if (strpos($get('message'), '__gCrWeb')) return;
+
 		// IGNORE JQUERY UI ERRORS - THIS LIBRARY IS RANDOMLY BUGGY
 		if (strpos($get('file'), 'jquery-ui.min.js')) return;
 
