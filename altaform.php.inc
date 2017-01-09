@@ -56,7 +56,7 @@ class altaform extends tbx {
 		$this->hhvm					= defined('HHVM_VERSION') ? 'HHVM' : 'PHP';
 		$this->_headers['notice']	= [];
 
-		if (substr(self::$_path, -1) !== '/') self::$_path .= '/';
+		if (substr($this->_path, -1) !== '/') $this->_path .= '/';
 
 		//REPORT *ALL* ERRORS, WARNINGS, NOTICES ON DEVELOPMENT SERVERS
 		if ($this->debug()) error_reporting(E_ALL);
@@ -177,14 +177,14 @@ class altaform extends tbx {
 
 
 	public function path() {
-		return self::$_path;
+		return $this->_path;
 	}
 
 
 
 
 	public function time() {
-		return self::$_time;
+		return $this->_time;
 	}
 
 
