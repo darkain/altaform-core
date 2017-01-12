@@ -97,33 +97,20 @@ class af_xlsx extends af_object_array {
 
 
 
-	////////////////////////////////////////////////////////////////////////////
-	//READ THE STRING VALUE FROM THE XLSX STRINGS TABLE
-	////////////////////////////////////////////////////////////////////////////
-	protected function _string($id) {
-		$item	= $this->strings->si[(int)$id];
-
-		if (!empty($item->t)) {
-			return afstring::doubletrim($item->t);
-		}
-
-		if (!empty($item->r)) {
-			$return = '';
-			foreach ($item->r as $part) $return .= $part->t;
-			return afstring::doubletrim($return);
-		}
-
-		return '';
-	}
-
-
-
 
 	////////////////////////////////////////////////////////////////////////////
 	//RETURNS: STRING=NEW NAME - TRUE=IGNORE - FALSE=ERROR
 	////////////////////////////////////////////////////////////////////////////
 	protected function _translate($name) {
 		global $db;
+
+		if ($name instanceof SimpleXMLElement) {
+			$name = (string) $name;
+		}
+
+		if (!is_string($name)) {
+			return $this->invalid('Invalid Name: ' . print_r($name,true));
+		}
 
 		if (empty($name)) return true;
 		if (empty($this->translate)) return $name;
@@ -171,27 +158,48 @@ class af_xlsx extends af_object_array {
 			$file = zip_entry_name($entry);
 
 			if ($file === 'xl/sharedStrings.xml') {
-				$this->strings = simplexml_load_string(
-					zip_entry_read($entry, zip_entry_filesize($entry))
+				$strings = simplexml_load_string(
+					zip_entry_read($entry, zip_entry_filesize($entry)),
+					'SimpleXMLElement',
+					LIBXML_COMPACT|LIBXML_NOBLANKS|LIBXML_NOCDATA|LIBXML_NONET
 				);
 
 			} else if ($file === 'xl/worksheets/sheet1.xml'  &&  empty($this->sheet)) {
 				$this->sheet = simplexml_load_string(
-					zip_entry_read($entry, zip_entry_filesize($entry))
+					zip_entry_read($entry, zip_entry_filesize($entry)),
+					'SimpleXMLElement',
+					LIBXML_COMPACT|LIBXML_NOBLANKS|LIBXML_NOCDATA|LIBXML_NONET
 				);
 			}
 		}
 
 		zip_close($zip);
 
-		if (empty($this->strings)) {
+		//VERIFY WE COULD READ THE MAIN SHEET DATA
+		if (empty($this->sheet)) {
+			throw new afException('CANNOT READ XLSX SHEET - ' . $filename);
+			return;
+		}
+
+		//VERIFY WE COULD READ THE STRINGS LOOKUP TABLE
+		if (empty($strings)  ||  empty($strings->si)) {
 			throw new afException('CANNOT READ XLSX STRINGS - ' . $filename);
 			return;
 		}
 
-		if (empty($this->sheet)) {
-			throw new afException('CANNOT READ XLSX SHEET - ' . $filename);
-			return;
+		//OPTIMIZE STRINGS TABLE
+		foreach ($strings->si as $item) {
+			if (isset($item->t)) {
+				$this->strings[] = afstring::doubletrim( (string) $item->t );
+
+			} else if (isset($item->r)) {
+				$string = '';
+				foreach ($item->r as $part) $string .= $part->t;
+				$this->strings[] = afstring::doubletrim($string);
+
+			} else {
+				$this->strings[] = '';
+			}
 		}
 
 		return true;
@@ -209,7 +217,7 @@ class af_xlsx extends af_object_array {
 			if (!isset($item->attributes()->r)) continue;
 			if (!isset($item->v)) continue;
 			$column	= preg_replace('/\d/', '', $item->attributes()->r);
-			$name	= $this->_string($item->v);
+			$name	= $this->strings[(int)$item->v];
 			$header	= $this->_translate($name);
 			if ($header === false) throw new afException('UNKNOWN HEADER: ' . $name);
 			if (is_string($header)) $this->header[$column] = $header;
@@ -227,24 +235,25 @@ class af_xlsx extends af_object_array {
 
 		for ($i=0; $i<$columns; $i++) {
 			$item = $row->c[$i];
+			$attr = $item->attributes();
 
-			if (empty($item->attributes()->r)) continue;
+			if (empty($attr->r)) continue;
 
-			$rownum	= preg_replace('/\D/', '', $item->attributes()->r);
-			$column	= preg_replace('/\d/', '', $item->attributes()->r);
-			$type	= $item->attributes()->t;
+			$rownum	= preg_replace('/\D/', '', $attr->r);
+			$column	= preg_replace('/\d/', '', $attr->r);
+			$type	= $attr->t;
 			$value	= $item->v;
 
 			if (empty($this->header[$column])) continue;
 
 			if (!is_null($type)  &&  !is_null($value)) {
-				$data[$this->header[$column]] = $this->_string($value);
+				$data[$this->header[$column]] = $this->strings[(int)$value];
 				continue;
 			}
 
 			if (!is_null($type)  ||  is_null($value)) continue;
 
-			$value = trim((string)$value);
+			$value = afstring::trim((string)$value);
 
 			if (strlen($value) < 1) continue;
 
