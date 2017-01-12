@@ -62,6 +62,7 @@ class afstring {
 
 	public static function ltrim($string) {
 		$count = strlen($string);
+		if ($count < 1) return $string;
 
 		for ($i=0; $i<$count; $i++) {
 			switch ($string[$i]) {
@@ -74,7 +75,7 @@ class afstring {
 			}
 		}
 
-		return '';
+		return $string;
 	}
 
 
@@ -82,6 +83,7 @@ class afstring {
 
 	public static function rtrim($string) {
 		$count = strlen($string);
+		if ($count < 1) return $string;
 
 		for ($i=$count-1; $i>=0; $i--) {
 			switch ($string[$i]) {
@@ -94,7 +96,7 @@ class afstring {
 			}
 		}
 
-		return '';
+		return $string;
 	}
 
 
@@ -102,6 +104,7 @@ class afstring {
 
 	public static function trim($string) {
 		$count = strlen($string);
+		if ($count < 1) return $string;
 
 		for ($begin=0; $begin<$count; $begin++) {
 			switch ($string[$begin]) {
