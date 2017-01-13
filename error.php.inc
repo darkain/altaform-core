@@ -166,7 +166,7 @@ class aferror {
 		if (empty($afconfig->debug)) return error500('', true, $arr);
 
 
-		$html = '<table class="af-debug-backtrace">';
+		$html = "\n" . '<table class="af-debug-backtrace">' . "\n";
 
 		foreach ($backtrace as $key => $value) {
 			$html .= '<tr><td>' . ($key+1) . '</td><td class="nobr">Line: ';
@@ -192,7 +192,7 @@ class aferror {
 				}
 				$html .= ')';
 			}
-			$html .= '</td></tr>';
+			$html .= "</td></tr>\n";
 		}
 
 		foreach ($arr as $key => $value) {
@@ -200,7 +200,7 @@ class aferror {
 			$html .= htmlspecialchars($key,TBX_SPECIAL_CHARS);
 			$html .= '</td><td>';
 			$html .= htmlspecialchars($value,TBX_SPECIAL_CHARS);
-			$html .= '</td></tr>';
+			$html .= "</td></tr>\n";
 		}
 
 		$html .= '</table>';
