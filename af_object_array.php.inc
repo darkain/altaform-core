@@ -17,7 +17,7 @@ class af_object_array implements ArrayAccess, Iterator {
 
 	public function _clone($array) {
 		$this->_object_array[] = [];
-		if (!is_array($array)  ||  empty($array)) return;
+		if (!tbx_array($array)) return;
 		foreach($array as $key => $value) {
 			$this->_object_array[$key]	= $value;
 		}
