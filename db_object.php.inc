@@ -192,7 +192,12 @@ abstract class	db_object
 	//SHORTCUT FUNCTIONS FOR ERROR CHECKING
 	////////////////////////////////////////////////////////////////////////////
 	public function assert401($text=false) { assert401((string)$this, $text); return $this; }
+	public function assert402($text=false) { assert402((string)$this, $text); return $this; }
+	public function assert403($text=false) { assert403((string)$this, $text); return $this; }
 	public function assert404($text=false) { assert404((string)$this, $text); return $this; }
+	public function assert405($text=false) { assert405((string)$this, $text); return $this; }
+	public function assert422($text=false) { assert422((string)$this, $text); return $this; }
+	public function assert500($text=false) { assert500((string)$this, $text); return $this; }
 
 
 

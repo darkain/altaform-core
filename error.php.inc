@@ -269,29 +269,43 @@ class aferror {
 
 
 
-function error401($text='', $log=false, $details=false) {
+function error401($text=false, $log=false, $details=false) {
 	aferror::render('HTTP/1.1 401 Unauthorized', [
 		'<div id="af-fatal"><h1>ERROR: 401</h1>',
 		'<h2>AUTHORIZATION REQUIRED</h2>',
 		'<h3>' . htmlspecialchars($details,TBX_SPECIAL_CHARS) . '</h3>',
-		'<i>' . $text . '</i></div>',
+		($text !== false ? '<i>' . $text . '</i>' : '') . '</div>',
 	], $log, 'error401.tpl');
 }
 
 
 
-function error403($text='', $log=false, $details=false) {
+
+function error402($text=false, $log=false, $details=false) {
+	aferror::render('HTTP/1.1 402 Payment Required', [
+		'<div id="af-fatal"><h1>ERROR: 402</h1>',
+		'<h2>PAYMENT REQUIRED</h2>',
+		'<h3>' . htmlspecialchars($details,TBX_SPECIAL_CHARS) . '</h3>',
+		($text !== false ? '<i>' . $text . '</i>' : '') . '</div>',
+	], $log, 'error402.tpl');
+}
+
+
+
+
+function error403($text=false, $log=false, $details=false) {
 	aferror::render('HTTP/1.1 403 Forbidden', [
 		'<div id="af-fatal"><h1>ERROR: 403</h1>',
 		'<h2>FORBIDDEN</h2>',
 		'<h3>' . htmlspecialchars($details,TBX_SPECIAL_CHARS) . '</h3>',
-		'<i>' . $text . '</i></div>',
+		($text !== false ? '<i>' . $text . '</i>' : '') . '</div>',
 	], $log, 'error403.tpl');
 }
 
 
 
-function error404($text='', $log=false, $details=false) {
+
+function error404($text=false, $log=false, $details=false) {
 	global $afurl, $get, $afconfig;
 
 	if (!empty($afurl)) {
@@ -311,85 +325,110 @@ function error404($text='', $log=false, $details=false) {
 		'<div id="af-fatal"><h1>ERROR: 404</h1>',
 		'<h2>FILE NOT FOUND</h2>',
 		'<h3>' . htmlspecialchars($details,TBX_SPECIAL_CHARS) . '</h3>',
-		'<i>' . $text . '</i></div>',
+		($text !== false ? '<i>' . $text . '</i>' : '') . '</div>',
 	], $log, 'error404.tpl');
 }
 
 
 
-function error405($text='', $log=true, $details=false) {
+
+function error405($text=false, $log=true, $details=false) {
 	aferror::render('HTTP/1.1 405 Method Not Allowed', [
 		'<div id="af-fatal"><h1>ERROR: 405</h1>',
 		'<h2>METHOD NOT ALLOWED</h2>',
 		'<h3>' . htmlspecialchars($details,TBX_SPECIAL_CHARS) . '</h3>',
-		'<i>' . $text . '</i></div>',
+		($text !== false ? '<i>' . $text . '</i>' : '') . '</div>',
 	], $log, 'error405.tpl');
 }
 
 
 
-function error422($text='', $log=true, $details=false) {
+
+function error422($text=false, $log=true, $details=false) {
 	aferror::render('HTTP/1.1 422 Unprocessable Entity', [
 		'<div id="af-fatal"><h1>ERROR: 422</h1>',
 		'<h2>UNPROCESSABLE ENTITY</h2>',
 		'<h3>' . htmlspecialchars($details,TBX_SPECIAL_CHARS) . '</h3>',
-		'<i>' . $text . '</i></div>',
+		($text !== false ? '<i>' . $text . '</i>' : '') . '</div>',
 	], $log, 'error422.tpl');
 }
 
 
 
-function error500($text='', $log=true, $details=false) {
+
+function error500($text=false, $log=true, $details=false) {
 	if (is_array($details)) $details = $details['details'];
 
 	aferror::render('HTTP/1.1 500 Internal Server Error', [
 		'<div id="af-fatal"><h1>ERROR: 500</h1>',
 		'<h2>INTERNAL SERVER ERROR</h2>',
 		'<h3>' . htmlspecialchars($details,TBX_SPECIAL_CHARS) . '</h3>',
-		'<i>' . $text . '</i></div>',
+		($text !== false ? '<i>' . $text . '</i>' : '') . '</div>',
 	], $log, 'error500.tpl');
 }
 
 
 
-function assert401($item, $text='', $log=false) {
+
+function assert401($item, $text=false, $log=false) {
+	if ($item instanceof db_object) return $item->error401($text);
 	return (empty($item) && $item!=='') ? error401($text, $log) : $item;
 }
 
-function assert403($item, $text='', $log=false) {
+
+function assert402($item, $text=false, $log=false) {
+	if ($item instanceof db_object) return $item->error402($text);
+	return (empty($item) && $item!=='') ? error402($text, $log) : $item;
+}
+
+
+function assert403($item, $text=false, $log=false) {
+	if ($item instanceof db_object) return $item->error403($text);
 	return (empty($item) && $item!=='') ? error403($text, $log) : $item;
 }
 
-function assert404($item, $text='', $log=false) {
+
+function assert404($item, $text=false, $log=false) {
+	if ($item instanceof db_object) return $item->error404($text);
 	return (empty($item) && $item!=='') ? error404($text, $log) : $item;
 }
 
-function assert405($item, $text='', $log=false) {
+
+function assert405($item, $text=false, $log=false) {
+	if ($item instanceof db_object) return $item->error405($text);
 	return (empty($item) && $item!=='') ? error405($text, $log) : $item;
 }
 
-function assert422($item, $text='', $log=true) {
+
+function assert422($item, $text=false, $log=true) {
+	if ($item instanceof db_object) return $item->error422($text);
 	return (empty($item) && $item!=='') ? error422($text, $log) : $item;
 }
 
-function assert500($item, $text='', $log=true) {
+
+function assert500($item, $text=false, $log=true) {
+	if ($item instanceof db_object) return $item->error500($text);
 	return (empty($item) && $item!=='') ? error500($text, $log) : $item;
 }
 
-function assertRead($item, $text='', $log=false) {
+
+function assertRead($item, $text=false, $log=false) {
 	return ($item !== true && !in_array($item, ['read', 'write', 'grant']))
 		? error401($text, $log) : $item;
 }
 
-function assertWrite($item, $text='', $log=false) {
+
+function assertWrite($item, $text=false, $log=false) {
 	return ($item !== true && !in_array($item, ['write', 'grant']))
 		? error401($text, $log) : $item;
 }
 
-function assertGrant($item, $text='', $log=false) {
+
+function assertGrant($item, $text=false, $log=false) {
 	return ($item !== true && !in_array($item, ['grant']))
 		? error401($text, $log) : $item;
 }
+
 
 
 
@@ -420,6 +459,7 @@ set_error_handler(function($errno, $errstr, $errfile=NULL, $errline=NULL, $errco
 
 
 
+
 set_exception_handler(function($e) {
 	if (!error_reporting()) return false;
 
@@ -430,6 +470,7 @@ set_exception_handler(function($e) {
 		'error-line'	=> $e->getLine(),
 	], true, $e->getTrace());
 });
+
 
 
 
@@ -450,6 +491,7 @@ register_shutdown_function(function() {
 
 
 
+
 function _pudl_log($callback, $db, $result=NULL) {
 	global $af;
 
@@ -461,6 +503,7 @@ function _pudl_log($callback, $db, $result=NULL) {
 		FILE_APPEND
 	);
 }
+
 
 
 
