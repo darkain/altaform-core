@@ -32,4 +32,5 @@ altaform::$types = [
 	25	=> 'chatroom',
 	26	=> 'panel',
 	27	=> 'panelroom',
+	28	=> 'invoice',
 ];
