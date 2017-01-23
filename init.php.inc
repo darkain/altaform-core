@@ -96,7 +96,7 @@ if (!headers_sent()) {
 
 
 //Host Information for Config
-assert500(afurl::validateDomain($afurl->domain), 'Invalid Domain: ' . $afurl->domain);
+assert500($afurl->validateDomain($afurl->domain), 'Invalid Domain: ' . $afurl->domain);
 
 
 

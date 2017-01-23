@@ -13,7 +13,7 @@ require_once('db_object.php.inc');
 
 class			afuser
 	extends		db_object
-	implements	af_url {
+	implements	afi_url {
 	use			af_node,	af_permission,		af_preference;
 
 

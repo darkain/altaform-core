@@ -5,11 +5,11 @@ require_once('_closure/closure.php');
 
 
 
-interface af_url { public function url(); }
+interface afi_url { public function url(); }
 
 
 
-class		afurl {
+class		af_url {
 	use		closures;
 
 
@@ -88,7 +88,7 @@ class		afurl {
 
 
 	public function __invoke($path, $base=false) {
-		if ($path instanceof af_url  ||  !tbx_array($path)) {
+		if ($path instanceof afi_url  ||  !tbx_array($path)) {
 			return ($base ? ($this->base.'/') : '') . $this->clean($path);
 		}
 
@@ -126,7 +126,7 @@ class		afurl {
 
 
 	public function clean($fragment) {
-		if ($fragment instanceof af_url) {
+		if ($fragment instanceof afi_url) {
 			$fragment = $fragment->url();
 		}
 		return ($fragment instanceof afurlsafe)
@@ -536,7 +536,7 @@ class		afurl {
 }
 
 
-$afurl = new afurl;
+$afurl = new af_url;
 
 
 
