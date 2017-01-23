@@ -1,7 +1,9 @@
 <?php
 
+
 //Enable automatic error display
 ini_set('display_errors', 'on');
+
 
 
 
@@ -10,8 +12,10 @@ ob_start();
 
 
 
+
 //PHP Error handling functions
 require_once('error.php.inc');
+
 
 
 
@@ -22,8 +26,10 @@ mb_internal_encoding('UTF-8');
 
 
 
+
 //Set the include path to make it easier to use include() and require()
 set_include_path(get_include_path() . PATH_SEPARATOR . getcwd());
+
 
 
 
@@ -34,11 +40,13 @@ ini_set('zlib.output_compression_level', '0');
 
 
 
+
 //DEFINE PHP_VERSION_ID IF NOT ALREADY DEFINED
 if (!defined('PHP_VERSION_ID')) {
 	$version = explode('.', PHP_VERSION);
 	define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
 }
+
 
 
 
@@ -69,7 +77,8 @@ require_once('types.php.inc');
 
 
 //URL Parser
-require_once('url.php.inc');
+require_once('af_url.php.inc');
+
 
 
 
@@ -85,8 +94,10 @@ if (!headers_sent()) {
 
 
 
+
 //Host Information for Config
 assert500(afurl::validateDomain($afurl->domain), 'Invalid Domain: ' . $afurl->domain);
+
 
 
 
@@ -105,6 +116,7 @@ if (is_file('_config/'.$afurl->domain.'/config.php.inc')) {
 
 
 
+
 //Load additional configuation file
 if (is_file($afconfig->root . '/_altaform.php.inc')) {
 	$__cwd = getcwd();
@@ -116,6 +128,7 @@ if (is_file($afconfig->root . '/_altaform.php.inc')) {
 
 
 
+
 //Set default flags for Getvar
 if (isset($afconfig->getvar)) {
 	$get->flags($afconfig->getvar);
@@ -123,8 +136,10 @@ if (isset($afconfig->getvar)) {
 
 
 
+
 //Initialize afurl
 $afurl->_all();
+
 
 
 
@@ -135,8 +150,10 @@ if (is_object($afconfig->debug)) {
 
 
 
+
 //Disable automatic error display
 ini_set('display_errors', 'off');
+
 
 
 
@@ -169,6 +186,7 @@ if ($get->server('HTTP_UPGRADE_INSECURE_REQUESTS')) {
 
 
 
+
 //Disable Frames
 if (!headers_sent()) {
 	header('X-Frame-Options: ' . $afconfig->frames);
@@ -176,9 +194,11 @@ if (!headers_sent()) {
 
 
 
+
 //Set the time zone and locale (localization)
 date_default_timezone_set(	$afconfig->timezone);
 setlocale(LC_CTYPE,			$afconfig->locale);
+
 
 
 
@@ -238,6 +258,7 @@ $af->login();
 
 
 
+
 //Parse the URL and load the page!
 while ($afurl->reparse) {
 	$afurl->reparse = false;
@@ -245,6 +266,7 @@ while ($afurl->reparse) {
 	if (is_string($afurl->path)) require($afurl->path);
 	chdir($afurl->directory);
 }
+
 
 
 

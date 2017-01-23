@@ -9,8 +9,8 @@ interface af_url { public function url(); }
 
 
 
-class afurl {
-	use closures;
+class		afurl {
+	use		closures;
 
 
 	public function __construct() {
