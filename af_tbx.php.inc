@@ -19,15 +19,6 @@ trait af_tbx {
 				$text = afstring::url($text);
 			break;
 
-			case 'hex':
-				$text = bin2hex($text);
-			break;
-
-			//TODO: this is deprecated, instead date=Y/M,f=lower (to support ALL date formats)
-			case 'urldate':
-				$text = strtolower(date('Y/M', $text));
-			break;
-
 			case 'linkify':
 				$text = afstring::linkify($text);
 			break;
