@@ -98,7 +98,6 @@ class altaform extends tbx {
 
 
 
-	//TODO: THIS IS DEPRECATED, AND SHOULD BE HANDLED BY $AFURL
 	public function jq() {
 		global $get;
 		if (!isset($get)) return false;
