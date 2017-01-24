@@ -153,7 +153,7 @@ abstract class	db_object
 
 		return !empty($data)
 			? $db->updateId($this->_table, $data, $this)
-			: false;
+			: true;
 	}
 
 
