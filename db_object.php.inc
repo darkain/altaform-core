@@ -28,7 +28,7 @@ abstract class	db_object
 		if (is_array($item)) {
 			$fetch ? $this->fetch($item)		: $this->_replace($item);
 
-		} else if (is_a($item, 'afurl')) {
+		} else if (is_a($item, 'af_url')) {
 			$this->fetch($item->id);
 
 		} else if (is_a($item, 'getvar')) {
