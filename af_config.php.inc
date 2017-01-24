@@ -45,6 +45,7 @@ class			af_config
 		$this->session		= [
 			'name'			=> false,
 			'domain'		=> false,
+			'redirect'		=> 'root',
 		];
 
 		//Defaults for password complexity
