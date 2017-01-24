@@ -104,7 +104,7 @@ class fileImporter {
 
 
 	private static function processImage(&$image, $name=false, $hash=false) {
-		global $af;
+		global $af, $afurl;
 
 		//ONLY SUPPORT JPEG / PNG / GIF FILES FOR NOW
 		try {
@@ -119,7 +119,7 @@ class fileImporter {
 		//BUILD DATA TO RETURN
 		$data['exif']		= self::getExif($image);
 		$data['hash']		= self::getHash($image, $hash);
-		$data['url']		= afurl::cdn($data['hash']);
+		$data['url']		= $afurl->cdn($data['hash']);
 		$data['size']		= $image->getImageLength();
 		$data['mime']		= $image->getImageMimeType();
 		$data['type']		= $image->getImageFormat();
@@ -203,6 +203,8 @@ class fileImporter {
 
 
 	private static function resize(&$image, $size, $square=false) {
+		global $afurl;
+
 		$resized = clone $image;
 
 		//RESIZE THE IMAGE
@@ -223,7 +225,7 @@ class fileImporter {
 		$data['type']		= (string) $size;
 		$data['hash']		= md5($blob);
 		$data['size']		= strlen($blob);
-		$data['url']		= afurl::cdn($data['hash']);
+		$data['url']		= $afurl->cdn($data['hash']);
 		$data['thumb_hash']	= pudlFunction::unhex($data['hash']);
 
 		//COPY BLOB TO IMAGE FILE SERVER
