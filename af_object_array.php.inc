@@ -230,11 +230,32 @@ class af_object_array implements ArrayAccess, Iterator {
 	}
 
 
+	public function snapshot() {
+		$this->_snapshot = $this->_object_array;
+	}
+
+
+	public function compare() {
+		$return = [];
+		if (!empty($this->_snapshot)) {
+			foreach ($this->_object_array as $key => $value) {
+				if (!isset($this->_snapshot[$key])) {
+					$return[$key] = $value;
+				} else if ($this->_snapshot[$key] !== $value) {
+					$return[$key] = $value;
+				}
+			}
+		}
+		return $return;
+	}
+
+
 	public function __debugInfo() {
 		return $this->_object_array;
 	}
 
 
-	private $_object_array = [];
+	private $_object_array	= [];
+	private $_snapshot		= false;
 
 }

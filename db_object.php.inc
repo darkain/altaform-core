@@ -138,6 +138,28 @@ abstract class	db_object
 
 
 	////////////////////////////////////////////////////////////////////////////
+	//UPDATE OBJECT'S CHANGES BACK INTO DATABASE - REQUIRES AN EXISTING SNAPSHOT
+	////////////////////////////////////////////////////////////////////////////
+	public function push($ignore=[]) {
+		global $db;
+
+		$data = $this->compare();
+
+		foreach ($data as $key => $value) {
+			if (in_array($key, $ignore)) {
+				unset($data[$key]);
+			}
+		}
+
+		return !empty($data)
+			? $db->updateId($this->_table, $data, $this)
+			: false;
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
 	//DELETE THIS OBJECT FROM DATABASE
 	////////////////////////////////////////////////////////////////////////////
 	public function delete() {
