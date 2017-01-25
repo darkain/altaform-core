@@ -2,7 +2,7 @@
 
 trait af_node {
 
-	function push($message) {
+	function nodepush($message) {
 		global $af, $afurl;
 
 		if (empty($afurl->push)) return;
