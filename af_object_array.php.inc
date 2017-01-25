@@ -239,7 +239,7 @@ class af_object_array implements ArrayAccess, Iterator {
 		$return = [];
 		if (!empty($this->_snapshot)) {
 			foreach ($this->_object_array as $key => $value) {
-				if (!isset($this->_snapshot[$key])) {
+				if (!array_key_exists($key, $this->_snapshot)) {
 					$return[$key] = $value;
 				} else if ($this->_snapshot[$key] !== $value) {
 					$return[$key] = $value;
