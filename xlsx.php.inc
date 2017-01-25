@@ -64,14 +64,18 @@ class af_xlsx extends af_object_array {
 			$row		= (int) $value->attributes()->r;
 			$columns	= count($value->c);
 
-			//FIRST ROW, HEADER!
-			if ($row === 1) {
-				$this->_header($value, $columns);
-				continue;
-			}
+			//IF TRANSLATE IS TRUE, WE USE COLUMN LETTERS, NOT HEADER ROW
+			if ($this->translate !== true) {
 
-			//IF WE DON'T HAVE A HEADER ROW, WE CANNOT DO ANYTHING!
-			if (empty($this->header)) continue;
+				//FIRST ROW, HEADER!
+				if ($row === 1) {
+					$this->_header($value, $columns);
+					continue;
+				}
+
+				//IF WE DON'T HAVE A HEADER ROW, WE CANNOT DO ANYTHING!
+				if (empty($this->header)) continue;
+			}
 
 			//BODY CONTENTS
 			$this->_body($value, $columns);
@@ -239,32 +243,59 @@ class af_xlsx extends af_object_array {
 
 			if (empty($attr->r)) continue;
 
-			$rownum	= preg_replace('/\D/', '', $attr->r);
+			$rownum	= (int) preg_replace('/\D/', '', $attr->r);
 			$column	= preg_replace('/\d/', '', $attr->r);
 			$type	= $attr->t;
 			$value	= $item->v;
 
-			if (empty($this->header[$column])) continue;
 
+			//HEADER IS SAME AS COLUMN
+			if ($this->translate === true) {
+				$header = $column;
+
+			//NO HEADER DATA FOUND
+			} else if (empty($this->header[$column])) {
+				continue;
+
+			//HEADER FROM TRANSLATION TABLE
+			} else {
+				$header = $this->header[$column];
+			}
+
+
+			//PULL DATA FROM STRINGS TABLE
 			if (!is_null($type)  &&  !is_null($value)) {
-				$data[$this->header[$column]] = $this->strings[(int)$value];
+				$data[$header] = $this->strings[(int)$value];
 				continue;
 			}
 
+
+			//EMPTY CELL, IGNORE IT
 			if (!is_null($type)  ||  is_null($value)) continue;
 
+
+			//VALUE IS SELF-CONTAINED, SO CLEAN IT UP
 			$value = afstring::trim((string)$value);
 
+
+			//EMPTY STRING (OR ALL WHITE-SPACE), MEANING EMPTY CELL, IGNORE IT
 			if (strlen($value) < 1) continue;
 
+
+			//FLOATING POINT VALUE
+			//TODO: CUSTOMIZE ROUNDING PERCISION.
 			if (is_numeric($value)  &&  strpos($value, 'e') === false  &&  strpos($value, '.') > 0) {
-				$data[$this->header[$column]] = round($value, 2);
+				$data[$header] = round($value, 2);
 
+
+			//INTEGER VALUE
 			} else if (ctype_digit($value)) {
-				$data[$this->header[$column]] = (int)$value;
+				$data[$header] = (int)$value;
 
+
+			//ALL OTHER TYPES, USUALLY TEXT STRINGS
 			} else {
-				$data[$this->header[$column]] = $value;
+				$data[$header] = $value;
 			}
 		}
 
