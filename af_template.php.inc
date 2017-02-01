@@ -456,6 +456,41 @@ trait af_template {
 
 
 	////////////////////////////////////////////////////////////////////////////
+	//AUTOMATICALLY INCLUDE JS AND CSS FILES IF AVAILABLE, AND RENDER OUTPUT
+	////////////////////////////////////////////////////////////////////////////
+	public function auto($render=false, $file=false) {
+		if ($file === false) {
+			$file = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[0]['file'];
+		}
+
+		$info	= pathinfo($file);
+		$name	= '/' . substr($info['basename'], 0, -3);
+		$ext	= substr($info['basename'], -4);
+
+		if (!in_array($ext, ['.php', '.tpl'])) {
+			throw new afException(
+				'Invalid file extension, only ".php" or ".tpl" are supported: '
+				. $info['basename']
+			);
+		}
+
+		if (file_exists($info['dirname'].$name.'js')) {
+			$this->js($info['dirname'].$name.'js');
+		}
+
+		if (file_exists($info['dirname'].$name.'css')) {
+			$this->css($info['dirname'].$name.'css');
+		}
+
+		if ($render) $this->renderPage($info['dirname'].$name.'tpl');
+
+		return $this;
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
 	//GET THE CURRENT PAGE RENDERING STAGE
 	////////////////////////////////////////////////////////////////////////////
 	public function stage() { return $this->_stage; }

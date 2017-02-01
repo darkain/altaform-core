@@ -252,7 +252,7 @@ class		af_url {
 				$file = $this->part[$i];
 				if (is_file("$file.php"))		return "$file.php";
 				if (is_file("$file.hh"))		return $this->hhvm("$file.hh");
-				if (is_file("$file.tpl"))		return $af->renderPage("$file.tpl");
+				if (is_file("$file.tpl"))		return $af->auto(true, "$file.tpl");
 				if (is_file('_virtual.php'))	return $this->virtualize($i, '_virtual.php');
 				if (is_file('_virtual.hh'))		return $this->virtualize($i, $this->hhvm('_virtual.hh'));
 				if (!is_dir('_virtual'))		error404();
@@ -483,7 +483,7 @@ class		af_url {
 		global $af;
 		if (is_file('_index.php'))	return '_index.php';
 		if (is_file('_index.hh'))	return $this->hhvm('_index.hh');
-		if (is_file('_index.tpl'))	return $af->renderPage('_index.tpl');
+		if (is_file('_index.tpl'))	return $af->auto(true, '_index.tpl');
 		error404();
 	}
 
