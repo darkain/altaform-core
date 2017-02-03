@@ -48,9 +48,12 @@ class afdevice {
 		//Set User Agent = $agent
 		$agent = $get->server('HTTP_USER_AGENT');
 
+		// No user agent
+		if (empty($agent)) {
+			self::$device = 'desktop';
 
 		// Check if user agent is a smart TV - http://goo.gl/FocDk
-		if ((preg_match('/GoogleTV|SmartTV|Internet.TV|NetCast|NETTV|AppleTV|boxee|Kylo|Roku|DLNADOC|CE\-HTML/i', $agent))) {
+		} else if ((preg_match('/GoogleTV|SmartTV|Internet.TV|NetCast|NETTV|AppleTV|boxee|Kylo|Roku|DLNADOC|CE\-HTML/i', $agent))) {
 			self::$device = 'tv';
 
 		// Check if user agent is a TV Based Gaming Console
