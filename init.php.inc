@@ -84,7 +84,7 @@ require_once('af_url.php.inc');
 
 //Set the content type for this document to HTML with UTF-8 encoding
 if (!headers_sent()) {
-	if (strpos($get->server('HTTP_USER_AGENT'), ' Trident/')) {
+	if (strpos($get->server('HTTP_USER_AGENT', ''), ' Trident/')) {
 		header('X-UA-Compatible: IE=edge,chrome=1');
 	}
 	header('Content-Language: en_US');
@@ -167,7 +167,7 @@ if ($get->server('HTTP_UPGRADE_INSECURE_REQUESTS')) {
 
 //Upgrade to HTTPS connection (legacy)
 } else if (!$afurl->https  &&  !empty($afconfig->secure)) {
-	$agent		= strtolower($get->server('HTTP_USER_AGENT'));
+	$agent		= strtolower($get->server('HTTP_USER_AGENT', ''));
 
 	$secure_ua	= [	'trident/',		'firefox/',		'applewebkit/',
 					'konqueror/',	'iceweasel/',
