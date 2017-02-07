@@ -37,11 +37,12 @@ class		af_git
 	////////////////////////////////////////////////////////////////////////////
 	// EXECUTE THE GIVEN GIT COMMAND, AND RETURN THE CONSOLE OUTPUT AS A STRING
 	////////////////////////////////////////////////////////////////////////////
-	public function __invoke($command) {
-		$cwd = getcwd();
+	public function __invoke() {
+		$command	= func_get_arg(0);
+		$path		= getcwd();
 		chdir($this->af->path());
-		$return = `git {$command}`;
-		chdir($cwd);
+		$return		= `git {$command}`;
+		chdir($path);
 		return $return;
 	}
 
