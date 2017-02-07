@@ -341,7 +341,7 @@ trait af_template {
 
 		$this->merge($this->_footers)->render();
 
-		if ($user->isStaff()  &&  $this->debug()) {
+		if ($user->isAdmin()  ||  ($user->isStaff()  &&  $this->debug())) {
 			if (file_exists($root.'/footer_admin.tpl')) {
 				$this->load($root.'/footer_admin.tpl');
 				if (!empty($db)) {
