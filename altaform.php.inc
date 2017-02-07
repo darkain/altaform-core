@@ -26,6 +26,7 @@ require_once('_tbx/tbx.php.inc');
 
 
 //LIST OF ALTAFORM TRAITS - USED TO HELP ORGANIZE CODE
+require_once('af_git.php.inc');
 require_once('af_auth.php.inc');
 require_once('af_robots.php.inc');
 require_once('af_tbx.php.inc');
@@ -33,11 +34,13 @@ require_once('af_template.php.inc');
 
 
 
-class altaform extends tbx {
-	use af_auth;
-	use af_robots;
-	use af_tbx;
-	use af_template;
+
+class		altaform
+	extends	tbx {
+	use		af_auth		{ postLogin as auth_postLogin; }
+	use		af_robots;
+	use		af_tbx;
+	use		af_template;
 
 
 
@@ -48,6 +51,7 @@ class altaform extends tbx {
 		parent::__construct();
 
 		$afconfig->af				= $this;
+		$this->git					= new af_void;
 		$this->config				= $afconfig;
 		$this->device				= $afdevice;
 		$this->_session				= $dbsession;
@@ -161,6 +165,19 @@ class altaform extends tbx {
 
 
 
+	public function postLogin() {
+		global $user;
+
+		$this->auth_postLogin();
+
+		if ($this->debug()  ||  $user->isAdmin()) {
+			$this->git = new af_git($this);
+		}
+	}
+
+
+
+
 	//GET THE OBJECT TYPE, EITHER BY NUMBER OR NAME
 	//PASS IN A NUMBER TO GET A NAME
 	//PASS IN A NAME TO GET A NUMBER
@@ -199,6 +216,7 @@ class altaform extends tbx {
 	private				$_prefs		= [];
 	protected			$_time		= 0;
 	protected			$_path		= '';
+	public				$git		= NULL;
 	public				$config		= NULL;
 	public				$device		= NULL;
 	public				$title		= '';
