@@ -240,7 +240,9 @@ if (!empty($afconfig->pudl)  &&  tbx_array($afconfig->pudl)) {
 		)
 	);
 
-	$af->settings = $db->select('*', 'pudl_altaform')->collection();
+	$af->settings = $db	->cache(AF_MINUTE*5, 'altaform_settings')
+						->select('*', 'pudl_altaform')
+						->collection();
 
 } else {
 	require_once('user.php.inc');
