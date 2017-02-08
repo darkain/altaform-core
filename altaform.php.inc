@@ -185,11 +185,7 @@ class		altaform
 		global $db;
 
 		if (empty(self::$types)) {
-			self::$types = $db->cache(AF_MINUTE*5)->collection(
-				'object_type_id',
-				'object_type_name',
-				'pudl_object_type'
-			);
+			self::$types = $db->cache(AF_MINUTE*5)->collection('pudl_object_type');
 		}
 
 		if (is_int($name)  ||  ctype_digit($name)) {
