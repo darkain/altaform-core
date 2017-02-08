@@ -203,6 +203,14 @@ class		altaform
 
 
 
+	public function setting($key) {
+		return array_key_exists($key, $this->settings)
+			? $this->settings[$key] : NULL;
+	}
+
+
+
+
 	public function path() {
 		return $this->_path;
 	}
@@ -230,6 +238,7 @@ class		altaform
 	public				$git		= NULL;
 	public				$config		= NULL;
 	public				$device		= NULL;
+	public				$settings	= [];
 	public				$title		= '';
 	public static		$types		= [];
 	public static		$class		= 'altaform';
