@@ -182,10 +182,21 @@ class		altaform
 	//PASS IN A NUMBER TO GET A NAME
 	//PASS IN A NAME TO GET A NUMBER
 	public static function type($name) {
+		global $db;
+
+		if (empty(self::$types)) {
+			self::$types = $db->collection(
+				'object_type_id',
+				'object_type_name',
+				'pudl_object_type'
+			);
+		}
+
 		if (is_int($name)  ||  ctype_digit($name)) {
 			$name = (int) $name;
 			return !empty(self::$types[$name]) ? self::$types[$name] : false;
 		}
+
 		return array_search($name, self::$types);
 	}
 
