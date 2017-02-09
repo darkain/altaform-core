@@ -352,9 +352,11 @@ class		af_url {
 	public static function post($url, $post=[], $options=[], $session=false) {
 		$ch = curl_init();
 
-		$agent = ini_get('user_agent');
-		if (!empty($agent)  &&  is_string($agent)) {
-			curl_setopt($ch, CURLOPT_USERAGENT, $agent);
+		if (empty($options[CURLOPT_USERAGENT])) {
+			$agent = ini_get('user_agent');
+			if (!empty($agent)  &&  is_string($agent)) {
+				curl_setopt($ch, CURLOPT_USERAGENT, $agent);
+			}
 		}
 
 		if (!empty($session)) {
@@ -368,8 +370,8 @@ class		af_url {
 			CURLOPT_RETURNTRANSFER	=> true,
 			CURLOPT_CONNECTTIMEOUT	=> 20,
 			CURLOPT_TIMEOUT			=> 20,
-			CURLOPT_POST			=> true,
-			CURLOPT_POSTFIELDS		=> $post,
+			CURLOPT_POST			=> $post!==false,
+			CURLOPT_POSTFIELDS		=> $post===false?false:$post,
 			CURLOPT_HTTPHEADER		=> ['Expect:'],
 		]);
 
