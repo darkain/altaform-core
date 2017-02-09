@@ -24,14 +24,17 @@ class af_csv extends af_xlsx {
 		$rownum	= 0;
 		$handle	= @fopen($file, 'rb');
 
+
 		//VERIFY FILE IS OKAY
 		if (!is_resource($handle)) {
 			throw new afException('CANNOT OPEN CSV FILE - ' . $file);
 			return;
 		}
 
+
 		//PARSE HEADERS
 		$this->header = fgetcsv($handle);
+
 
 		//PARSE BODY
 		while ($item = fgetcsv($handle)) {
