@@ -47,6 +47,10 @@ class af_csv extends af_xlsx {
 		}
 
 		fclose($handle);
+
+
+		//PROCESS THE FILE
+		return $this->_processing();
 	}
 
 

@@ -82,22 +82,31 @@ class af_xlsx extends af_object_array {
 		}
 
 
+		//PROCESS THE FILE
+		return $this->_processing();
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	//PARSING DONE, NOW VALIDATE AND PROCESS
+	////////////////////////////////////////////////////////////////////////////
+	protected function _processing() {
 		//VALIDATE CONTENTS OF FILE
 		$valid = $this->validate();
 
 		if (!empty($this->errors)) {
 			throw new afException(
-				"XLSX FAILED DATA VALIDATION\n" .
+				"FILE FAILED DATA VALIDATION\n" .
 				implode("\n", $this->errors)
 			);
 			return false;
 		}
 
-
 		//PROCESS CONTENTS OF FILE
 		return $valid ? $this->process() : false;
 	}
-
 
 
 
