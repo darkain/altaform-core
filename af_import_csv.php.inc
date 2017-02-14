@@ -1,12 +1,12 @@
 <?php
 
 
-require_once('xlsx.php.inc');
+require_once('af_import.php.inc');
 
 
 
-class		af_csv
-	extends	af_xlsx {
+class		af_import_csv
+	extends	af_import {
 
 
 
@@ -57,7 +57,7 @@ class		af_csv
 
 
 		//PROCESS THE FILE
-		return $this->_processing();
+		return $this->processing();
 	}
 
 
