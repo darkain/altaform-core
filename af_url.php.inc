@@ -36,7 +36,7 @@ class		af_url {
 		if (empty($this->parts['path'])) error404();
 
 		if ($this->parts['path'][0] !== '/') {
-			$this->parts['path']  = '/' . $this->parts['path'];
+			$this->parts['path'] = '/' . $this->parts['path'];
 		}
 
 		if ($this->parts['path'] === '/') {
