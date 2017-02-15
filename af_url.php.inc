@@ -19,6 +19,9 @@ class		af_url {
 		$host = explode(':', $get->server('HTTP_HOST', ''));
 		if (empty($host[0])) $host = explode(':', $get->server('SERVER_ADDR', ''));
 
+		//TODO:	TEST TO SEE IF WE ARE CLI, IF SO,
+		//		THEN SET $_SERVER[REQUEST_URI] TO COMMAND LINE ARGS
+
 		$this->directory	= getcwd();
 		$this->uri			= urldecode($get->server('REQUEST_URI', ''));
 		$this->domain		= reset($host);
