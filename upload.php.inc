@@ -176,8 +176,7 @@ class fileImporter {
 		} catch (ImagickException $exception) {}
 
 		//GET THE LONG EDGE OF THE IMAGE
-		$long = $image->getImageWidth() > $image->getImageHeight() ?
-				$image->getImageWidth() : $image->getImageHeight();
+		$long = max($image->getImageWidth(), $image->getImageHeight());
 
 		//PROCESS RESIZED IMAGES (MAINTAIN ASPECT RATIO)
 		//NOTE: CREATE SMALLEST SIZE REGARDLESS, IN CASE OF ROTATION/ICC ISSUES
