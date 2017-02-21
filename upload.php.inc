@@ -337,13 +337,20 @@ class fileImporter {
 
 	public static function exifClean(&$data) {
 		if (is_string($data)) {
-			$data = trim($data);
-			$data = preg_replace('/[\x00-\x1F]/', '', $data);
-			$data = mb_convert_encoding($data, 'UTF-8', 'UTF-8');
+			if (extension_loaded('mbstring')) {
+				$data = @mb_convert_encoding($data, 'UTF-8', 'UTF-8');
+			} else {
+				$data = @iconv('UTF-8', 'UTF-8//IGNORE', $data);
+			}
+
+			$data = preg_replace('/[\x00-\x1F]/', ' ', $data);
+			$data = afstring::doubletrim($data);
+
 		} else if (tbx_array($data)) {
 			foreach ($data as &$item) self::exifClean($item);
 		}
 	}
+
 
 
 
