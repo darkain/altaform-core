@@ -21,6 +21,7 @@ if (!empty($data[800]['url'])) {
 }
 
 
+//TODO: OUTPUT SHOULD OPTIONALLY BE JSON FOR TINYMCE, OR AF STYLE FOR COSPIX
 if (!empty($data['url'])) {
 	return $af->json([
 		'location' => str_replace('cdn/', 'files/', $data['url']),
