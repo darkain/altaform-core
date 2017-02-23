@@ -1,5 +1,8 @@
 <?php
 
+//TBX - THE RENDERING SYSTEM
+require_once('_tbx/tbx.php.inc');
+
 //ALTAFORM CONFIGURATION
 require_once('af_config.php.inc');
 
@@ -20,9 +23,6 @@ require_once('string.php.inc');
 
 //EXTRA TIME FUNCTIONS
 require_once('time.php.inc');
-
-//TBX - THE RENDERING SYSTEM
-require_once('_tbx/tbx.php.inc');
 
 
 //LIST OF ALTAFORM TRAITS - USED TO HELP ORGANIZE CODE
@@ -115,9 +115,9 @@ class		altaform
 	public function json($data) {
 		$this->contentType('json');
 
-		echo ($data instanceof pudlResult)
-				? $data->json()
-				: json_encode($data);
+		echo $data instanceof pudlResult
+			? $data->json()
+			: json_encode($data);
 	}
 
 
@@ -201,7 +201,8 @@ class		altaform
 
 	public function setting($key) {
 		return array_key_exists($key, $this->settings)
-			? $this->settings[$key] : NULL;
+			? $this->settings[$key]
+			: NULL;
 	}
 
 

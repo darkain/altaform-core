@@ -6,7 +6,8 @@ require_once('af_object_array.php.inc');
 
 
 class			af_config
-	extends		af_object_array {
+	extends		af_object_array
+	implements	tbx_plugin {
 
 
 
@@ -17,9 +18,6 @@ class			af_config
 
 		//Default to "online" mode
 		$this->offline		= false;
-
-		//Default site title
-		$this->title		= 'Altaform';
 
 		//Default application directory
 		$this->root			= '_app';
@@ -99,9 +97,18 @@ class			af_config
 
 
 
+
 	public function auth($message) {
 		return md5($this->af->time() . $message . $this->afkey());
 	}
+
+
+
+
+	public function tbx_render($array) {
+		return $this->af->setting('af.' . implode('.', $array));
+	}
+
 
 
 
