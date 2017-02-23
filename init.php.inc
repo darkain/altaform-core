@@ -271,7 +271,7 @@ while ($afurl->reparse) {
 
 
 //Flush PHP Output Buffer
-$i=20;
-while ($i--  &&  ob_get_level()){
+$i = 20;
+while ($i--  &&  ob_get_level()) {
 	ob_end_flush();
 }
