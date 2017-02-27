@@ -16,11 +16,17 @@ class		af_url {
 	public function __construct() {
 		global $get;
 
-		$host = explode(':', $get->server('HTTP_HOST', ''));
-		if (empty($host[0])) $host = explode(':', $get->server('SERVER_ADDR', ''));
+		if (altaform::cli()) {
+			$host = ['cli'];
+			$args = $get->server('argv');
+			if (is_array($args)) {
+				$_SERVER['REQUEST_URI'] = isset($args[1]) ? $args[1] : '/';
+			}
 
-		//TODO:	TEST TO SEE IF WE ARE CLI, IF SO,
-		//		THEN SET $_SERVER[REQUEST_URI] TO COMMAND LINE ARGS
+		} else {
+			$host = explode(':', $get->server('HTTP_HOST', ''));
+			if (empty($host[0])) $host = explode(':', $get->server('SERVER_ADDR', ''));
+		}
 
 		$this->directory	= getcwd();
 		$this->uri			= urldecode($get->server('REQUEST_URI', ''));
@@ -411,7 +417,7 @@ class		af_url {
 		echo htmlspecialchars($url,TBX_SPECIAL_CHARS) . '\'" /></head><body>';
 		echo "<script>top.location.href='";
 		echo htmlspecialchars(addslashes($url),TBX_SPECIAL_CHARS);
-		echo "';</script></body></html>";
+		echo "';</script></body></html>\n";
 		if ($die) exit;
 	}
 

@@ -79,7 +79,10 @@ class		altaform
 
 	public static function cli() {
 		global $get;
-		if (php_sapi_name() === 'cli') return true;
+		if (php_sapi_name() === 'cli')					return true;
+		if (defined('STDIN'))							return true;
+		if (!$get instanceof getvar)					return false;
+		if ($get->server('REQUEST_METHOD') !== NULL)	return false;
 		return ((int)$get->server('argc')) > 0;
 	}
 
