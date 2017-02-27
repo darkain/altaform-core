@@ -42,6 +42,7 @@ class aferror {
 		}
 
 		if ($db instanceof pudl) $db->rollback();
+		echo "\n";
 		flush();
 		die();
 	}
