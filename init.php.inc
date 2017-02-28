@@ -93,7 +93,12 @@ if (!headers_sent()) {
 
 
 //Host Information for Config
-assert500($afurl->validateDomain($afurl->domain), 'Invalid Domain: ' . $afurl->domain);
+if ($afurl->domain !== '_cli') {
+	assert500(
+		$afurl->validateDomain($afurl->domain),
+		'Invalid Domain: ' . $afurl->domain
+	);
+}
 
 
 

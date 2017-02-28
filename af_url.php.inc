@@ -17,7 +17,7 @@ class		af_url {
 		global $get;
 
 		if (altaform::cli()) {
-			$host = ['cli'];
+			$host = ['_cli'];
 			$args = $get->server('argv');
 			if (is_array($args)) {
 				$_SERVER['REQUEST_URI'] = isset($args[1]) ? $args[1] : '/';
