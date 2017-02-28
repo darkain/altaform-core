@@ -26,6 +26,7 @@ class		af_url {
 		} else {
 			$host = explode(':', $get->server('HTTP_HOST', ''));
 			if (empty($host[0])) $host = explode(':', $get->server('SERVER_ADDR', ''));
+			assert500($host[0] !== '_cli');
 		}
 
 		$this->directory	= getcwd();
