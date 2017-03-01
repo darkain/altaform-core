@@ -16,7 +16,13 @@ trait af_template {
 	//LINK A JAVASCRIPT FILE IN HTML HEADER
 	////////////////////////////////////////////////////////////////////////////
 	public function script($path) {
-		$this->_script[] = ['path' => $path];
+		if (is_array($path)) {
+			foreach ($path as $item) {
+				$this->_script[] = ['path' => $item];
+			}
+		} else {
+			$this->_script[] = ['path' => $path];
+		}
 		return $this;
 	}
 
@@ -64,7 +70,13 @@ trait af_template {
 	//EMBED INLINE CASCADING STYLE SHEET IN HTML HEADER
 	////////////////////////////////////////////////////////////////////////////
 	public function sheet($styles, $merge=false) {
-		$this->_css[] = [$styles, $merge];
+		if (is_array($path)) {
+			foreach ($path as $item) {
+				$this->_css[] = ['path' => $item];
+			}
+		} else {
+			$this->_css[] = ['path' => $path];
+		}
 		return $this;
 	}
 
