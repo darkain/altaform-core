@@ -89,22 +89,22 @@ class aferror {
 		}
 
 		$return = array_merge($data, [
-			'address'		=> !empty($data['address']) ? $data['address'] : $address,
+			'address'		=> empty($data['address']) ? $address : $data['address'],
 			'error-time'	=> @date('r'),
 			'error-path'	=> getcwd(),
-			'var-get'		=> !empty($_GET)	? self::json($_GET)					: '',
-			'var-post'		=> !empty($_POST)	? self::json($_POST)				: '',
-			'var-files'		=> !empty($_FILES)	? self::json($_FILES)				: '',
-			'var-user'		=> !empty($user)	? self::json($user)					: '',
-			'template'		=> !empty($af)		? self::json($af->filepath)			: '',
-			'query'			=> !empty($db)		? $db->query()						: '',
-			'ip-database'	=> !empty($db)		? $db->server()						: '',
-			'ip-php'		=> !empty($get)		? $get->server('X-PHP-IP')			: '',
-			'ip-httpd'		=> !empty($get)		? $get->server('SERVER_ADDR')		: '',
-			'ip-client'		=> !empty($get)		? $get->server('REMOTE_ADDR')		: '',
-			'user-agent'	=> !empty($get)		? $get->server('HTTP_USER_AGENT')	: '',
-			'user-referer'	=> !empty($get)		? $get->server('HTTP_REFERER')		: '',
-			'user-device'	=> !empty($afdevice)? $afdevice()						: '',
+			'var-get'		=> empty($_GET)		? '' :	self::json($_GET),
+			'var-post'		=> empty($_POST)	? '' :	self::json($_POST),
+			'var-files'		=> empty($_FILES)	? '' :	self::json($_FILES),
+			'var-user'		=> empty($user)		? '' :	self::json($user),
+			'template'		=> empty($af)		? '' :	self::json($af->filepath),
+			'query'			=> empty($db)		? '' :	$db->query(),
+			'ip-database'	=> empty($db)		? '' :	$db->server(),
+			'ip-php'		=> empty($get)		? '' :	$get->server('X-PHP-IP'),
+			'ip-httpd'		=> empty($get)		? '' :	$get->server('SERVER_ADDR'),
+			'ip-client'		=> empty($get)		? '' :	$get->server('REMOTE_ADDR'),
+			'user-agent'	=> empty($get)		? '' :	$get->server('HTTP_USER_AGENT'),
+			'user-referer'	=> empty($get)		? '' :	$get->server('HTTP_REFERER'),
+			'user-device'	=> empty($afdevice)	? '' :	$afdevice(),
 		]);
 
 		if (!empty($afurl->redirected)) {
