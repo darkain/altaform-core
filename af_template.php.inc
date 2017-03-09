@@ -59,7 +59,13 @@ trait af_template {
 	//LINK A CASCADING STYLE SHEET FILE IN HTML HEADER
 	////////////////////////////////////////////////////////////////////////////
 	public function style($path) {
-		$this->_style[] = ['path' => $path];
+		if (is_array($path)) {
+			foreach ($path as $item) {
+				$this->_style[] = ['path' => $item];
+			}
+		} else {
+			$this->_style[] = ['path' => $path];
+		}
 		return $this;
 	}
 
@@ -70,13 +76,7 @@ trait af_template {
 	//EMBED INLINE CASCADING STYLE SHEET IN HTML HEADER
 	////////////////////////////////////////////////////////////////////////////
 	public function sheet($styles, $merge=false) {
-		if (is_array($path)) {
-			foreach ($path as $item) {
-				$this->_css[] = ['path' => $item];
-			}
-		} else {
-			$this->_css[] = ['path' => $path];
-		}
+		$this->_css[] = [$styles, $merge];
 		return $this;
 	}
 
