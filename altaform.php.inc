@@ -202,10 +202,26 @@ class		altaform
 
 
 
-	public function setting($key) {
-		return array_key_exists($key, $this->settings)
-			? $this->settings[$key]
-			: NULL;
+	public function setting($key, $value=NULL) {
+		global $db;
+
+		//IF NO VALUE, RETURN EXISTING VALUE
+		if (func_num_args() === 1) {
+			return array_key_exists($key, $this->settings)
+				? $this->settings[$key]
+				: NULL;
+		}
+
+		//INSERT NEW VALUE
+		$return = $db->reinsert('pudl_altaform', [
+			'af_key'	=> $key,
+			'af_value'	=> $value,
+		]);
+
+		//PURGE VALUE CACHE FROM REDIS
+		$db->purge('altaform_settings');
+
+		return $return;
 	}
 
 
