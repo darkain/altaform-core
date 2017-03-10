@@ -201,9 +201,11 @@ class		af_import_xlsx
 
 
 			//FLOATING POINT VALUE
-			//TODO: CUSTOMIZE ROUNDING PERCISION.
-			if (is_numeric($value)  &&  strpos($value, 'e') === false  &&  strpos($value, '.') > 0) {
-				$data[$header] = round($value, 2);
+			if (is_numeric($value)  &&
+				strpos($value, 'e') === false  &&
+				strpos($value, '.') > 0) {
+
+				$data[$header] = round($value, $this->precision);
 
 
 			//INTEGER VALUE
@@ -224,6 +226,7 @@ class		af_import_xlsx
 
 
 
-	protected $sheet		= [];
-	protected $strings		= [];
+	protected	$sheet		= [];
+	protected	$strings	= [];
+	public		$precision	= 2;
 }
