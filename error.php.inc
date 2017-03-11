@@ -38,7 +38,11 @@ class aferror {
 		}
 
 		if (empty($ok)) {
-			echo is_array($text) ? implode("\n", $text) : $text;
+			echo str_replace(
+				['&lt;br /&gt;', '&lt;br/&gt;', '&lt;br&gt;'],
+				'<br />',
+				is_array($text) ? implode("\n", $text) : $text
+			);
 		}
 
 		if ($db instanceof pudl) $db->rollback();
