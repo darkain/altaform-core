@@ -4,17 +4,17 @@
 class af_ip {
 
 
-	public function valid($address) {
+	public static function valid($address) {
 		return filter_var($address, FILTER_VALIDATE_IP);
 	}
 
 
-	public function valid4($address) {
+	public static function valid4($address) {
 		return filter_var($address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
 	}
 
 
-	public function valid6($address) {
+	public static function valid6($address) {
 		return filter_var($address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
 	}
 
