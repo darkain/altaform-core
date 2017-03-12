@@ -187,11 +187,11 @@ class		altaform
 	public static function type($name) {
 		global $db;
 
-		if (empty(self::$types)) {
+		if (!is_array(self::$types)  ||  empty(self::$types)) {
 			self::$types = $db->cache(AF_MINUTE*5)->collection('pudl_object_type');
 		}
 
-		if (empty(self::$types)) return false;
+		if (!is_array(self::$types)) return false;
 
 		if (is_int($name)  ||  ctype_digit($name)) {
 			$name = (int) $name;
