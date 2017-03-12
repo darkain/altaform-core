@@ -191,6 +191,8 @@ class		altaform
 			self::$types = $db->cache(AF_MINUTE*5)->collection('pudl_object_type');
 		}
 
+		if (empty(self::$types)) return false;
+
 		if (is_int($name)  ||  ctype_digit($name)) {
 			$name = (int) $name;
 			return !empty(self::$types[$name]) ? self::$types[$name] : false;
