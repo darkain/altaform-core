@@ -30,6 +30,7 @@ class		af_url {
 		}
 
 		$this->directory	= getcwd();
+		$this->encoding		= array_map('trim', explode(',', $get->server('HTTP_ACCEPT_ENCODING','')));
 		$this->uri			= urldecode($get->server('REQUEST_URI', ''));
 		$this->domain		= reset($host);
 		$this->referer		= $get->server('HTTP_REFERER', '');
@@ -40,6 +41,8 @@ class		af_url {
 		$this->af_host		= $this->host;
 		$this->parts		= (array)parse_url($this->uri);
 		$this->query		= str_replace(' ', '+', $this->uri . (empty($this->parts['query']) ? '?' : '&'));
+
+		if (in_array('gzip', $this->encoding)) $this->gz = '.gz';
 
 		if (substr($this->uri, 0, 2) === '//') $this->redirect('/');
 
@@ -533,6 +536,7 @@ class		af_url {
 	public $url;
 
 	//SET DYNAMICALLY OR BY CONFIG
+	public $gz			= '';
 	public $path		= '';
 	public $base		= '';
 	public $cdn			= '';
@@ -541,6 +545,7 @@ class		af_url {
 	public $push		= '';
 	public $virtual		= [];
 	public $redirected	= [];
+	public $encoding	= [];
 	public $id			= 0;
 	public $jq			= false;
 	public $reparse		= true;
