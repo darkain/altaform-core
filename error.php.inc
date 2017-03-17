@@ -146,6 +146,9 @@ class aferror {
 
 		$arrout += $backtrace;
 		foreach ($arrout as $key => &$value) if (is_int($key)) {
+			if (is_array($value)  &&  is_array($value['args'])) {
+				array_walk_recursive($value['args'], [self,'nopassword']);
+			}
 			$value = self::json($value);
 		}
 
@@ -176,6 +179,7 @@ class aferror {
 			if (!empty($value['function'])) {
 				$html .= '<br/>' . $value['function'] . '(';
 				if (!empty($value['args'])) {
+					array_walk_recursive($value['args'], [self,'nopassword']);
 					$html .= substr(self::html_json($value['args']), 1, -1);
 				}
 				$html .= ')';
@@ -271,6 +275,20 @@ class aferror {
 
 	public static function html_json($item) {
 		return self::html(self::json($item));
+	}
+
+
+	public static function nopassword(&$item, $key) {
+		if (is_int($key)) return;
+
+		switch ($key) {
+			case 'pass':
+			case 'password':
+			case 'hash':
+			case 'key':
+			case 'secure':
+				$item = '********';
+		}
 	}
 }
 
