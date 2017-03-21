@@ -406,7 +406,8 @@ class		af_url {
 	//307 Temporary Redirect (keeps POST data)
 	//308 Permanent Redirect (keeps POST data)
 	public static function redirect($url, $type=301, $die=true) {
-		global $afurl;
+		global $af, $afurl;
+
 		if (tbx_array($url)) $url = $afurl($url, true);
 
 		assert422(
@@ -416,12 +417,20 @@ class		af_url {
 			))
 		);
 
-		if (!headers_sent()) header("Location: $url", true, $type);
-		echo '<html><head><meta http-equiv="refresh" content="0;URL=\'';
-		echo htmlspecialchars($url,TBX_SPECIAL_CHARS) . '\'" /></head><body>';
-		echo "<script>top.location.href='";
-		echo htmlspecialchars(addslashes($url),TBX_SPECIAL_CHARS);
-		echo "';</script></body></html>\n";
+		if (!$af->jq()) {
+			if (!headers_sent()) header("Location: $url", true, $type);
+			echo '<html><head><meta http-equiv="refresh" content="0;URL=\'';
+			echo $this->html($url) . '\'" /></head><body>';
+		}
+
+		echo "<script>window.top.location.href='";
+		echo $this->html(addslashes($url));
+		echo "';</script>";
+
+		if (!$af->jq()) {
+			echo "</body></html>\n";
+		}
+
 		if ($die) exit;
 	}
 
