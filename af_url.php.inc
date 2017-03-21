@@ -417,17 +417,17 @@ class		af_url {
 			))
 		);
 
-		if (!$af->jq()) {
+		if (!$af  ||  !$af->jq()) {
 			if (!headers_sent()) header("Location: $url", true, $type);
 			echo '<html><head><meta http-equiv="refresh" content="0;URL=\'';
-			echo $this->html($url) . '\'" /></head><body>';
+			echo tbx::html($url) . '\'" /></head><body>';
 		}
 
 		echo "<script>window.top.location.href='";
-		echo $this->html(addslashes($url));
+		echo tbx::html(addslashes($url));
 		echo "';</script>";
 
-		if (!$af->jq()) {
+		if (!$af  ||  !$af->jq()) {
 			echo "</body></html>\n";
 		}
 
