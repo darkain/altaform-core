@@ -137,6 +137,7 @@ class aferror {
 		if (empty($backtrace)) $backtrace = debug_backtrace(0);
 
 		if (!($user instanceof afuser)  ||  $user->isAdmin()) {
+			if (empty($afconfig)) $afconfig = (object)[];
 			$afconfig->debug = true;
 		}
 
@@ -147,7 +148,7 @@ class aferror {
 		$arrout += $backtrace;
 		foreach ($arrout as $key => &$value) if (is_int($key)) {
 			if (is_array($value)  &&  is_array($value['args'])) {
-				array_walk_recursive($value['args'], [self,'nopassword']);
+				array_walk_recursive($value['args'], [__CLASS__,'nopassword']);
 			}
 			$value = self::json($value);
 		}
