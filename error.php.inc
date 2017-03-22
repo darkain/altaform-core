@@ -125,10 +125,6 @@ class aferror {
 	public static function log($data, $die=true, $backtrace=[]) {
 		global $af, $db, $user, $afconfig;
 
-		if (!defined('TBX_SPECIAL_CHARS')) {
-			define('TBX_SPECIAL_CHARS', ENT_NOQUOTES|ENT_HTML5);
-		}
-
 		//ONLY LOG ERROR ONCE!
 		static $echo = false;
 		if ($echo) return false;
@@ -265,8 +261,12 @@ class aferror {
 
 
 	public static function html($item) {
+		if (!defined('TBX_SPECIAL_CHARS')) {
+			define('TBX_SPECIAL_CHARS', ENT_NOQUOTES|ENT_HTML5);
+		}
 		return htmlspecialchars($item, TBX_SPECIAL_CHARS);
 	}
+
 
 
 	public static function json($item) {
@@ -274,9 +274,11 @@ class aferror {
 	}
 
 
+
 	public static function html_json($item) {
 		return self::html(self::json($item));
 	}
+
 
 
 	public static function nopassword(&$item, $key) {
@@ -341,7 +343,7 @@ function error404($text=false, $log=false, $details=false) {
 			$afurl->redirect("$afurl->host$afurl->base/", 302);
 		}
 
-		$text = htmlspecialchars($afurl->all,TBX_SPECIAL_CHARS) . '<br/>' . $text;
+		$text = aferror::html($afurl->all) . '<br/>' . $text;
 
 		if (!empty($afconfig->debug)) {
 			$text .= '<br/><pre>' . print_r($afurl,true) . '</pre>';
