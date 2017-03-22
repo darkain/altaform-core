@@ -61,18 +61,19 @@ class afstring {
 
 
 	public static function ltrim($string) {
+		if (!is_string($string)) $string = (string)$string;
+
 		$count = strlen($string);
-		if ($count < 1) return $string;
+		if (!$count) return $string;
 
-		for ($i=0; $i<$count; $i++) {
-			switch ($string[$i]) {
-				case ' ': case "\n": case "\r": case "\t": case "\0": case "\x0B":
-					continue;
-
-				default:
-					if ($i === 0) return $string;
-					return substr($string, $i);
-			}
+		switch (ord($string)) {
+			case 0x20:	// space
+			case 0x13:	// carriage return
+			case 0x10:	// new line
+			case 0x0B:	// vertical tab
+			case 0x09:	// tab
+			case 0x00:	// null terminator
+			return ltrim($string);
 		}
 
 		return $string;
@@ -82,18 +83,19 @@ class afstring {
 
 
 	public static function rtrim($string) {
+		if (!is_string($string)) $string = (string)$string;
+
 		$count = strlen($string);
-		if ($count < 1) return $string;
+		if (!$count) return $string;
 
-		for ($i=$count-1; $i>=0; $i--) {
-			switch ($string[$i]) {
-				case ' ': case "\n": case "\r": case "\t": case "\0": case "\x0B":
-					continue;
-
-				default:
-					if ($i === $count-1) return $string;
-					return substr($string, 0, $i+1);
-			}
+		switch (ord($string[$count-1])) {
+			case 0x20:	// space
+			case 0x13:	// carriage return
+			case 0x10:	// new line
+			case 0x0B:	// vertical tab
+			case 0x09:	// tab
+			case 0x00:	// null terminator
+			return rtrim($string);
 		}
 
 		return $string;
