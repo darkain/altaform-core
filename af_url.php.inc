@@ -42,7 +42,9 @@ class		af_url {
 		$this->parts		= (array)parse_url($this->uri);
 		$this->query		= str_replace(' ', '+', $this->uri . (empty($this->parts['query']) ? '?' : '&'));
 
-		if (in_array('gzip', $this->encoding)) $this->gz = '.gz';
+		if (in_array('gzip', $this->encoding)  &&  !afdevice::trident()) {
+			$this->gz = '.gz';
+		}
 
 		if (substr($this->uri, 0, 2) === '//') $this->redirect('/');
 
