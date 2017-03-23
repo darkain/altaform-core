@@ -136,7 +136,8 @@ class afdevice {
 	public static function agent()		{ return self::$agent; }
 	public static function is($type)	{ return strpos(self::$agent, $type)!==false; }
 	public static function trident()	{ return self::is('trident/'); }
-	public static function webkit()		{ return self::is('applewebkit/'); }
+	public static function edge()		{ return self::is('edge/'); }
+	public static function webkit()		{ return self::is('applewebkit/')  ||  !self::edge(); }
 	public static function konqueror()	{ return self::is('konqueror/'); }
 	public static function firefox()	{ return self::is('firefox/')	|| self::is('iceweasel/'); }
 	public static function bot()		{ return self::is('spider/')	|| self::is('bot/'); }
