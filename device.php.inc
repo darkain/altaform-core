@@ -45,63 +45,63 @@ class afdevice {
 
 		if (self::$device !== false) return self::$device;
 
-		//Set User Agent = $agent
-		$agent = $get->server('HTTP_USER_AGENT');
+		//Set User Agent = self::$agent
+		self::$agent = strtolower($get->server('HTTP_USER_AGENT', ''));
 
 		// No user agent
-		if (empty($agent)) {
+		if (empty(self::$agent)) {
 			self::$device = 'desktop';
 
 		// Check if user agent is a smart TV - http://goo.gl/FocDk
-		} else if ((preg_match('/GoogleTV|SmartTV|Internet.TV|NetCast|NETTV|AppleTV|boxee|Kylo|Roku|DLNADOC|CE\-HTML/i', $agent))) {
+		} else if ((preg_match('/AndroidTV|GoogleTV|SmartTV|Internet.TV|NetCast|NETTV|AppleTV|boxee|Kylo|Roku|DLNADOC|CE\-HTML/i', self::$agent))) {
 			self::$device = 'tv';
 
 		// Check if user agent is a TV Based Gaming Console
-		} else if ((preg_match('/Xbox|PLAYSTATION|Wii/i', $agent))) {
+		} else if ((preg_match('/Xbox|PLAYSTATION|Wii|Nintendo/i', self::$agent))) {
 			self::$device = 'tv';
 
 		// Check if user agent is a Tablet
-		} else if((preg_match('/iP(a|ro)d/i', $agent)) || (preg_match('/tablet/i', $agent)) && (!preg_match('/RX-34/i', $agent)) || (preg_match('/FOLIO/i', $agent))) {
+		} else if((preg_match('/iP(a|ro)d/i', self::$agent)) || (preg_match('/tablet/i', self::$agent)) && (!preg_match('/RX-34/i', self::$agent)) || (preg_match('/FOLIO/i', self::$agent))) {
 			self::$device = 'tablet';
 
 		// Check if user agent is an Android Tablet
-		} else if ((preg_match('/Linux/i', $agent)) && (preg_match('/Android/i', $agent)) && (!preg_match('/Fennec|mobi|HTC.Magic|HTCX06HT|Nexus.One|SC-02B|fone.945/i', $agent))) {
+		} else if ((preg_match('/Linux/i', self::$agent)) && (preg_match('/Android/i', self::$agent)) && (!preg_match('/Fennec|mobi|HTC.Magic|HTCX06HT|Nexus.One|SC-02B|fone.945/i', self::$agent))) {
 			self::$device = 'tablet';
 
 		// Check if user agent is a Kindle or Kindle Fire
-		} else if ((preg_match('/Kindle/i', $agent)) || (preg_match('/Mac.OS/i', $agent)) && (preg_match('/Silk/i', $agent))) {
+		} else if ((preg_match('/Kindle/i', self::$agent)) || (preg_match('/Mac.OS/i', self::$agent)) && (preg_match('/Silk/i', self::$agent))) {
 			self::$device = 'tablet';
 
 		// Check if user agent is a pre Android 3.0 Tablet
-		} else if ((preg_match('/GT-P10|SC-01C|SHW-M180S|SGH-T849|SCH-I800|SHW-M180L|SPH-P100|SGH-I987|zt180|HTC(.Flyer|\_Flyer)|Sprint.ATP51|ViewPad7|pandigital(sprnova|nova)|Ideos.S7|Dell.Streak.7|Advent.Vega|A101IT|A70BHT|MID7015|Next2|nook/i', $agent)) || (preg_match('/MB511/i', $agent)) && (preg_match('/RUTEM/i', $agent))) {
+		} else if ((preg_match('/GT-P10|SC-01C|SHW-M180S|SGH-T849|SCH-I800|SHW-M180L|SPH-P100|SGH-I987|zt180|HTC(.Flyer|\_Flyer)|Sprint.ATP51|ViewPad7|pandigital(sprnova|nova)|Ideos.S7|Dell.Streak.7|Advent.Vega|A101IT|A70BHT|MID7015|Next2|nook/i', self::$agent)) || (preg_match('/MB511/i', self::$agent)) && (preg_match('/RUTEM/i', self::$agent))) {
 			self::$device = 'tablet';
 
 		// Check if user agent is unique Mobile User Agent
-		} else if ((preg_match('/BOLT|Fennec|Iris|Maemo|Minimo|Mobi|mowser|NetFront|Novarra|Prism|RX-34|Skyfire|Tear|XV6875|XV6975|Google.Wireless.Transcoder/i', $agent))) {
+		} else if ((preg_match('/BOLT|Fennec|Iris|Maemo|Minimo|Mobi|mowser|NetFront|Novarra|Prism|RX-34|Skyfire|Tear|XV6875|XV6975|Google.Wireless.Transcoder/i', self::$agent))) {
 			self::$device = 'mobile';
 
 		// Check if user agent is an odd Opera User Agent - http://goo.gl/nK90K
-		} else if ((preg_match('/Opera/i', $agent)) && (preg_match('/Windows.NT.5/i', $agent)) && (preg_match('/HTC|Xda|Mini|Vario|SAMSUNG\-GT\-i8000|SAMSUNG\-SGH\-i9/i', $agent))) {
+		} else if ((preg_match('/Opera/i', self::$agent)) && (preg_match('/Windows.NT.5/i', self::$agent)) && (preg_match('/HTC|Xda|Mini|Vario|SAMSUNG\-GT\-i8000|SAMSUNG\-SGH\-i9/i', self::$agent))) {
 			self::$device = 'mobile';
 
 		// Check if user agent is Windows Desktop
-		} else if ((preg_match('/Windows.(NT|XP|ME|9)/', $agent)) && (!preg_match('/Phone/i', $agent)) || (preg_match('/Win(9|.9|NT)/i', $agent))) {
+		} else if ((preg_match('/Windows.(NT|XP|ME|9)/', self::$agent)) && (!preg_match('/Phone/i', self::$agent)) || (preg_match('/Win(9|.9|NT)/i', self::$agent))) {
 			self::$device = 'desktop';
 
 		// Check if agent is Mac Desktop
-		} else if ((preg_match('/Macintosh|PowerPC/i', $agent)) && (!preg_match('/Silk/i', $agent))) {
+		} else if ((preg_match('/Macintosh|PowerPC/i', self::$agent)) && (!preg_match('/Silk/i', self::$agent))) {
 			self::$device = 'desktop';
 
 		// Check if user agent is a Linux Desktop
-		} else if ((preg_match('/Linux/i', $agent)) && (preg_match('/X11/i', $agent))) {
+		} else if ((preg_match('/Linux/i', self::$agent)) && (preg_match('/X11/i', self::$agent))) {
 			self::$device = 'desktop';
 
 		// Check if user agent is a Solaris, SunOS, BSD Desktop
-		} else if ((preg_match('/Solaris|SunOS|BSD/i', $agent))) {
+		} else if ((preg_match('/Solaris|SunOS|BSD/i', self::$agent))) {
 			self::$device = 'desktop';
 
 		// Check if user agent is a Desktop BOT/Crawler/Spider
-		} else if ((preg_match('/Bot|Crawler|Spider|Yahoo|ia_archiver|Covario-IDS|findlinks|DataparkSearch|larbin|Mediapartners-Google|NG-Search|Snappy|Teoma|Jeeves|TinEye|Validator/i', $agent)) && (!preg_match('/Mobile/i', $agent))) {
+		} else if ((preg_match('/Bot|Crawler|Spider|Yahoo|ia_archiver|Covario-IDS|findlinks|DataparkSearch|larbin|Mediapartners-Google|NG-Search|Snappy|Teoma|Jeeves|TinEye|Validator/i', self::$agent)) && (!preg_match('/Mobile/i', self::$agent))) {
 			self::$device = 'desktop';
 
 		// Otherwise assume it is a Mobile Device
@@ -116,12 +116,38 @@ class afdevice {
 
 
 
-	static function set($device)	{ self::$device = $device; }
-	static function desktop()		{ return (self::device() === 'desktop'	); }
-	static function tablet()		{ return (self::device() === 'tablet'	); }
-	static function tv()			{ return (self::device() === 'tv'		); }
-	static function mobile()		{ return (self::device() === 'mobile'	); }
-	static function redetect()		{ self::$device = false; return self::device(); }
+	public static function is_secure() {
+		if (self::is('windows nt 5.')) return false;
+		foreach (self::$secure as $agent) {
+			if ($afdevice->is($agent)) return true;
+		}
+		return false;
+	}
+
+
+
+	public static function set($device)	{ self::$device = $device; }
+	public static function desktop()	{ return (self::device() === 'desktop'	); }
+	public static function tablet()		{ return (self::device() === 'tablet'	); }
+	public static function tv()			{ return (self::device() === 'tv'		); }
+	public static function mobile()		{ return (self::device() === 'mobile'	); }
+	public static function redetect()	{ self::$device = false; return self::device(); }
+
+	public static function agent()		{ return self::$agent; }
+	public static function is($type)	{ return strpos(self::$agent, $type)!==false; }
+	public static function trident()	{ self::is('trident/'); }
+	public static function webkit()		{ self::is('applewebkit/'); }
+	public static function konqueror()	{ self::is('konqueror/'); }
+	public static function firefox()	{ self::is('firefox/')	|| self::is('iceweasel/'); }
+	public static function bot()		{ self::is('spider/')	|| self::is('bot/'); }
+
+	public static $agent	= '';
+
+	public static $secure	= [
+		'trident/',		'firefox/',		'applewebkit/',
+		'konqueror/',	'iceweasel/',
+		'bot/',			'spider/'
+	];
 
 }
 

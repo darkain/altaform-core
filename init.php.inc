@@ -169,16 +169,8 @@ if ($get->server('HTTP_UPGRADE_INSECURE_REQUESTS')) {
 
 //Upgrade to HTTPS connection (legacy)
 } else if (!$afurl->https  &&  !empty($afconfig->secure)) {
-	$agent		= strtolower($get->server('HTTP_USER_AGENT', ''));
-
-	$secure_ua	= [	'trident/',		'firefox/',		'applewebkit/',
-					'konqueror/',	'iceweasel/',
-					'bot/',			'spider/'];
-
-	foreach ($secure_ua as $ua) {
-		if (strpos($agent, $ua)  &&  !strpos($agent, 'windows nt 5.')) {
-			$afurl->redirectSecure();
-		}
+	if ($afdevice->is_secure()) {
+		$afurl->redirectSecure();
 	}
 
 //HSTS - HTTP Strict Transport Security
