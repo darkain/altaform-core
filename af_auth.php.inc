@@ -114,11 +114,12 @@ trait af_auth {
 	//LOG THE CURRENT SESSION INTO THE GIVEN USER ACCOUNT (CALLED ONCE)
 	////////////////////////////////////////////////////////////////////////////
 	public function authenticate($user, $purge=true) {
-		if (tbx_array($user)) $user = $user['user_id'];
-		$this->_session->user($user, 'AF:USER_ID');
+		if ($this->_session) {
+			if (tbx_array($user)) $user = $user['user_id'];
+			$this->_session->user($user, 'AF:USER_ID');
+		}
 		if ($purge) $this->purgeSession();
 	}
-
 
 
 
