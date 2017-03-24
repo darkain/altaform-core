@@ -85,7 +85,7 @@ class afdevice {
 			self::$device = 'mobile';
 
 		// Check if user agent is Windows Desktop
-		} else if ((preg_match('/Windows.(NT|XP|ME|9)/', self::$agent)) && (!preg_match('/Phone/i', self::$agent)) || (preg_match('/Win(9|.9|NT)/i', self::$agent))) {
+		} else if ((preg_match('/Windows.(NT|XP|ME|9)/i', self::$agent)) && (!preg_match('/Phone/i', self::$agent)) || (preg_match('/Win(9|.9|NT)/i', self::$agent))) {
 			self::$device = 'desktop';
 
 		// Check if agent is Mac Desktop
