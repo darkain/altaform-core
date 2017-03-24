@@ -242,6 +242,11 @@ class		altaform
 
 
 
+	public function device() {
+		return (string) $this->device;
+	}
+
+
 
 	public function debug() {
 		return !empty($this->config->debug);
