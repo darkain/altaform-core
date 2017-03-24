@@ -89,7 +89,7 @@ class afdevice {
 			self::$device = 'desktop';
 
 		// Check if agent is Mac Desktop
-		} else if ((preg_match('/Macintosh|PowerPC/i', self::$agent)) && (!preg_match('/Silk/i', self::$agent))) {
+		} else if ((preg_match('/Macintosh|PowerPC|Mac.OS/i', self::$agent)) && (!preg_match('/Silk/i', self::$agent))) {
 			self::$device = 'desktop';
 
 		// Check if user agent is a Linux Desktop
