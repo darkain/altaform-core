@@ -119,7 +119,7 @@ class afdevice {
 	public static function is_secure() {
 		if (self::is('windows nt 5.')) return false;
 		foreach (self::$secure as $agent) {
-			if ($afdevice->is($agent)) return true;
+			if (self::is($agent)) return true;
 		}
 		return false;
 	}
