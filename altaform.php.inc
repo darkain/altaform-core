@@ -46,15 +46,15 @@ class		altaform
 
 
 	public function __construct($dbsession=false) {
-		global $afconfig, $afdevice;
+		global $afconfig;
 
 		parent::__construct();
 
 		$afconfig->af				= $this;
-		$this->git					= new af_void;
 		$this->config				= $afconfig;
-		$this->device				= $afdevice;
 		$this->_session				= $dbsession;
+		$this->git					= new af_void;
+		$this->device				= new afdevice;
 		$this->_time				= time();
 		$this->_path				= getcwd();
 		$this->hhvm					= defined('HHVM_VERSION') ? 'HHVM' : 'PHP';

@@ -151,6 +151,3 @@ class afdevice {
 	];
 
 }
-
-
-$afdevice = new afdevice();
