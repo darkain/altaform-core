@@ -35,8 +35,8 @@ function _pudl_file($thumbsize=200) {
 	return _pudl_thumb('pudl_file', 'fl.file_hash', $thumbsize);
 }
 
-function _pudl_gallery() {
-	return _pudl_thumb('pudl_gallery', 'ga.gallery_thumb');
+function _pudl_gallery($thumbsize=200) {
+	return _pudl_thumb('pudl_gallery', 'ga.gallery_thumb', $thumbsize);
 }
 
 function _pudl_gallery_image($thumbsize=200) {
