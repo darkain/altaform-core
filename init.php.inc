@@ -169,7 +169,7 @@ if ($get->server('HTTP_UPGRADE_INSECURE_REQUESTS')) {
 
 //Upgrade to HTTPS connection (legacy)
 } else if (!$afurl->https  &&  !empty($afconfig->secure)) {
-	if ($afdevice->is_secure()) {
+	if (afdevice::is_secure()) {
 		$afurl->redirectSecure();
 	}
 
