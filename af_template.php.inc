@@ -139,6 +139,7 @@ trait af_template {
 
 	////////////////////////////////////////////////////////////////////////////
 	//LOAD A TEMPLATE FILE - OVERRIDE DEFAULT TBX FILE LOADER
+	//TODO: if file is .html extension, load and render without TBX processing
 	////////////////////////////////////////////////////////////////////////////
 	public function load($file) {
 		$device	= $file . '.' . afdevice::device();
