@@ -151,3 +151,5 @@ class afdevice {
 	];
 
 }
+
+afdevice::device();
