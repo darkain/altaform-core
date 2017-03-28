@@ -15,20 +15,20 @@ function _pudl_thumb($table, $field, $thumbsize=200) {
 
 
 
-function _pudl_user() {
-	return _pudl_thumb('pudl_user', 'us.user_icon');
+function _pudl_user($thumbsize=200) {
+	return _pudl_thumb('pudl_user', 'us.user_icon', $thumbsize);
 }
 
-function _pudl_article() {
-	return _pudl_thumb('pudl_article', 'ar.article_icon');
+function _pudl_article($thumbsize=200) {
+	return _pudl_thumb('pudl_article', 'ar.article_icon', $thumbsize);
 }
 
-function _pudl_event() {
-	return _pudl_thumb('pudl_event', 'ev.event_icon');
+function _pudl_event($thumbsize=200) {
+	return _pudl_thumb('pudl_event', 'ev.event_icon', $thumbsize);
 }
 
-function _pudl_gathering() {
-	return _pudl_thumb('pudl_gathering', 'gt.gathering_icon');
+function _pudl_gathering($thumbsize=200) {
+	return _pudl_thumb('pudl_gathering', 'gt.gathering_icon', $thumbsize);
 }
 
 function _pudl_file($thumbsize=200) {
@@ -43,16 +43,16 @@ function _pudl_gallery_image($thumbsize=200) {
 	return _pudl_thumb('pudl_gallery_image', 'gi.file_hash', $thumbsize);
 }
 
-function _pudl_product() {
-	return _pudl_thumb('pudl_product', 'pr.product_icon');
+function _pudl_product($thumbsize=200) {
+	return _pudl_thumb('pudl_product', 'pr.product_icon', $thumbsize);
 }
 
-function _pudl_vendor() {
-	return _pudl_thumb('pudl_vendor', 've.vendor_icon');
+function _pudl_vendor($thumbsize=200) {
+	return _pudl_thumb('pudl_vendor', 've.vendor_icon', $thumbsize);
 }
 
-function _pudl_group() {
-	return _pudl_thumb('pudl_group', 'gr.group_icon');
+function _pudl_group($thumbsize=200) {
+	return _pudl_thumb('pudl_group', 'gr.group_icon', $thumbsize);
 }
 
 function _pudl_feature($thumbsize=200) {
