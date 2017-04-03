@@ -8,6 +8,7 @@ class fileImporter {
 		try {
 			$image = new Imagick($path);
 		} catch (ImagickException $e) {
+			self::$error = 'importPath error: ' . $path;
 			return false;
 		}
 		$image->setFilename($path);
@@ -24,6 +25,7 @@ class fileImporter {
 			$image = new Imagick();
 			$image->readImageFile($file, $name);
 		} catch (ImagickException $e) {
+			self::$error = 'importFile error: ' . $name;
 			return false;
 		}
 		$return = self::processImage($image, false, $hash);
@@ -39,6 +41,7 @@ class fileImporter {
 			$image = new Imagick();
 			$image->readImageBlob($blob, $name);
 		} catch (ImagickException $e) {
+			self::$error = 'importBlob error: ' . $name;
 			return false;
 		}
 		$return = self::processImage($image);
@@ -51,7 +54,11 @@ class fileImporter {
 
 	public static function importURL($url) {
 		$blob = @file_get_contents($url);
-		return (!empty($blob)) ? self::importBlob($blob, $url) : false;
+
+		if ($blob !== false) return self::importBlob($blob, $url);
+
+		self::$error = 'importURL error: ' . $url;
+		return false;
 	}
 
 
@@ -61,6 +68,7 @@ class fileImporter {
 	//		http://php.net/manual/en/function.exif-imagetype.php
 	public static function upload($form=false, $database=true) {
 		if (empty($_FILES)  ||  !tbx_array($_FILES)) {
+			self::$error = 'upload error';
 			return false;
 		} else if (empty($form)) {
 			$data = reset($_FILES);
@@ -68,14 +76,39 @@ class fileImporter {
 			$data = $_FILES[$form];
 		}
 
-		if ( empty($data))				return false;
-		if (!tbx_array($data))			return false;
-		if (!empty($data['error']))		return false;
-		if ( empty($data['size']))		return false;
-		if ( empty($data['name']))		return false;
-		if ( empty($data['tmp_name']))	return false;
-		if ($data['size'] < 12)			return false;
-		if (!is_uploaded_file($data['tmp_name'])) return false;
+		switch (true) {
+			case empty($data):
+				self::$error = 'error: nothing to process';
+			return false;
+
+			case !tbx_array($data):
+				self::$error = 'error: not an array';
+			return false;
+
+			case !empty($data['error']):
+				self::$error = 'external error: ' . $data['error'];
+			return false;
+
+			case empty($data['size']):
+				self::$error = 'error: invalid file size';
+			return false;
+
+			case empty($data['name']):
+				self::$error = 'error: invalid file name';
+			return false;
+
+			case empty($data['tmp_name']):
+				self::$error = 'error: invalid temp file';
+			return false;
+
+			case $data['size'] < 12:
+				self::$error = 'error: file size too small';
+			return false;
+
+			case !is_uploaded_file($data['tmp_name']):
+				self::$error = 'error: possible hacking attempt';
+			return false;
+		}
 
 		//TODO:	IF $DATABASE=TRUE, CHECK HASH AGAINST DATABASE HERE!
 		//		IF ALREADY IN DATABASE, NO NEED TO PROCESS/UPLOAD IMAGE
@@ -109,10 +142,15 @@ class fileImporter {
 		//ONLY SUPPORT JPEG / PNG / GIF FILES FOR NOW
 		try {
 			switch (strtoupper($image->getImageFormat())) {
-				case 'JPEG':  case 'JPG':  case 'PNG':  case 'GIF':  continue;
-				default: return false;
+				case 'JPEG':  case 'JPG':  case 'PNG':  case 'GIF':
+				continue;
+
+				default:
+					self::$error = 'invalid file format';
+				return false;
 			}
 		} catch (ImagickException $exception) {
+			self::$error = 'cannot read file format';
 			return false;
 		}
 
@@ -423,6 +461,12 @@ class fileImporter {
 
 
 
-	public static $thumbSize		= [50, 100, 150, 200];
-	public static $imageSize		= [800, 1280, 1920];
+	//GET THE LAST ERROR MESSAGE
+	public static function error() { return self::$error; }
+
+
+
+	public	static $thumbSize		= [50, 100, 150, 200];
+	public	static $imageSize		= [800, 1280, 1920];
+	private	static $error			= false;
 }
