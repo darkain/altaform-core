@@ -118,8 +118,10 @@ class afdevice {
 
 	public static function is_secure() {
 		if (self::is('windows nt 5.')) return false;
-		foreach (self::$secure as $agent) {
-			if (self::is($agent)) return true;
+		foreach (self::$secure as $key => $agent) {
+			if (self::is($agent)) {
+				return is_string($key) ? self::is($key) : true;
+			}
 		}
 		return false;
 	}
@@ -145,9 +147,10 @@ class afdevice {
 	public static $agent	= '';
 
 	public static $secure	= [
-		'trident/',		'firefox/',		'applewebkit/',
-		'konqueror/',	'iceweasel/',
-		'bot/',			'spider/'
+		'applewebkit/',	'konqueror/',
+		'firefox/',		'iceweasel/',
+		'bot/',			'spider/',
+		'rv:11.' =>		'trident/',
 	];
 
 }
