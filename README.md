@@ -84,6 +84,12 @@ ln -s ../mods-available/rewrite.load
 service apache2 restart
 ```
 
+By default, TurnKey LAMP does not include root certificates to validate HTTPS
+connections made by git. These need to be added to the system.
+```Bash
+apt-get install ca-certificates
+```
+
 By default, TurnKey LAMP installs a bunch of cruft into /var/www, so we need to
 empty the folder.
 ```Bash
