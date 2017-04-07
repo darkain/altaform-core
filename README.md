@@ -17,7 +17,7 @@ of a modern framework.
 
 
 ## License
-This software library is licensed under the BSD 3-clause license, and may be
+This software library is licensed under the BSD 2-clause license, and may be
 freely used in any project (commercial, freelance, hobby, or otherwise) which
 is compatible with this license. See
 [LICENSE](https://github.com/darkain/altaform/blob/master/LICENSE)
