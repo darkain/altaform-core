@@ -2,6 +2,7 @@
 
 
 require_once('_closure/closure.php');
+require_once('af_router.php.inc');
 
 
 
@@ -11,8 +12,14 @@ interface afi_url { public function url(); }
 
 class		af_url {
 	use		closures;
+	use		af_router;
 
 
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// PARSE THE URL AND QUERY STRING FRAGMENTS
+	////////////////////////////////////////////////////////////////////////////
 	public function __construct() {
 		global $get;
 
@@ -77,7 +84,8 @@ class		af_url {
 			if (!strlen($val)) continue;
 
 			assert500(
-				!in_array($val[0], ['.', '+', '-', '_', ' ', "\t", "\n", "\r", "\0", "\x0B", "\\"]),
+				!in_array($val[0], ['.', '+', '-', '_', "\\", 0x7F])
+				&& ord($val[0])>0x20,
 				'Invalid character in URL path: 0x' . ord($val[0])
 			);
 
@@ -87,6 +95,10 @@ class		af_url {
 
 
 
+
+	////////////////////////////////////////////////////////////////////////////
+	// POST-CONFIGURATION (AF_CONFIG) OPTIONS
+	////////////////////////////////////////////////////////////////////////////
 	public function _all() {
 		$base		= $this->host . $this->base;
 		$this->full	= $base . $this->url;
@@ -102,6 +114,10 @@ class		af_url {
 
 
 
+
+	////////////////////////////////////////////////////////////////////////////
+	// GENERATE A URL
+	////////////////////////////////////////////////////////////////////////////
 	public function __invoke($path, $base=false) {
 		if ($path instanceof afi_url  ||  !tbx_array($path)) {
 			return ($base ? ($this->base.'/') : '') . $this->clean($path);
@@ -118,6 +134,10 @@ class		af_url {
 
 
 
+
+	////////////////////////////////////////////////////////////////////////////
+	// BUILD A COMPLETE URL
+	////////////////////////////////////////////////////////////////////////////
 	public function build($path, $query=false, $host=false) {
 		$return = ($host ? $this->host : '') . $this($path, true);
 		if (empty($query))		return $return;
@@ -127,6 +147,10 @@ class		af_url {
 
 
 
+
+	////////////////////////////////////////////////////////////////////////////
+	// GET THE URL FOR THE GIVEN USER ACCOUNT
+	////////////////////////////////////////////////////////////////////////////
 	public function user($user, $base=false) {
 		$user = empty($user['user_url']) ? $user['user_id'] : $user['user_url'];
 
@@ -140,6 +164,10 @@ class		af_url {
 
 
 
+
+	////////////////////////////////////////////////////////////////////////////
+	// CLEAN PART OF A URL PATH FRAGMENT
+	////////////////////////////////////////////////////////////////////////////
 	public function clean($fragment) {
 		if ($fragment instanceof afi_url) {
 			$fragment = $fragment->url();
@@ -151,167 +179,10 @@ class		af_url {
 
 
 
-	public function vid($new_id=false) {
-		if ($new_id !== false) $this->id = afstring::int($new_id);
-		return $this->id;
-	}
 
-
-
-	public function reparse($prepend=[], $append=[], $replace=false) {
-		if (empty($prepend)  &&  empty($append)) return;
-
-		if (!tbx_array($prepend))	$prepend	= [$prepend];
-		if (!tbx_array($append))	$append		= [$append];
-		if ($replace)				$this->part	= [];
-
-		$prepend	= array_reverse($prepend);
-
-		$prepend[]	= '';
-		$append[]	= '';
-
-		array_shift($this->part);
-		array_pop($this->part);
-
-		foreach ($prepend as $item) {
-			if ($item === false) continue;
-			array_unshift($this->part, $item);
-		}
-
-		foreach ($append as $item) {
-			if ($item === false) continue;
-			$this->part[] = $item;
-		}
-
-		$this->reparse = true;
-	}
-
-
-
-	public function replace($prepend=[], $append=[]) {
-		$this->reparse($prepend, $append, true);
-	}
-
-
-
-	public function finalize() {
-		return ($this->reparse = NULL);
-	}
-
-
-
-	public function process() {
-		global $af;
-
-		//Recursion limit
-		static $recurse = 0;
-		if ($recurse++ == 20) error500('INTERNAL REDIRECT RECURSION LIMIT REACHED');
-
-		//Reset virtual pathing, in case this is a reprocess
-		$this->virtual = [];
-
-		//Number of items in URL path
-		$count = count($this->part) - 1;
-
-		//Store path information for debugging
-		$this->redirected[] = array_slice($this->part, 1, $count-1);
-
-		//Load our home page!!
-		if ($count < 2) {
-			return $this->reparse($this->homepage);
-		}
-
-
-		//Handle Google Domain Authentication
-		if ($count === 2  &&  substr($this->part[1], 0, 6) === 'google') {
-			if (!empty($af->config->google['auth'])) {
-				$auth = &$af->config->google['auth'];
-				switch (true) {
-					case is_string($auth)  &&  $this->part[1] === $auth:
-					case tbx_array($auth)  &&  in_array($this->part[1], $auth):
-						echo 'google-site-verification: ';
-						echo $this->part[1];
-					return false;
-				}
-			}
-		}
-
-
-		for ($i=1; $i<$count; $i++) {
-
-			//FORCE VIRTUAL PATHING IF SPECIAL CHARACTERS ARE FOUND
-			//SPECIAL CHARACTER ALLOWED: [SPACE] ! + - . _ (ALL OTHERS FORCE VITUAL PATHING)
-			if (preg_match('/[^\x21\x2B\x2D\x2E\x5F 0-9a-zA-Z]/', $this->part[$i])) {
-				if (is_dir('_virtual')) {
-					$this->chdir( $this->virtualize($i, '_virtual') );
-					if ($this->reparse  ||  $this->reparse === NULL) return true;
-					if ($count-$i === 1) return $this->index();
-					continue;
-				}
-
-				if (is_file('_virtual.php'))	return $this->virtualize($i, '_virtual.php');
-				if (is_file('_virtual.hh'))		return $this->virtualize($i, $this->hhvm('_virtual.hh'));
-				error404();
-			}
-
-
-			if (is_dir($this->part[$i])) {
-				$this->chdir( $this->part[$i] );
-				if ($this->reparse  ||  $this->reparse === NULL) return true;
-				if ($count-$i === 1) return $this->index();
-				continue;
-			}
-
-
-			if ($count-$i === 1) {
-				$file = $this->part[$i];
-				if (is_file("$file.php"))		return "$file.php";
-				if (is_file("$file.hh"))		return $this->hhvm("$file.hh");
-				if (is_file("$file.tpl"))		return $af->auto(true, "$file.tpl");
-				if (is_file('_virtual.php'))	return $this->virtualize($i, '_virtual.php');
-				if (is_file('_virtual.hh'))		return $this->virtualize($i, $this->hhvm('_virtual.hh'));
-				if (!is_dir('_virtual'))		error404();
-
-				$this->chdir( $this->virtualize($i, '_virtual') );
-				if ($this->reparse  ||  $this->reparse === NULL) return true;
-
-				return $this->index();
-			}
-
-
-			if (is_dir('_virtual')) {
-				$this->chdir( $this->virtualize($i, '_virtual') );
-				if ($this->reparse  ||  $this->reparse === NULL) return true;
-				continue;
-			}
-
-
-			if (is_file('_virtual.php'))		return $this->virtualize($i, '_virtual.php');
-			if (is_file('_virtual.hh'))			return $this->virtualize($i, $this->hhvm('_virtual.hh'));
-
-			error404();
-		}
-	}
-
-
-
-	private function virtualize($start, $return=false) {
-		if (!empty($this->virtual)) return $return;
-
-		$count = count($this->part)-1;
-		if ($start >= $count) error500();
-
-		for ($x=$start; $x<$count; $x++) {
-			$this->virtual[] = $this->part[$x];
-		}
-
-		$this->vid($this->virtual[0]);
-
-		return $return;
-	}
-
-
-
+	////////////////////////////////////////////////////////////////////////////
+	// GET THE CDN URL FOR THE GIVEN ITEM
+	////////////////////////////////////////////////////////////////////////////
 	public static function cdn($hash, $key='hash') {
 		global $afurl;
 		$hash = self::cdnHash($hash, $key);
@@ -322,6 +193,10 @@ class		af_url {
 
 
 
+
+	////////////////////////////////////////////////////////////////////////////
+	// PROCESS CDN URLS FOR AN ARRAY OF ITEMS
+	////////////////////////////////////////////////////////////////////////////
 	public static function cdnAll(&$list, $key='img', $hashkey='hash') {
 		if (!tbx_array($list)) return false;
 		if (empty($key)) $key = 'img';
@@ -333,6 +208,10 @@ class		af_url {
 
 
 
+
+	////////////////////////////////////////////////////////////////////////////
+	// GET THE CDN PATH FOR THE GIVEN HASH
+	////////////////////////////////////////////////////////////////////////////
 	public static function cdnPath($hash) {
 		if (empty($hash)) return false;
 		if (strlen($hash) === 16) $hash = bin2hex($hash);
@@ -344,6 +223,10 @@ class		af_url {
 
 
 
+
+	////////////////////////////////////////////////////////////////////////////
+	// GET THE LOCAL CDN FILE PATH FOR THE GIVEN HASH
+	////////////////////////////////////////////////////////////////////////////
 	public static function cdnFile($hash, $ext=false) {
 		$hash = self::cdnHash($hash);
 		if (empty($hash)) return false;
@@ -353,6 +236,10 @@ class		af_url {
 
 
 
+
+	////////////////////////////////////////////////////////////////////////////
+	// GET THE CDN HASH FROM THE GIVEN ARRAY OR VALUE
+	////////////////////////////////////////////////////////////////////////////
 	public static function cdnHash($hash, $key='hash') {
 		if (empty($hash))					return false;
 		if (!tbx_array($hash))				return $hash;
@@ -364,6 +251,10 @@ class		af_url {
 
 
 
+
+	////////////////////////////////////////////////////////////////////////////
+	// INITIATE A POST REQUEST TO THE GIVEN URL
+	////////////////////////////////////////////////////////////////////////////
 	public static function post($url, $post=[], $options=[], $session=false) {
 		$ch = curl_init();
 
@@ -403,10 +294,14 @@ class		af_url {
 
 
 
+
+	////////////////////////////////////////////////////////////////////////////
+	//REDIRECT CLIENT TO A NEW URL
 	//301 Moved Permanently
 	//302 Found (temporary)
 	//307 Temporary Redirect (keeps POST data)
 	//308 Permanent Redirect (keeps POST data)
+	////////////////////////////////////////////////////////////////////////////
 	public static function redirect($url, $type=301, $die=true) {
 		global $af, $afurl;
 
@@ -438,6 +333,10 @@ class		af_url {
 
 
 
+
+	////////////////////////////////////////////////////////////////////////////
+	// REDIRECT CLIENT TO HTTPS SECURE VERSION OF PAGE
+	////////////////////////////////////////////////////////////////////////////
 	public function redirectSecure() {
 		if (!headers_sent()) {
 			header('Vary: upgrade-insecure-requests');
@@ -452,7 +351,10 @@ class		af_url {
 
 
 
+
+	////////////////////////////////////////////////////////////////////////////
 	//HANDLE SSL, TLS, HTTPS, HSTS RELATED CONFIG PROCESSING
+	////////////////////////////////////////////////////////////////////////////
 	public function secure($data) {
 		if (headers_sent()) return;
 		header('Content-Security-Policy: upgrade-insecure-requests');
@@ -472,7 +374,11 @@ class		af_url {
 
 
 
-	//SOURCE: http://stackoverflow.com/questions/1755144/how-to-validate-domain-name-in-php
+
+	////////////////////////////////////////////////////////////////////////////
+	// VALIDATE THE GIVEN DOMAIN NAME
+	//http://stackoverflow.com/questions/1755144/how-to-validate-domain-name-in-php
+	////////////////////////////////////////////////////////////////////////////
 	public static function validateDomain($domain) {
 		if (!is_string($domain))	return false;
 		if (strlen($domain) < 1)	return false;
@@ -483,45 +389,10 @@ class		af_url {
 
 
 
-	//Move into a folder, and test security if needed
-	private function chdir($__path) {
-		assert500(@chdir($__path), 'Unable to enter directory');
 
-		if (!is_file('_altaform.php.inc')) return;
-
-		$__keys = array_keys($GLOBALS);
-		extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
-		require('_altaform.php.inc');
-
-		$list = get_defined_vars();
-
-		$__keys[] = '__path';
-		$__keys[] = '__keys';
-		foreach ($__keys as $key) unset($list[$key]);
-
-		foreach ($list as $key => $val) $GLOBALS[$key] = $val;
-	}
-
-
-
-	//Process index file, if available
-	private function index() {
-		global $af;
-		if (is_file('_index.php'))	return '_index.php';
-		if (is_file('_index.hh'))	return $this->hhvm('_index.hh');
-		if (is_file('_index.tpl'))	return $af->auto(true, '_index.tpl');
-		error404();
-	}
-
-
-
-	private function hhvm($path) {
-		if (defined('HHVM_VERSION')) return $path;
-		error500('HHVM_VERSION is not defined. Cannot execute HACK language code from PHP.');
-	}
-
-
-
+	////////////////////////////////////////////////////////////////////////////
+	// LIMIT RECURSION FROM DEBUG INFO REQUESTS
+	////////////////////////////////////////////////////////////////////////////
 	public function __debugInfo() {
 		$dump = [];
 		foreach ($this as $key => $item) {
@@ -532,7 +403,10 @@ class		af_url {
 
 
 
-	//SET IN CONSTRUCTOR
+
+	////////////////////////////////////////////////////////////////////////////
+	// MEMBER VARIABLES SET IN CONSTRUCTOR
+	////////////////////////////////////////////////////////////////////////////
 	public $directory;
 	public $uri;
 	public $domain;
@@ -541,12 +415,13 @@ class		af_url {
 	public $protocol;
 	public $host;
 	public $af_host;
-	public $part;
 	public $parts;
 	public $query;
 	public $url;
 
-	//SET DYNAMICALLY OR BY CONFIG
+	////////////////////////////////////////////////////////////////////////////
+	// MEMBER VARIABLES SET DYNAMICALLY OR BY CONFIG
+	////////////////////////////////////////////////////////////////////////////
 	public $gz			= '';
 	public $path		= '';
 	public $base		= '';
@@ -554,13 +429,8 @@ class		af_url {
 	public $static		= '';
 	public $upload		= '';
 	public $push		= '';
-	public $virtual		= [];
-	public $redirected	= [];
 	public $encoding	= [];
-	public $id			= 0;
 	public $jq			= false;
-	public $reparse		= true;
-	public $homepage	= 'homepage';
 }
 
 

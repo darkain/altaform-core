@@ -259,7 +259,7 @@ $af->login();
 //Parse the URL and load the page!
 while ($afurl->reparse) {
 	$afurl->reparse = false;
-	$afurl->path = $afurl->process();
+	$afurl->path = $afurl->route();
 	if (is_string($afurl->path)) require($afurl->path);
 	chdir($afurl->directory);
 }
