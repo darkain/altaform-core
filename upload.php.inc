@@ -154,14 +154,21 @@ class fileImporter {
 			return false;
 		}
 
+		if (empty($name)) $name = $image->getFilename();
+
 		//BUILD DATA TO RETURN
-		$data['exif']		= self::getExif($image);
-		$data['hash']		= self::getHash($image, $hash);
+		$data = [
+			'exif'			=> self::getExif($image);
+			'hash'			=> self::getHash($image, $hash);
+			'size'			=> $image->getImageLength();
+			'mime'			=> $image->getImageMimeType();
+			'type'			=> $image->getImageFormat();
+			'width'			=> $image->getImageWidth();
+			'height'		=> $image->getImageHeight();
+			'name'			=> basename($name);
+		];
+
 		$data['url']		= $afurl->cdn($data['hash']);
-		$data['size']		= $image->getImageLength();
-		$data['mime']		= $image->getImageMimeType();
-		$data['type']		= $image->getImageFormat();
-		$data['name']		= basename(!empty($name) ? $name : $image->getFilename());
 		$data['file_hash']	= pudlFunction::unhex($data['hash']);
 
 
@@ -401,10 +408,12 @@ class fileImporter {
 
 
 
-	public static function database($data) {
+	public static function database($data, $transaction=false) {
 		global $db, $user;
 
 		if (empty($data)) return;
+
+		if ($transaction) $db->begin();
 
 		//GET INTERNAL MIME TYPE DATA
 		$mime = $db->rowId('pudl_mimetype', 'mime_type', $data['mime']);
@@ -415,6 +424,8 @@ class fileImporter {
 			'file_size'				=> $data['size'],
 			'file_uploaded'			=> $db->time(),
 			'file_name'				=> $data['name'],
+			'file_width'			=> $data['width'],
+			'file_height'			=> $data['height'],
 			'mime_id'				=> !empty($mime) ? $mime['mime_id'] : NULL,
 		], 'file_hash=file_hash');
 
@@ -437,6 +448,8 @@ class fileImporter {
 		}
 
 		self::databaseThumbs($data);
+
+		if ($transaction) $db->commit();
 	}
 
 
