@@ -142,6 +142,16 @@ trait af_template {
 	//TODO: if file is .html extension, load and render without TBX processing
 	////////////////////////////////////////////////////////////////////////////
 	public function load($file) {
+		if (tbx_array($file)) {
+			$source = '';
+			foreach ($file as $item) {
+				$this->load($item);
+				$source .= (string) $this;
+			}
+			$this->Source = $source;
+			return $this;
+		}
+
 		$device	= $file . '.' . afdevice::device();
 		if (file_exists($device)) return parent::load($device);
 
