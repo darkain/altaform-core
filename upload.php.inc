@@ -158,14 +158,14 @@ class fileImporter {
 
 		//BUILD DATA TO RETURN
 		$data = [
-			'exif'			=> self::getExif($image);
-			'hash'			=> self::getHash($image, $hash);
-			'size'			=> $image->getImageLength();
-			'mime'			=> $image->getImageMimeType();
-			'type'			=> $image->getImageFormat();
-			'width'			=> $image->getImageWidth();
-			'height'		=> $image->getImageHeight();
-			'name'			=> basename($name);
+			'exif'			=> self::getExif($image),
+			'hash'			=> self::getHash($image, $hash),
+			'size'			=> $image->getImageLength(),
+			'mime'			=> $image->getImageMimeType(),
+			'type'			=> $image->getImageFormat(),
+			'width'			=> $image->getImageWidth(),
+			'height'		=> $image->getImageHeight(),
+			'name'			=> basename($name),
 		];
 
 		$data['url']		= $afurl->cdn($data['hash']);
