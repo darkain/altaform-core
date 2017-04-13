@@ -143,13 +143,7 @@ trait af_template {
 	////////////////////////////////////////////////////////////////////////////
 	public function load($file) {
 		if (tbx_array($file)) {
-			$source = '';
-			foreach ($file as $item) {
-				$this->load($item);
-				$source .= (string) $this;
-			}
-			$this->Source = $source;
-			return $this;
+			return $this->loadArray($file);
 		}
 
 		$device	= $file . '.' . afdevice::device();
