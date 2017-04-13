@@ -230,7 +230,8 @@ class af_object_array implements ArrayAccess, Iterator {
 	}
 
 
-	public function snapshot() {
+	public function snapshot($return=false) {
+		if ($return) return $this->_snapshot;
 		$this->_snapshot = $this->_object_array;
 	}
 
