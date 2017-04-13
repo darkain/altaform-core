@@ -167,7 +167,7 @@ class af_object_array implements ArrayAccess, Iterator {
 	}
 
 
-	public function offsetGet($key) {
+	public function &offsetGet($key) {
 		return $this->_object_array[$key];
 	}
 
