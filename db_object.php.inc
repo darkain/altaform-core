@@ -57,7 +57,7 @@ abstract class	db_object
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//IF CONVERTING CLASS TO STRING, RETURNS THE CURRENT USER ID NUMBER
+	//IF CONVERTING CLASS TO STRING, RETURNS THE CURRENT OBJECT ID NUMBER
 	////////////////////////////////////////////////////////////////////////////
 	public function __toString() {
 		return (string) $this->{static::column};
@@ -208,7 +208,7 @@ abstract class	db_object
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//UPDATE THE USER TABLE IN THE DATABASE
+	//UPDATE THE OBJECT IN THE DATABASE
 	////////////////////////////////////////////////////////////////////////////
 	public function update($data) {
 		global $db;
@@ -285,10 +285,22 @@ abstract class	db_object
 				: 0;
 		}
 
-		$this->_clone(
-			$db	->cache($this->_fetchCache())
-				->rowId(static::table, static::column, (int)$id)
-		);
+		if (is_int(static::prefix)) {
+			$clause = [static::column => $id];
+		} else {
+			$clause = [static::prefix.'.'.static::column => $id];
+		}
+
+		$data = $db	->cache($this->_fetchCache())
+					->query(static::schema(), [
+						'clause'	=> $clause,
+						'limit'		=> 1,
+					])
+					->complete();
+
+		!empty($data)
+			? $this->_replace($data[0])
+			: $this->_clone();
 	}
 
 
