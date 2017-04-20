@@ -9,14 +9,21 @@ class af_object_array implements ArrayAccess, Iterator {
 	}
 
 
+	public function _clear() {
+		$this->_object_array	= [];
+		$this->_snapshot		= false;
+	}
+
+
 	public function _replace(&$array) {
+		$this->_clear();
 		if (is_a($array, 'Traversable')) return $this->_clone($array);
 		$this->_object_array = &$array;
 	}
 
 
 	public function _clone($array=false) {
-		$this->_object_array = [];
+		$this->_clear();
 		if (!tbx_array($array)) return;
 		foreach($array as $key => $value) {
 			$this->_object_array[$key]	= $value;
