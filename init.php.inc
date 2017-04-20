@@ -81,7 +81,7 @@ require_once('af_url.php.inc');
 
 //Set the content type for this document to HTML with UTF-8 encoding
 if (!headers_sent()) {
-	if (strpos($get->server('HTTP_USER_AGENT', ''), ' Trident/')) {
+	if (afdevice::trident()) {
 		header('X-UA-Compatible: IE=edge,chrome=1');
 	}
 	header('Content-Language: en_US');
