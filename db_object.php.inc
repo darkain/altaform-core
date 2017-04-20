@@ -118,7 +118,6 @@ abstract class	db_object
 	public static function select($clause) {
 		global $db;
 
-
 		$data = $db(array_merge_recursive(
 			$pudl,
 			static::schema(),
