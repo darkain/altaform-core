@@ -22,7 +22,7 @@ class af_object_array implements ArrayAccess, Iterator {
 	}
 
 
-	public function _clone($array=false) {
+	public function _clone($array) {
 		$this->_clear();
 		if (!tbx_array($array)) return;
 		foreach($array as $key => $value) {

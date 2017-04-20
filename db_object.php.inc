@@ -300,7 +300,7 @@ abstract class	db_object
 
 		!empty($data)
 			? $this->_replace($data[0])
-			: $this->_clone();
+			: $this->_clear();
 	}
 
 
