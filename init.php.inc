@@ -69,7 +69,7 @@ require_once('common.php.inc');
 
 
 //Altaform Base Code
-require_once('altaform.php.inc');
+require_once('_altaform.php.inc');
 
 
 
