@@ -143,7 +143,7 @@ abstract class	db_object
 		$result = $db(array_merge_recursive(
 			static::schema(),
 			$pudl,
-			['clause'	=> is_array($clause) ? $clause : [$clause]]
+			['clause' => is_array($clause) ? $clause : [$clause]]
 		));
 
 		$class	= static::classname;
@@ -175,9 +175,7 @@ abstract class	db_object
 	//OVERWRITE THE PUDL PARAMETERS FOR PULLING A COLLECTION
 	////////////////////////////////////////////////////////////////////////////
 	protected static function schema() {
-		return [
-			'table' => [static::prefix => static::table]
-		];
+		return ['table' => [static::prefix => static::table]];
 	}
 
 
