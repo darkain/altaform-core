@@ -115,12 +115,12 @@ abstract class	db_object
 	////////////////////////////////////////////////////////////////////////////
 	//GET AN INSTANCE OF THIS OBJECT FROM THE DATABASE FOR A GIVEN CLAUSE
 	////////////////////////////////////////////////////////////////////////////
-	public static function select($clause) {
+	public static function select($clause, $pudl=[]) {
 		global $db;
 
 		$data = $db(array_merge_recursive(
-			$pudl,
 			static::schema(),
+			$pudl,
 			[
 				'clause'	=> is_array($clause) ? $clause : [$clause],
 				'limit'		=> 1,
@@ -141,8 +141,8 @@ abstract class	db_object
 		global $db;
 
 		$result = $db(array_merge_recursive(
-			$pudl,
 			static::schema(),
+			$pudl,
 			['clause'	=> is_array($clause) ? $clause : [$clause]]
 		));
 
@@ -175,7 +175,9 @@ abstract class	db_object
 	//OVERWRITE THE PUDL PARAMETERS FOR PULLING A COLLECTION
 	////////////////////////////////////////////////////////////////////////////
 	protected static function schema() {
-		return ['table' => static::table];
+		return [
+			'table' => [static::prefix => static::table]
+		];
 	}
 
 
@@ -322,4 +324,5 @@ abstract class	db_object
 	const classname	= __CLASS__;
 	const column	= 'id';
 	const table		= 'pudl';
+	const prefix	= -1;
 }

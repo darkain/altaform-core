@@ -215,6 +215,7 @@ class			af_user
 	const classname	= __CLASS__;
 	const column	= 'user_id';
 	const table		= 'pudl_user';
+	const prefix	= 'us';
 
 
 
