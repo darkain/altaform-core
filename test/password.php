@@ -5,8 +5,8 @@ $afconfig('password', [
 ]);
 
 
-assert(afuser::validatePassword('test') === 'Password must be at least 8 characters long');
-assert(afuser::validatePassword('test1324') === 'Password must be at least 8 characters long');
+assert(af_user::validatePassword('test') === 'Password must be at least 8 characters long');
+assert(af_user::validatePassword('test1324') === 'Password must be at least 8 characters long');
 
 
 

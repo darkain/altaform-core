@@ -215,7 +215,7 @@ if (!empty( $get->server('HTTP_ORIGIN') )) {
 if (!empty($afconfig->pudl)  &&  tbx_array($afconfig->pudl)) {
 	require_once('_pudl/pudl.php');
 	require_once('_pudl/pudlSession.php');
-	require_once('user.php.inc');
+	require_once('af_user.php.inc');
 	$db = pudl::instance($afconfig->pudl);
 
 	$db->on('log',		'_pudl_log');
@@ -243,7 +243,7 @@ if (!empty($afconfig->pudl)  &&  tbx_array($afconfig->pudl)) {
 						->collection('pudl_altaform');
 
 } else {
-	require_once('user.php.inc');
+	require_once('af_user.php.inc');
 	$af = altaform::create();
 }
 

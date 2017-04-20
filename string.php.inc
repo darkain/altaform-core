@@ -6,11 +6,6 @@ define('BYTE_FORMAT_KB',	0x0002);
 define('BYTE_FORMAT_KIB',	0x0003);
 
 
-//FALL BACK IF random_int() DOESN'T EXIST - NEW IN PHP 7.0
-if (!function_exists('random_int')) {
-	function random_int($min, $max) { return mt_rand($min, $max); }
-}
-
 
 
 class afstring {
@@ -273,12 +268,7 @@ class afstring {
 
 	//GENERATE NEW RANDOM PASSWORD OF $length CHARACTERS
 	public static function password($length=16) {
-		$password	= '';
-		$characters	= strlen(self::$allowed)-1;
-		for ($i=0; $i<$length; $i++) {
-			$password .= self::$allowed[random_int(0, $characters)];
-		}
-		return $password;
+		return af_user::password($length);
 	}
 
 
@@ -450,11 +440,4 @@ class afstring {
 		'rus' => '/[\x{0400}-\x{052f}]/u',
 		'heb' => '/[\x{0590}-\x{05ff}]/u',
 	];
-
-
-
-
-	public static $allowed =
-		'^/(01234=abcdefghijklmnopqrstuvwxyz-ABCDEFGHIJKLMNOPQRSTUVWXYZ+56789)\$';
-
 }

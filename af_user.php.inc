@@ -9,22 +9,21 @@ require_once('db_object.php.inc');
 //TODO:	ADD A TRAIT FOR 'ATTRIBUTES'
 //		CURRENTLY ONLY ATTRIBUTE IS UNVERIFIED PASSWORD
 
+//FALL BACK IF random_int() DOESN'T EXIST - NEW IN PHP 7.0
+//THIS IS USED FOR PASSWORD GENERATOR
+if (!function_exists('random_int')) {
+	function random_int($min, $max) { return mt_rand($min, $max); }
+}
 
 
-class			afuser
+
+
+class			af_user
 	extends		db_object
 	implements	afi_url {
-	use			af_node,	af_permission,		af_preference;
-
-
-
-
-	////////////////////////////////////////////////////////////////////////////
-	//PASS THE TABLE, COLUMN, AND ITEM INFO TO DB_OBJECT CONSTRUCTOR
-	////////////////////////////////////////////////////////////////////////////
-	public function __construct($item=false, $fetch=false) {
-		parent::__construct('pudl_user', 'user_id', $item, $fetch);
-	}
+	use			af_node;
+	use			af_permission;
+	use			af_preference;
 
 
 
@@ -64,7 +63,7 @@ class			afuser
 	//TRUE IF THE USER IS LOGGED IN, FALSE OTHERWISE
 	////////////////////////////////////////////////////////////////////////////
 	public function loggedIn() {
-		return !empty($this->user_id);
+		return !!$this->id();
 	}
 
 
@@ -85,7 +84,7 @@ class			afuser
 	//GET THE URL OF THE CURRENT USER
 	////////////////////////////////////////////////////////////////////////////
 	public function url() {
-		return empty($this->user_url) ? $this->user_id : $this->user_url;
+		return empty($this->user_url) ? $this->id() : $this->user_url;
 	}
 
 
@@ -99,11 +98,11 @@ class			afuser
 
 		$this->auth_account = $account;
 
-		return $db->insert('pudl_user_auth', [
-			'user_id'		=> $this->user_id,
+		return $db->upsert('pudl_user_auth', [
+			static::column	=> $this->id(),
 			'auth_account'	=> $account,
 			'auth_password'	=> password_hash($password, PASSWORD_DEFAULT),
-		], true);
+		]);
 	}
 
 
@@ -150,7 +149,21 @@ class			afuser
 		return true;
 	}
 
-//public static generate password
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	//GENERATE A RANDOM PASSWORD
+	////////////////////////////////////////////////////////////////////////////
+	public static function password($length=16) {
+		$password	= '';
+		$characters	= strlen(static::password_allowed)-1;
+		for ($i=0; $i<$length; $i++) {
+			$password .= static::password_allowed[random_int(0, $characters)];
+		}
+		return $password;
+	}
+
 
 
 
@@ -162,7 +175,7 @@ class			afuser
 
 		if ($data === false) {
 			$db->delete('pudl_queue', [
-				'queue_user'	=> $this->user_id,
+				'queue_user'	=> $this->id(),
 				'queue_service'	=> $service,
 				'queue_type'	=> $type,
 			]);
@@ -172,7 +185,7 @@ class			afuser
 		if (!tbx_array($data)) $data = [$data];
 
 		$db->insert('pudl_queue', [
-				'queue_user'	=> $this->user_id,
+				'queue_user'	=> $this->id(),
 				'queue_service'	=> $service,
 				'queue_type'	=> $type,
 				'queue_time'	=> $db->time(),
@@ -197,60 +210,21 @@ class			afuser
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//CREATE NEW USER ACCOUNT WITH THE GIVEN DATA
+	//LATE STATIC BINDING VARIABLES FROM DB_OBJECT
 	////////////////////////////////////////////////////////////////////////////
-	public static function create($data=false) {
-		global $db;
-		return self::get($db->insert('pudl_user', $data));
-	}
-
-
-
-
-	////////////////////////////////////////////////////////////////////////////
-	//GET A USER ACCOUNT FROM DATABASE FOR A GIVEN ID NUMBER
-	////////////////////////////////////////////////////////////////////////////
-	public static function get($id) {
-		return new afuser($id, true);
-	}
+	const classname	= __CLASS__;
+	const column	= 'user_id';
+	const table		= 'pudl_user';
 
 
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//GET A USER ACCOUNT FROM DATABASE FOR A GIVEN CLAUSE
+	//ALLOWED CHARACTERS IN SYSTEM GENERATED PASSWORDS
 	////////////////////////////////////////////////////////////////////////////
-	public static function select($clause) {
-		global $db;
-		return new afuser($db->row('pudl_user', $clause));
-	}
-
-}
-
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-//SHORTCUT CLASS FOR AUTOMATIC ERROR HANDLING, THROWS ERROR 401 ON UNKNOWN USER
-////////////////////////////////////////////////////////////////////////////////
-class afuser401 extends afuser {
-	public function __construct($id) {
-		parent::__construct($id, true);
-		$this->assert401();
-	}
-}
-
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-//SHORTCUT CLASS FOR AUTOMATIC ERROR HANDLING, THROWS ERROR 404 ON UNKNOWN USER
-////////////////////////////////////////////////////////////////////////////////
-class afuser404 extends afuser {
-	public function __construct($id) {
-		parent::__construct($id, true);
-		$this->assert404();
-	}
+	const password_allowed =
+		'01234abcdefghijklmnopqrstuvwxyz-^/(' .
+		'56789ABCDEFGHIJKLMNOPQRSTUVWXYZ+)\$=';
 }
 
 
@@ -259,8 +233,10 @@ class afuser404 extends afuser {
 ////////////////////////////////////////////////////////////////////////////////
 //SHORTCUT CLASS FOR ANONYMOUS USER
 ////////////////////////////////////////////////////////////////////////////////
-class afanonymous extends afuser {
+class af_anonymous extends af_user {
 	public function __construct() {
 		parent::__construct(0, true);
 	}
+
+	protected function _fetchCache() { return AF_DAY; }
 }

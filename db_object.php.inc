@@ -21,9 +21,8 @@ abstract class	db_object
 
 
 
-	public function __construct($table, $column, $item=false, $fetch=false) {
-		$this->_table	= $table;
-		$this->_column	= $column;
+	public function __construct($item=false, $fetch=false) {
+		assert500(static::table !== 'pudl');
 
 		if (is_array($item)) {
 			$fetch ? $this->fetch($item)		: $this->_replace($item);
@@ -44,31 +43,15 @@ abstract class	db_object
 			$this->fetch($item);
 
 		} else if (!empty($item)) {
-			$this->{$column} = $item;
+			$this->{static::column} = $item;
 		}
 
 
 		//SET DEFAULT OBJECT ID AND FORCE INTEGER
-		$this->{$column} =	(!empty($this->{$column}))
-							? (int) $this->{$column}
-							: 0;
+		$this->{static::column} = !empty($this->{static::column})
+								?  (int) $this->{static::column}
+								: 0;
 	}
-
-
-
-
-	////////////////////////////////////////////////////////////////////////////
-	//CREATE A NEW INSTANCE OF THIS OBJECT IN THE DATABASE
-	////////////////////////////////////////////////////////////////////////////
-	//abstract public static function create($data=false);
-
-
-
-
-	////////////////////////////////////////////////////////////////////////////
-	//GET AN INSTANCE OF THIS OBJECT FROM THE DATABASE
-	////////////////////////////////////////////////////////////////////////////
-	//abstract public static function get($id);
 
 
 
@@ -77,7 +60,7 @@ abstract class	db_object
 	//IF CONVERTING CLASS TO STRING, RETURNS THE CURRENT USER ID NUMBER
 	////////////////////////////////////////////////////////////////////////////
 	public function __toString() {
-		return (string) $this->{$this->_column};
+		return (string) $this->{static::column};
 	}
 
 
@@ -87,7 +70,113 @@ abstract class	db_object
 	//RETURN THE CURRENT OBJECT ID NUMBER
 	////////////////////////////////////////////////////////////////////////////
 	public function id() {
-		return (int) $this->{$this->_column};
+		return (int) $this->{static::column};
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	//CREATE A NEW INSTANCE OF THIS OBJECT IN THE DATABASE
+	////////////////////////////////////////////////////////////////////////////
+	public static function create($data=false) {
+		global $db;
+		return static::get($db->insert(static::table, $data));
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	//GET AN INSTANCE OF THIS OBJECT FROM THE DATABASE
+	////////////////////////////////////////////////////////////////////////////
+	public static function get($id=false) {
+		global $get, $afurl;
+
+		if (tbx_array($id))	$id = $id[static::column];
+
+		if (empty($id)  &&  $get instanceof getvar) {
+			$id = $get->id();
+		}
+
+		if (empty($id)  &&  $afurl instanceof af_url) {
+			$id = $afurl->id;
+		}
+
+		$id = (int) $id;
+
+		$class = static::classname;
+		return new $class($id, true);
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	//GET AN INSTANCE OF THIS OBJECT FROM THE DATABASE FOR A GIVEN CLAUSE
+	////////////////////////////////////////////////////////////////////////////
+	public static function select($clause) {
+		global $db;
+
+
+		$data = $db(array_merge_recursive(
+			$pudl,
+			static::schema(),
+			[
+				'clause'	=> is_array($clause) ? $clause : [$clause],
+				'limit'		=> 1,
+			]
+		))->complete();
+
+		$class = static::classname;
+		return new $class(reset($data));
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	//GET A COLLECTION OF OBJECTS
+	////////////////////////////////////////////////////////////////////////////
+	public static function collect($clause, $pudl=[]) {
+		global $db;
+
+		$result = $db(array_merge_recursive(
+			$pudl,
+			static::schema(),
+			['clause'	=> is_array($clause) ? $clause : [$clause]]
+		));
+
+		$class	= static::classname;
+		$return	= [];
+
+		while ($data = $result()) {
+			$return[] = new $class($data);
+		}
+
+		$result->free();
+
+		return $return;
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	//GET A COLLECTION OF PARTS FROM ID NUMBERS
+	////////////////////////////////////////////////////////////////////////////
+	public static function group($items, $pudl=[]) {
+		return static::collect([static::column=>$items], $pudl);
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	//OVERWRITE THE PUDL PARAMETERS FOR PULLING A COLLECTION
+	////////////////////////////////////////////////////////////////////////////
+	protected static function schema() {
+		return ['table' => static::table];
 	}
 
 
@@ -102,12 +191,12 @@ abstract class	db_object
 		if (empty($item))		return false;
 
 		if (is_array($item)) {
-			if (empty($item[$this->_column])) return false;
-			$item = $item[$this->_column];
+			if (empty($item[static::column])) return false;
+			$item = $item[static::column];
 
 		} else if (is_object($item)) {
-			if (empty($item->{$this->_column})) return false;
-			$item = $item->{$this->_column};
+			if (empty($item->{static::column})) return false;
+			$item = $item->{static::column};
 		}
 
 		$item = (int) $item;
@@ -131,7 +220,7 @@ abstract class	db_object
 			}
 		}
 
-		return $db->updateId($this->_table, $data, $this);
+		return $db->updateId(static::table, $data, $this);
 	}
 
 
@@ -152,7 +241,7 @@ abstract class	db_object
 		}
 
 		return !empty($data)
-			? $db->updateId($this->_table, $data, $this)
+			? $db->updateId(static::table, $data, $this)
 			: true;
 	}
 
@@ -164,7 +253,7 @@ abstract class	db_object
 	////////////////////////////////////////////////////////////////////////////
 	public function delete() {
 		global $db;
-		return $db->deleteId($this->_table, $this);
+		return $db->deleteId(static::table, $this);
 	}
 
 
@@ -174,7 +263,7 @@ abstract class	db_object
 	//PUDL INTEGRATION
 	////////////////////////////////////////////////////////////////////////////
 	public function pudlId() {
-		return [$this->_column => $this->{$this->_column}];
+		return [static::column => $this->id()];
 	}
 
 
@@ -187,15 +276,19 @@ abstract class	db_object
 		global $db;
 
 		if (is_array($id)) {
-			$id = empty($id[$this->_column])	? 0 : $id[$this->_column];
+			$id = !empty($id[static::column])
+				? $id[static::column]
+				: 0;
 
 		} else if (is_object($id)) {
-			$id = empty($id->{$this->_column})	? 0 : $id->{$this->_column};
+			$id = !empty($id->{static::column})
+				? $id->{static::column}
+				: 0;
 		}
 
 		$this->_clone(
 			$db	->cache($this->_fetchCache())
-				->rowId($this->_table, $this->_column, (int)$id)
+				->rowId(static::table, static::column, (int)$id)
 		);
 	}
 
@@ -224,6 +317,10 @@ abstract class	db_object
 
 
 
-	protected $_column	= '';
-	protected $_table	= '';
+	////////////////////////////////////////////////////////////////////////////
+	//LATE STATIC BINDING VARIABLES, OVERWRITE THESE IN YOUR CLASS
+	////////////////////////////////////////////////////////////////////////////
+	const classname	= __CLASS__;
+	const column	= 'id';
+	const table		= 'pudl';
 }

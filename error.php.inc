@@ -132,7 +132,7 @@ class aferror {
 
 		if (empty($backtrace)) $backtrace = debug_backtrace(0);
 
-		if (!($user instanceof afuser)  ||  $user->isAdmin()) {
+		if (!($user instanceof af_user)  ||  $user->isAdmin()) {
 			if (empty($afconfig)) $afconfig = (object)[];
 			$afconfig->debug = true;
 		}

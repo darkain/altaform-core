@@ -18,7 +18,7 @@ trait af_auth {
 	public function login($session=false) {
 		global $user, $db, $get;
 
-		if (empty($db)) return $user = new afuser();
+		if (empty($db)) return $user = new af_user;
 
 		$user = false;
 
@@ -32,11 +32,11 @@ trait af_auth {
 					'user_id' => $id,
 					pudl::find('user_permission', $this->_authtype),
 				]);
-				if (!empty($data)) $user = new afuser($data);
+				if (!empty($data)) $user = new af_user($data);
 			}
 		}
 
-		if (empty($user)) $user = new afanonymous;
+		if (empty($user)) $user = new af_anonymous;
 
 		$user->user_session = $session;
 		if (empty($user->user_url)) $user->user_url = $user->user_id;
