@@ -1,7 +1,7 @@
 <?php
 
 
-require_once('_closure/closure.php');
+require_once('af_closure.php.inc');
 require_once('af_router.php.inc');
 
 
@@ -11,7 +11,7 @@ interface afi_url { public function url(); }
 
 
 class		af_url {
-	use		closures;
+	use		af_closure;
 	use		af_router;
 
 
