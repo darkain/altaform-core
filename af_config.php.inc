@@ -1,12 +1,15 @@
 <?php
 
 
-require_once('af_object_array.php.inc');
+
+
+require_once('_pudl/pudlObject.php');
+
 
 
 
 class			af_config
-	extends		af_object_array
+	extends		pudlObject
 	implements	tbx_plugin {
 
 

@@ -4,7 +4,6 @@
 require_once('af_node.php.inc');
 require_once('af_permission.php.inc');
 require_once('af_preference.php.inc');
-require_once('db_object.php.inc');
 
 //TODO:	ADD A TRAIT FOR 'ATTRIBUTES'
 //		CURRENTLY ONLY ATTRIBUTE IS UNVERIFIED PASSWORD
@@ -19,7 +18,7 @@ if (!function_exists('random_int')) {
 
 
 class			af_user
-	extends		db_object
+	extends		pudlOrm
 	implements	afi_url {
 	use			af_node;
 	use			af_permission;
@@ -210,7 +209,7 @@ class			af_user
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//LATE STATIC BINDING VARIABLES FROM DB_OBJECT
+	//LATE STATIC BINDING VARIABLES FROM PUDL ORM
 	////////////////////////////////////////////////////////////////////////////
 	const classname	= __CLASS__;
 	const column	= 'user_id';

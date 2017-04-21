@@ -89,7 +89,7 @@ trait af_permission {
 		}
 
 		if ($id !== false) {
-			if ($id instanceof db_object) $id = $id->id();
+			if ($id instanceof pudlOrm) $id = $id->id();
 			else if (tbx_array($id)) $id = $id['object_id'];
 
 			$row = $db->row('pudl_object_access', [

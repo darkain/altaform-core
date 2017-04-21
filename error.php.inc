@@ -400,43 +400,43 @@ function error500($text=false, $log=true, $details=false) {
 
 
 function assert401($item, $text=false, $log=false) {
-	if ($item instanceof db_object) return $item->assert401($text);
+	if ($item instanceof pudlOrm) return $item->assert401($text);
 	return (empty($item) && $item!=='') ? error401($text, $log) : $item;
 }
 
 
 function assert402($item, $text=false, $log=false) {
-	if ($item instanceof db_object) return $item->assert402($text);
+	if ($item instanceof pudlOrm) return $item->assert402($text);
 	return (empty($item) && $item!=='') ? error402($text, $log) : $item;
 }
 
 
 function assert403($item, $text=false, $log=false) {
-	if ($item instanceof db_object) return $item->assert403($text);
+	if ($item instanceof pudlOrm) return $item->assert403($text);
 	return (empty($item) && $item!=='') ? error403($text, $log) : $item;
 }
 
 
 function assert404($item, $text=false, $log=false) {
-	if ($item instanceof db_object) return $item->assert404($text);
+	if ($item instanceof pudlOrm) return $item->assert404($text);
 	return (empty($item) && $item!=='') ? error404($text, $log) : $item;
 }
 
 
 function assert405($item, $text=false, $log=false) {
-	if ($item instanceof db_object) return $item->assert405($text);
+	if ($item instanceof pudlOrm) return $item->assert405($text);
 	return (empty($item) && $item!=='') ? error405($text, $log) : $item;
 }
 
 
 function assert422($item, $text=false, $log=true) {
-	if ($item instanceof db_object) return $item->assert422($text);
+	if ($item instanceof pudlOrm) return $item->assert422($text);
 	return (empty($item) && $item!=='') ? error422($text, $log) : $item;
 }
 
 
 function assert500($item, $text=false, $log=true) {
-	if ($item instanceof db_object) return $item->assert500($text);
+	if ($item instanceof pudlOrm) return $item->assert500($text);
 	return (empty($item) && $item!=='') ? error500($text, $log) : $item;
 }
 

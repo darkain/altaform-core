@@ -1,12 +1,15 @@
 <?php
 
 
-require_once('af_object_array.php.inc');
+
+
+require_once('_pudl/pudlObject.php');
+
 
 
 
 abstract class	af_import
-	extends		af_object_array {
+	extends		pudlObject {
 
 
 
