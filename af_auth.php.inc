@@ -60,7 +60,7 @@ trait af_auth {
 
 		$this->authenticate(0, $destroy);
 
-		$user = new afanonymous;
+		$user = new af_anonymous;
 		$user->permissions($user);
 
 		if (!$destroy) return;
