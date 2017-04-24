@@ -143,7 +143,7 @@ class aferror {
 
 		$arrout += $backtrace;
 		foreach ($arrout as $key => &$value) if (is_int($key)) {
-			if (is_array($value)  &&  is_array($value['args'])) {
+			if (!empty($value['args'])  &&  is_array($value['args'])) {
 				array_walk_recursive($value['args'], [__CLASS__,'nopassword']);
 			}
 			$value = self::json($value);
@@ -176,7 +176,7 @@ class aferror {
 			if (!empty($value['function'])) {
 				$html .= '<br/>' . $value['function'] . '(';
 				if (!empty($value['args'])) {
-					array_walk_recursive($value['args'], [self,'nopassword']);
+					array_walk_recursive($value['args'], [__CLASS__,'nopassword']);
 					$html .= substr(self::html_json($value['args']), 1, -1);
 				}
 				$html .= ')';
@@ -264,7 +264,7 @@ class aferror {
 		if (!defined('TBX_SPECIAL_CHARS')) {
 			define('TBX_SPECIAL_CHARS', ENT_NOQUOTES|ENT_HTML5);
 		}
-		return htmlspecialchars($item, TBX_SPECIAL_CHARS);
+		return htmlspecialchars((string)$item, TBX_SPECIAL_CHARS);
 	}
 
 

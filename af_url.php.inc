@@ -41,7 +41,7 @@ class		af_url {
 		$this->uri			= urldecode($get->server('REQUEST_URI', ''));
 		$this->domain		= reset($host);
 		$this->referer		= $get->server('HTTP_REFERER', '');
-		$this->https		= strtolower($get->server('HTTPS'));
+		$this->https		= strtolower($get->server('HTTPS', ''));
 		$this->https		= $this->https !== 'off'  &&  !empty($this->https);
 		$this->protocol		= $this->https ? 'https' : 'http';
 		$this->host			= $this->protocol . '://' . $this->domain;
