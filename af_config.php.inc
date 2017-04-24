@@ -77,7 +77,7 @@ class			af_config
 		if (empty($data)) return;
 
 		if (func_num_args() === 1) {
-			$this->_merge($data);
+			$this->merge($data);
 
 		} else if (is_array($this->{$data})) {
 			$this->{$data} = array_merge($this->{$data}, $value);

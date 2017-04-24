@@ -52,7 +52,7 @@ class			af_user
 			return $db->updateId('pudl_user_profile', $data, $this);
 		}
 
-		$this->_merge($db->rowId('pudl_user_profile', $this));
+		$this->merge($db->rowId('pudl_user_profile', $this));
 	}
 
 
