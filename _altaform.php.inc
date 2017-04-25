@@ -242,6 +242,14 @@ class		altaform
 
 
 
+	public function timeout($seconds) {
+		global $db;
+		set_time_limit($seconds);
+		$db->timeout($seconds);
+	}
+
+
+
 	public function device() {
 		return (string) $this->device;
 	}
