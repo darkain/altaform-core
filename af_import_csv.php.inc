@@ -120,12 +120,14 @@ class		af_import_csv
 		//PARSE BODY
 		if ($this->translate === true) {
 			foreach ($rows as $row) {
+				if (empty($row)) continue;
 				$item = str_getcsv($row);
 				if (!empty($item)) $this[] = $item;
 			}
 
 		} else {
 			foreach ($rows as $row) {
+				if (empty($row)) continue;
 				$item = str_getcsv($row);
 				$data = [];
 				echo '<pre>';
