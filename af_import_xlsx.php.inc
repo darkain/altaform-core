@@ -69,7 +69,7 @@ class		af_import_xlsx
 	//OPEN ZIP FILE AND READ CONTENTS
 	////////////////////////////////////////////////////////////////////////////
 	protected function _openfile($filename) {
-		$zip = zip_open($filename);
+		$zip = zip_open(realpath($filename));
 
 		if (!is_resource($zip)) {
 			throw new afException('CANNOT OPEN XLSX FILE - ' . $filename);
