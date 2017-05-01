@@ -61,8 +61,8 @@ function _pudl_feature($thumbsize=200) {
 
 
 
-function _pudl_gallery_costume() {
-	$table = _pudl_gallery();
+function _pudl_gallery_costume($thumbsize=200) {
+	$table = _pudl_gallery($thumbsize);
 
 	$table[] = [
 		'left' => ['gl1'=>'pudl_group_label'],
