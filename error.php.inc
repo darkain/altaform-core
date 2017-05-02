@@ -11,10 +11,15 @@ class aferror {
 	public static function render($header, $text, $log=false, $template=false) {
 		global $db, $af;
 
-		if (!headers_sent()) header($header);
+		if (!headers_sent()) {
+			$protocol	= !empty($_SERVER['SERVER_PROTOCOL'])
+						? $_SERVER['SERVER_PROTOCOL']
+						: 'HTTP/1.1';
+			header($protocol . ' ' . $header);
+		}
 
 		if ($af instanceof altaform) {
-			$af->title = str_replace('HTTP/1.1 ', '', $header);
+			$af->title = $header;
 		}
 
 		$data = $log ? self::log($text, false) : self::process($text);
@@ -300,7 +305,7 @@ class aferror {
 
 
 function error401($text=false, $log=false, $details=false) {
-	aferror::render('HTTP/1.1 401 Unauthorized', [
+	aferror::render('401 Unauthorized', [
 		'<div id="af-fatal"><h1>ERROR: 401</h1>',
 		'<h2>AUTHORIZATION REQUIRED</h2>',
 		'<h3>' . aferror::html($details) . '</h3>',
@@ -312,7 +317,7 @@ function error401($text=false, $log=false, $details=false) {
 
 
 function error402($text=false, $log=false, $details=false) {
-	aferror::render('HTTP/1.1 402 Payment Required', [
+	aferror::render('402 Payment Required', [
 		'<div id="af-fatal"><h1>ERROR: 402</h1>',
 		'<h2>PAYMENT REQUIRED</h2>',
 		'<h3>' . aferror::html($details) . '</h3>',
@@ -324,7 +329,7 @@ function error402($text=false, $log=false, $details=false) {
 
 
 function error403($text=false, $log=false, $details=false) {
-	aferror::render('HTTP/1.1 403 Forbidden', [
+	aferror::render('403 Forbidden', [
 		'<div id="af-fatal"><h1>ERROR: 403</h1>',
 		'<h2>FORBIDDEN</h2>',
 		'<h3>' . aferror::html($details) . '</h3>',
@@ -351,7 +356,7 @@ function error404($text=false, $log=false, $details=false) {
 		}
 	}
 
-	aferror::render('HTTP/1.1 404 File Not Found', [
+	aferror::render('404 File Not Found', [
 		'<div id="af-fatal"><h1>ERROR: 404</h1>',
 		'<h2>FILE NOT FOUND</h2>',
 		'<h3>' . aferror::html($details) . '</h3>',
@@ -363,7 +368,7 @@ function error404($text=false, $log=false, $details=false) {
 
 
 function error405($text=false, $log=true, $details=false) {
-	aferror::render('HTTP/1.1 405 Method Not Allowed', [
+	aferror::render('405 Method Not Allowed', [
 		'<div id="af-fatal"><h1>ERROR: 405</h1>',
 		'<h2>METHOD NOT ALLOWED</h2>',
 		'<h3>' . aferror::html($details) . '</h3>',
@@ -375,7 +380,7 @@ function error405($text=false, $log=true, $details=false) {
 
 
 function error422($text=false, $log=true, $details=false) {
-	aferror::render('HTTP/1.1 422 Unprocessable Entity', [
+	aferror::render('422 Unprocessable Entity', [
 		'<div id="af-fatal"><h1>ERROR: 422</h1>',
 		'<h2>UNPROCESSABLE ENTITY</h2>',
 		'<h3>' . aferror::html($details) . '</h3>',
@@ -389,7 +394,7 @@ function error422($text=false, $log=true, $details=false) {
 function error500($text=false, $log=true, $details=false) {
 	if (is_array($details)) $details = $details['details'];
 
-	aferror::render('HTTP/1.1 500 Internal Server Error', [
+	aferror::render('500 Internal Server Error', [
 		'<div id="af-fatal"><h1>ERROR: 500</h1>',
 		'<h2>INTERNAL SERVER ERROR</h2>',
 		'<h3>' . aferror::html($details) . '</h3>',
