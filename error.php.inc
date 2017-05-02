@@ -62,7 +62,7 @@ class aferror {
 	public static function renderFile($file, $header, $text, $data) {
 		global $af;
 
-		if ($af->cli()) return false;
+		if ($af->contentType() !== 'html') return false;
 		if ($af->stage() === AF_STAGE_HEADER) return false;
 
 		return $af->resetStage()->renderPage($file, [

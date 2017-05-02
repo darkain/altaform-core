@@ -144,7 +144,6 @@ class		altaform
 
 
 
-	//TODO:	error page needs to read content type to see what style error page to display
 	public function contentType($extension=false) {
 		global $db;
 
