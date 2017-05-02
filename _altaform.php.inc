@@ -143,6 +143,8 @@ class		altaform
 
 
 
+	//TODO:	store content type in local variable that can be read back
+	//TODO:	error page needs to read content type to see what style error page to display
 	public function contentType($extension) {
 		global $db;
 
