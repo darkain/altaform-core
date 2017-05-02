@@ -1,7 +1,7 @@
 <main>
 	<h2>Login</h2>
 	<form id="login" method="post" action="[afurl.base]/login/auth"><div>
-		<input type="text" name="auth_account"
+		<input type="email" name="auth_account"
 			placeholder="Account" />
 		<br />
 		<input type="password" name="auth_password"
