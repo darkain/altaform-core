@@ -168,7 +168,7 @@ class fileImporter {
 		];
 
 		$data['url']		= $afurl->cdn($data['hash']);
-		$data['file_hash']	= $data['hash'];
+		$data['file_hash']	= hex2bin($data['hash']);
 
 
 		//SAVE THE FILE TO OUR STORAGE SYSTEM
