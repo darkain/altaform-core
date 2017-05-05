@@ -145,7 +145,7 @@ class aferror {
 		$arrout += $backtrace;
 		foreach ($arrout as $key => &$value) if (is_int($key)) {
 			if (!empty($value['args'])  &&  is_array($value['args'])) {
-				array_walk_recursive($value['args'], [__CLASS__,'nopassword']);
+				@array_walk_recursive($value['args'], [__CLASS__,'nopassword']);
 			}
 			$value = self::json($value);
 		}

@@ -158,18 +158,17 @@ class fileImporter {
 
 		//BUILD DATA TO RETURN
 		$data = [
+			'average'		=> self::average($image),
 			'exif'			=> self::getExif($image),
 			'hash'			=> self::getHash($image, $hash),
 			'size'			=> $image->getImageLength(),
 			'mime'			=> $image->getImageMimeType(),
 			'type'			=> $image->getImageFormat(),
-			'width'			=> $image->getImageWidth(),
-			'height'		=> $image->getImageHeight(),
 			'name'			=> basename($name),
 		];
 
 		$data['url']		= $afurl->cdn($data['hash']);
-		$data['file_hash']	= pudlFunction::unhex($data['hash']);
+		$data['file_hash']	= $data['hash'];
 
 
 		//SAVE THE FILE TO OUR STORAGE SYSTEM
@@ -213,6 +212,14 @@ class fileImporter {
 		//RESET ORIENTATION INFORMATION
 		$image->setImageOrientation(Imagick::ORIENTATION_TOPLEFT);
 
+
+		//PULL WIDTH AND HEIGHT AFTER ORIENTATION FIX
+		$data += [
+			'width'			=> $image->getImageWidth(),
+			'height'		=> $image->getImageHeight(),
+		];
+
+
 		//SET'S THE IMAGES COLOR SPACE TO SRGB - ANDROID/IOS COMPATIBLITY
 		try {
 			$image->profileImage('icc',
@@ -241,6 +248,48 @@ class fileImporter {
 
 		//RETURN THE EVERYTHINGS!
 		return $data;
+	}
+
+
+
+
+	public static function average(&$image) {
+		try {
+			//RESIZE
+			$resized = clone $image;
+			$resized->posterizeImage(200, false);
+			$resized->scaleimage(50, 50);
+
+			$colors = [];
+
+			for ($y=0; $y<50; $y++) {
+				for ($x=0; $x<50; $x++) {
+					$pixel			= $resized->getImagePixelColor($x, $y);
+					$list			= $pixel->getColor();
+					list($r,$g,$b)	= array_values($list);
+					$pixel->clear();
+
+					if ($r <  16  ||  $g <  16  ||  $b <  16)		continue;
+					if ($r > 240  &&  $g > 240  &&  $b > 240)		continue;
+					if (abs($r - $g) < 10  &&  abs($r - $b) < 10)	continue;
+
+					$rgb = (($r&0xFF)<<16) | (($g&0xFF)<<8) | ($b&0xFF);
+
+					if (empty($colors[$rgb])) $colors[$rgb] = 0;
+					$colors[$rgb]++;
+				}
+			}
+
+			//RETURN MOST POPULAR COLOR
+			if (!empty($colors)) {
+				return str_pad(dechex(
+					(array_keys($colors, max($colors)))[0]
+				), 6, '0', STR_PAD_LEFT);
+			}
+
+		} catch (ImagickException $e) {}
+
+		return NULL;
 	}
 
 
@@ -426,6 +475,7 @@ class fileImporter {
 			'file_name'				=> $data['name'],
 			'file_width'			=> $data['width'],
 			'file_height'			=> $data['height'],
+			'file_average'			=> $data['average'],
 			'mime_id'				=> !empty($mime) ? $mime['mime_id'] : NULL,
 		], 'file_hash=file_hash');
 
