@@ -257,8 +257,8 @@ class fileImporter {
 		try {
 			//RESIZE
 			$resized = clone $image;
-			$resized->posterizeImage(200, false);
 			$resized->scaleimage(50, 50);
+			$resized->posterizeImage(200, false);
 
 			$colors = [];
 
