@@ -79,14 +79,20 @@ require_once('af_url.php.inc');
 
 
 
-//Set the content type for this document to HTML with UTF-8 encoding
+//Set the content type for this document to HTML or TXT with UTF-8 encoding
 if (!headers_sent()) {
 	if (afdevice::trident()) {
 		header('X-UA-Compatible: IE=edge,chrome=1');
 	}
-	header('Content-Language: en_US');
-	header('Content-Type: text/html; charset=utf-8');
+
 	header('X-Content-Type-Options: nosniff');
+	header('Content-Language: en_US');
+
+	if (altaform::cli()) {
+		header('Content-Type: text/plain; charset=utf-8');
+	} else {
+		header('Content-Type: text/html; charset=utf-8');
+	}
 }
 
 

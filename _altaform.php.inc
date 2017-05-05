@@ -58,6 +58,7 @@ class		altaform
 		$this->_time				= time();
 		$this->_path				= getcwd();
 		$this->hhvm					= defined('HHVM_VERSION') ? 'HHVM' : 'PHP';
+		$this->_extension			= $this->cli() ? 'txt' : 'html';
 		$this->_headers['notice']	= [];
 
 		if (substr($this->_path, -1) !== '/') $this->_path .= '/';
@@ -143,26 +144,28 @@ class		altaform
 
 
 
-	//TODO:	store content type in local variable that can be read back
-	//TODO:	error page needs to read content type to see what style error page to display
-	public function contentType($extension) {
+	public function contentType($extension=false) {
 		global $db;
+
+		if (empty($extension)) return $this->_extension;
 
 		if (headers_sent()) return $this;
 
-		$list	= explode('.', $extension);
-		$ext	= end($list);
+		$list = explode('.', $extension);
+		$this->_extension = end($list);
 
 		$type = $db->cellId(
 			'pudl_mimetype',
 			'mime_type',
 			'mime_ext',
-			$ext
+			$this->_extension
 		);
 
-		header('Content-Type: ' . (
-			$type!==false ? $type : ('application/'.$ext)
-		));
+		header(
+			'Content-Type: ' .
+			($type!==false ? $type : ('application/'.$this->_extension)) .
+			'; charset=utf-8'
+		);
 
 		return $this;
 	}
@@ -266,6 +269,7 @@ class		altaform
 
 
 	private				$_prefs		= [];
+	private				$_extension	= 'html';
 	protected			$_time		= 0;
 	protected			$_path		= '';
 	public				$git		= NULL;

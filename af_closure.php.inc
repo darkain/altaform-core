@@ -5,6 +5,6 @@ trait af_closure {
 		if (isset($this->$function)  &&  is_callable($this->$function)) {
 			return call_user_func_array($this->$function, $arguements);
 		}
-		throw new Exception('Function not found: ' . $function);
+		throw new afException('Function not found: ' . $function);
 	}
 }
