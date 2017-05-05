@@ -183,12 +183,38 @@ class		af_url {
 	////////////////////////////////////////////////////////////////////////////
 	// GET THE CDN URL FOR THE GIVEN ITEM
 	////////////////////////////////////////////////////////////////////////////
-	public static function cdn($hash, $key='hash') {
-		global $afurl;
-		$hash = self::cdnHash($hash, $key);
+	public static function cdn($hash, $key='hash', $ext='mime') {
+		global $afurl, $db;
+
+		//TODO: MAKE MIME TYPE CACHE ITS OWN SECTION OF ALTAFORM
+		if (!empty($hash[$ext])) {
+			$mime = (int) $hash[$ext];
+			if (!isset(self::$mimecache[$mime])) {
+				self::$mimecache[$mime] = $db->cache(AF_DAY)->rowId(
+					'pudl_mimetype',
+					'mime_id',
+					$mime
+				);
+			}
+
+			$ext = self::$mimecache[$mime];
+		} else {
+			$ext = false;
+		}
+
+		$hash	= self::cdnHash($hash, $key);
 		if (empty($hash)) return false;
-		$path = self::cdnPath($hash);
-		return empty($path) ? false : $afurl->cdn . '/' . $path;
+
+		$path	= self::cdnPath($hash);
+		if (empty($path)) return false;
+
+		if (!empty($ext)) {
+			$path .= '.' . (empty($ext['af_ext'])
+					? $ext['mime_ext']
+					: $ext['af_ext']);
+		}
+
+		return $afurl->cdn . '/' . $path;
 	}
 
 
@@ -197,11 +223,11 @@ class		af_url {
 	////////////////////////////////////////////////////////////////////////////
 	// PROCESS CDN URLS FOR AN ARRAY OF ITEMS
 	////////////////////////////////////////////////////////////////////////////
-	public static function cdnAll(&$list, $key='img', $hashkey='hash') {
+	public static function cdnAll(&$list, $key='img', $hashkey='hash', $ext='mime') {
 		if (!tbx_array($list)) return false;
 		if (empty($key)) $key = 'img';
 		foreach ($list as &$val) {
-			$val[$key] = self::cdn($val, $hashkey);
+			$val[$key] = self::cdn($val, $hashkey, $ext);
 		} unset($val);
 		return true;
 	}
@@ -403,6 +429,11 @@ class		af_url {
 
 
 
+
+	////////////////////////////////////////////////////////////////////////////
+	// PRIVATE INTERNAL VARIABLES
+	////////////////////////////////////////////////////////////////////////////
+	private static $mimecache = [];
 
 	////////////////////////////////////////////////////////////////////////////
 	// MEMBER VARIABLES SET IN CONSTRUCTOR
