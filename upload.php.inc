@@ -269,7 +269,7 @@ class fileImporter {
 					list($r,$g,$b)	= array_values($list);
 					$pixel->clear();
 
-					if ($r <  16  ||  $g <  16  ||  $b <  16)		continue;
+					if ($r <  16  &&  $g <  16  &&  $b <  16)		continue;
 					if ($r > 240  &&  $g > 240  &&  $b > 240)		continue;
 					if (abs($r - $g) < 10  &&  abs($r - $b) < 10)	continue;
 
