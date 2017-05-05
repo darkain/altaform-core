@@ -260,6 +260,7 @@ class fileImporter {
 			$resized->scaleimage(50, 50);
 			$resized->posterizeImage(200, false);
 
+			$ar = $ag = $ab = 0;
 			$colors = [];
 
 			for ($y=0; $y<50; $y++) {
@@ -269,9 +270,13 @@ class fileImporter {
 					list($r,$g,$b)	= array_values($list);
 					$pixel->clear();
 
-					if ($r <  16  &&  $g <  16  &&  $b <  16)		continue;
-					if ($r > 240  &&  $g > 240  &&  $b > 240)		continue;
-					if (abs($r - $g) < 10  &&  abs($r - $b) < 10)	continue;
+					$ar += $r;
+					$ag += $g;
+					$ab += $b;
+
+					if ($r < 0x08  &&  $g < 0x08  &&  $b < 0x08)		continue;
+					if ($r > 0xf8  &&  $g > 0xf8  &&  $b > 0xf8)		continue;
+					if (abs($r - $g) < 0x08  &&  abs($r - $b) < 0x08)	continue;
 
 					$rgb = (($r&0xFF)<<16) | (($g&0xFF)<<8) | ($b&0xFF);
 
@@ -282,10 +287,16 @@ class fileImporter {
 
 			//RETURN MOST POPULAR COLOR
 			if (!empty($colors)) {
-				return str_pad(dechex(
-					(array_keys($colors, max($colors)))[0]
-				), 6, '0', STR_PAD_LEFT);
+				$color	= (array_keys($colors, max($colors)))[0];
+
+			} else {
+				$ar		= (int) $ar / (50*50);
+				$ag		= (int) $ag / (50*50);
+				$ab		= (int) $ab / (50*50);
+				$color	= (($ar&0xFF)<<16) | (($ag&0xFF)<<8) | ($ab&0xFF);
 			}
+
+			return str_pad(dechex($color), 6, '0', STR_PAD_LEFT);
 
 		} catch (ImagickException $e) {}
 
