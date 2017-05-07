@@ -1,14 +1,16 @@
 <?php
 
 
+
 //Enable automatic error display
 ini_set('display_errors', 'on');
 
 
 
 
-//Enable PHP Output Buffering
-ob_start();
+//Set the include path to make it easier to use include() and require()
+chdir(__DIR__.'/..');
+set_include_path(get_include_path() . PATH_SEPARATOR . getcwd());
 
 
 
@@ -19,18 +21,18 @@ require_once('error.php.inc');
 
 
 
+//Enable PHP Output Buffering
+ob_start();
+
+
+
+
 //Set the internal character encoding to UTF-8
 if (extension_loaded('mbstring')) {
 	mb_http_output('UTF-8');
 	mb_regex_encoding('UTF-8');
 	mb_internal_encoding('UTF-8');
 }
-
-
-
-
-//Set the include path to make it easier to use include() and require()
-set_include_path(get_include_path() . PATH_SEPARATOR . getcwd());
 
 
 
