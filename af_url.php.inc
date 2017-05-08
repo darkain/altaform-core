@@ -24,6 +24,7 @@ class		af_url {
 		global $get;
 
 		if (altaform::cli()) {
+			ob_end_clean();
 			$host = ['_cli'];
 			$args = $get->server('argv');
 			if (is_array($args)) {
