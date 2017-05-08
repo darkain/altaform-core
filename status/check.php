@@ -54,4 +54,4 @@ foreach ($pids as $pid) {
 
 
 
-echo json_encode($output);
+$af->json($output);
