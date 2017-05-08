@@ -247,6 +247,8 @@ if (!empty($afconfig->pudl)  &&  tbx_array($afconfig->pudl)) {
 		)
 	);
 
+	if ($af->cli()) $db->timeout(AF_DAY);
+
 	$af->settings = $db	->cache(AF_MINUTE*5, 'altaform_settings')
 						->collection('pudl_altaform');
 
