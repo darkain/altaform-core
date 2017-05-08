@@ -282,3 +282,8 @@ $i = 20;
 while ($i--  &&  ob_get_level()) {
 	ob_end_flush();
 }
+
+
+
+//New line for CLI mode
+if ($af->cli()) echo "\n";
