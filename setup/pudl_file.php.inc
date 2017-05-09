@@ -2,21 +2,23 @@
 
 /*
 
-CREATE TABLE `pudl_mimetype` (
-  `mime_id` int(11) NOT NULL AUTO_INCREMENT,
-  `mime_ext` varchar(255) COLLATE utf8_bin NOT NULL,
-  `mime_type` varchar(255) COLLATE utf8_bin NOT NULL,
-  `mime_icon` binary(16) DEFAULT NULL,
+CREATE TABLE IF NOT EXISTS `pudl_mimetype` (
+  `mime_id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `mime_ext` char(10) CHARACTER SET utf8 NOT NULL,
+  `mime_type` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `af_ext` char(4) CHARACTER SET utf8 DEFAULT NULL,
   PRIMARY KEY (`mime_id`),
   UNIQUE KEY `mime_ext` (`mime_ext`),
-  KEY `mime_type` (`mime_type`),
-  KEY `mime_icon` (`mime_icon`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+  KEY `mime_type` (`mime_type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
-INSERT INTO `pudl_mimetype` (`mime_id`, `mime_ext`, `mime_type`, `mime_icon`) VALUES
-(1, 'xhtml', 'text/xhtml'),
-(2, 'htm', 'text/htm'),
+SET SESSION sql_mode='NO_AUTO_VALUE_ON_ZERO';
+
+INSERT INTO `pudl_mimetype` (`mime_id`, `mime_ext`, `mime_type`, `af_ext`) VALUES
+(0, '', 'application/octet-stream'),
+(1, 'xhtml', 'application/xhtml+xml'),
+(2, 'htm', 'text/htm', 'html'),
 (3, 'html', 'text/html'),
 (4, 'sht', 'text/html'),
 (5, 'shtm', 'text/html'),
@@ -44,11 +46,11 @@ INSERT INTO `pudl_mimetype` (`mime_id`, `mime_ext`, `mime_type`, `mime_icon`) VA
 (27, 'htc', 'text/x-component'),
 (28, 'etx', 'text/x-setext'),
 (29, 'vcf', 'text/x-vcard'),
-(30, 'jpe', 'image/jpeg'),
+(30, 'jpe', 'image/jpeg', 'jpg'),
 (31, 'jpg', 'image/jpeg'),
-(32, 'jpeg', 'image/jpeg'),
+(32, 'jpeg', 'image/jpeg', 'jpg'),
 (33, 'tif', 'image/tiff'),
-(34, 'tiff', 'image/tiff'),
+(34, 'tiff', 'image/tiff', 'tif'),
 (35, 'gif', 'image/gif'),
 (36, 'png', 'image/png'),
 (37, 'bmp', 'image/bmp'),
@@ -72,10 +74,10 @@ INSERT INTO `pudl_mimetype` (`mime_id`, `mime_ext`, `mime_type`, `mime_icon`) VA
 (55, 'xbm', 'image/x-xbitmap'),
 (56, 'xpm', 'image/x-xpixmap'),
 (57, 'xwd', 'image/x-xwindowdump'),
-(58, 'psd', 'application/octet-stream'),
+(58, 'psd', 'image/vnd.adobe.photoshop'),
 (59, 'gz', 'application/octet-stream'),
 (60, 'tar', 'application/octet-stream'),
-(61, 'rar', 'application/octet-stream'),
+(61, 'rar', 'application/x-rar-compressed'),
 (62, 'bin', 'application/octet-stream'),
 (63, 'class', 'application/octet-stream'),
 (64, 'dms', 'application/octet-stream'),
@@ -108,7 +110,14 @@ INSERT INTO `pudl_mimetype` (`mime_id`, `mime_ext`, `mime_type`, `mime_icon`) VA
 (91, 'ppam', 'application/vnd.ms-powerpoint.addin.macroEnabled.12'),
 (92, 'pptm', 'application/vnd.ms-powerpoint.presentation.macroEnabled.12'),
 (93, 'potm', 'application/vnd.ms-powerpoint.template.macroEnabled.12'),
-(94, 'ppsm', 'application/vnd.ms-powerpoint.slideshow.macroEnabled.12');
+(94, 'ppsm', 'application/vnd.ms-powerpoint.slideshow.macroEnabled.12'),
+(95, 'json', 'application/json'),
+(96, 'jsonp', 'application/javascript'),
+(97, 'csv', 'text/csv'),
+(98, 'woff', 'font/woff'),
+(99, 'woff2', 'font/woff2'),
+(100, 'ttf', 'application/font-sfnt'),
+(101, 'otf', 'application/font-sfnt');
 
 
 
