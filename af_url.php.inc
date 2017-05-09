@@ -187,20 +187,8 @@ class		af_url {
 	public static function cdn($hash, $key='hash', $ext='mime') {
 		global $afurl, $db;
 
-		//TODO: MAKE MIME TYPE CACHE ITS OWN SECTION OF ALTAFORM
 		if (!empty($hash[$ext])) {
-			$mime = (int) $hash[$ext];
-			if (!isset(self::$mimecache[$mime])) {
-				self::$mimecache[$mime] = $db->cache(AF_DAY)->rowId(
-					'pudl_mimetype',
-					'mime_id',
-					$mime
-				);
-			}
-
-			$ext = self::$mimecache[$mime];
-		} else {
-			$ext = false;
+			$ext = new af_mimetype($hash[$ext]);
 		}
 
 		$hash	= self::cdnHash($hash, $key);
@@ -209,10 +197,8 @@ class		af_url {
 		$path	= self::cdnPath($hash);
 		if (empty($path)) return false;
 
-		if (!empty($ext)) {
-			$path .= '.' . (empty($ext['af_ext'])
-					? $ext['mime_ext']
-					: $ext['af_ext']);
+		if (is_object($ext)  &&  $ext->id()) {
+			$path .= '.' . $ext->ext();
 		}
 
 		return $afurl->cdn . '/' . $path;

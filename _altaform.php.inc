@@ -15,6 +15,9 @@ require_once('af_fs.php.inc');
 //IP ADDRESS RELATED FUNCTIONS
 require_once('af_ip.php.inc');
 
+//MIME TYPE / CONTENT TYPE HANDLER
+require_once('af_mimetype.php.inc');
+
 //AUDIT LOGGING
 require_once('audit.php.inc');
 
@@ -148,27 +151,16 @@ class		altaform
 
 
 	public function contentType($extension=false) {
-		global $db;
-
 		if (empty($extension)) return $this->_extension;
 
 		if (headers_sent()) return $this;
 
-		$list = explode('.', $extension);
-		$this->_extension = end($list);
+		$list	= explode('.', $extension);
+		$ext	= new af_mimetype(end($list));
 
-		$type = $db->cellId(
-			'pudl_mimetype',
-			'mime_type',
-			'mime_ext',
-			$this->_extension
-		);
+		$this->_extension = $ext->ext() || end($list);
 
-		header(
-			'Content-Type: ' .
-			($type!==false ? $type : ('application/'.$this->_extension)) .
-			'; charset=utf-8'
-		);
+		header('Content-Type: ' . $ext . '; charset=utf-8');
 
 		return $this;
 	}
