@@ -70,9 +70,9 @@ class af_mimetype {
 		if (is_string($this->type)) return $this->type;
 		if (!is_array($this->type)) return NULL;
 
-		return empty($this->type['mime_afext'])
+		return empty($this->type['af_ext'])
 				? $this->type['mime_ext']
-				: $this->type['mime_afext'];
+				: $this->type['af_ext'];
 	}
 
 
