@@ -327,7 +327,7 @@ class		af_url {
 			))
 		);
 
-		if (!$af  ||  !$af->jq()) {
+		if (empty($af)  ||  !$af->jq()) {
 			if (!headers_sent()) header("Location: $url", true, $type);
 			echo '<html><head><meta http-equiv="refresh" content="0;URL=\'';
 			echo tbx::html($url) . '\'" /></head><body>';
@@ -337,7 +337,7 @@ class		af_url {
 		echo tbx::html(addslashes($url));
 		echo "';</script>";
 
-		if (!$af  ||  !$af->jq()) {
+		if (empty($af)  ||  !$af->jq()) {
 			echo "</body></html>\n";
 		}
 
