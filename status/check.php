@@ -1,5 +1,13 @@
 <?php
 
+//VERIFY SECURITY
+if (!$user->isStaff()) {
+	if (!$af->config->verify($get->h, $get->m, true)) {
+		error404();
+	}
+}
+
+
 $output	= [
 	'type'					=> defined('HHVM_VERSION') ? 'HHVM' : 'PHP',
 	'version'				=> defined('HHVM_VERSION') ? HHVM_VERSION : PHP_VERSION,

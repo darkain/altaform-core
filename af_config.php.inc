@@ -101,8 +101,33 @@ class			af_config
 
 
 
-	public function auth($message) {
-		return md5($this->af->time() . $message . $this->afkey());
+	public function auth($message, $time=false, $algorithm='sha1') {
+		if ($time === true)		$time = $this->af->time();
+		if (!is_bool($time))	$time = (int) ($time / AF_MINUTE);
+		return hash_hmac($algorithm, $time.$message, $this->afkey());
+	}
+
+
+
+
+	public function verify($hash, $message, $time=false, $algorithm='sha1') {
+		$afkey = $this->afkey();
+
+		if ($time === false) {
+			return ($hash === hash_hmac($algorithm, $message, $afkey));
+		}
+
+		if ($time === true) $time = $this->af->time();
+
+		$time = (int) ($time / AF_MINUTE);
+
+		for ($x=$time-5; $x<=$time+5; $x++) {
+			if ($hash === hash_hmac($algorithm, $x.$message, $afkey)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 

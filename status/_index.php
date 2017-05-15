@@ -26,7 +26,11 @@ $ctx = stream_context_create(['http'=>[
 foreach ($servers as &$server) {
 	$nstime = microtime(true);
 
-	$json = pudl::jsonDecode(@file_get_contents($server, 0, $ctx));
+	$key	= af_user::password();
+	$hash	= $af->config->auth($key, true);
+	$url	= $server . '?m=' . $key . '&h=' . $hash;
+	$json	= pudl::jsonDecode(@file_get_contents($url, 0, $ctx));
+
 	if (!empty($json)) {
 		$server = [
 			'path'		=> $server,
