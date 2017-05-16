@@ -273,7 +273,8 @@ class		af_url {
 
 		if (empty($options[CURLOPT_USERAGENT])) {
 			$agent = ini_get('user_agent');
-			if (!empty($agent)  &&  is_string($agent)) {
+			if (empty($agent)) $agent = afdevice::agent();
+			if (!empty($agent)) {
 				curl_setopt($ch, CURLOPT_USERAGENT, $agent);
 			}
 		}
