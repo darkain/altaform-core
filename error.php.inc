@@ -105,7 +105,7 @@ class aferror {
 			'var-get'		=> !isset($_GET)		? '' :	self::json($_GET),
 			'var-post'		=> !isset($_POST)		? '' :	self::json($_POST),
 			'var-files'		=> !isset($_FILES)		? '' :	self::json($_FILES),
-			'var-user'		=> !isset($user)		? '' :	self::json($user),
+			'var-user'		=> !isset($user)		? '' :	self::json($user->raw()),
 			'template'		=> !isset($af)			? '' :	self::json($af->filepath),
 			'query'			=> !isset($db)			? '' :	$db->query(),
 			'ip-database'	=> !isset($db)			? '' :	$db->server(),
