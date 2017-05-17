@@ -125,6 +125,8 @@ class		altaform
 	public function json($data) {
 		$this->contentType('json');
 
+		if ($data instanceof pudlObject) $data = $data->raw();
+
 		echo $data instanceof pudlResult
 			? $data->json()
 			: json_encode($data, JSON_PARTIAL_OUTPUT_ON_ERROR);
