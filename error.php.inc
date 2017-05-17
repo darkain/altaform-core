@@ -102,19 +102,19 @@ class aferror {
 			'address'		=> empty($data['address']) ? $address : $data['address'],
 			'error-time'	=> @date('r'),
 			'error-path'	=> getcwd(),
-			'var-get'		=> empty($_GET)			? '' :	self::json($_GET),
-			'var-post'		=> empty($_POST)		? '' :	self::json($_POST),
-			'var-files'		=> empty($_FILES)		? '' :	self::json($_FILES),
-			'var-user'		=> empty($user)			? '' :	self::json($user),
-			'template'		=> empty($af)			? '' :	self::json($af->filepath),
-			'query'			=> empty($db)			? '' :	$db->query(),
-			'ip-database'	=> empty($db)			? '' :	$db->server(),
-			'ip-php'		=> empty($get)			? '' :	$get->server('X-PHP-IP'),
-			'ip-httpd'		=> empty($get)			? '' :	$get->server('SERVER_ADDR'),
-			'ip-client'		=> empty($get)			? '' :	$get->server('REMOTE_ADDR'),
-			'user-agent'	=> empty($get)			? '' :	$get->server('HTTP_USER_AGENT'),
-			'user-referer'	=> empty($get)			? '' :	$get->server('HTTP_REFERER'),
-			'user-device'	=> empty($af->device)	? '' :	$af->device(),
+			'var-get'		=> !isset($_GET)		? '' :	self::json($_GET),
+			'var-post'		=> !isset($_POST)		? '' :	self::json($_POST),
+			'var-files'		=> !isset($_FILES)		? '' :	self::json($_FILES),
+			'var-user'		=> !isset($user)		? '' :	self::json($user),
+			'template'		=> !isset($af)			? '' :	self::json($af->filepath),
+			'query'			=> !isset($db)			? '' :	$db->query(),
+			'ip-database'	=> !isset($db)			? '' :	$db->server(),
+			'ip-php'		=> !isset($get)			? '' :	$get->server('X-PHP-IP'),
+			'ip-httpd'		=> !isset($get)			? '' :	$get->server('SERVER_ADDR'),
+			'ip-client'		=> !isset($get)			? '' :	$get->server('REMOTE_ADDR'),
+			'user-agent'	=> !isset($get)			? '' :	$get->server('HTTP_USER_AGENT'),
+			'user-referer'	=> !isset($get)			? '' :	$get->server('HTTP_REFERER'),
+			'user-device'	=> !isset($af->device)	? '' :	$af->device(),
 		]);
 
 		if (!empty($afurl->redirected)) {
@@ -276,7 +276,11 @@ class aferror {
 
 
 	public static function json($item) {
-		return json_encode($item, JSON_UNESCAPED_SLASHES);
+		return @json_encode($item,
+			JSON_UNESCAPED_SLASHES |
+			JSON_UNESCAPED_UNICODE |
+			JSON_PARTIAL_OUTPUT_ON_ERROR
+		);
 	}
 
 
