@@ -127,7 +127,7 @@ class		altaform
 
 		echo $data instanceof pudlResult
 			? $data->json()
-			: json_encode($data);
+			: json_encode($data, JSON_PARTIAL_OUTPUT_ON_ERROR);
 	}
 
 
