@@ -6,9 +6,10 @@ require_once('_altaform/upload.php.inc');
 $user->requireLogin();
 
 
+$data = fileImporter::upload();
 assert500(
-	$data = fileImporter::upload(),
-	'Could not process uploaded image file'
+	is_array($data),
+	'Unable to process image file - ' . fileImporter::error()
 );
 
 
