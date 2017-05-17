@@ -334,9 +334,9 @@ class		af_url {
 			echo tbx::html($url) . '\'" /></head><body>';
 		}
 
-		echo "<script>window.top.location.href='";
-		echo tbx::html(addslashes($url));
-		echo "';</script>";
+		echo "<script>window.top.location.href=";
+		echo json_encode($url);
+		echo ";</script>";
 
 		if (empty($af)  ||  !$af->jq()) {
 			echo "</body></html>\n";
