@@ -215,8 +215,8 @@ class fileImporter {
 
 		//PULL WIDTH AND HEIGHT AFTER ORIENTATION FIX
 		$data += [
-			'width'			=> $image->getImageWidth(),
-			'height'		=> $image->getImageHeight(),
+			'file_width'	=> $image->getImageWidth(),
+			'file_height'	=> $image->getImageHeight(),
 		];
 
 
@@ -228,14 +228,13 @@ class fileImporter {
 		} catch (ImagickException $exception) {}
 
 		//GET THE LONG EDGE OF THE IMAGE
-		$long = max($image->getImageWidth(), $image->getImageHeight());
+		$long = max($data['file_width'], $data['file_height']);
 
 		//PROCESS RESIZED IMAGES (MAINTAIN ASPECT RATIO)
 		//NOTE: CREATE SMALLEST SIZE REGARDLESS, IN CASE OF ROTATION/ICC ISSUES
-		$smallest = reset(self::$imageSize);
-		foreach (self::$imageSize as $size) {
-			if ($size >= $long  &&  $size !== $smallest) continue;
-			$data[$size] = self::resize($image, $size, false);
+		foreach (self::$imageSize as $size => $quality) {
+			if ($size >= $long  &&  $size !== self::$smallest) continue;
+			$data[$size] = self::resize($image, $size, false, $quality);
 		}
 
 		//PROCESS THUMBNAILS (SQUARE CROP)
@@ -306,7 +305,7 @@ class fileImporter {
 
 
 
-	private static function resize(&$image, $size, $square=false) {
+	private static function resize(&$image, $size, $square=false, $quality=true) {
 		global $afurl;
 
 		$resized = clone $image;
@@ -319,8 +318,9 @@ class fileImporter {
 		}
 
 		//SET NEW IMAGE PROPERTIES
+		if (is_bool($quality)) $quality = 85;
 		$resized->setImagePage(0, 0, 0, 0);
-		$resized->setImageCompressionQuality(85);
+		$resized->setImageCompressionQuality($quality);
 
 		//GET BINARY DATA
 		$blob = $resized->getImageBlob();
@@ -484,8 +484,8 @@ class fileImporter {
 			'file_size'				=> $data['size'],
 			'file_uploaded'			=> $db->time(),
 			'file_name'				=> $data['name'],
-			'file_width'			=> $data['width'],
-			'file_height'			=> $data['height'],
+			'file_width'			=> $data['file_width'],
+			'file_height'			=> $data['file_height'],
 			'file_average'			=> $data['average'],
 			'mime_id'				=> !empty($mime) ? $mime['mime_id'] : NULL,
 		], 'file_hash=file_hash');
@@ -541,6 +541,7 @@ class fileImporter {
 
 
 	public	static $thumbSize		= [50, 100, 150, 200];
-	public	static $imageSize		= [800, 1280, 1920];
+	public	static $imageSize		= [500=>50, 800=>true, 1920=>true];
+	public	static $smallest		= 500;
 	private	static $error			= false;
 }
