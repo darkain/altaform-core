@@ -85,8 +85,11 @@ function _pudl_gallery_costume($thumbsize=200) {
 
 
 function af_dump($var, $die=true) {
+	if ($var instanceof pudlObject) $var = $var->raw();
+
 	echo '<pre>';
 	var_export($var);
 	echo '</pre>';
+
 	if ($die) exit;
 }
