@@ -163,6 +163,7 @@ trait af_template {
 	////////////////////////////////////////////////////////////////////////////
 	public function header($key=false, $data=false, $replace=false) {
 		if ($key === false) {
+			if ($this->cli()) return $this;
 			if (!$this->jq()) return $this->headerHTML()->headerPage();
 
 			list($js, $css) = $this->prerender();
@@ -199,7 +200,7 @@ trait af_template {
 	////////////////////////////////////////////////////////////////////////////
 	public function footer($key=false, $data=false, $replace=false) {
 		if ($key === false) {
-			if ($this->jq()) return $this;
+			if ($this->jq() || $this->cli()) return $this;
 			return $this->footerPage()->footerHTML();
 		}
 
