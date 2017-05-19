@@ -113,18 +113,21 @@ class			af_config
 	public function verify($hash, $message, $time=false, $algorithm='sha1') {
 		$afkey = $this->afkey();
 
-		if ($time === false) {
-			return ($hash === hash_hmac($algorithm, $message, $afkey));
-		}
-
 		if ($time === true) $time = $this->af->time();
 
-		$time = (int) ($time / AF_MINUTE);
+		if (is_bool($time)) {
+			return hash_equals(
+				hash_hmac($algorithm, $message, $afkey),
+				$hash
+			);
+		}
 
+		$time = (int) ($time / AF_MINUTE);
 		for ($x=$time-5; $x<=$time+5; $x++) {
-			if ($hash === hash_hmac($algorithm, $x.$message, $afkey)) {
-				return true;
-			}
+			if (hash_equals(
+				hash_hmac($algorithm, $x.$message, $afkey),
+				$hash
+			)) return true;
 		}
 
 		return false;
