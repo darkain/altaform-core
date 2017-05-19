@@ -224,7 +224,7 @@ class fileImporter {
 		//SET'S THE IMAGES COLOR SPACE TO SRGB - ANDROID/IOS COMPATIBLITY
 		try {
 			$image->profileImage('icc',
-				file_get_contents(__DIR__.'/_altaform/srgb.icc')
+				file_get_contents(__DIR__.'/srgb.icc')
 			);
 		} catch (ImagickException $exception) {}
 
@@ -326,7 +326,7 @@ class fileImporter {
 			$resized->stripImage();
 			try {
 				$resized->profileImage('icc',
-					file_get_contents(__DIR__.'/_altaform/srgb.icc')
+					file_get_contents(__DIR__.'/srgb.icc')
 				);
 			} catch (ImagickException $exception) {}
 		}
