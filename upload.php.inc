@@ -137,7 +137,7 @@ class fileImporter {
 
 
 	private static function processImage(&$image, $name=false, $hash=false) {
-		global $af, $afurl;
+		global $afurl;
 
 		//ONLY SUPPORT JPEG / PNG / GIF FILES FOR NOW
 		try {
@@ -167,6 +167,7 @@ class fileImporter {
 			'name'			=> basename($name),
 		];
 
+		//TODO: ADD MIME TYPE TO THIS CALL SO WE HAVE PROPER EXTENSION!
 		$data['url']		= $afurl->cdn($data['hash']);
 		$data['file_hash']	= hex2bin($data['hash']);
 
@@ -223,7 +224,7 @@ class fileImporter {
 		//SET'S THE IMAGES COLOR SPACE TO SRGB - ANDROID/IOS COMPATIBLITY
 		try {
 			$image->profileImage('icc',
-				file_get_contents($af->path().'_altaform/srgb.icc')
+				file_get_contents(__DIR__.'/_altaform/srgb.icc')
 			);
 		} catch (ImagickException $exception) {}
 
@@ -317,8 +318,21 @@ class fileImporter {
 			$resized->resizeImage($size, $size, Imagick::FILTER_SINC, 1, true);
 		}
 
+		//QUALITY SETTING
+		if (is_bool($quality)) {
+			$quality = 85;
+
+		} else {
+			$resized->stripImage();
+			try {
+				$resized->profileImage('icc',
+					file_get_contents(__DIR__.'/_altaform/srgb.icc')
+				);
+			} catch (ImagickException $exception) {}
+		}
+
+
 		//SET NEW IMAGE PROPERTIES
-		if (is_bool($quality)) $quality = 85;
 		$resized->setImagePage(0, 0, 0, 0);
 		$resized->setImageCompressionQuality($quality);
 
