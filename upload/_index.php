@@ -15,9 +15,9 @@ assert500(
 
 //TODO: STR_REPLACE IS A TEMPORARY FIX.
 //THE UPLOADER SHOULD RECOGNIZE OUR CDN LOCATION BY DEFAULT, BUT DOESNT YET
-if (!empty($data[800]['url'])) {
+if (!empty($data[500]['url'])) {
 	return $af->json([
-		'location' => str_replace('cdn/', 'files/', $data[800]['url']),
+		'location' => str_replace('cdn/', 'files/', $data[500]['url']),
 	]);
 }
 

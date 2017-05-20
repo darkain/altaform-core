@@ -142,7 +142,8 @@ CREATE TABLE `pudl_file_thumb` (
   `thumb_hash` binary(16) NOT NULL,
   `file_hash` binary(16) NOT NULL,
   `thumb_size` int(10) UNSIGNED NOT NULL,
-  `thumb_type` enum('50','100','150','200','800','1280','1920') CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+  `thumb_type` enum('50','100','150','200','500', 800','1920') CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+  //TODO: THIS IS WRONG, KEYS HAVE CHANGED IN PRODUCTION SERVER
   PRIMARY KEY (`thumb_hash`),
   KEY `file_hash` (`file_hash`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
