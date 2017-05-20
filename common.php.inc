@@ -85,11 +85,19 @@ function _pudl_gallery_costume($thumbsize=200) {
 
 
 function af_dump($var, $die=true) {
+	global $af;
+
 	if ($var instanceof pudlObject) $var = $var->raw();
 
-	echo '<pre>';
-	var_export($var);
-	echo '</pre>';
+	if ($af instanceof altaform  &&  $af->cli()) {
+		var_export($var);
+		echo "\n";
+
+	} else {
+		echo '<pre>';
+		var_export($var);
+		echo '</pre>';
+	}
 
 	if ($die) exit;
 }
