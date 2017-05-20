@@ -136,7 +136,7 @@ class fileImporter {
 
 
 
-	private static function processImage(&$image, $name=false, $hash=false) {
+	public static function processImage(&$image, $name=false, $hash=false) {
 		global $afurl;
 
 		//ONLY SUPPORT JPEG / PNG / GIF FILES FOR NOW
@@ -307,7 +307,7 @@ class fileImporter {
 
 
 
-	private static function resize(&$image, $size, $square=false, $quality=true) {
+	public static function resize(&$image, $size, $square=false, $quality=true) {
 		global $afurl;
 
 		$resized = clone $image;
@@ -360,7 +360,7 @@ class fileImporter {
 
 
 
-	private static function getExif(&$image) {
+	public static function getExif(&$image) {
 		$path = $image->getFilename();
 
 		//LOCAL FILE, MUCH FASTER TO USE FILE SYSTEM THAN TO GENERATE A BLOB
@@ -381,7 +381,7 @@ class fileImporter {
 
 
 
-	private static function getHash(&$image, $hash=false) {
+	public static function getHash(&$image, $hash=false) {
 		if (!empty($hash)) {
 			if (is_string($hash)) return self::unhex($hash);
 			if (tbx_array($hash)) {
