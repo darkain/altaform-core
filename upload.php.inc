@@ -287,7 +287,8 @@ class fileImporter {
 
 			//RETURN MOST POPULAR COLOR
 			if (!empty($colors)) {
-				$color	= (array_keys($colors, max($colors)))[0];
+				$color	= array_keys($colors, max($colors));
+				$color	= $color[0];
 
 			} else {
 				$ar		= (int) $ar / (50*50);
