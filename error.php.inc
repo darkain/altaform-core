@@ -43,11 +43,27 @@ class aferror {
 		}
 
 		if (empty($ok)) {
-			echo str_replace(
-				['&lt;br /&gt;', '&lt;br/&gt;', '&lt;br&gt;'],
-				'<br />',
-				is_array($text) ? implode("\n", $text) : $text
-			);
+			if ($af instanceof altaform  &&  $af->cli()) {
+				if (is_array($text)) $text = implode("\n", $text);
+
+				$text = str_replace(
+					['&lt;br /&gt;', '&lt;br/&gt;', '&lt;br&gt;', '<br/>', '<br />'],
+					"\n", $text
+				);
+
+				echo strip_tags(str_replace(
+					["\r\n",	'&apos;',	'&amp;'],
+					["\n",		"'",		'&'],
+					$text
+				));
+
+			} else {
+				echo str_replace(
+					['&lt;br /&gt;', '&lt;br/&gt;', '&lt;br&gt;'],
+					'<br />',
+					is_array($text) ? implode("\n", $text) : $text
+				);
+			}
 		}
 
 		if ($db instanceof pudl) $db->rollback();
