@@ -2,14 +2,18 @@
 
 function _pudl_thumb($table, $field, $thumbsize=200) {
 	return [
-		998 => $table,
-		999 => [
-			'left' => ['th' => 'pudl_file_thumb'],
-			'clause' => [
+		997 => $table,
+		998 => [
+			'left'	=> ['th' => 'pudl_file_thumb'],
+			'on'	=> [
 				'th.file_hash'	=> pudl::column($field),
 				'th.thumb_type'	=> (string) $thumbsize,
 			]
-		]
+		],
+		999 => [
+			'left'	=> ['tx' => 'pudl_file'],
+			'on'	=> ['tx.file_hash' => pudl::column($field)]
+		],
 	];
 }
 

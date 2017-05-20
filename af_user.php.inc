@@ -25,6 +25,24 @@ class			af_user
 	use			af_preference;
 
 
+/*
+
+	////////////////////////////////////////////////////////////////////////////
+	//OVERWRITE THE PUDL PARAMETERS FOR PULLING A COLLECTION
+	////////////////////////////////////////////////////////////////////////////
+	protected static function schema() {
+		return [
+			'column'	=> ['fl.mime_id'],
+
+			'table'		=> [static::prefix	=> [static::table,
+				['left' => ['fl'=>'pudl_file'], 'clause' => [
+						'fl.file_hash'	=> pudl::column([static::icon]),
+				]]
+			]]
+		];
+	}
+
+*/
 
 
 	////////////////////////////////////////////////////////////////////////////
@@ -80,10 +98,21 @@ class			af_user
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//GET THE URL OF THE CURRENT USER
+	//GET THE URL PATH OF THE USER
 	////////////////////////////////////////////////////////////////////////////
 	public function url() {
 		return empty($this->user_url) ? $this->id() : $this->user_url;
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	//GET THE ICON OF THE USER
+	////////////////////////////////////////////////////////////////////////////
+	public function icon() {
+		global $afurl;
+		return $afurl->cdn($this, 'thumb_hash', 'mime_id');
 	}
 
 
@@ -211,10 +240,10 @@ class			af_user
 	////////////////////////////////////////////////////////////////////////////
 	//LATE STATIC BINDING VARIABLES FROM PUDL ORM
 	////////////////////////////////////////////////////////////////////////////
-	const classname	= __CLASS__;
-	const column	= 'user_id';
-	const table		= 'pudl_user';
-	const prefix	= 'us';
+	const	classname	= __CLASS__;
+	const	column		= 'user_id';
+	const	table		= 'pudl_user';
+	const	prefix		= 'us';
 
 
 
