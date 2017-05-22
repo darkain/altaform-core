@@ -67,10 +67,11 @@ class			af_user
 		if (!$this->loggedIn()) return false;
 
 		if ($data !== false) {
+			$this->merge($data);
 			return $db->updateId('pudl_user_profile', $data, $this);
 		}
 
-		$this->merge($db->rowId('pudl_user_profile', $this));
+		return $this->merge($db->rowId('pudl_user_profile', $this));
 	}
 
 
