@@ -69,6 +69,8 @@ class		altaform
 
 		if (substr($this->_path, -1) !== '/') $this->_path .= '/';
 
+		$this->_static				= $this->_path . 'static/';
+
 		//REPORT *ALL* ERRORS, WARNINGS, NOTICES ON DEVELOPMENT SERVERS
 		if ($this->debug()) error_reporting(E_ALL);
 	}
@@ -238,6 +240,13 @@ class		altaform
 
 
 
+	public function staticPath() {
+		return $this->_static;
+	}
+
+
+
+
 	public function time() {
 		return $this->_time;
 	}
@@ -269,6 +278,7 @@ class		altaform
 	private				$_extension	= 'html';
 	protected			$_time		= 0;
 	protected			$_path		= '';
+	protected			$_static	= '';
 	public				$git		= NULL;
 	public				$config		= NULL;
 	public				$device		= NULL;
