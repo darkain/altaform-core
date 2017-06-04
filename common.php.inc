@@ -65,6 +65,7 @@ function _pudl_feature($thumbsize=200) {
 
 
 
+//TODO: THIS IS NOW BROKEN
 function _pudl_gallery_costume($thumbsize=200) {
 	$table = _pudl_gallery($thumbsize);
 
