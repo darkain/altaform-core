@@ -106,3 +106,16 @@ function af_dump($var, $die=true) {
 
 	if ($die) exit;
 }
+
+
+
+function get_ancestors($class) {
+	if (empty($class)
+		||  !is_object($class)
+		||  !is_string($class))
+		return [];
+
+	$list = [$class];
+	while($class = get_parent_class($class)) $list[] = $class;
+	return $list;
+}
