@@ -167,7 +167,7 @@ trait af_template {
 			if (!$this->jq()) return $this->headerHTML()->headerPage();
 
 			list($js, $css) = $this->prerender();
-			if ($js  !== '') echo '<script>' . $js . '</script>';
+			if ($js  !== '') echo '<script>\'use strict\';' . $js . '</script>';
 			if ($css !== '') echo '<style>' . $css . '</style>';
 
 		} else if ($replace  ||  empty($this->_headers[$key])) {
