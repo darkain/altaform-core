@@ -65,30 +65,6 @@ function _pudl_feature($thumbsize=200) {
 
 
 
-//TODO: THIS IS NOW BROKEN
-function _pudl_gallery_costume($thumbsize=200) {
-	$table = _pudl_gallery($thumbsize);
-
-	$table[] = [
-		'left' => ['gl1'=>'pudl_group_label'],
-		'clause' => 'ga.series_id=gl1.group_label_id'
-	];
-
-	$table[] = [
-		'left' => ['gl2'=>'pudl_group_label'],
-		'clause' => 'ga.character_id=gl2.group_label_id'
-	];
-
-	$table[] = [
-		'left' => ['gl3'=>'pudl_group_label'],
-		'clause' => 'ga.outfit_id=gl3.group_label_id'
-	];
-
-	return $table;
-}
-
-
-
 function af_dump($var, $die=true) {
 	global $af;
 
