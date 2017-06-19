@@ -261,6 +261,9 @@ class aferror {
 		// IGNORE ISSUES WITH "MULTIFACTOR AUTHENTICATION CLIENT"
 		if (strpos($get('message'), 'fidoCallback')) return;
 
+		// IGNORE ISSUES WITH "BLINGBAR" TOOLBAR
+		if (strpos($get('message'), 'BLNGBAR')) return;
+
 		// IGNORE JQUERY UI ERRORS - THIS LIBRARY IS RANDOMLY BUGGY
 		if (strpos($get('file'), 'jquery-ui.min.js')) return;
 
