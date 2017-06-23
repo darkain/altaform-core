@@ -13,7 +13,6 @@ $need = [
 	'imagick',		// photo processing
 	'json',			// javascript object notation
 //	'mail',			// error reporting and user account registration emails
-	'mcrypt',		// ??? - encryption
 	'mysqli',		// database
 	'openssl',		// fopen('https//example.com') HTTPS
 	'redis',		// database caching

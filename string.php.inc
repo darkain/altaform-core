@@ -274,6 +274,8 @@ class afstring {
 
 
 
+	//TODO: MCRYPT SHOULD NOT BE USED ANYWHERE!
+	//	https://github.com/php/php-src/blob/php-7.2.0alpha2/UPGRADING
 	public static function encrypt($data, $secret=false) {
 		global $af;
 		if (empty($secret)) $secret = $af->config->afkey();
@@ -289,6 +291,8 @@ class afstring {
 
 
 
+	//TODO: MCRYPT SHOULD NOT BE USED ANYWHERE!
+	//	https://github.com/php/php-src/blob/php-7.2.0alpha2/UPGRADING
 	public static function decrypt($data, $secret=false) {
 		global $af;
 		if (empty($data)) return false;
