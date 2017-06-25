@@ -274,43 +274,6 @@ class afstring {
 
 
 
-	//TODO: MCRYPT SHOULD NOT BE USED ANYWHERE!
-	//	https://github.com/php/php-src/blob/php-7.2.0alpha2/UPGRADING
-	public static function encrypt($data, $secret=false) {
-		global $af;
-		if (empty($secret)) $secret = $af->config->afkey();
-		$key	= pack('H*', $secret);
-		$size	= mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
-		$iv		= mcrypt_create_iv($size, MCRYPT_RAND);
-		$cipher	= mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $key, $data, MCRYPT_MODE_CBC, $iv);
-		$encode = base64_encode($iv . $cipher);
-		$encode = str_replace(['+', '/', '='], ['-', '_', '~'], $encode);
-		return $encode;
-	}
-
-
-
-
-	//TODO: MCRYPT SHOULD NOT BE USED ANYWHERE!
-	//	https://github.com/php/php-src/blob/php-7.2.0alpha2/UPGRADING
-	public static function decrypt($data, $secret=false) {
-		global $af;
-		if (empty($data)) return false;
-		if (empty($secret)) $secret = $af->config->afkey();
-		$key	= pack('H*', $secret);
-		$data	= str_replace(['-', '_', '~'], ['+', '/', '='], $data);
-		$data	= @base64_decode($data, true);
-		if (empty($data)) return false;
-		$size	= mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
-		$iv		= substr($data, 0, $size);
-		$text	= substr($data, $size);
-		$value	= mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $key, $text, MCRYPT_MODE_CBC, $iv);
-		return rtrim ($value, "\0\4");
-	}
-
-
-
-
 	public static function maxDigits($value, $digits) {
 		return round($value, max(0, $digits-strlen((string)round($value))));
 	}
