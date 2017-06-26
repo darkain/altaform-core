@@ -270,3 +270,13 @@ class af_anonymous extends af_user {
 
 	protected function _fetchCache() { return AF_DAY; }
 }
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+//SHORTCUT CLASS FOR A CACHELESS ACCOUNT - USEFUL FOR ADMIN PAGES
+////////////////////////////////////////////////////////////////////////////////
+class af_account extends af_user {
+	protected function _fetchCache() { return 0; }
+}
