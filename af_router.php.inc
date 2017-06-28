@@ -181,11 +181,12 @@ trait af_router {
 
 		$list = get_defined_vars();
 
-		$__keys[] = '__path';
-		$__keys[] = '__keys';
-		foreach ($__keys as $key) unset($list[$key]);
+		unset($list['__path']);
+		unset($list['__keys']);
 
-		foreach ($list as $key => $val) $GLOBALS[$key] = $val;
+		foreach ($list as $key => $value) {
+			$GLOBALS[$key] = $value;
+		}
 	}
 
 
