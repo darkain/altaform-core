@@ -52,11 +52,12 @@ class		altaform
 
 
 	public function __construct($dbsession=false) {
-		global $afconfig;
+		global $afconfig, $afurl;
 
 		parent::__construct();
 
 		$afconfig->af				= $this;
+		$this->url					= $afurl;
 		$this->config				= $afconfig;
 		$this->_session				= $dbsession;
 		$this->git					= new af_void;
@@ -232,6 +233,12 @@ class		altaform
 
 
 
+	public function url($path, $base=false) {
+		$url = $this->url;
+		return $url($path, $base);
+	}
+
+
 
 	public function path() {
 		return $this->_path;
@@ -280,6 +287,7 @@ class		altaform
 	protected			$_path		= '';
 	protected			$_static	= '';
 	public				$git		= NULL;
+	public				$url		= NULL;
 	public				$config		= NULL;
 	public				$device		= NULL;
 	public				$settings	= [];
