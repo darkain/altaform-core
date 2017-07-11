@@ -198,7 +198,7 @@ class aferror {
 			if (!empty($value['function'])) {
 				$html .= '<br/>' . $value['function'] . '(';
 				if (!empty($value['args'])) {
-					array_walk_recursive($value['args'], [__CLASS__,'nopassword']);
+					@array_walk_recursive($value['args'], [__CLASS__,'nopassword']);
 					$html .= substr(self::html_json($value['args']), 1, -1);
 				}
 				$html .= ')';
