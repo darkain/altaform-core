@@ -31,6 +31,8 @@ class afgeo {
 	public static function geocode($location) {
 		global $af;
 
+		if (trim($location, " \t\n\r\0\x0B,") === '') return NULL;
+
 		$url  = 'https://maps.googleapis.com/maps/api/geocode/json';
 		$url .= '?address=' . rawurlencode($location);
 		$url .= '&key=' . $af->config->google['geocoding'];
