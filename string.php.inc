@@ -55,6 +55,27 @@ class afstring {
 
 
 
+	public static function attribute($array) {
+		$output = ' ';
+
+		foreach ($array as $key => $value) {
+			if (is_int($key)) {
+				$output .= htmlspecialchars($value) . ' ';
+				continue;
+			}
+
+			$output .= htmlspecialchars($key);
+			$output .= '="';
+			$output .= htmlspecialchars($value);
+			$output .= '" ';
+		}
+
+		return rtrim($output, ' ');
+	}
+
+
+
+
 	public static function ltrim($string) {
 		if (!is_string($string)) $string = (string)$string;
 
