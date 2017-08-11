@@ -54,7 +54,7 @@ trait af_auth {
 	//LOG THE CURRENT USER OUT (DESTOY CURRENT USER'S SESSION)
 	////////////////////////////////////////////////////////////////////////////
 	public function logout($session=false, $destroy=true) {
-		global $user, $db;
+		global $user;
 
 		if (empty($session)) $session = session_id();
 

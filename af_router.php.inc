@@ -175,17 +175,15 @@ trait af_router {
 
 		if (!is_file('_altaform.php.inc')) return;
 
-		$__keys = array_keys($GLOBALS);
 		extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
 		require('_altaform.php.inc');
 
-		$list = get_defined_vars();
+		$__list = get_defined_vars();
 
-		unset($list['__path']);
-		unset($list['__keys']);
+		unset($__list['__path']);
 
-		foreach ($list as $key => $value) {
-			$GLOBALS[$key] = $value;
+		foreach ($__list as $__key => $__value) {
+			$GLOBALS[$__key] = $__value;
 		}
 	}
 
