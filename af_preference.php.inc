@@ -72,4 +72,7 @@ trait af_preference {
 	}
 
 
+
+	private				$_prefs		= [];
+
 }

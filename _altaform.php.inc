@@ -281,7 +281,6 @@ class		altaform
 
 
 
-	private				$_prefs		= [];
 	private				$_extension	= 'html';
 	protected			$_time		= 0;
 	protected			$_path		= '';
