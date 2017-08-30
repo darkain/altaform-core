@@ -122,8 +122,8 @@ INSERT INTO `pudl_mimetype` (`mime_id`, `mime_ext`, `mime_type`, `af_ext`) VALUE
 
 
 CREATE TABLE `pudl_file` (
-  `file_hash` binary(16) NOT NULL COMMENT 'MD5 hash value of file contents',
-  `file_parent` binary(16) DEFAULT NULL,
+  `file_hash` varbinary(128) NOT NULL COMMENT 'Hash value of file contents',
+  `file_parent` varbinary(128) DEFAULT NULL,
   `file_size` bigint(10) UNSIGNED NOT NULL COMMENT 'File size on disc, in bytes',
   `file_uploaded` int(10) UNSIGNED NOT NULL COMMENT 'UNIX timestamp of file upload time',
   `file_visible` set('admin','staff','debug','user','jobber','dealer','wholesale') COLLATE ascii_bin NOT NULL DEFAULT 'admin,staff,debug,user,jobber,dealer,wholesale',
