@@ -16,7 +16,7 @@ class afmail {
 			if (is_file($attach)) {
 				$mail->addAttachment($attach);
 			} else {
-				$path = '/tmp/' . md5(microtime(true) . rand()) . '.pdf';
+				$path = '/tmp/' . hash_hmac('sha256', $body, microtime(true).rand()) . '.pdf';
 				$x = @copy($attach, $path);
 				if ($x) $mail->addAttachment($path);
 			}
