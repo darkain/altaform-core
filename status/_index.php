@@ -112,13 +112,14 @@ foreach ($databases as $item) {
 		$uptime			= $connect->globals('Uptime');
 		$version		= $connect->variables('version');
 		$memory			= $connect->status('Innodb_buffer_pool_bytes_data');
+		$state			= $connect->globals('wsrep_local_state');
 
 		$servers[]		= [
 			'path'		=> $name,
-			'version'	=> !empty($version['version']) ? $version['version'] : NULL,
-			'boot'		=> !empty($uptime['Uptime']) ? $af->time() - $uptime['Uptime'] : NULL,
-			'uptime'	=> !empty($uptime['Uptime']) ? aftime::since($af->time() - $uptime['Uptime'], AF_YEAR*7) : NULL,
-			'memory'	=> !empty($memory['Innodb_buffer_pool_bytes_data']) ? afstring::fromBytes($memory['Innodb_buffer_pool_bytes_data']) : NULL,
+			'version'	=> !empty($version) ? (reset($version) . ' : ' . reset($state)) : NULL,
+			'boot'		=> !empty($uptime) ? $af->time() - reset($uptime) : NULL,
+			'uptime'	=> !empty($uptime) ? aftime::since($af->time() - reset($uptime), AF_YEAR*7) : NULL,
+			'memory'	=> !empty($memory) ? afstring::fromBytes(reset($memory)) : NULL,
 			'delay'		=> sprintf('%0.4f', microtime(true) - $nstime),
 		];
 
