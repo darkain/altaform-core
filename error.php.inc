@@ -317,6 +317,7 @@ class aferror {
 			case 'pass':
 			case 'password':
 			case 'hash':
+			case 'salt':
 			case 'key':
 			case 'secure':
 				$item = '********';
