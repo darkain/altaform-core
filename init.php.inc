@@ -227,7 +227,6 @@ if (!empty($afconfig->pudl)  &&  tbx_array($afconfig->pudl)) {
 	$db = pudl::instance($afconfig->pudl);
 
 	$db->on('log',		'_pudl_log');
-	$db->on('debug',	'_pudl_debug');
 
 	if (!empty($afconfig->pudl['connected'])) {
 		call_user_func($afconfig->pudl['connected']);

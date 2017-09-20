@@ -562,14 +562,3 @@ function _pudl_log($callback, $db, $result=NULL) {
 		FILE_APPEND
 	);
 }
-
-
-
-
-function _pudl_debug($callback, $db, $result=NULL) {
-	aferror::log([
-		'error-code'	=> $db->errno(),
-		'details'		=> $db->error(),
-		'result'		=> ($result instanceof pudlResult) ? $result->error() : 'NULL',
-	]);
-}
