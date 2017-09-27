@@ -264,6 +264,9 @@ class aferror {
 		// IGNORE ISSUES WITH "BLINGBAR" TOOLBAR
 		if (strpos($get('message'), 'BLNGBAR')) return;
 
+		// IGNORE ISSUES WITH "hilitor" - unknown browser add-on
+		if (strpos($get('message'), 'hilitor')) return;
+
 		// IGNORE JQUERY UI ERRORS - THIS LIBRARY IS RANDOMLY BUGGY
 		if (strpos($get('file'), 'jquery-ui.min.js')) return;
 
