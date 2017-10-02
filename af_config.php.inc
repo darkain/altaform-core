@@ -142,8 +142,21 @@ class			af_config
 
 
 
+	public function onload($callback) {
+		$this->callbacks[] = $callback;
+	}
 
-	public $af = NULL;
+
+	public function _onload() {
+		foreach ($this->callbacks as $callback) {
+			$callback($this);
+		}
+	}
+
+
+
+	public	$af			= NULL;
+	private	$callbacks	= [];
 
 }
 

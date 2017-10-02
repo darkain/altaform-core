@@ -139,6 +139,12 @@ if (is_file($afconfig->root . '/_altaform.php.inc')) {
 
 
 
+//Do post-load configuration updates
+$afconfig->_onload();
+
+
+
+
 //Set default flags for Getvar
 if (isset($afconfig->getvar)) {
 	$get->flags($afconfig->getvar);
