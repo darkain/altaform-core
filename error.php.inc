@@ -155,8 +155,10 @@ class aferror {
 		if (empty($backtrace)) $backtrace = debug_backtrace(0);
 
 		if (!($user instanceof af_user)  ||  $user->isAdmin()) {
-			if (empty($afconfig)) $afconfig = (object)[];
-			$afconfig->debug = true;
+			if (empty($afconfig)) {
+				$afconfig = (object)[];
+				$afconfig->debug = true;
+			}
 		}
 
 		$error = (ob_get_level()  &&  $die) ? self::html(ob_get_clean()) : '';
@@ -523,7 +525,15 @@ set_error_handler(function($errno, $errstr, $errfile=NULL, $errline=NULL, $errco
 
 
 set_exception_handler(function($e) {
+	global $afconfig;
+
 	if (!error_reporting()) return false;
+
+	if ($e instanceof pudlException) {
+		if ($e->getCode() === PUDL_X_CONNECTION) {
+			$afconfig->debug = false;
+		}
+	}
 
 	aferror::log([
 		'error-code'	=> get_class($e) . ':' . $e->getCode(),
