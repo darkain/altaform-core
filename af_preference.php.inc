@@ -6,12 +6,7 @@ trait af_preference {
 
 	public static function parsePreferences($data) {
 		if (empty($data)) return [];
-
-		if (PHP_VERSION_ID >= 50400) {
-			return json_decode($data, true, 512, JSON_BIGINT_AS_STRING);
-		}
-
-		return json_decode($data, true);
+		return json_decode($data, true, 512, JSON_BIGINT_AS_STRING);
 	}
 
 
