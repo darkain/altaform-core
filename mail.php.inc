@@ -4,7 +4,7 @@ class afmail {
 
 	public static function send($headers, $subject, $body, $attach=false) {
 		global $afurl, $af;
-
+return;
 		require_once('_phpmailer/class.phpmailer.php');
 		require_once('_phpmailer/class.smtp.php');
 
