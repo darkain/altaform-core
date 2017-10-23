@@ -70,7 +70,7 @@ function af_dump($var, $die=true) {
 
 	if ($var instanceof pudlObject) $var = $var->raw();
 
-	if ($af instanceof altaform) {
+	if (!($af instanceof altaform)  ||  $af->cli()) {
 		$af->contentType('txt');
 		var_export($var);
 		echo "\n";
