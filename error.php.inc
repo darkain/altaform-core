@@ -52,8 +52,8 @@ class aferror {
 				);
 
 				echo strip_tags(str_replace(
-					["\r\n",	'&apos;',	'&amp;',	'</td><td>'],
-					["\n",		"'",		'&',		":\t"],
+					["\r\n",	'&apos;',	'&amp;',	'</td><td>',	'</td><td class="nobr">'],
+					["\n",		"'",		'&',		":\t",			":\t"],
 					$text
 				));
 
