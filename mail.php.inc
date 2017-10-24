@@ -4,11 +4,13 @@ class afmail {
 
 	public static function send($headers, $subject, $body, $attach=false) {
 		global $afurl, $af;
-return;
-		require_once('_phpmailer/class.phpmailer.php');
-		require_once('_phpmailer/class.smtp.php');
 
-		$mail = new PHPMailer;
+		require_once('_phpmailer/src/PHPMailer.php');
+		require_once('_phpmailer/src/SMTP.php');
+
+		//Really gaiz, really? double-name space OF THE SAME NAME
+		//and THEN the class name, which is also the same!?
+		$mail = new PHPMailer\PHPMailer\PHPMailer;
 
 		if ($af->debug()) $mail->SMTPDebug = 2;
 
