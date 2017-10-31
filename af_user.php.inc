@@ -25,12 +25,40 @@ class			af_user
 	use			af_preference;
 
 
-/*
+
+
+	////////////////////////////////////////////////////////////////////////////
+	//CONSTRUCTOR
+	////////////////////////////////////////////////////////////////////////////
+	public function __construct($item=false, $fetch=false) {
+		parent::__construct($item, $fetch);
+
+		$this->has_password
+			=	!empty($this->user_pass)
+			||	!empty($this->auth_password);
+	}
+
+
+
 
 	////////////////////////////////////////////////////////////////////////////
 	//OVERWRITE THE PUDL PARAMETERS FOR PULLING A COLLECTION
 	////////////////////////////////////////////////////////////////////////////
 	protected static function schema() {
+		return [
+			'column'	=> [
+				'us.*',
+				'ua.auth_account',
+				'ua.auth_password',
+				'ua.auth_verified',
+			],
+
+			'table'		=> [static::prefix	=> [static::table,
+				['left'	=> ['ua'=>'pudl_user_auth'], 'using'=>'user_id'],
+			]],
+		];
+	}
+/*
 		return [
 			'column'	=> ['fl.mime_id'],
 
@@ -40,9 +68,9 @@ class			af_user
 				]]
 			]]
 		];
-	}
+	}*/
 
-*/
+
 
 
 	////////////////////////////////////////////////////////////////////////////
