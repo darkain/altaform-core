@@ -47,7 +47,7 @@ class			af_user
 	protected static function schema() {
 		return [
 			'column'	=> [
-				'us.*',
+				static::prefix.'.*',
 				'ua.auth_account',
 				'ua.auth_password',
 				'ua.auth_verified',
