@@ -3,7 +3,7 @@
 /*
 
 CREATE TABLE IF NOT EXISTS `pudl_mimetype` (
-  `mime_id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `mime_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `mime_ext` char(10) CHARACTER SET utf8 NOT NULL,
   `mime_type` varchar(100) CHARACTER SET utf8 NOT NULL,
   `af_ext` char(4) CHARACTER SET utf8 DEFAULT NULL,
@@ -124,29 +124,39 @@ INSERT INTO `pudl_mimetype` (`mime_id`, `mime_ext`, `mime_type`, `af_ext`) VALUE
 CREATE TABLE `pudl_file` (
   `file_hash` varbinary(128) NOT NULL COMMENT 'Hash value of file contents',
   `file_parent` varbinary(128) DEFAULT NULL,
-  `file_size` bigint(10) UNSIGNED NOT NULL COMMENT 'File size on disc, in bytes',
-  `file_uploaded` int(10) UNSIGNED NOT NULL COMMENT 'UNIX timestamp of file upload time',
+  `file_size` bigint(20) UNSIGNED NOT NULL COMMENT 'File size on disc, in bytes',
+  `file_uploaded` bigint(20) NOT NULL COMMENT 'UNIX timestamp of file upload time',
   `file_visible` set('admin','staff','debug','user','jobber','dealer','wholesale') COLLATE ascii_bin NOT NULL DEFAULT 'admin,staff,debug,user,jobber,dealer,wholesale',
-  `mime_id` int(11) DEFAULT NULL,
-  `file_name` varchar(255) CHARACTER SET ascii NOT NULL,
+  `mime_id` int(10) UNSIGNED DEFAULT NULL,
+  `file_name` varchar(500) CHARACTER SET utf8_general_ci NOT NULL,
+  `file_width` smallint(5) UNSIGNED NOT NULL DEFAULT 0,
+  `file_height` smallint(5) UNSIGNED NOT NULL DEFAULT 0,
+  `file_average` char(6) CHARACTER SET ascii DEFAULT NULL,
+  `file_credits` int(10) unsigned NOT NULL DEFAULT 0,
+  `file_comments` int(10) unsigned NOT NULL DEFAULT 0,
+  `file_favorites` int(10) unsigned NOT NULL DEFAULT 0,
+  `file_views` int(10) unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY (`file_hash`),
   KEY `mime_id` (`mime_id`),
   KEY `file_name` (`file_name`),
   KEY `file_parent` (`file_parent`),
+  KEY `file_credits` (`file_credits`),
+  KEY `file_comments` (`file_comments`),
+  KEY `file_favorites` (`file_favorites`),
+  KEY `file_views` (`file_views`),
   CONSTRAINT `pudl_file_mime` FOREIGN KEY (`mime_id`) REFERENCES `pudl_mimetype` (`mime_id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `pudl_file_parent` FOREIGN KEY (`file_parent`) REFERENCES `pudl_file` (`file_hash`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=ascii COLLATE=ascii_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 CREATE TABLE `pudl_file_thumb` (
-  `thumb_hash` binary(16) NOT NULL,
-  `file_hash` binary(16) NOT NULL,
-  `thumb_size` int(10) UNSIGNED NOT NULL,
-  `thumb_type` enum('50','100','150','200','500', 800','1920') CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
-  //TODO: THIS IS WRONG, KEYS HAVE CHANGED IN PRODUCTION SERVER
+  `thumb_hash` varbinary(128) NOT NULL COMMENT 'Hash value of thumbnail contents',
+  `file_hash` varbinary(128) NOT NULL,
+  `thumb_size` bigint(20) UNSIGNED NOT NULL,
+  `thumb_type` enum('50','100','150','200','500','640','800','1000','1280','1500','1920') CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
   PRIMARY KEY (`thumb_hash`),
   KEY `file_hash` (`file_hash`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 ALTER TABLE `pudl_mimetype`
@@ -156,7 +166,7 @@ ALTER TABLE `pudl_mimetype`
 
 $db(
 	'CREATE TABLE ' . $db->_table('pudl_file_meta') . ' (
-	  `file_hash` binary(16) NOT NULL,
+	  `file_hash` varbinary(128) NOT NULL,
 	  `file_meta_name` varchar(32) COLLATE utf8_bin NOT NULL,
 	  `file_meta_value` varchar(255) COLLATE utf8_bin NOT NULL,
 	  PRIMARY KEY (`file_hash`,`file_meta_name`),
@@ -169,10 +179,10 @@ $db(
 /*
 
 CREATE TABLE IF NOT EXISTS `pudl_file_user` (
-  `file_hash` binary(16) NOT NULL,
-  `user_id` int(10) UNSIGNED NOT NULL,
+  `file_hash` varbinary(128) NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
   `user_time` bigint(20) NOT NULL,
-  `file_credit_by` int(10) UNSIGNED DEFAULT NULL,
+  `file_credit_by` bigint(20) UNSIGNED DEFAULT NULL,
   `file_user_visible` tinyint(1) NOT NULL DEFAULT '1',
   `file_text` text NOT NULL,
   PRIMARY KEY (`file_hash`,`user_id`),
