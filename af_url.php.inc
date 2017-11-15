@@ -126,11 +126,33 @@ class		af_url {
 
 		$url = $base ? ($this->base.'/') : '';
 
-		if (empty($path)) return $url;
 
+		//QUERY PARAMETERS
+		$query = '';
+		if (!empty($path['query'])) {
+			if (is_string($path['query'])) {
+				$query = '?' . $path['query'];
+
+			} else if (tbx_array($path['query'])) {
+				foreach ($path['query'] as $key => $value) {
+					$query .= ($query==='') ? '?' : '&';
+					$query .= rawurlencode($key) . '=';
+					$query .= rawurlencode($value);
+				}
+			}
+
+			unset($path['query']);
+		}
+
+
+		//NO PATH, RETURN BASE URL
+		if (empty($path)) return $url . $query;
+
+		//PARSE EACH URL PATH SEGMENT
 		foreach ($path as $item) $url .= $this->clean($item) . '/';
 
-		return rtrim($url, '/');
+		//RETURN URL
+		return rtrim($url, '/') . $query;
 	}
 
 
