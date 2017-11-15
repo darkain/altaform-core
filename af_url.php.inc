@@ -124,32 +124,29 @@ class		af_url {
 			return ($base ? ($this->base.'/') : '') . $this->clean($path);
 		}
 
-		$url = $base ? ($this->base.'/') : '';
-
-
-		//QUERY PARAMETERS
-		$query = '';
-		if (!empty($path['query'])) {
-			if (is_string($path['query'])) {
-				$query = '?' . $path['query'];
-
-			} else if (tbx_array($path['query'])) {
-				foreach ($path['query'] as $key => $value) {
-					$query .= ($query==='') ? '?' : '&';
-					$query .= rawurlencode($key) . '=';
-					$query .= rawurlencode($value);
-				}
-			}
-
-			unset($path['query']);
-		}
+		$url	= $base ? ($this->base.'/') : '';
+		$query	= '';
 
 
 		//NO PATH, RETURN BASE URL
-		if (empty($path)) return $url . $query;
+		if (empty($path)) return $url;
+
 
 		//PARSE EACH URL PATH SEGMENT
-		foreach ($path as $item) $url .= $this->clean($item) . '/';
+		foreach ($path as $key => $value) {
+			if (is_int($key)) {
+				$url .= $this->clean($value) . '/';
+
+			} else {
+				$query .= ($query==='') ? '?' : '&';
+				$query .= http_build_query(
+					[$key => $value],
+					NULL, NULL,
+					PHP_QUERY_RFC3986
+				);
+			}
+		}
+
 
 		//RETURN URL
 		return rtrim($url, '/') . $query;
