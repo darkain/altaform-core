@@ -375,7 +375,7 @@ function error404($text=false, $log=false, $details=false) {
 	if (!empty($afurl)) {
 		if (empty($afurl->all)) $afurl->all = '';
 		if ($get->server('HTTP_REFERER') === $afurl->all) {
-			$afurl->redirect("$afurl->host$afurl->base/", 302);
+			$afurl->redirect([], 302);
 		}
 
 		$text = aferror::html($afurl->all) . '<br/>' . $text;
