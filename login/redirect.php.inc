@@ -7,8 +7,7 @@ $referer	= $get->sessionClear('referer');
 if (!empty($redirect))
 	$afurl->redirect($redirect, 302);
 
-//TODO: ADD CHECK TO SEE IF REFERER WAS /LOGIN/ URL, IF SO, IGNORE THIS CLAUSE
-if (!empty($referer))
+if (!empty($referer)  &&  $referer !== $afurl(['login'], $afurl))
 	$afurl->redirect($referer, 302);
 
 //TODO: VERIFY THAT REDIRECT IS WITHIN OUR ACCEPTED DOMAINS LIST (ORIGINS)
@@ -22,10 +21,11 @@ if ($af->config->session['redirect'] === 'root')
 	$afurl->redirect([]);
 
 if ($af->config->session['redirect'] === 'profile') {
-	if (!empty($user->user_url))
+	if (!empty($user->user_url)) {
 		$afurl->redirect([$user->user_url], 302);
-	else
+	} else {
 		$afurl->redirect([$user->user_id], 302);
+	}
 }
 
 $afurl->redirect($af->config->session['redirect']);

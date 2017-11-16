@@ -120,12 +120,20 @@ class		af_url {
 	// GENERATE A URL
 	////////////////////////////////////////////////////////////////////////////
 	public function __invoke($path, $base=false) {
-		if ($path instanceof afi_url  ||  !tbx_array($path)) {
-			return ($base ? ($this->base.'/') : '') . $this->clean($path);
+		$url	= '';
+		$query	= '';
+
+		if ($base === true) {
+			$url = $this->base . '/';
+		} else if ($base instanceof af_url) {
+			$url = $this->host . $this->base . '/';
+		} else if (is_string($base)) {
+			$url = $base . '/';
 		}
 
-		$url	= $base ? ($this->base.'/') : '';
-		$query	= '';
+		if ($path instanceof afi_url  ||  !tbx_array($path)) {
+			return $url . $this->clean($path);
+		}
 
 
 		//NO PATH, RETURN BASE URL
