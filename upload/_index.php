@@ -8,7 +8,7 @@ $user->requireLogin();
 
 $data = fileImporter::upload();
 assert500(
-	is_array($data),
+	tbx_array($data),
 	'Unable to process image file - ' . fileImporter::error()
 );
 

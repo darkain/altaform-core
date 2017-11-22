@@ -16,7 +16,7 @@ trait af_template {
 	//LINK A JAVASCRIPT FILE IN HTML HEADER
 	////////////////////////////////////////////////////////////////////////////
 	public function script($path) {
-		if (is_array($path)) {
+		if (tbx_array($path)) {
 			foreach ($path as $item) {
 				$this->_script[] = ['path' => $item];
 			}
@@ -59,7 +59,7 @@ trait af_template {
 	//LINK A CASCADING STYLE SHEET FILE IN HTML HEADER
 	////////////////////////////////////////////////////////////////////////////
 	public function style($path) {
-		if (is_array($path)) {
+		if (tbx_array($path)) {
 			foreach ($path as $item) {
 				$this->_style[] = ['path' => $item];
 			}

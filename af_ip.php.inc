@@ -30,7 +30,7 @@ class af_ip {
 
 
 	public static function inCidr($address, $cidr) {
-		if (!is_array($cidr)) $cidr = [$cidr];
+		if (!tbx_array($cidr)) $cidr = [$cidr];
 		if (empty($address)) return false;
 		$address		= ip2long(trim($address));
 		foreach ($cidr as $item) {
