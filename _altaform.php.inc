@@ -37,6 +37,7 @@ require_once('af_auth.php.inc');
 require_once('af_robots.php.inc');
 require_once('af_tbx.php.inc');
 require_once('af_template.php.inc');
+require_once('af_encrypt.php.inc');
 
 
 
@@ -47,6 +48,7 @@ class		altaform
 	use		af_robots;
 	use		af_tbx;
 	use		af_template;
+	use		af_encrypt;
 
 
 
