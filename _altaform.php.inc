@@ -231,6 +231,14 @@ class		altaform
 
 
 
+
+	public function __get($name) {
+		return $this->setting($name);
+	}
+
+
+
+
 	public function url($path, $base=false) {
 		$url = $this->url;
 		return $url($path, $base);
