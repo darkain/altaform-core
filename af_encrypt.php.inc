@@ -9,15 +9,16 @@ trait af_encrypt {
 	////////////////////////////////////////////////////////////////////////////
 	// ENCRYPT A STRING, RETURNING AN ARRAY
 	////////////////////////////////////////////////////////////////////////////
-	public function encrypt($string) {
+	public function encrypt($data) {
+		$data	= json_encode($data);
 		$ivlen	= openssl_cipher_iv_length($this->config->pci['cipher']);
 		$iv		= openssl_random_pseudo_bytes($ivlen);
-		$hash	= hash_hmac('sha256', $string, $iv);
+		$hash	= hash_hmac('sha256', $data, $iv);
 
 		return [
 			'iv'	=> base64_encode($iv),
 			'raw'	=> openssl_encrypt(
-				$hash . ':' . $string,
+				$hash . ':' . $data,
 				$this->config->pci['cipher'],
 				$this->config->pci['key'] . $this->{'af.pci'},
 				$options=0,
@@ -52,7 +53,7 @@ trait af_encrypt {
 		$hash	= substr($decrypted, 0, $pos);
 
 		return ($hash === hash_hmac('sha256', $string, $iv))
-				? $string
+				? json_decode($string, true)
 				: NULL;
 	}
 
