@@ -434,6 +434,18 @@ function error500($text=false, $log=true, $details=false) {
 
 
 
+function error503($text=false, $log=true, $details=false) {
+	aferror::render('503 Service Unavailable', [
+		'<div id="af-fatal"><h1>ERROR: 503</h1>',
+		'<h2>SERVICE UNAVAILABLE</h2>',
+		'<h3>' . aferror::html($details) . '</h3>',
+		($text !== false ? '<i>' . $text . '</i>' : '') . '</div>',
+	], $log, 'error503.tpl');
+}
+
+
+
+
 function assert401($item, $text=false, $log=false) {
 	if ($item instanceof pudlOrm) return $item->assert401($text);
 	return (empty($item) && $item!=='') ? error401($text, $log) : $item;
@@ -473,6 +485,12 @@ function assert422($item, $text=false, $log=true) {
 function assert500($item, $text=false, $log=true) {
 	if ($item instanceof pudlOrm) return $item->assert500($text);
 	return (empty($item) && $item!=='') ? error500($text, $log) : $item;
+}
+
+
+function assert503($item, $text=false, $log=true) {
+	if ($item instanceof pudlOrm) return $item->assert503($text);
+	return (empty($item) && $item!=='') ? error503($text, $log) : $item;
 }
 
 
@@ -532,6 +550,8 @@ set_exception_handler(function($e) {
 	if ($e instanceof pudlException) {
 		if ($e->getCode() === PUDL_X_CONNECTION) {
 			$afconfig->debug = false;
+			$afconfig->error['email'] = false;
+			error503();
 		}
 	}
 
