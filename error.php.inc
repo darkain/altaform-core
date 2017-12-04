@@ -373,7 +373,7 @@ function error404($text=false, $log=false, $details=false) {
 	global $afurl, $get, $afconfig;
 
 	if (!empty($afurl)) {
-		if (empty($afurl->all)) $afurl->all = '';
+		if (empty($afurl->all)) $afurl->all = '_DOES_NOT_EXIST_';
 		if ($get->server('HTTP_REFERER') === $afurl->all) {
 			$afurl->redirect([], 302);
 		}
