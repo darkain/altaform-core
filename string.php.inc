@@ -287,6 +287,39 @@ class afstring {
 
 
 
+	////////////////////////////////////////////////////////////////////////////
+	// PASS IN A FLOAT, GET A RATIONAL: PASS IN (66.66667) AND GET "66-2/3"
+	// Source:
+	// https://stackoverflow.com/questions/14330713/converting-float-decimal-to-fraction
+	////////////////////////////////////////////////////////////////////////////
+	static function rational($n, $tolerance=1.e-4) {
+		$n = (float) $n;
+		if (empty($n)) return '';
+
+		$h1=1;		$h2=0;
+		$k1=0;		$k2=1;
+		$b = 1/$n;
+
+		do {
+			$b = 1/$b;
+			$a = floor($b);
+			$x = $h1;		$h1 = $a*$h1+$h2;		$h2 = $x;
+			$x = $k1;		$k1 = $a*$k1+$k2;		$k2 = $x;
+			$b = $b-$a;
+		} while (abs($n-$h1/$k1) > $n*$tolerance);
+
+		$r1 = (int)($h1 / $k1);
+		$r2 = (int)($h1 % $k1);
+
+		if ($r1  &&  $r2) return $r1 . '-' . $r2 . '/' . $k1;
+		if ($r2) return $r2 . '/' . $k1;
+		if ($r1) return $r1;
+		return '';
+	}
+
+
+
+
 	//GENERATE NEW RANDOM PASSWORD OF $length CHARACTERS
 	public static function password($length=16) {
 		return af_user::password($length);
