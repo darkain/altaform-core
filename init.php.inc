@@ -54,6 +54,15 @@ if (!defined('PHP_VERSION_ID')) {
 
 
 
+//FIX FOR PHP 7.1 FLOATING POINT PRECISION DURING SERIALIZATION
+//https://stackoverflow.com/questions/42981409/php7-1-json-encode-float-issue
+if (version_compare(phpversion(), '7.1', '>=')) {
+	ini_set( 'serialize_precision', -1 );
+}
+
+
+
+
 //PUDL Interfaces
 require_once('_pudl/pudlInterfaces.php');
 
