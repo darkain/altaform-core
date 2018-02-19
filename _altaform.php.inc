@@ -117,6 +117,14 @@ class		altaform
 
 
 
+	public static function reload($die=true) {
+		echo 'AF-RELOAD';
+		if ($die) die();
+	}
+
+
+
+
 	public function jq() {
 		global $get;
 		if (!isset($get)) return false;
