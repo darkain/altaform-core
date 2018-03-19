@@ -149,7 +149,6 @@ class afdevice {
 	public static $secure	= [
 		'applewebkit/',	'konqueror/',
 		'firefox/',		'iceweasel/',
-		'bot/',			'spider/',
 		'rv:11.' =>		'trident/',
 	];
 
