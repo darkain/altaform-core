@@ -126,7 +126,7 @@ class		altaform
 
 
 
-	public static function load($path, $die=true) {
+	public static function afload($path, $die=true) {
 		echo "AF-LOAD\n";
 		echo static::$af->url($path, true);
 		echo "\n";
