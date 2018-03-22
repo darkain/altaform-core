@@ -103,7 +103,7 @@ class		altaform
 
 
 	public static function ok($die=true) {
-		echo 'AF-OK';
+		echo "AF-OK\n";
 		if ($die) die();
 	}
 
@@ -111,7 +111,7 @@ class		altaform
 
 
 	public static function refresh($die=true) {
-		echo 'AF-REFRESH';
+		echo "AF-REFRESH\n";
 		if ($die) die();
 	}
 
@@ -119,7 +119,7 @@ class		altaform
 
 
 	public static function reload($die=true) {
-		echo 'AF-RELOAD';
+		echo "AF-RELOAD\n";
 		if ($die) die();
 	}
 
@@ -129,6 +129,7 @@ class		altaform
 	public static function redirect($path, $die=true) {
 		echo "AF-REDIRECT\n";
 		echo static::$af->url($path, true);
+		echo "\n";
 		if ($die) die();
 	}
 
