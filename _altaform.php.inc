@@ -59,6 +59,7 @@ class		altaform
 		parent::__construct();
 
 		$afconfig->af				= $this;
+		static::$af					= $this;
 		$this->url					= $afurl;
 		$this->config				= $afconfig;
 		$this->_session				= $dbsession;
@@ -119,6 +120,15 @@ class		altaform
 
 	public static function reload($die=true) {
 		echo 'AF-RELOAD';
+		if ($die) die();
+	}
+
+
+
+
+	public static function redirect($path, $die=true) {
+		echo "AF-REDIRECT\n";
+		echo static::$af->url($path, true);
 		if ($die) die();
 	}
 
@@ -307,6 +317,7 @@ class		altaform
 	public				$device		= NULL;
 	public				$settings	= [];
 	public				$title		= '';
+	public static		$af			= NULL;
 	public static		$types		= [];
 	public static		$class		= 'altaform';
 	public static		$version	= 'Altaform-Core 2.8.4';
