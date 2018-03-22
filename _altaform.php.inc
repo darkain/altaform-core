@@ -126,6 +126,16 @@ class		altaform
 
 
 
+	public static function load($path, $die=true) {
+		echo "AF-LOAD\n";
+		echo static::$af->url($path, true);
+		echo "\n";
+		if ($die) die();
+	}
+
+
+
+
 	public static function redirect($path, $die=true) {
 		echo "AF-REDIRECT\n";
 		echo static::$af->url($path, true);
