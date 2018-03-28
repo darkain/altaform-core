@@ -89,6 +89,10 @@ require_once('af_url.php.inc');
 
 
 
+//If we're on the CLI, disable output buffering
+if (altaform::cli()) ob_end_flush();
+
+
 
 //Set the content type for this document to HTML or TXT with UTF-8 encoding
 if (!headers_sent()) {
@@ -110,7 +114,7 @@ if (!headers_sent()) {
 
 
 //Host Information for Config
-if ($afurl->domain !== '_cli') {
+if (!altaform::cli()) {
 	assert500(
 		$afurl->validateDomain($afurl->domain),
 		'Invalid Domain: ' . $afurl->domain
@@ -260,7 +264,7 @@ if (!empty($afconfig->pudl)  &&  tbx_array($afconfig->pudl)) {
 		)
 	);
 
-	if ($af->cli()) $db->timeout(AF_DAY);
+	if (altaform::cli()) $db->timeout(AF_DAY);
 
 	$af->settings = $db	->cache(AF_MINUTE*5, 'altaform_settings')
 						->collection('pudl_altaform');
@@ -299,4 +303,4 @@ while ($i--  &&  ob_get_level()) {
 
 
 //New line for CLI mode
-if ($af->cli()) echo "\n";
+if (altaform::cli()) echo "\n";
