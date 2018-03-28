@@ -90,7 +90,7 @@ require_once('af_url.php.inc');
 
 
 //If we're on the CLI, disable output buffering
-if (altaform::cli()) ob_end_flush();
+if (altaform::cli()  &&  ob_get_level()) ob_end_flush();
 
 
 
