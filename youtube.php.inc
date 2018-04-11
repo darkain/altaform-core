@@ -12,9 +12,9 @@ class afyoutube {
 
 
 	public static function importPath($path) {
-		$id = self::id($path);
+		$id = static::id($path);
 		if (empty($id)) return false;
-		return self::import($id);
+		return static::import($id);
 	}
 
 

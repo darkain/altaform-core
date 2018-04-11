@@ -6,7 +6,7 @@ class afactivity {
 	public static function add($id, $type, $verb, $userid=false) {
 		global $af, $db;
 
-		$userid = self::uid($userid);
+		$userid = static::uid($userid);
 		if (empty($userid)) return false;
 
 		return $db->insert('pudl_activity', [
@@ -26,7 +26,7 @@ class afactivity {
 	public static function addFile($hash, $type, $verb, $userid=false) {
 		global $af, $db;
 
-		$userid = self::uid($userid);
+		$userid = static::uid($userid);
 		if (empty($userid)) return false;
 
 		return $db->insert('pudl_activity', [
@@ -46,7 +46,7 @@ class afactivity {
 	public static function delete($id, $type, $userid=false) {
 		global $af, $db;
 
-		$userid = self::uid($userid);
+		$userid = static::uid($userid);
 		if (empty($userid)) return false;
 
 		return $db->delete('pudl_activity', [
@@ -61,7 +61,7 @@ class afactivity {
 	public static function deleteFile($hash, $type, $userid=false) {
 		global $af, $db;
 
-		$userid = self::uid($userid);
+		$userid = static::uid($userid);
 		if (empty($userid)) return false;
 
 		return $db->delete('pudl_activity', [

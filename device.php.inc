@@ -33,11 +33,11 @@ class afdevice {
 	static $device = false;
 
 
-	public function __construct() { self::device(); }
+	public function __construct() { static::device(); }
 
-	public function __invoke() { return self::device(); }
+	public function __invoke() { return static::device(); }
 
-	public function __toString() { return self::device(); }
+	public function __toString() { return static::device(); }
 
 
 	static function device() {
@@ -117,10 +117,10 @@ class afdevice {
 
 
 	public static function is_secure() {
-		if (self::is('windows nt 5.')) return false;
+		if (static::is('windows nt 5.')) return false;
 		foreach (self::$secure as $key => $agent) {
-			if (self::is($agent)) {
-				return is_string($key) ? self::is($key) : true;
+			if (static::is($agent)) {
+				return is_string($key) ? static::is($key) : true;
 			}
 		}
 		return false;
@@ -129,20 +129,20 @@ class afdevice {
 
 
 	public static function set($device)	{ self::$device = $device; }
-	public static function desktop()	{ return (self::device() === 'desktop'	); }
-	public static function tablet()		{ return (self::device() === 'tablet'	); }
-	public static function tv()			{ return (self::device() === 'tv'		); }
-	public static function mobile()		{ return (self::device() === 'mobile'	); }
-	public static function redetect()	{ self::$device = false; return self::device(); }
+	public static function desktop()	{ return (static::device() === 'desktop'	); }
+	public static function tablet()		{ return (static::device() === 'tablet'		); }
+	public static function tv()			{ return (static::device() === 'tv'			); }
+	public static function mobile()		{ return (static::device() === 'mobile'		); }
+	public static function redetect()	{ self::$device = false; return static::device(); }
 
 	public static function agent()		{ return self::$agent; }
 	public static function is($type)	{ return strpos(self::$agent, $type)!==false; }
-	public static function trident()	{ return self::is('trident/')		||  self::is('bingpreview/'); }
-	public static function edge()		{ return self::is('edge/'); }
-	public static function webkit()		{ return self::is('applewebkit/')	||  !self::edge(); }
-	public static function konqueror()	{ return self::is('konqueror/'); }
-	public static function firefox()	{ return self::is('firefox/')		||  self::is('iceweasel/'); }
-	public static function bot()		{ return self::is('spider/')		||  self::is('bot/')	||  self::is('baidu/')	||  self::is('cawl/')	||  self::is('slurp/'); }
+	public static function trident()	{ return static::is('trident/')		||  static::is('bingpreview/'); }
+	public static function edge()		{ return static::is('edge/'); }
+	public static function webkit()		{ return static::is('applewebkit/')	||  !self::edge(); }
+	public static function konqueror()	{ return static::is('konqueror/'); }
+	public static function firefox()	{ return static::is('firefox/')		||  static::is('iceweasel/'); }
+	public static function bot()		{ return static::is('spider/')		||  static::is('bot/')  ||  static::is('baidu/')  ||  static::is('cawl/')  ||  static::is('slurp/'); }
 
 	public static $agent	= '';
 

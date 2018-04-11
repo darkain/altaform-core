@@ -12,8 +12,8 @@ class afproduct {
 
 		if (empty($key)) $key = $search;
 
-		$data = self::cached($key);
-		if (!empty($data)) return self::https($data);
+		$data = static::cached($key);
+		if (!empty($data)) return static::https($data);
 
 		//DISABLE ERROR REPORTING IN CASE OF CONNECTION TIMEOUT
 		$level = error_reporting(0);
@@ -45,7 +45,7 @@ class afproduct {
 		//TURN ERROR REPORTING BACK ON BECAUSE WE STILL NEED IT OTHERWISE
 		error_reporting($level);
 
-		return self::https($data);
+		return static::https($data);
 	}
 
 
@@ -59,7 +59,7 @@ class afproduct {
 		} catch (RedisException $e) {
 			return false;
 		}
-		return !empty($data) ? self::https($data) : false;
+		return !empty($data) ? static::https($data) : false;
 	}
 
 

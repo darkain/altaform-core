@@ -218,10 +218,10 @@ class		af_url {
 			$ext = new af_mimetype($hash[$ext]);
 		}
 
-		$hash	= self::cdnHash($hash, $key);
+		$hash	= static::cdnHash($hash, $key);
 		if (empty($hash)) return false;
 
-		$path	= self::cdnPath($hash);
+		$path	= static::cdnPath($hash);
 		if (empty($path)) return false;
 
 		if (is_object($ext)  &&  $ext->id()) {
@@ -241,7 +241,7 @@ class		af_url {
 		if (!tbx_array($list)) return false;
 		if (empty($key)) $key = 'img';
 		foreach ($list as &$val) {
-			$val[$key] = self::cdn($val, $hashkey, $ext);
+			$val[$key] = static::cdn($val, $hashkey, $ext);
 		} unset($val);
 		return true;
 	}
@@ -268,10 +268,10 @@ class		af_url {
 	// GET THE LOCAL CDN FILE PATH FOR THE GIVEN HASH
 	////////////////////////////////////////////////////////////////////////////
 	public static function cdnFile($hash, $ext=false) {
-		$hash = self::cdnHash($hash);
+		$hash = static::cdnHash($hash);
 		if (empty($hash)) return false;
-		if ($ext) return 'cdn/' . self::cdnPath($hash) . '.' . $ext;
-		return 'cdn/' . self::cdnPath($hash);
+		if ($ext) return 'cdn/' . static::cdnPath($hash) . '.' . $ext;
+		return 'cdn/' . static::cdnPath($hash);
 	}
 
 

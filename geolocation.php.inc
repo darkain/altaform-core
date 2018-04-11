@@ -10,7 +10,7 @@ class afgeo {
 		global $af;
 
 		if ($longitude === false) {
-			$geocode = is_object($latitude) ? $latitude : self::geocode($latitude);
+			$geocode = is_object($latitude) ? $latitude : static::geocode($latitude);
 			if (empty($geocode->results[0]->geometry->location)) return false;
 			$latitude	= $geocode->results[0]->geometry->location->lat;
 			$longitude	= $geocode->results[0]->geometry->location->lng;
@@ -63,7 +63,7 @@ class afgeo {
 
 
 	public static function geoip($ipaddress=false) {
-		if ($ipaddress === false) $ipaddress = self::ipaddress();
+		if ($ipaddress === false) $ipaddress = static::ipaddress();
 		if ($ipaddress === false) return false;
 
 		$ctx = stream_context_create(['http'=>['timeout'=>1]]);
@@ -107,7 +107,7 @@ class afgeo {
 		}
 
 		//Geolocate User
-		$geoip = self::geoip();
+		$geoip = static::geoip();
 		if (!empty($geoip['latitude']) && !empty($geoip['longitude'])) {
 			return [
 				'lat'	=> $geoip['latitude'],

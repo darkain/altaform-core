@@ -178,7 +178,7 @@ class afstring {
 
 
 	public static function doubletrim($string) {
-		return self::doublespace( self::trim($string) );
+		return static::doublespace( static::trim($string) );
 	}
 
 
@@ -203,7 +203,7 @@ class afstring {
 		$string = str_replace('&nbsp;', ' ', $string);
 		$string = preg_replace('/\s\s+/', ' ', $string);
 		$string = trim($string);
-		if (is_numeric($length) && $length >= 1) $string = self::truncateWord($string, $length);
+		if (is_numeric($length) && $length >= 1) $string = static::truncateWord($string, $length);
 		return $string;
 	}
 
@@ -359,7 +359,7 @@ class afstring {
 
 		for ($i=0; $i<count($units); $i++) {
 			if ( ($value >= pow($size, $i) )  &&  ($value <= pow($size, $i+1)) ) {
-				return self::maxDigits( ($value / pow($size, $i)), 4 ) . $sep . $units[$i];
+				return static::maxDigits( ($value / pow($size, $i)), 4 ) . $sep . $units[$i];
 			}
 		}
 		return false;

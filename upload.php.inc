@@ -12,7 +12,7 @@ class fileImporter {
 			return false;
 		}
 		$image->setFilename($path);
-		$return = self::processImage($image, $name);
+		$return = static::processImage($image, $name);
 		$image->clear();
 		return $return;
 	}
@@ -28,7 +28,7 @@ class fileImporter {
 			self::$error = 'importFile error: ' . $name;
 			return false;
 		}
-		$return = self::processImage($image, false, $hash);
+		$return = static::processImage($image, false, $hash);
 		$image->clear();
 		return $return;
 	}
@@ -44,7 +44,7 @@ class fileImporter {
 			self::$error = 'importBlob error: ' . $name;
 			return false;
 		}
-		$return = self::processImage($image);
+		$return = static::processImage($image);
 		$image->clear();
 		return $return;
 	}
@@ -55,7 +55,7 @@ class fileImporter {
 	public static function importURL($url) {
 		$blob = @file_get_contents($url);
 
-		if ($blob !== false) return self::importBlob($blob, $url);
+		if ($blob !== false) return static::importBlob($blob, $url);
 
 		self::$error = 'importURL error: ' . $url;
 		return false;
@@ -113,9 +113,9 @@ class fileImporter {
 		//TODO:	IF $DATABASE=TRUE, CHECK HASH AGAINST DATABASE HERE!
 		//		IF ALREADY IN DATABASE, NO NEED TO PROCESS/UPLOAD IMAGE
 
-		$image = self::importPath($data['tmp_name'], $data['name']);
+		$image = static::importPath($data['tmp_name'], $data['name']);
 
-		if ($database) self::database($image);
+		if ($database) static::database($image);
 
 		return $image;
 	}
@@ -124,11 +124,11 @@ class fileImporter {
 
 
 	public static function importFacebookProfileImage($facebook_id, $database=true) {
-		$image = self::importURL(
+		$image = static::importURL(
 			'http://graph.facebook.com/v2.4/' . $facebook_id . '/picture?width=9999&height=9999'
 		);
 
-		if ($database) self::database($image);
+		if ($database) static::database($image);
 
 		return $image;
 	}
@@ -158,9 +158,9 @@ class fileImporter {
 
 		//BUILD DATA TO RETURN
 		$data = [
-			'average'		=> self::average($image),
-			'exif'			=> self::getExif($image),
-			'hash'			=> self::getHash($image, $hash),
+			'average'		=> static::average($image),
+			'exif'			=> static::getExif($image),
+			'hash'			=> static::getHash($image, $hash),
 			'size'			=> $image->getImageLength(),
 			'mime'			=> $image->getImageMimeType(),
 			'type'			=> $image->getImageFormat(),
@@ -173,7 +173,7 @@ class fileImporter {
 
 
 		//SAVE THE FILE TO OUR STORAGE SYSTEM
-		self::write($data['hash'], $image->getImageBlob());
+		static::write($data['hash'], $image->getImageBlob());
 
 
 		//RORATE THE IMAGE, IF NEEDED
@@ -235,12 +235,12 @@ class fileImporter {
 		//NOTE: CREATE SMALLEST SIZE REGARDLESS, IN CASE OF ROTATION/ICC ISSUES
 		foreach (self::$imageSize as $size => $quality) {
 			if ($size >= $long  &&  $size !== self::$smallest) continue;
-			$data[$size] = self::resize($image, $size, false, $quality);
+			$data[$size] = static::resize($image, $size, false, $quality);
 		}
 
 		//PROCESS THUMBNAILS (SQUARE CROP)
 		foreach (self::$thumbSize as $size) {
-			$data[$size] = self::resize($image, $size, true);
+			$data[$size] = static::resize($image, $size, true);
 		}
 
 		//CLEANUP / FREE RESOURCES
@@ -348,7 +348,7 @@ class fileImporter {
 		$data['thumb_hash']	= pudlFunction::unhex($data['hash']);
 
 		//COPY BLOB TO IMAGE FILE SERVER
-		$data['good']		= self::write($data['hash'], $blob);
+		$data['good']		= static::write($data['hash'], $blob);
 
 		//CLEANUP / FREE RESOURCES
 		$resized->clear();
@@ -366,11 +366,11 @@ class fileImporter {
 		//LOCAL FILE, MUCH FASTER TO USE FILE SYSTEM THAN TO GENERATE A BLOB
 		if (!empty($path)) {
 			if (substr($path, 0, 1) === '/'  ||  substr($path, 0, 7) === 'file://') {
-				return self::exif_read_data($path);
+				return static::exif_read_data($path);
 			}
 		}
 
-		return self::exif_read_data(
+		return static::exif_read_data(
 			'data://' . $image->getImageMimeType() .
 			';base64,' . base64_encode(
 				substr($image->getImageBlob(), 0, 1024*1024)
@@ -383,11 +383,11 @@ class fileImporter {
 
 	public static function getHash(&$image, $hash=false) {
 		if (!empty($hash)) {
-			if (is_string($hash)) return self::unhex($hash);
+			if (is_string($hash)) return static::unhex($hash);
 			if (tbx_array($hash)) {
-				if (!empty($hash['hash']))			return self::unhex($hash['hash']);
-				if (!empty($hash['file_hash']))		return self::unhex($hash['file_hash']);
-				if (!empty($hash['thumb_hash']))	return self::unhex($hash['thumb_hash']);
+				if (!empty($hash['hash']))			return static::unhex($hash['hash']);
+				if (!empty($hash['file_hash']))		return static::unhex($hash['file_hash']);
+				if (!empty($hash['thumb_hash']))	return static::unhex($hash['thumb_hash']);
 			}
 		}
 
@@ -445,7 +445,7 @@ class fileImporter {
 			if (substr($key, 0, 15) === 'UndefinedTag:0x') {
 				unset($exif[$key]);
 			} else {
-				self::exifClean($item);
+				static::exifClean($item);
 			}
 		} unset($item);
 
@@ -467,7 +467,7 @@ class fileImporter {
 			$data = afstring::doubletrim($data);
 
 		} else if (tbx_array($data)) {
-			foreach ($data as &$item) self::exifClean($item);
+			foreach ($data as &$item) static::exifClean($item);
 		}
 	}
 
@@ -523,7 +523,7 @@ class fileImporter {
 			], 'file_hash=file_hash');
 		}
 
-		self::databaseThumbs($data);
+		static::databaseThumbs($data);
 
 		if ($transaction) $db->commit();
 	}

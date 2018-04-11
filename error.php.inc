@@ -22,11 +22,11 @@ class aferror {
 			$af->title = $header;
 		}
 
-		$data = $log ? self::log($text, false) : self::process($text);
+		$data = $log ? static::log($text, false) : static::process($text);
 
 		if (!empty($template)  &&  $af instanceof altaform  &&  !empty($af->config->root)) {
 			if (is_file($af->path().$af->config->root.'/'.$template)) {
-				$ok = self::renderFile(
+				$ok = static::renderFile(
 					$af->path().$af->config->root.'/'.$template,
 					$header, $text, $data
 				);
@@ -35,7 +35,7 @@ class aferror {
 
 		if (empty($ok)  &&  $af instanceof altaform  &&  !empty($af->config->root)) {
 			if (is_file($af->path().$af->config->root.'/error.tpl')) {
-				$ok = self::renderFile(
+				$ok = static::renderFile(
 					$af->path().$af->config->root.'/error.tpl',
 					$header, $text, $data
 				);
@@ -103,7 +103,7 @@ class aferror {
 			if (is_array($val)) foreach ($val as &$item) {
 				if (is_array($item)  ||  is_object($item)) $item = [];
 			} unset($item);
-			$val = self::json($val);
+			$val = static::json($val);
 		} unset($val);
 
 		if (!empty($get)) {
@@ -118,11 +118,11 @@ class aferror {
 			'address'		=> empty($data['address']) ? $address : $data['address'],
 			'error-time'	=> @date('r'),
 			'error-path'	=> getcwd(),
-			'var-get'		=> !isset($_GET)		? '' :	self::json($_GET),
-			'var-post'		=> !isset($_POST)		? '' :	self::json($_POST),
-			'var-files'		=> !isset($_FILES)		? '' :	self::json($_FILES),
-			'var-user'		=> !isset($user)		? '' :	self::json($user->raw()),
-			'template'		=> !isset($af)			? '' :	self::json($af->filepath),
+			'var-get'		=> !isset($_GET)		? '' :	static::json($_GET),
+			'var-post'		=> !isset($_POST)		? '' :	static::json($_POST),
+			'var-files'		=> !isset($_FILES)		? '' :	static::json($_FILES),
+			'var-user'		=> !isset($user)		? '' :	static::json($user->raw()),
+			'template'		=> !isset($af)			? '' :	static::json($af->filepath),
 			'query'			=> !isset($db)			? '' :	$db->query(),
 			'ip-database'	=> !isset($db)			? '' :	$db->server(),
 			'ip-php'		=> !isset($get)			? '' :	$get->server('X-PHP-IP'),
@@ -134,7 +134,7 @@ class aferror {
 		]);
 
 		if (!empty($afurl->redirected)) {
-			$return['redirected'] = self::json($afurl->redirected);
+			$return['redirected'] = static::json($afurl->redirected);
 		}
 
 		ksort($return, SORT_NATURAL);
@@ -161,16 +161,16 @@ class aferror {
 			}
 		}
 
-		$error = (ob_get_level()  &&  $die) ? self::html(ob_get_clean()) : '';
+		$error = (ob_get_level()  &&  $die) ? static::html(ob_get_clean()) : '';
 
-		$arr = $arrout = self::process($data);
+		$arr = $arrout = static::process($data);
 
 		$arrout += $backtrace;
 		foreach ($arrout as $key => &$value) if (is_int($key)) {
 			if (!empty($value['args'])  &&  is_array($value['args'])) {
 				@array_walk_recursive($value['args'], [__CLASS__,'nopassword']);
 			}
-			$value = self::json($value);
+			$value = static::json($value);
 		}
 
 		$out = str_replace("\n", "\r\n", print_r($arrout, true)) . "\r\n";
@@ -180,7 +180,7 @@ class aferror {
 			$out, FILE_APPEND
 		);
 
-		self::email($out, !empty($arr['details']) ? $arr['details'] : '');
+		static::email($out, !empty($arr['details']) ? $arr['details'] : '');
 
 		if ($db instanceof pudl) $db->rollback();
 
@@ -194,14 +194,14 @@ class aferror {
 
 		foreach ($backtrace as $key => $value) {
 			$html .= '<tr><td>' . ($key+1) . '</td><td class="nobr">Line: ';
-			$html .= self::html(array_key_exists('line', $value) ? $value['line'] : '?');
+			$html .= static::html(array_key_exists('line', $value) ? $value['line'] : '?');
 			$html .= '</td><td>File: ';
-			$html .= self::html(array_key_exists('file', $value) ? $value['file'] : '?');
+			$html .= static::html(array_key_exists('file', $value) ? $value['file'] : '?');
 			if (!empty($value['function'])) {
 				$html .= '<br/>' . $value['function'] . '(';
 				if (!empty($value['args'])) {
 					@array_walk_recursive($value['args'], [__CLASS__,'nopassword']);
-					$html .= substr(self::html_json($value['args']), 1, -1);
+					$html .= substr(static::html_json($value['args']), 1, -1);
 				}
 				$html .= ')';
 			}
@@ -210,9 +210,9 @@ class aferror {
 
 		foreach ($arr as $key => $value) {
 			$html .= '<tr><td colspan="2" class="nobr">';
-			$html .= self::html($key);
+			$html .= static::html($key);
 			$html .= '</td><td>';
-			$html .= self::html($value);
+			$html .= static::html($value);
 			$html .= "</td></tr>\n";
 		}
 
@@ -282,7 +282,7 @@ class aferror {
 			return;
 		}
 
-		self::log([
+		static::log([
 			'address'		=> $get('url'),
 			'details'		=> 'JavaScript: ' . $get('message'),
 			'error-file'	=> $get('file'),
@@ -315,7 +315,7 @@ class aferror {
 
 
 	public static function html_json($item) {
-		return self::html(self::json($item));
+		return static::html(static::json($item));
 	}
 
 

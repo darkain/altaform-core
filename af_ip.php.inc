@@ -45,7 +45,7 @@ class af_ip {
 
 
 	public static function addressInCidr($cidr) {
-		return self::inCidr(self::address(), $cidr);
+		return static::inCidr(static::address(), $cidr);
 	}
 
 
