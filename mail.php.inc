@@ -5,6 +5,7 @@ class afmail {
 	public static function send($headers, $subject, $body, $attach=false) {
 		global $afurl, $af;
 
+		require_once('_phpmailer/src/Exception.php');
 		require_once('_phpmailer/src/PHPMailer.php');
 		require_once('_phpmailer/src/SMTP.php');
 
