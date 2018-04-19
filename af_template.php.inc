@@ -146,10 +146,10 @@ trait af_template {
 		}
 
 		$device	= $file . '.' . afdevice::device();
-		if (file_exists($device)) return parent::load($device);
+		if (af_fs::readfile($device)) return parent::load($device);
 
 		$pathed	= $this->path() . $device;
-		if (file_exists($pathed)) return parent::load($pathed);
+		if (af_fs::readfile($pathed)) return parent::load($pathed);
 
 		return parent::load($file);
 	}
@@ -242,9 +242,9 @@ trait af_template {
 		list ($js, $css) = $this->prerender();
 
 
-		if ($this->debug()  &&  file_exists($root.'/header_html_debug.tpl.'.$device)) {
+		if ($this->debug()  &&  af_fs::readfile($root.'/header_html_debug.tpl.'.$device)) {
 			$this->load($root.'/header_html_debug.tpl.'.$device);
-		} else if ($this->debug()  &&  file_exists($root.'/header_html_debug.tpl')) {
+		} else if ($this->debug()  &&  af_fs::readfile($root.'/header_html_debug.tpl')) {
 			$this->load($root.'/header_html_debug.tpl');
 		} else {
 			$this->load($root.'/header_html.tpl');
@@ -272,9 +272,9 @@ trait af_template {
 		$device	= afdevice::device();
 		$root	= $this->path() . $this->config->root;
 
-		if ($this->debug()  &&  file_exists($root.'/header_page_debug.tpl.'.$device)) {
+		if ($this->debug()  &&  af_fs::readfile($root.'/header_page_debug.tpl.'.$device)) {
 			$this->load($root.'/header_page_debug.tpl.'.$device);
-		} else if ($this->debug()  &&  file_exists($root.'/header_page_debug.tpl')) {
+		} else if ($this->debug()  &&  af_fs::readfile($root.'/header_page_debug.tpl')) {
 			$this->load($root.'/header_page_debug.tpl');
 		} else {
 			$this->load($root.'/header_page.tpl');
@@ -296,7 +296,7 @@ trait af_template {
 	public function headerEmail() {
 		$root	= $this->path() . $this->config->root;
 
-		if ($this->debug()  &&  file_exists($root.'/header_email_debug.tpl')) {
+		if ($this->debug()  &&  af_fs::readfile($root.'/header_email_debug.tpl')) {
 			$this->load($root.'/header_email_debug.tpl');
 		} else {
 			$this->load($root.'/header_email.tpl');
@@ -319,9 +319,9 @@ trait af_template {
 		$ok		= false;
 
 		if ($this->debug()) {
-			if (file_exists($root.'/footer_html_debug.tpl.'.$device)) {
+			if (af_fs::readfile($root.'/footer_html_debug.tpl.'.$device)) {
 				$ok = $this->render($root.'/footer_html_debug.tpl.'.$device);
-			} else if (file_exists($root.'/footer_html_debug.tpl')) {
+			} else if (af_fs::readfile($root.'/footer_html_debug.tpl')) {
 				$ok = $this->render($root.'/footer_html_debug.tpl');
 			}
 		}
@@ -348,9 +348,9 @@ trait af_template {
 		$device	= afdevice::device();
 		$root	= $this->path() . $this->config->root;
 
-		if ($this->debug()  &&  file_exists($root.'/footer_page_debug.tpl.'.$device)) {
+		if ($this->debug()  &&  af_fs::readfile($root.'/footer_page_debug.tpl.'.$device)) {
 			$this->load($root.'/footer_page_debug.tpl.'.$device);
-		} else if ($this->debug()  &&  file_exists($root.'/footer_page_debug.tpl')) {
+		} else if ($this->debug()  &&  af_fs::readfile($root.'/footer_page_debug.tpl')) {
 			$this->load($root.'/footer_page_debug.tpl');
 		} else {
 			$this->load($root.'/footer_page.tpl');
@@ -359,7 +359,7 @@ trait af_template {
 		$this->merge($this->_footers)->render();
 
 		if ($user->isAdmin()  ||  ($user->isStaff()  &&  $this->debug())) {
-			if (file_exists($root.'/footer_admin.tpl')) {
+			if (af_fs::readfile($root.'/footer_admin.tpl')) {
 				$this->load($root.'/footer_admin.tpl');
 				if (!empty($db)) {
 					$this->field('dbstats',		$db->stats());
@@ -381,7 +381,7 @@ trait af_template {
 	public function footerEmail() {
 		$root	= $this->path() . $this->config->root;
 
-		if ($this->debug()  &&  file_exists($root.'/footer_email_debug.tpl')) {
+		if ($this->debug()  &&  af_fs::readfile($root.'/footer_email_debug.tpl')) {
 			$this->load($root.'/footer_email_debug.tpl');
 		} else {
 			$this->load($root.'/footer_email.tpl');
@@ -403,7 +403,7 @@ trait af_template {
 		$device	= $file . '.' . afdevice::device();
 
 		//PULL THE CONTENTS OF THE TEMPLATE BEFORE ANYTHING ELSE!
-		$text = @file_get_contents( file_exists($device) ? $device : $file );
+		$text = @file_get_contents( af_fs::readfile($device) ? $device : $file );
 		if ($text === false) {
 			throw new afException('Unable to load template file: '.$file);
 		}
@@ -491,11 +491,11 @@ trait af_template {
 			);
 		}
 
-		if (file_exists($info['dirname'].$name.'js')) {
+		if (af_fs::readfile($info['dirname'].$name.'js')) {
 			$this->js($info['dirname'].$name.'js');
 		}
 
-		if (file_exists($info['dirname'].$name.'css')) {
+		if (af_fs::readfile($info['dirname'].$name.'css')) {
 			$this->css($info['dirname'].$name.'css');
 		}
 
