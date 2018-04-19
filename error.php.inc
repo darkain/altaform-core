@@ -43,7 +43,7 @@ class aferror {
 		}
 
 		if (empty($ok)) {
-			if ($af instanceof altaform  &&  $af->cli()) {
+			if (class_exists('altaform')  &&  altaform::cli()) {
 				if (is_array($text)) $text = implode("\n", $text);
 
 				$text = str_replace(
@@ -295,7 +295,7 @@ class aferror {
 
 	public static function html($item) {
 		global $af;
-		if ($af instanceof altaform  &&  $af->cli()) return $item;
+		if (class_exists('altaform')  &&  altaform::cli()) return $item;
 		if (!defined('TBX_SPECIAL_CHARS')) {
 			define('TBX_SPECIAL_CHARS', ENT_NOQUOTES|ENT_HTML5);
 		}
