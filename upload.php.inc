@@ -398,7 +398,7 @@ class fileImporter {
 			if (substr($path, 0, 1) === '/'		||
 				substr($path, 0, 3) === '../'	||
 				substr($path, 0, 7) === 'file://') {
-				return md5_file($path);
+				if (af_fs::readfile($path)) return md5_file($path);
 			}
 		}
 
