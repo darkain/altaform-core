@@ -4,7 +4,7 @@ require_once('geolocation.php.inc');
 
 
 
-class afaudit {
+class af_audit {
 
 
 	static function insert($object, $type, $value_new, $value_old=NULL) {
