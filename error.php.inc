@@ -251,32 +251,32 @@ class aferror {
 		global $get;
 
 		// GENERIC ERROR MESSAGE IN JS FILE NOT HOSTED BY US (CROSS-SITE)
-		if ($get('message') === 'Script error') return;
-		if ($get('message') === 'Script error.') return;
+		if ($get->message === 'Script error') return;
+		if ($get->message === 'Script error.') return;
 
 		// https://github.com/getsentry/raven-js/issues/756
-		if (strpos($get('message'), "evaluating 'elt.parentNode'")) return;
+		if (strpos($get->message, "evaluating 'elt.parentNode'")) return;
 
 		// IGNORE ISSUES WITH CriOS INSERTED JAVASCRIPT FILE
-		if (strpos($get('message'), '__gCrWeb')) return;
+		if (strpos($get->message, '__gCrWeb')) return;
 
 		// IGNORE ISSUES WITH "MULTIFACTOR AUTHENTICATION CLIENT"
-		if (strpos($get('message'), 'fidoCallback')) return;
+		if (strpos($get->message, 'fidoCallback')) return;
 
 		// IGNORE ISSUES WITH "BLINGBAR" TOOLBAR
-		if (strpos($get('message'), 'BLNGBAR')) return;
+		if (strpos($get->message, 'BLNGBAR')) return;
 
 		// IGNORE ISSUES WITH "hilitor" - unknown browser add-on
-		if (strpos($get('message'), 'hilitor')) return;
+		if (strpos($get->message, 'hilitor')) return;
 
 		// IGNORE SEZNAM SCREENSHOT GENERATOR
-		if (strpos($get('message'), 'screenshot')) return;
+		if (strpos($get->message, 'screenshot')) return;
 
 		// IGNORE ZTE "PAGESCROLLMODULE"
-		if (strpos($get('message'), 'zte')) return;
+		if (strpos($get->message, 'zte')) return;
 
 		// IGNORE JQUERY UI ERRORS - THIS LIBRARY IS RANDOMLY BUGGY
-		if (strpos($get('file'), 'jquery-ui.min.js')) return;
+		if (strpos($get->file, 'jquery-ui.min.js')) return;
 
 		// IGNORE ERRORS FROM BOTS. THEY ARE TERRIBAD AT PROCESSING SCRIPTS PROPERLY
 		if (preg_match(
@@ -286,10 +286,10 @@ class aferror {
 		}
 
 		static::log([
-			'address'		=> $get('url'),
-			'details'		=> 'JavaScript: ' . $get('message'),
-			'error-file'	=> $get('file'),
-			'error-line'	=> $get('line') . ':' . $get('col'),
+			'address'		=> $get->url,
+			'details'		=> 'JavaScript: ' . $get->message,
+			'error-file'	=> $get->file,
+			'error-line'	=> $get->line . ':' . $get->col,
 		], false);
 	}
 
