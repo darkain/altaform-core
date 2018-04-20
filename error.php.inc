@@ -272,6 +272,9 @@ class aferror {
 		// IGNORE SEZNAM SCREENSHOT GENERATOR
 		if (strpos($get('message'), 'screenshot')) return;
 
+		// IGNORE ZTE "PAGESCROLLMODULE"
+		if (strpos($get('message'), 'zte')) return;
+
 		// IGNORE JQUERY UI ERRORS - THIS LIBRARY IS RANDOMLY BUGGY
 		if (strpos($get('file'), 'jquery-ui.min.js')) return;
 
