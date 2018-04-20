@@ -22,6 +22,7 @@ class af_ip {
 
 	public static function address() {
 		global $get;
+		if (altaform::cli()) return '127.0.0.1';
 		$address = $get->server('HTTP_X_FORWARDED_FOR');
 		if (empty($address)) $address = $get->server('REMOTE_ADDR');
 		return empty($address) ? false : $address;
