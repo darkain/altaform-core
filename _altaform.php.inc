@@ -30,6 +30,9 @@ require_once('string.php.inc');
 //EXTRA TIME FUNCTIONS
 require_once('time.php.inc');
 
+//GEOLOCATION FUNCTIONS
+require_once('geolocation.php.inc');
+
 
 //LIST OF ALTAFORM TRAITS - USED TO HELP ORGANIZE CODE
 require_once('af_git.php.inc');
