@@ -51,7 +51,7 @@ class af_geo {
 
 		if (empty($location)) return false;
 
-		if (!isset(self::$_geoloc[$location])) {
+		if (!array_key_exists($location, self::$_geoloc)) {
 			self::$_geoloc[$location] = $db->rowId(
 				'pudl_geolocation',
 				'location',

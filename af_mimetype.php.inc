@@ -13,7 +13,7 @@ class af_mimetype {
 
 		if (is_numeric($type)) $type = (int) $type;
 
-		if (!isset(self::$cache[$type])) {
+		if (!array_key_exists($type, self::$cache)) {
 			self::$cache[$type] = $db->cache(AF_DAY)->rowId(
 				'pudl_mimetype',
 				is_int($type) ? 'mime_id' : 'mime_ext',
