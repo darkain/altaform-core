@@ -12,6 +12,9 @@ require_once('af_config.php.inc');
 //FILE SYSTEM RELATED FUNCTIONS
 require_once('af_fs.php.inc');
 
+//GEOLOCATION FUNCTIONS
+require_once('af_geo.php.inc');
+
 //IP ADDRESS RELATED FUNCTIONS
 require_once('af_ip.php.inc');
 
@@ -29,9 +32,6 @@ require_once('string.php.inc');
 
 //EXTRA TIME FUNCTIONS
 require_once('time.php.inc');
-
-//GEOLOCATION FUNCTIONS
-require_once('geolocation.php.inc');
 
 
 //LIST OF ALTAFORM TRAITS - USED TO HELP ORGANIZE CODE

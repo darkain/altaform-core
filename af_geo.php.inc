@@ -1,6 +1,6 @@
 <?php
 
-class afgeo {
+class af_geo {
 
 	static $_geoloc = [];
 
@@ -28,6 +28,7 @@ class afgeo {
 
 
 
+
 	public static function geocode($location) {
 		global $af;
 
@@ -41,6 +42,7 @@ class afgeo {
 			@file_get_contents($url)
 		);
 	}
+
 
 
 
@@ -62,26 +64,27 @@ class afgeo {
 
 
 
+
 	public static function geoip($ipaddress=false) {
-		if ($ipaddress === false) $ipaddress = static::ipaddress();
-		if ($ipaddress === false) return false;
+		global $afconfig;
+
+		if (empty($afconfig->af['geo'])) return false;
+
+		if (empty($ipaddress)) $ipaddress = af_ip::address();
+		if (empty($ipaddress)) return false;
 
 		$ctx = stream_context_create(['http'=>['timeout'=>1]]);
 
-		$json = @file_get_contents("http://geo.cospix.net/$ipaddress", 0, $ctx);
+		$json = @file_get_contents($afconfig->af['geo'].$ipaddress, 0, $ctx);
 		if (empty($json)) return false;
 
 		$data = @json_decode($json, true);
-		if (empty($data)) return false;
 
-		return $data;
+		return (is_array($data)  &&  !empty($data))
+			? $data
+			: false;
 	}
 
-
-
-	public static function ipaddress() {
-		return af_ip::address();
-	}
 
 
 
