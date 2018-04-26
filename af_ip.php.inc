@@ -92,4 +92,17 @@ class af_ip {
 	}
 
 
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// GET THE HTTPD SERVER ADDRESS (MAY BE IPv4 OR IPv6)
+	// THIS MAY BE DIFFERENT DUE TO PHP-FPM AND LOAD BALANCING BETWEEN NODES
+	////////////////////////////////////////////////////////////////////////////
+	public static function server() {
+		global $get;
+		if (altaform::cli()) return '127.0.0.1';
+		$address = $get->server('SERVER_ADDR');
+		return empty($address) ? false : $address;
+	}
+
 }
