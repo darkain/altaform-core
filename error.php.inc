@@ -125,14 +125,14 @@ class aferror {
 			'af-template'	=> !isset($af)		? '' :	static::json($af->filepath),
 			'db-query'		=> !isset($db)		? '' :	$db->query(),
 			'ip-database'	=> !isset($db)		? '' :	$db->server(),
-			'ip-httpd'		=> !isset($get)		? '' :	$get->server('SERVER_ADDR'),
-			'ip-client'		=> !isset($get)		? '' :	$get->server('REMOTE_ADDR'),
 			'user-agent'	=> !isset($get)		? '' :	$get->server('HTTP_USER_AGENT'),
 			'user-referer'	=> !isset($get)		? '' :	$get->server('HTTP_REFERER'),
 
 			'af-url'		=> empty($data['address'])	? $address : $data['address'],
 			'user-device'	=> !isset($af->device)		? '' :	$af->device(),
 			'ip-php'		=> !class_exists('af_ip')	? '' :	af_ip::local(),
+			'ip-client'		=> !class_exists('af_ip')	? '' :	af_ip::address(),
+			'ip-httpd'		=> !class_exists('af_ip')	? '' :	af_ip::server(),
 		]);
 
 		if (!empty($afurl->redirected)) {
