@@ -331,6 +331,7 @@ class		altaform
 	public				$device		= NULL;
 	public				$settings	= [];
 	public				$title		= '';
+	public static		$error		= false;
 	public static		$af			= NULL;
 	public static		$types		= [];
 	public static		$class		= 'altaform';

@@ -149,6 +149,8 @@ class aferror {
 	public static function log($data, $die=true, $backtrace=[]) {
 		global $af, $db, $user, $afconfig;
 
+		if (class_exists('altaform')) altaform::$error = true;
+
 		//ONLY LOG ERROR ONCE!
 		static $echo = false;
 		if ($echo) return false;
