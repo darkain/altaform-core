@@ -115,22 +115,24 @@ class aferror {
 		}
 
 		$return = array_merge($data, [
-			'address'		=> empty($data['address']) ? $address : $data['address'],
 			'error-time'	=> @date('r'),
 			'error-path'	=> getcwd(),
-			'var-get'		=> !isset($_GET)		? '' :	static::json($_GET),
-			'var-post'		=> !isset($_POST)		? '' :	static::json($_POST),
-			'var-files'		=> !isset($_FILES)		? '' :	static::json($_FILES),
-			'var-user'		=> !isset($user)		? '' :	static::json($user->raw()),
-			'template'		=> !isset($af)			? '' :	static::json($af->filepath),
-			'query'			=> !isset($db)			? '' :	$db->query(),
-			'ip-database'	=> !isset($db)			? '' :	$db->server(),
-			'ip-php'		=> !isset($get)			? '' :	$get->server('X-PHP-IP'),
-			'ip-httpd'		=> !isset($get)			? '' :	$get->server('SERVER_ADDR'),
-			'ip-client'		=> !isset($get)			? '' :	$get->server('REMOTE_ADDR'),
-			'user-agent'	=> !isset($get)			? '' :	$get->server('HTTP_USER_AGENT'),
-			'user-referer'	=> !isset($get)			? '' :	$get->server('HTTP_REFERER'),
-			'user-device'	=> !isset($af->device)	? '' :	$af->device(),
+
+			'var-get'		=> !isset($_GET)	? '' :	static::json($_GET),
+			'var-post'		=> !isset($_POST)	? '' :	static::json($_POST),
+			'var-files'		=> !isset($_FILES)	? '' :	static::json($_FILES),
+			'var-user'		=> !isset($user)	? '' :	static::json($user->raw()),
+			'af-template'	=> !isset($af)		? '' :	static::json($af->filepath),
+			'db-query'		=> !isset($db)		? '' :	$db->query(),
+			'ip-database'	=> !isset($db)		? '' :	$db->server(),
+			'ip-httpd'		=> !isset($get)		? '' :	$get->server('SERVER_ADDR'),
+			'ip-client'		=> !isset($get)		? '' :	$get->server('REMOTE_ADDR'),
+			'user-agent'	=> !isset($get)		? '' :	$get->server('HTTP_USER_AGENT'),
+			'user-referer'	=> !isset($get)		? '' :	$get->server('HTTP_REFERER'),
+
+			'af-url'		=> empty($data['address'])	? $address : $data['address'],
+			'user-device'	=> !isset($af->device)		? '' :	$af->device(),
+			'ip-php'		=> !class_exists('af_ip')	? '' :	af_ip::local(),
 		]);
 
 		if (!empty($afurl->redirected)) {
