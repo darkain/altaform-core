@@ -50,4 +50,14 @@ class af_ip {
 	}
 
 
+
+	public static function local() {
+		$address	= false;
+		$socket		= socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
+		socket_connect(		$socket, '8.8.8.8', 53);
+		socket_getsockname(	$socket, $address);
+		return $address;
+	}
+
+
 }
