@@ -22,7 +22,7 @@ require_once('af_ip.php.inc');
 require_once('af_mimetype.php.inc');
 
 //AUDIT LOGGING
-require_once('audit.php.inc');
+require_once('af_audit.php.inc');
 
 //DEVICE DETECTION
 require_once('device.php.inc');
