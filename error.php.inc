@@ -312,10 +312,14 @@ class aferror {
 
 
 	public static function json($item) {
-		return @json_encode($item,
-			JSON_UNESCAPED_SLASHES |
-			JSON_UNESCAPED_UNICODE |
-			JSON_PARTIAL_OUTPUT_ON_ERROR
+		return str_replace(
+			[',',	'":{'],
+			[', ',	'":{ '],
+			@json_encode($item,
+				JSON_UNESCAPED_SLASHES |
+				JSON_UNESCAPED_UNICODE |
+				JSON_PARTIAL_OUTPUT_ON_ERROR
+			)
 		);
 	}
 
