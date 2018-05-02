@@ -114,14 +114,22 @@ class aferror {
 			$address = !empty($afurl->all) ? $afurl->all : '';
 		}
 
+		if ($user instanceof pudlObject) {
+			$userdata = new pudlObject;
+			$userdata->merge($user, false);
+			$userdata = $userdata->raw();
+		} else {
+			$userdata = [];
+		}
+
 		$return = array_merge($data, [
 			'error-time'	=> @date('r'),
 			'error-path'	=> getcwd(),
 
+			'var-user'		=> static::json($userdata),
 			'var-get'		=> !isset($_GET)	? '' :	static::json($_GET),
 			'var-post'		=> !isset($_POST)	? '' :	static::json($_POST),
 			'var-files'		=> !isset($_FILES)	? '' :	static::json($_FILES),
-			'var-user'		=> !isset($user)	? '' :	static::json($user->raw()),
 			'af-template'	=> !isset($af)		? '' :	static::json($af->filepath),
 			'db-query'		=> !isset($db)		? '' :	$db->query(),
 			'ip-database'	=> !isset($db)		? '' :	$db->server(),
@@ -136,7 +144,7 @@ class aferror {
 		]);
 
 		if (!empty($afurl->redirected)) {
-			$return['redirected'] = static::json($afurl->redirected);
+			$return['redirected'] = static::json($afurl->redirected, false);
 		}
 
 		ksort($return, SORT_NATURAL);
@@ -197,9 +205,9 @@ class aferror {
 		$html = "\n" . '<table class="af-debug-backtrace">' . "\n";
 
 		foreach ($backtrace as $key => $value) {
-			$html .= '<tr><td>' . ($key+1) . '</td><td class="nobr">Line: ';
+			$html .= '<tr><th>' . ($key+1) . '</th><th>Line: ';
 			$html .= static::html(array_key_exists('line', $value) ? $value['line'] : '?');
-			$html .= '</td><td>File: ';
+			$html .= '</th><td>File: ';
 			$html .= static::html(array_key_exists('file', $value) ? $value['file'] : '?');
 			if (!empty($value['function'])) {
 				$html .= '<br/>' . $value['function'] . '(';
@@ -213,9 +221,9 @@ class aferror {
 		}
 
 		foreach ($arr as $key => $value) {
-			$html .= '<tr><td colspan="2" class="nobr">';
+			$html .= '<tr><th colspan="2">';
 			$html .= static::html($key);
-			$html .= '</td><td>';
+			$html .= '</th><td>';
 			$html .= static::html($value);
 			$html .= "</td></tr>\n";
 		}
@@ -311,15 +319,12 @@ class aferror {
 
 
 
-	public static function json($item) {
-		return str_replace(
-			[',',	'":{'],
-			[', ',	'":{ '],
-			@json_encode($item,
-				JSON_UNESCAPED_SLASHES |
-				JSON_UNESCAPED_UNICODE |
-				JSON_PARTIAL_OUTPUT_ON_ERROR
-			)
+	public static function json($item, $pretty=true) {
+		return @json_encode($item,
+			($pretty ? JSON_PRETTY_PRINT : 0) |
+			JSON_UNESCAPED_SLASHES |
+			JSON_UNESCAPED_UNICODE |
+			JSON_PARTIAL_OUTPUT_ON_ERROR
 		);
 	}
 
