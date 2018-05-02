@@ -52,7 +52,7 @@ class aferror {
 				);
 
 				echo strip_tags(str_replace(
-					["\r\n",	'&apos;',	'&amp;',	'</td><td>',	'</td><td class="nobr">'],
+					["\r\n",	'&apos;',	'&amp;',	'</th><th>',	'</th><td>'],
 					["\n",		"'",		'&',		":\t",			":\t"],
 					$text
 				));
