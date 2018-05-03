@@ -66,16 +66,16 @@ class af_geo {
 
 
 	public static function geoip($ipaddress=false) {
-		global $afconfig;
+		global $af;
 
-		if (empty($afconfig->af['geo'])) return false;
+		if (empty($af->config->geo)) return false;
 
 		if (empty($ipaddress)) $ipaddress = af_ip::address();
 		if (empty($ipaddress)) return false;
 
 		$ctx = stream_context_create(['http'=>['timeout'=>1]]);
 
-		$json = @file_get_contents($afconfig->af['geo'].$ipaddress, 0, $ctx);
+		$json = @file_get_contents($af->config->geo.$ipaddress, 0, $ctx);
 		if (empty($json)) return false;
 
 		$data = @json_decode($json, true);
