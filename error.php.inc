@@ -237,7 +237,7 @@ class aferror {
 
 
 	public static function email($text, $title='') {
-		global $afconfig;
+		global $afconfig, $afurl;
 
 		if (empty($afconfig->error['email'])) return;
 
@@ -249,10 +249,15 @@ class aferror {
 		}
 		$tag = str_replace('@@', '@', trim($tag));
 
-		@mail(
+		return @mail(
 			$afconfig->error['email'],
 			date('r') . ' ' . strip_tags($title),
-			$tag . "\r\n" . wordwrap($text, 75, "\r\n", true)
+			$tag . "\r\n" . wordwrap($text, 75, "\r\n", true),
+			'From: altaform@' . (
+				!empty($afurl->domain)
+				? $afurl->domain
+				: 'example.com'
+			)
 		);
 	}
 
