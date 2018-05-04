@@ -1,5 +1,6 @@
 <?php
 
+//TODO: RENAME THIS
 
 define('AF_YEAR',  31536000);
 define('AF_MONTH',  2592000);

@@ -1,7 +1,7 @@
 <?php
 
 
-class af_void {
+class afVoid {
 	public function __construct()	{}
 	public function __invoke()		{ return NULL; }
 	public function __toString()	{ return ''; }

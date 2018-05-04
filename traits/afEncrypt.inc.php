@@ -2,7 +2,7 @@
 
 
 
-trait af_encrypt {
+trait afEncrypt {
 
 
 

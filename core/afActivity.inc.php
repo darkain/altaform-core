@@ -1,6 +1,6 @@
 <?php
 
-class afactivity {
+class afActivity {
 
 
 	public static function add($id, $type, $verb, $userid=false) {

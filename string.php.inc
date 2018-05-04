@@ -1,5 +1,6 @@
 <?php
 
+//TODO: RENAME THIS
 
 define('BYTE_FORMAT_K',		0x0001);
 define('BYTE_FORMAT_KB',	0x0002);

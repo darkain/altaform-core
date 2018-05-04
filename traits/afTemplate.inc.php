@@ -9,7 +9,7 @@ define('AF_STAGE_COMPLETE',	4);
 
 
 
-trait af_template {
+trait afTemplate {
 
 
 	////////////////////////////////////////////////////////////////////////////
@@ -145,11 +145,11 @@ trait af_template {
 			return $this->loadArray($file);
 		}
 
-		$device	= $file . '.' . afdevice::device();
-		if (af_fs::readfile($device)) return parent::load($device);
+		$device	= $file . '.' . afDevice::device();
+		if (afFile::readable($device)) return parent::load($device);
 
 		$pathed	= $this->path() . $device;
-		if (af_fs::readfile($pathed)) return parent::load($pathed);
+		if (afFile::readable($pathed)) return parent::load($pathed);
 
 		return parent::load($file);
 	}
@@ -163,7 +163,7 @@ trait af_template {
 	////////////////////////////////////////////////////////////////////////////
 	public function header($key=false, $data=false, $replace=false) {
 		if ($key === false) {
-			if ($this->cli()) return $this;
+			if (afCli()) return $this;
 			if (!$this->jq()) return $this->headerHTML()->headerPage();
 
 			list($js, $css) = $this->prerender();
@@ -200,7 +200,7 @@ trait af_template {
 	////////////////////////////////////////////////////////////////////////////
 	public function footer($key=false, $data=false, $replace=false) {
 		if ($key === false) {
-			if ($this->jq() || $this->cli()) return $this;
+			if ($this->jq() || afCli()) return $this;
 			return $this->footerPage()->footerHTML();
 		}
 
@@ -234,7 +234,7 @@ trait af_template {
 		if ($this->_stage !== AF_STAGE_NONE) return $this;
 		$this->_stage = AF_STAGE_HEADER;
 
-		$device	= afdevice::device();
+		$device	= afDevice::device();
 		$root	= $this->path() . $this->config->root;
 
 
@@ -242,9 +242,9 @@ trait af_template {
 		list ($js, $css) = $this->prerender();
 
 
-		if ($this->debug()  &&  af_fs::readfile($root.'/header_html_debug.tpl.'.$device)) {
+		if ($this->debug()  &&  afFile::readable($root.'/header_html_debug.tpl.'.$device)) {
 			$this->load($root.'/header_html_debug.tpl.'.$device);
-		} else if ($this->debug()  &&  af_fs::readfile($root.'/header_html_debug.tpl')) {
+		} else if ($this->debug()  &&  afFile::readable($root.'/header_html_debug.tpl')) {
 			$this->load($root.'/header_html_debug.tpl');
 		} else {
 			$this->load($root.'/header_html.tpl');
@@ -269,12 +269,12 @@ trait af_template {
 	public function headerPage() {
 		if ($this->_stage !== AF_STAGE_HEADER) return $this;
 
-		$device	= afdevice::device();
+		$device	= afDevice::device();
 		$root	= $this->path() . $this->config->root;
 
-		if ($this->debug()  &&  af_fs::readfile($root.'/header_page_debug.tpl.'.$device)) {
+		if ($this->debug()  &&  afFile::readable($root.'/header_page_debug.tpl.'.$device)) {
 			$this->load($root.'/header_page_debug.tpl.'.$device);
-		} else if ($this->debug()  &&  af_fs::readfile($root.'/header_page_debug.tpl')) {
+		} else if ($this->debug()  &&  afFile::readable($root.'/header_page_debug.tpl')) {
 			$this->load($root.'/header_page_debug.tpl');
 		} else {
 			$this->load($root.'/header_page.tpl');
@@ -296,7 +296,7 @@ trait af_template {
 	public function headerEmail() {
 		$root	= $this->path() . $this->config->root;
 
-		if ($this->debug()  &&  af_fs::readfile($root.'/header_email_debug.tpl')) {
+		if ($this->debug()  &&  afFile::readable($root.'/header_email_debug.tpl')) {
 			$this->load($root.'/header_email_debug.tpl');
 		} else {
 			$this->load($root.'/header_email.tpl');
@@ -314,14 +314,14 @@ trait af_template {
 	public function footerHTML() {
 		if ($this->_stage !== AF_STAGE_FOOTER) return $this;
 
-		$device	= afdevice::device();
+		$device	= afDevice::device();
 		$root	= $this->path() . $this->config->root;
 		$ok		= false;
 
 		if ($this->debug()) {
-			if (af_fs::readfile($root.'/footer_html_debug.tpl.'.$device)) {
+			if (afFile::readable($root.'/footer_html_debug.tpl.'.$device)) {
 				$ok = $this->render($root.'/footer_html_debug.tpl.'.$device);
-			} else if (af_fs::readfile($root.'/footer_html_debug.tpl')) {
+			} else if (afFile::readable($root.'/footer_html_debug.tpl')) {
 				$ok = $this->render($root.'/footer_html_debug.tpl');
 			}
 		}
@@ -345,12 +345,12 @@ trait af_template {
 		if ($this->_stage !== AF_STAGE_BODY) return $this;
 		$this->_stage = AF_STAGE_FOOTER;
 
-		$device	= afdevice::device();
+		$device	= afDevice::device();
 		$root	= $this->path() . $this->config->root;
 
-		if ($this->debug()  &&  af_fs::readfile($root.'/footer_page_debug.tpl.'.$device)) {
+		if ($this->debug()  &&  afFile::readable($root.'/footer_page_debug.tpl.'.$device)) {
 			$this->load($root.'/footer_page_debug.tpl.'.$device);
-		} else if ($this->debug()  &&  af_fs::readfile($root.'/footer_page_debug.tpl')) {
+		} else if ($this->debug()  &&  afFile::readable($root.'/footer_page_debug.tpl')) {
 			$this->load($root.'/footer_page_debug.tpl');
 		} else {
 			$this->load($root.'/footer_page.tpl');
@@ -359,7 +359,7 @@ trait af_template {
 		$this->merge($this->_footers)->render();
 
 		if ($user->isAdmin()  ||  ($user->isStaff()  &&  $this->debug())) {
-			if (af_fs::readfile($root.'/footer_admin.tpl')) {
+			if (afFile::readable($root.'/footer_admin.tpl')) {
 				$this->load($root.'/footer_admin.tpl');
 				if (!empty($db)) {
 					$this->field('dbstats',		$db->stats());
@@ -381,7 +381,7 @@ trait af_template {
 	public function footerEmail() {
 		$root	= $this->path() . $this->config->root;
 
-		if ($this->debug()  &&  af_fs::readfile($root.'/footer_email_debug.tpl')) {
+		if ($this->debug()  &&  afFile::readable($root.'/footer_email_debug.tpl')) {
 			$this->load($root.'/footer_email_debug.tpl');
 		} else {
 			$this->load($root.'/footer_email.tpl');
@@ -400,10 +400,10 @@ trait af_template {
 		global $og, $user;
 
 		//ALLOW DEVICE SPECIFIC LOADING
-		$device	= $file . '.' . afdevice::device();
+		$device	= $file . '.' . afDevice::device();
 
 		//PULL THE CONTENTS OF THE TEMPLATE BEFORE ANYTHING ELSE!
-		$text = @file_get_contents( af_fs::readfile($device) ? $device : $file );
+		$text = @file_get_contents( afFile::readable($device) ? $device : $file );
 		if ($text === false) {
 			throw new afException('Unable to load template file: '.$file);
 		}
@@ -491,11 +491,11 @@ trait af_template {
 			);
 		}
 
-		if (af_fs::readfile($info['dirname'].$name.'js')) {
+		if (afFile::readable($info['dirname'].$name.'js')) {
 			$this->js($info['dirname'].$name.'js');
 		}
 
-		if (af_fs::readfile($info['dirname'].$name.'css')) {
+		if (afFile::readable($info['dirname'].$name.'css')) {
 			$this->css($info['dirname'].$name.'css');
 		}
 
@@ -558,6 +558,33 @@ trait af_template {
 		}
 
 		return $return;
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	//CUSTOM TEMPLATE FORMATS
+	////////////////////////////////////////////////////////////////////////////
+	protected function _customFormat(&$text, $style) {
+		global $afurl;
+
+		switch ($style) {
+			case 'cdn':
+				$text = $afurl->cdn($text);
+			break;
+
+			case 'url':
+				$text = afstring::url($text);
+			break;
+
+			case 'linkify':
+				$text = afstring::linkify($text);
+			break;
+
+			default:
+				parent::_customFormat($text, $style);
+		}
 	}
 
 

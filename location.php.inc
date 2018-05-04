@@ -1,8 +1,10 @@
 <?php
 
+//TODO: RENAME THIS
+
 function clean_location_name($location) {
 	global $db;
-	
+
 	$location = strtolower($location);
 	$location = ucwords($location);
 	$location = str_replace(',', ', ', $location);

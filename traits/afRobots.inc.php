@@ -7,7 +7,7 @@ https://developers.google.com/webmasters/control-crawl-index/docs/robots_meta_ta
 */
 
 
-trait af_robots {
+trait afRobots {
 
 	public function robots($flags) {
 		if (is_string($flags)) $flags = explode(',', $flags);

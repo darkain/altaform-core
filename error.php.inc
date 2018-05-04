@@ -43,7 +43,7 @@ class aferror {
 		}
 
 		if (empty($ok)) {
-			if (class_exists('altaform')  &&  altaform::cli()) {
+			if (function_exists('afCli') && afCli()) {
 				if (is_array($text)) $text = implode("\n", $text);
 
 				$text = str_replace(
@@ -315,7 +315,7 @@ class aferror {
 
 	public static function html($item) {
 		global $af;
-		if (class_exists('altaform')  &&  altaform::cli()) return $item;
+		if (function_exists('afCli') && afCli()) return $item;
 		if (!defined('TBX_SPECIAL_CHARS')) {
 			define('TBX_SPECIAL_CHARS', ENT_NOQUOTES|ENT_HTML5);
 		}
@@ -620,4 +620,26 @@ function _pudl_log($callback, $db, $result=NULL) {
 		$db->query() . "\n",
 		FILE_APPEND
 	);
+}
+
+
+
+
+function af_dump($var, $die=true) {
+	global $af;
+
+	if ($var instanceof pudlObject) $var = $var->raw();
+
+	if (function_exists('afCli') && afCli()) {
+		if (isset($af)) $af->contentType('txt');
+		var_export($var);
+		echo "\n";
+
+	} else {
+		echo '<pre>';
+		var_export($var);
+		echo '</pre>';
+	}
+
+	if ($die) exit;
 }

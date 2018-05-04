@@ -1,12 +1,11 @@
 <?php
 
 
-require_once('af_void.php.inc');
+require_once('afVoid.inc.php');
 
 
-
-class		af_git
-	extends	af_void {
+class		afGit
+	extends	afVoid {
 
 
 

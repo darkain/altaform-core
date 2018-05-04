@@ -1,18 +1,14 @@
 <?php
 
 
-require_once('af_closure.php.inc');
-require_once('af_router.php.inc');
-
-
 
 interface afi_url { public function url(); }
 
 
 
 class		af_url {
-	use		af_closure;
-	use		af_router;
+	use		afCallable;
+	use		afRouter;
 
 
 
@@ -23,7 +19,7 @@ class		af_url {
 	public function __construct() {
 		global $get;
 
-		if (altaform::cli()) {
+		if (afCli()) {
 			ob_end_clean();
 			$host = ['_cli'];
 			$args = $get->server('argv');
@@ -50,7 +46,7 @@ class		af_url {
 		$this->parts		= (array)parse_url($this->uri);
 		$this->query		= str_replace(' ', '+', $this->uri . (empty($this->parts['query']) ? '?' : '&'));
 
-		if (in_array('gzip', $this->encoding)  &&  !afdevice::trident()) {
+		if (in_array('gzip', $this->encoding)  &&  !afDevice::trident()) {
 			$this->gz = '.gz';
 		}
 
@@ -300,7 +296,7 @@ class		af_url {
 
 		if (empty($options[CURLOPT_USERAGENT])) {
 			$agent = ini_get('user_agent');
-			if (empty($agent)) $agent = afdevice::agent();
+			if (empty($agent)) $agent = afDevice::agent();
 			if (!empty($agent)) {
 				curl_setopt($ch, CURLOPT_USERAGENT, $agent);
 			}

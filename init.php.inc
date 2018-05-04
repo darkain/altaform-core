@@ -90,20 +90,20 @@ require_once('af_url.php.inc');
 
 
 //If we're on the CLI, disable output buffering
-if (altaform::cli()  &&  ob_get_level()) ob_end_flush();
+if (afCli()  &&  ob_get_level()) ob_end_flush();
 
 
 
 //Set the content type for this document to HTML or TXT with UTF-8 encoding
 if (!headers_sent()) {
-	if (afdevice::trident()) {
+	if (afDevice::trident()) {
 		header('X-UA-Compatible: IE=edge,chrome=1');
 	}
 
 	header('X-Content-Type-Options: nosniff');
 	header('Content-Language: en_US');
 
-	if (altaform::cli()) {
+	if (afCli()) {
 		header('Content-Type: text/plain; charset=utf-8');
 	} else {
 		header('Content-Type: text/html; charset=utf-8');
@@ -114,7 +114,7 @@ if (!headers_sent()) {
 
 
 //Host Information for Config
-if (!altaform::cli()) {
+if (!afCli()) {
 	assert500(
 		$afurl->validateDomain($afurl->domain),
 		'Invalid Domain: ' . $afurl->domain
@@ -196,7 +196,7 @@ if ($get->server('HTTP_UPGRADE_INSECURE_REQUESTS')) {
 
 //Upgrade to HTTPS connection (legacy)
 } else if (!$afurl->https  &&  !empty($afconfig->secure)) {
-	if (afdevice::is_secure()) {
+	if (afDevice::is_secure()) {
 		$afurl->redirectSecure();
 	}
 
@@ -264,7 +264,7 @@ if (!empty($afconfig->pudl)  &&  tbx_array($afconfig->pudl)) {
 		)
 	);
 
-	if (altaform::cli()) $db->timeout(AF_DAY);
+	if (afCli()) $db->timeout(AF_DAY);
 
 	$af->settings = $db	->cache(AF_MINUTE*5, 'altaform_settings')
 						->collection('pudl_altaform');
@@ -303,4 +303,4 @@ while ($i--  &&  ob_get_level()) {
 
 
 //New line for CLI mode
-if (altaform::cli()) echo "\n";
+if (afCli()) echo "\n";

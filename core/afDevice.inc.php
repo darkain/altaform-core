@@ -1,4 +1,6 @@
 <?php
+
+
 /**
 * Modification by Darkain Multimedia for use in Altaform
 **/
@@ -29,7 +31,7 @@
 **/
 
 
-class afdevice {
+class afDevice {
 	static $device = false;
 
 
@@ -154,4 +156,4 @@ class afdevice {
 
 }
 
-afdevice::device();
+afDevice::device();

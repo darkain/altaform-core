@@ -3,55 +3,55 @@
 if (class_exists('altaform',false)) return;
 
 
-//TBX - THE RENDERING SYSTEM
+// CORE FUNCTIONALITY
+require_once('core/afCli.inc.php');
+require_once('core/afDir.inc.php');
+require_once('core/afGeo.inc.php');
+require_once('core/afGit.inc.php');
+require_once('core/afFile.inc.php');
+require_once('core/afVoid.inc.php');
+require_once('core/afDevice.inc.php');
+require_once('core/afActivity.inc.php');
+
+// TBX - THE RENDERING SYSTEM
 require_once('_tbx/tbx.php.inc');
 
-//ALTAFORM CONFIGURATION
+// ALTAFORM CONFIGURATION
 require_once('af_config.php.inc');
 
-//FILE SYSTEM RELATED FUNCTIONS
-require_once('af_fs.php.inc');
-
-//GEOLOCATION FUNCTIONS
-require_once('af_geo.php.inc');
-
-//IP ADDRESS RELATED FUNCTIONS
+// IP ADDRESS RELATED FUNCTIONS
 require_once('af_ip.php.inc');
 
-//MIME TYPE / CONTENT TYPE HANDLER
+// MIME TYPE / CONTENT TYPE HANDLER
 require_once('af_mimetype.php.inc');
 
-//AUDIT LOGGING
+// AUDIT LOGGING
 require_once('af_audit.php.inc');
 
-//DEVICE DETECTION
-require_once('device.php.inc');
-
-//EXTRA STRING FUNCTIONS
+// EXTRA STRING FUNCTIONS
 require_once('string.php.inc');
 
-//EXTRA TIME FUNCTIONS
+// EXTRA TIME FUNCTIONS
 require_once('time.php.inc');
 
-
-//LIST OF ALTAFORM TRAITS - USED TO HELP ORGANIZE CODE
-require_once('af_git.php.inc');
-require_once('af_auth.php.inc');
-require_once('af_robots.php.inc');
-require_once('af_tbx.php.inc');
-require_once('af_template.php.inc');
-require_once('af_encrypt.php.inc');
+// LIST OF ALTAFORM TRAITS - USED TO HELP ORGANIZE CODE
+require_once('traits/afAuth.inc.php');
+require_once('traits/afNode.inc.php');
+require_once('traits/afRobots.inc.php');
+require_once('traits/afRouter.inc.php');
+require_once('traits/afEncrypt.inc.php');
+require_once('traits/afCallable.inc.php');
+require_once('traits/afTemplate.inc.php');
 
 
 
 
 class		altaform
 	extends	tbx {
-	use		af_auth		{ postLogin as auth_postLogin; }
-	use		af_robots;
-	use		af_tbx;
-	use		af_template;
-	use		af_encrypt;
+	use		afAuth		{ postLogin as authLogin; }
+	use		afRobots;
+	use		afTemplate;
+	use		afEncrypt;
 
 
 
@@ -66,12 +66,12 @@ class		altaform
 		$this->url					= $afurl;
 		$this->config				= $afconfig;
 		$this->_session				= $dbsession;
-		$this->git					= new af_void;
-		$this->device				= new afdevice;
+		$this->git					= new afVoid;
+		$this->device				= new afDevice;
 		$this->_time				= time();
 		$this->_path				= getcwd();
 		$this->hhvm					= defined('HHVM_VERSION') ? 'HHVM' : 'PHP';
-		$this->_extension			= $this->cli() ? 'txt' : 'html';
+		$this->_extension			= afCli() ? 'txt' : 'html';
 		$this->_headers['notice']	= [];
 
 		if (substr($this->_path, -1) !== '/') $this->_path .= '/';
@@ -88,18 +88,6 @@ class		altaform
 	public static function create() {
 		return (new ReflectionClass(self::$class))
 				->newInstanceArgs(func_get_args());
-	}
-
-
-
-
-	public static function cli() {
-		global $get;
-		if (php_sapi_name() === 'cli')					return true;
-		if (defined('STDIN'))							return true;
-		if (!$get instanceof getvar)					return false;
-		if ($get->server('REQUEST_METHOD') !== NULL)	return false;
-		return ((int)$get->server('argc')) > 0;
 	}
 
 
@@ -208,10 +196,10 @@ class		altaform
 	public function postLogin() {
 		global $user;
 
-		$this->auth_postLogin();
+		$this->authLogin();
 
 		if ($this->debug()  ||  $user->isAdmin()) {
-			$this->git = new af_git($this);
+			$this->git = new afGit($this);
 		}
 	}
 

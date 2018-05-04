@@ -1,7 +1,6 @@
 <?php
 
 
-require_once('af_node.php.inc');
 require_once('af_permission.php.inc');
 require_once('af_preference.php.inc');
 
@@ -20,7 +19,7 @@ if (!function_exists('random_int')) {
 class			af_user
 	extends		pudlOrm
 	implements	afi_url {
-	use			af_node;
+	use			afNode;
 	use			af_permission;
 	use			af_preference;
 

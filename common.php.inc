@@ -1,5 +1,9 @@
 <?php
 
+
+//TODO: KILL THIS ENTIRE FILE
+
+
 function _pudl_thumb($table, $field, $thumbsize=200) {
 	return [
 		997 => $table,
@@ -61,38 +65,4 @@ function _pudl_group($thumbsize=200) {
 
 function _pudl_feature($thumbsize=200) {
 	return _pudl_thumb('pudl_feature', 'fe.file_hash', $thumbsize);
-}
-
-
-
-function af_dump($var, $die=true) {
-	global $af;
-
-	if ($var instanceof pudlObject) $var = $var->raw();
-
-	if (!($af instanceof altaform)  ||  $af->cli()) {
-		if (isset($af)) $af->contentType('txt');
-		var_export($var);
-		echo "\n";
-
-	} else {
-		echo '<pre>';
-		var_export($var);
-		echo '</pre>';
-	}
-
-	if ($die) exit;
-}
-
-
-
-function get_ancestors($class) {
-	if (empty($class)
-		||  !is_object($class)
-		||  !is_string($class))
-		return [];
-
-	$list = [$class];
-	while($class = get_parent_class($class)) $list[] = $class;
-	return $list;
 }

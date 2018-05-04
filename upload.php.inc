@@ -1,5 +1,6 @@
 <?php
 
+//TODO: RENAME THIS
 
 class fileImporter {
 
@@ -398,7 +399,7 @@ class fileImporter {
 			if (substr($path, 0, 1) === '/'		||
 				substr($path, 0, 3) === '../'	||
 				substr($path, 0, 7) === 'file://') {
-				if (af_fs::readfile($path)) return md5_file($path);
+				if (afFile::readable($path)) return md5_file($path);
 			}
 		}
 
@@ -477,7 +478,7 @@ class fileImporter {
 	public static function write($hash, $blob) {
 		global $af, $afurl;
 		$path = $af->path() . 'files/' . $afurl->cdnPath($hash);
-		af_fs::mkdir(substr($path, 0, -32));
+		afDir::create(substr($path, 0, -32));
 		return @file_put_contents($path, $blob);
 	}
 

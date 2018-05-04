@@ -1,8 +1,8 @@
 <?php
 
-trait af_node {
+trait afNode {
 
-	function nodepush($message) {
+	function node($message) {
 		global $af, $afurl;
 
 		if (empty($afurl->push)) return;
