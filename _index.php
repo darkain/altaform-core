@@ -1,6 +1,9 @@
 <?php
 
 
+// DISABLE DOUBLE-LOADING
+if (class_exists('altaform', false)) return;
+
 
 //Enable automatic error display
 ini_set('display_errors', 'on');
@@ -16,7 +19,7 @@ set_include_path(get_include_path() . PATH_SEPARATOR . getcwd());
 
 
 //PHP Error handling functions
-require_once('error.php.inc');
+require_once('core/afError.inc.php');
 
 
 
@@ -242,7 +245,7 @@ if (!empty( $get->server('HTTP_ORIGIN') )) {
 if (!empty($afconfig->pudl)  &&  tbx_array($afconfig->pudl)) {
 	require_once('_pudl/pudl.php');
 	require_once('_pudl/pudlSession.php');
-	require_once('af_user.php.inc');
+	require_once('core/afUser.inc.php');
 	$db = pudl::instance($afconfig->pudl);
 
 	$db->on('log',		'_pudl_log');
@@ -270,7 +273,7 @@ if (!empty($afconfig->pudl)  &&  tbx_array($afconfig->pudl)) {
 						->collection('pudl_altaform');
 
 } else {
-	require_once('af_user.php.inc');
+	require_once('afUser.php.inc');
 	$af = altaform::create();
 }
 

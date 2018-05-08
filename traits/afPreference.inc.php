@@ -1,7 +1,7 @@
 <?php
 
 
-trait af_preference {
+trait afPreference {
 
 
 	public static function parsePreferences($data) {

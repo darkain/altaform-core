@@ -575,11 +575,11 @@ trait afTemplate {
 			break;
 
 			case 'url':
-				$text = afstring::url($text);
+				$text = afString::url($text);
 			break;
 
 			case 'linkify':
-				$text = afstring::linkify($text);
+				$text = afString::linkify($text);
 			break;
 
 			default:

@@ -1,8 +1,8 @@
 <?php
 
-//TODO: RENAME THIS
 
-class fileImporter {
+
+class afUpload {
 
 
 	public static function importPath($path, $name=false) {
@@ -465,7 +465,7 @@ class fileImporter {
 			}
 
 			$data = preg_replace('/[\x00-\x1F]/', ' ', $data);
-			$data = afstring::doubletrim($data);
+			$data = afString::doubletrim($data);
 
 		} else if (tbx_array($data)) {
 			foreach ($data as &$item) static::exifClean($item);

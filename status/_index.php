@@ -26,7 +26,7 @@ $ctx = stream_context_create(['http'=>[
 foreach ($servers as &$server) {
 	$nstime = microtime(true);
 
-	//$key	= af_user::password();
+	//$key	= afUser::password();
 	//$hash	= $af->config->auth($key, true);
 	$url	= $server;// . '?m=' . urlencode($key) . '&h=' . urlencode($hash);
 	$json	= pudl::jsonDecode(@file_get_contents($url, 0, $ctx));
@@ -35,8 +35,8 @@ foreach ($servers as &$server) {
 		$server = [
 			'path'		=> $server,
 			'delay'		=> sprintf('%0.4f', microtime(true) - $nstime),
-			'uptime'	=> str_replace('ago', '', aftime::since($json['boot'], AF_YEAR*7)),
-			'memory'	=> afstring::fromBytes( empty($json['memory']) ? 0 : $json['memory'] ),
+			'uptime'	=> str_replace('ago', '', afTime::since($json['boot'], AF_YEAR*7)),
+			'memory'	=> afString::fromBytes( empty($json['memory']) ? 0 : $json['memory'] ),
 		] + $json;
 	} else {
 		$server = [
@@ -59,8 +59,8 @@ if ($db->redis() instanceof Redis) {
 		'path'			=> 'Redis-01',
 		'version'		=> $redis['redis_version'],
 		'boot'			=> $af->time() - $redis['uptime_in_seconds'],
-		'uptime'		=> aftime::since($af->time() - $redis['uptime_in_seconds'], AF_YEAR*7),
-		'memory'		=> afstring::fromBytes($redis['used_memory']),
+		'uptime'		=> afTime::since($af->time() - $redis['uptime_in_seconds'], AF_YEAR*7),
+		'memory'		=> afString::fromBytes($redis['used_memory']),
 		'delay'			=> sprintf('%0.4f', microtime(true) - $nstime),
 	];
 } else {
@@ -118,8 +118,8 @@ foreach ($databases as $item) {
 			'path'		=> $name,
 			'version'	=> !empty($version) ? (reset($version) . ' : ' . reset($state)) : NULL,
 			'boot'		=> !empty($uptime) ? $af->time() - reset($uptime) : NULL,
-			'uptime'	=> !empty($uptime) ? aftime::since($af->time() - reset($uptime), AF_YEAR*7) : NULL,
-			'memory'	=> !empty($memory) ? afstring::fromBytes(reset($memory)) : NULL,
+			'uptime'	=> !empty($uptime) ? afTime::since($af->time() - reset($uptime), AF_YEAR*7) : NULL,
+			'memory'	=> !empty($memory) ? afString::fromBytes(reset($memory)) : NULL,
 			'delay'		=> sprintf('%0.4f', microtime(true) - $nstime),
 		];
 

@@ -1,38 +1,33 @@
 <?php
 
-if (class_exists('altaform',false)) return;
+// DISABLE DOUBLE-LOADING
+if (class_exists('altaform', false)) return;
 
 
 // CORE FUNCTIONALITY
+require_once('core/afIp.inc.php');
+require_once('core/af2fa.inc.php');
 require_once('core/afCli.inc.php');
 require_once('core/afDir.inc.php');
 require_once('core/afGeo.inc.php');
 require_once('core/afGit.inc.php');
 require_once('core/afFile.inc.php');
+require_once('core/afMail.inc.php');
+require_once('core/afTime.inc.php');
 require_once('core/afVoid.inc.php');
+require_once('core/afAudit.inc.php');
 require_once('core/afDevice.inc.php');
+require_once('core/afString.inc.php');
+require_once('core/afUpload.inc.php');
+require_once('core/afYoutube.inc.php');
 require_once('core/afActivity.inc.php');
+require_once('core/afMimetype.inc.php');
 
 // TBX - THE RENDERING SYSTEM
 require_once('_tbx/tbx.php.inc');
 
 // ALTAFORM CONFIGURATION
 require_once('af_config.php.inc');
-
-// IP ADDRESS RELATED FUNCTIONS
-require_once('af_ip.php.inc');
-
-// MIME TYPE / CONTENT TYPE HANDLER
-require_once('af_mimetype.php.inc');
-
-// AUDIT LOGGING
-require_once('af_audit.php.inc');
-
-// EXTRA STRING FUNCTIONS
-require_once('string.php.inc');
-
-// EXTRA TIME FUNCTIONS
-require_once('time.php.inc');
 
 // LIST OF ALTAFORM TRAITS - USED TO HELP ORGANIZE CODE
 require_once('traits/afAuth.inc.php');
@@ -181,7 +176,7 @@ class		altaform
 		if (headers_sent()) return $this;
 
 		$list	= explode('.', $extension);
-		$ext	= new af_mimetype(end($list));
+		$ext	= new afMimetype(end($list));
 
 		$this->_extension = $ext->ext() || end($list);
 

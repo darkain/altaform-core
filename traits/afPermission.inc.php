@@ -1,7 +1,7 @@
 <?php
 
 
-trait af_permission {
+trait afPermission {
 
 
 	public function hasPermission($permission) {

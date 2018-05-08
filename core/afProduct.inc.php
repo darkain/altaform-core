@@ -1,11 +1,10 @@
 <?php
 
-//TODO: RENAME THIS
 
 require_once('_products/lib/AmazonECS.class.php');
 
 
-class afproduct {
+class afProduct {
 
 	static function search($search, $key=false, $category='All', $group='Small,Images') {
 		global $afconfig, $db;
@@ -125,9 +124,9 @@ class afproduct {
 
 
 
-	static $amazon	= false;
+	static			$amazon		= false;
 
-	public static $sizes	= [
+	public static	$sizes		= [
 		'TinyImage',
 		'SmallImage',
 		'MediumImage',

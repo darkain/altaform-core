@@ -1,27 +1,20 @@
 <?php
 
 
-require_once('af_permission.php.inc');
-require_once('af_preference.php.inc');
+require_once(__DIR__.'/../traits/afPermission.inc.php');
+require_once(__DIR__.'/../traits/afPreference.inc.php');
 
 //TODO:	ADD A TRAIT FOR 'ATTRIBUTES'
 //		CURRENTLY ONLY ATTRIBUTE IS UNVERIFIED PASSWORD
 
-//FALL BACK IF random_int() DOESN'T EXIST - NEW IN PHP 7.0
-//THIS IS USED FOR PASSWORD GENERATOR
-if (!function_exists('random_int')) {
-	function random_int($min, $max) { return mt_rand($min, $max); }
-}
 
 
-
-
-class			af_user
+class			afUser
 	extends		pudlOrm
 	implements	afi_url {
 	use			afNode;
-	use			af_permission;
-	use			af_preference;
+	use			afPermission;
+	use			afPreference;
 
 
 
@@ -57,17 +50,6 @@ class			af_user
 			]],
 		];
 	}
-/*
-		return [
-			'column'	=> ['fl.mime_id'],
-
-			'table'		=> [static::prefix	=> [static::table,
-				['left' => ['fl'=>'pudl_file'], 'clause' => [
-						'fl.file_hash'	=> pudl::column([static::icon]),
-				]]
-			]]
-		];
-	}*/
 
 
 
@@ -290,7 +272,7 @@ class			af_user
 ////////////////////////////////////////////////////////////////////////////////
 //SHORTCUT CLASS FOR ANONYMOUS USER
 ////////////////////////////////////////////////////////////////////////////////
-class af_anonymous extends af_user {
+class afAnonymous extends afUser {
 	public function __construct() {
 		parent::__construct(0, true);
 	}
@@ -304,6 +286,6 @@ class af_anonymous extends af_user {
 ////////////////////////////////////////////////////////////////////////////////
 //SHORTCUT CLASS FOR A CACHELESS ACCOUNT - USEFUL FOR ADMIN PAGES
 ////////////////////////////////////////////////////////////////////////////////
-class af_account extends af_user {
+class afAccount extends afUser {
 	protected function _fetchCache() { return 0; }
 }

@@ -6,10 +6,10 @@ require_once('_altaform/upload.php.inc');
 $user->requireLogin();
 
 
-$data = fileImporter::upload();
+$data = afUpload::upload();
 assert500(
 	tbx_array($data),
-	'Unable to process image file - ' . fileImporter::error()
+	'Unable to process image file - ' . afUpload::error()
 );
 
 

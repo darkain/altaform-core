@@ -1,6 +1,6 @@
 <?php
 
-//TODO: RENAME THIS
+
 
 define('BYTE_FORMAT_K',		0x0001);
 define('BYTE_FORMAT_KB',	0x0002);
@@ -9,7 +9,7 @@ define('BYTE_FORMAT_KIB',	0x0003);
 
 
 
-class afstring {
+class afString {
 
 
 	public static function url($string) {
@@ -323,7 +323,7 @@ class afstring {
 
 	//GENERATE NEW RANDOM PASSWORD OF $length CHARACTERS
 	public static function password($length=16) {
-		return af_user::password($length);
+		return afUser::password($length);
 	}
 
 

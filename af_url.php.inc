@@ -211,7 +211,7 @@ class		af_url {
 		global $afurl;
 
 		if (!empty($hash[$ext])) {
-			$ext = new af_mimetype($hash[$ext]);
+			$ext = new afMimetype($hash[$ext]);
 		}
 
 		$hash	= static::cdnHash($hash, $key);

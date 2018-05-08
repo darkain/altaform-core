@@ -1,7 +1,7 @@
 <?php
-//TODO: RENAME THIS FILE
 
-class af_sidebar {
+
+class afSidebar {
 
 
 	public function __construct($data=true) {

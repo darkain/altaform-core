@@ -1,8 +1,7 @@
 <?php
 
-//TODO: rename to af_mail to keep inline with the rest of altaform
 
-class afmail {
+class afMail {
 
 	public static function send($headers, $subject, $body, $attach=false) {
 		global $afurl, $af;

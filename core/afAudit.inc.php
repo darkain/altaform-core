@@ -1,12 +1,11 @@
 <?php
 
-require_once('af_ip.php.inc');
 
 
 /*//////////////////////////////////////////////////////////////////////////////
 \ TO USE THIS CLASS, CALL
 /
-\ af_audit::something($type, $id, $old [optional], $new [optional])
+\ afAudit::something($type, $id, $old [optional], $new [optional])
 /
 \ METHOD NAME something CAN BE ANYTHING, AND IS USED TO LOG THE TYPE OF ACTION
 / THAT IS TAKING PLACE. FOR INSTANCE, something CAN BE create TO DENOTE THE
@@ -21,7 +20,7 @@ require_once('af_ip.php.inc');
 
 
 
-class af_audit {
+class afAudit {
 
 
 	public static function __callStatic($action, $arguments) {
@@ -30,12 +29,12 @@ class af_audit {
 		//VALIDATE NUMBER OF ARGUMENTS
 		if (count($arguments) < 2) {
 			throw new afException(
-				'Invalid number of arguments for af_audit::' . $action . '()'
+				'Invalid number of arguments for afAudit::' . $action . '()'
 			);
 		}
 
 		//VALUES WE NEED TO PROCESS
-		$address	= af_ip::address();
+		$address	= afIp::address();
 		$type		= $arguments[0];
 
 		//CONVERT TYPE STRINGS TO THEIR INTEGER VALUE
@@ -46,7 +45,7 @@ class af_audit {
 		//THROW AN EXCEPTION IF NO TYPE NUMBER AVAILABLE
 		if (empty($type)) {
 			throw new afException(
-				'Invalid object type for af_audit::' . $action . '()'
+				'Invalid object type for afAudit::' . $action . '()'
 			);
 		}
 

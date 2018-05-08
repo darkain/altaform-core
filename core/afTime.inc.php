@@ -1,6 +1,6 @@
 <?php
 
-//TODO: RENAME THIS
+
 
 define('AF_YEAR',  31536000);
 define('AF_MONTH',  2592000);
@@ -12,7 +12,7 @@ define('AF_SECOND',       1);
 
 
 
-class aftime {
+class afTime {
 
 	// ARRAY OF TIME PERIOD CHUNKS
 	public static $chunks = [

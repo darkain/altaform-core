@@ -1,1 +1,1 @@
-<?php require_once('_altaform/init.php.inc');
+<?php require_once('_altaform/_index.php');

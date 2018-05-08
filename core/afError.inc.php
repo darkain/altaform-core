@@ -5,7 +5,7 @@ class afException extends Exception {}
 
 
 
-class aferror {
+class afError {
 
 
 	public static function render($header, $text, $log=false, $template=false) {
@@ -138,9 +138,9 @@ class aferror {
 
 			'af-url'		=> empty($data['address'])	? $address : $data['address'],
 			'user-device'	=> !isset($af->device)		? '' :	$af->device(),
-			'ip-php'		=> !class_exists('af_ip')	? '' :	af_ip::local(),
-			'ip-client'		=> !class_exists('af_ip')	? '' :	af_ip::address(),
-			'ip-httpd'		=> !class_exists('af_ip')	? '' :	af_ip::server(),
+			'ip-php'		=> !class_exists('afIp')	? '' :	afIp::local(),
+			'ip-client'		=> !class_exists('afIp')	? '' :	afIp::address(),
+			'ip-httpd'		=> !class_exists('afIp')	? '' :	afIp::server(),
 		]);
 
 		if (!empty($afurl->redirected)) {
@@ -164,9 +164,12 @@ class aferror {
 		if ($echo) return false;
 		$echo = true;
 
+		//DISABLE RECURSIVE ERROR REPORTING
+		$olderr = error_reporting(0);
+
 		if (empty($backtrace)) $backtrace = debug_backtrace(0);
 
-		if (!($user instanceof af_user)  ||  $user->isAdmin()) {
+		if (!($user instanceof afUser)  ||  $user->isAdmin()) {
 			if (empty($afconfig)) {
 				$afconfig = (object)[];
 				$afconfig->debug = true;
@@ -196,7 +199,11 @@ class aferror {
 
 		if ($db instanceof pudl) $db->rollback();
 
-		if (!$die) return $arr;
+
+		if (!$die) {
+			error_reporting($olderr);
+			return $arr;
+		}
 
 
 		if (empty($afconfig->debug)) return error500('', true, $arr);
@@ -360,10 +367,10 @@ class aferror {
 
 
 function error401($text=false, $log=false, $details=false) {
-	aferror::render('401 Unauthorized', [
+	afError::render('401 Unauthorized', [
 		'<div id="af-fatal"><h1>ERROR: 401</h1>',
 		'<h2>AUTHORIZATION REQUIRED</h2>',
-		'<h3>' . aferror::html($details) . '</h3>',
+		'<h3>' . afError::html($details) . '</h3>',
 		($text !== false ? '<i>' . $text . '</i>' : '') . '</div>',
 	], $log, 'error401.tpl');
 }
@@ -372,10 +379,10 @@ function error401($text=false, $log=false, $details=false) {
 
 
 function error402($text=false, $log=false, $details=false) {
-	aferror::render('402 Payment Required', [
+	afError::render('402 Payment Required', [
 		'<div id="af-fatal"><h1>ERROR: 402</h1>',
 		'<h2>PAYMENT REQUIRED</h2>',
-		'<h3>' . aferror::html($details) . '</h3>',
+		'<h3>' . afError::html($details) . '</h3>',
 		($text !== false ? '<i>' . $text . '</i>' : '') . '</div>',
 	], $log, 'error402.tpl');
 }
@@ -384,10 +391,10 @@ function error402($text=false, $log=false, $details=false) {
 
 
 function error403($text=false, $log=false, $details=false) {
-	aferror::render('403 Forbidden', [
+	afError::render('403 Forbidden', [
 		'<div id="af-fatal"><h1>ERROR: 403</h1>',
 		'<h2>FORBIDDEN</h2>',
-		'<h3>' . aferror::html($details) . '</h3>',
+		'<h3>' . afError::html($details) . '</h3>',
 		($text !== false ? '<i>' . $text . '</i>' : '') . '</div>',
 	], $log, 'error403.tpl');
 }
@@ -404,17 +411,17 @@ function error404($text=false, $log=false, $details=false) {
 			$afurl->redirect([], 302);
 		}
 
-		$text = aferror::html($afurl->all) . '<br/>' . $text;
+		$text = afError::html($afurl->all) . '<br/>' . $text;
 
 		if (!empty($afconfig->debug)) {
 			$text .= '<br/><pre>' . print_r($afurl,true) . '</pre>';
 		}
 	}
 
-	aferror::render('404 File Not Found', [
+	afError::render('404 File Not Found', [
 		'<div id="af-fatal"><h1>ERROR: 404</h1>',
 		'<h2>FILE NOT FOUND</h2>',
-		'<h3>' . aferror::html($details) . '</h3>',
+		'<h3>' . afError::html($details) . '</h3>',
 		($text !== false ? '<i>' . $text . '</i>' : '') . '</div>',
 	], $log, 'error404.tpl');
 }
@@ -423,10 +430,10 @@ function error404($text=false, $log=false, $details=false) {
 
 
 function error405($text=false, $log=true, $details=false) {
-	aferror::render('405 Method Not Allowed', [
+	afError::render('405 Method Not Allowed', [
 		'<div id="af-fatal"><h1>ERROR: 405</h1>',
 		'<h2>METHOD NOT ALLOWED</h2>',
-		'<h3>' . aferror::html($details) . '</h3>',
+		'<h3>' . afError::html($details) . '</h3>',
 		($text !== false ? '<i>' . $text . '</i>' : '') . '</div>',
 	], $log, 'error405.tpl');
 }
@@ -435,10 +442,10 @@ function error405($text=false, $log=true, $details=false) {
 
 
 function error422($text=false, $log=true, $details=false) {
-	aferror::render('422 Unprocessable Entity', [
+	afError::render('422 Unprocessable Entity', [
 		'<div id="af-fatal"><h1>ERROR: 422</h1>',
 		'<h2>UNPROCESSABLE ENTITY</h2>',
-		'<h3>' . aferror::html($details) . '</h3>',
+		'<h3>' . afError::html($details) . '</h3>',
 		($text !== false ? '<i>' . $text . '</i>' : '') . '</div>',
 	], $log, 'error422.tpl');
 }
@@ -449,10 +456,10 @@ function error422($text=false, $log=true, $details=false) {
 function error500($text=false, $log=true, $details=false) {
 	if (is_array($details)) $details = $details['details'];
 
-	aferror::render('500 Internal Server Error', [
+	afError::render('500 Internal Server Error', [
 		'<div id="af-fatal"><h1>ERROR: 500</h1>',
 		'<h2>INTERNAL SERVER ERROR</h2>',
-		'<h3>' . aferror::html($details) . '</h3>',
+		'<h3>' . afError::html($details) . '</h3>',
 		($text !== false ? '<i>' . $text . '</i>' : '') . '</div>',
 	], $log, 'error500.tpl');
 }
@@ -461,10 +468,10 @@ function error500($text=false, $log=true, $details=false) {
 
 
 function error503($text=false, $log=true, $details=false) {
-	aferror::render('503 Service Unavailable', [
+	afError::render('503 Service Unavailable', [
 		'<div id="af-fatal"><h1>ERROR: 503</h1>',
 		'<h2>SERVICE UNAVAILABLE</h2>',
-		'<h3>' . aferror::html($details) . '</h3>',
+		'<h3>' . afError::html($details) . '</h3>',
 		($text !== false ? '<i>' . $text . '</i>' : '') . '</div>',
 	], $log, 'error503.tpl');
 }
@@ -555,7 +562,7 @@ set_error_handler(function($errno, $errstr, $errfile=NULL, $errline=NULL, $errco
 				: false;
 	}
 
-	aferror::log([
+	afError::log([
 		'error-code'	=> $errno,
 		'details'		=> $errstr,
 		'error-file'	=> $errfile,
@@ -581,7 +588,7 @@ set_exception_handler(function($e) {
 		}
 	}
 
-	aferror::log([
+	afError::log([
 		'error-code'	=> get_class($e) . ':' . $e->getCode(),
 		'details'		=> $e->getMessage(),
 		'error-file'	=> $e->getFile(),
@@ -599,7 +606,7 @@ register_shutdown_function(function() {
 
 	if ($e['type'] !== E_ERROR  &&  $e['type'] !== E_PARSE) return;
 
-	aferror::log([
+	afError::log([
 		'error-code'	=> $e['type'],
 		'details'		=> $e['message'],
 		'error-file'	=> $e['file'],

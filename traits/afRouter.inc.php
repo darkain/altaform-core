@@ -217,7 +217,7 @@ trait afRouter {
 			$this->virtual[] = $this->part[$x];
 		}
 
-		$this->id = afstring::int($this->virtual[0]);
+		$this->id = afString::int($this->virtual[0]);
 
 		return $return;
 	}
