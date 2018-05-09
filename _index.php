@@ -78,7 +78,7 @@ $get = new getvar;
 
 
 //Altaform Base Code
-require_once('_altaform.inc.php');
+require_once('includes.inc.php');
 
 
 
