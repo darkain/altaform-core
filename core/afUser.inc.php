@@ -252,6 +252,7 @@ class			afUser
 	////////////////////////////////////////////////////////////////////////////
 	const	classname	= __CLASS__;
 	const	column		= 'user_id';
+	const	thumbnail	= 'user_icon';
 	const	table		= 'pudl_user';
 	const	prefix		= 'us';
 
