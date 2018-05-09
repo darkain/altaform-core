@@ -79,7 +79,15 @@ class		afUrl {
 			assert500(
 				!in_array($val[0], ['.', '+', '-', '_', "\\", 0x7F])
 				&& ord($val[0])>0x20,
-				'Invalid character in URL path: 0x' . ord($val[0])
+				'Invalid character in URL path: 0x' . dechex(ord($val[0]))
+			);
+
+			assert500(
+				(substr($val, -4) !== '.php')  &&
+				(substr($val, -4) !== '.inc')  &&
+				(substr($val, -4) !== '.tpl')  &&
+				(substr($val, -3) !== '.hh'),
+				'Invalid character in URL path: 0x2E'
 			);
 
 			$this->url .= '/' . urlencode($val);
