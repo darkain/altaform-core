@@ -2,11 +2,7 @@
 
 
 
-interface afi_url { public function url(); }
-
-
-
-class		af_url {
+class		afUrl {
 	use		afCallable;
 	use		afRouter;
 
@@ -121,13 +117,13 @@ class		af_url {
 
 		if ($base === true) {
 			$url = $this->base . '/';
-		} else if ($base instanceof af_url) {
+		} else if ($base instanceof afUrl) {
 			$url = $this->host . $this->base . '/';
 		} else if (is_string($base)) {
 			$url = $base . '/';
 		}
 
-		if ($path instanceof afi_url  ||  !tbx_array($path)) {
+		if ($path instanceof afUrlx  ||  !tbx_array($path)) {
 			return $url . $this->clean($path);
 		}
 
@@ -193,10 +189,10 @@ class		af_url {
 	// CLEAN PART OF A URL PATH FRAGMENT
 	////////////////////////////////////////////////////////////////////////////
 	public function clean($fragment) {
-		if ($fragment instanceof afi_url) {
+		if ($fragment instanceof afUrlx) {
 			$fragment = $fragment->url();
 		}
-		return ($fragment instanceof afurlsafe)
+		return ($fragment instanceof afUrlSafe)
 			? (string) $fragment
 			: strtolower(urlencode($fragment));
 	}
@@ -471,11 +467,29 @@ class		af_url {
 }
 
 
-$afurl = new af_url;
+
+////////////////////////////////////////////////////////////////////////////////
+// CREATE GLOBAL INSTANCE OF AFURL
+////////////////////////////////////////////////////////////////////////////////
+$afurl = new afUrl;
 
 
 
-class afurlsafe {
+
+////////////////////////////////////////////////////////////////////////////////
+// ??
+////////////////////////////////////////////////////////////////////////////////
+interface afUrlx {
+	public function url();
+}
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// ??
+////////////////////////////////////////////////////////////////////////////////
+class afUrlSafe {
 	public function __construct($string) { $this->string = $string; }
 	public function __toString() { return $this->string; }
 	private $string;

@@ -136,7 +136,7 @@ class		altaform
 	public function jq() {
 		global $get;
 		if (!isset($get)) return false;
-		if (!is_a($get, 'getvar')) return false;
+		if (!($get instanceof getvar)) return false;
 		return $get->bool('jq');
 	}
 

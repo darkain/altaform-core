@@ -11,7 +11,7 @@ require_once(__DIR__.'/../traits/afPreference.inc.php');
 
 class			afUser
 	extends		pudlOrm
-	implements	afi_url {
+	implements	afUrlx {
 	use			afNode;
 	use			afPermission;
 	use			afPreference;

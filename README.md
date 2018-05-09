@@ -11,7 +11,7 @@ on allowing developers to jump in to create simplistic and clean PHP
 code without worrying about what classes need to be inherited or what
 methods need overwritten. Altaform allows for traditional minimalistic
 procedural PHP programming while still having many of the same benefits
-of a modern framework.
+of a modern PHP framework.
 
 
 
@@ -27,17 +27,17 @@ for more details.
 
 
 ## Compatibility
-Altaform is actively tested and used in production on PHP 5.6, PHP 7.0, and
-HHVM 3.18.
+Altaform is actively tested and used in production on PHP 7.2 and HHVM 3.24.
 
 Altaform should work as far back as PHP 5.4, but this is no longer actively
 used in production. Altaform heavily relies upon new features introduced in
 PHP 5.4, therefor will NOT work on any version of PHP prior to 5.4.
 
-Altaform may work on versions of HHVM prior to 3.18, but we highly discourage
-it. During Altaform development, we've discovered and reported a number of bugs
-in the HHVM interpreter that directly affected this project. As such, we cannot
-guarantee earlier version of HHVM will work.
+Altaform may work on versions of HHVM prior to 3.12, but it is highly
+discouraged. During Altaform development, a countless number of bugs have been
+discovered and reported in the HHVM interpreter that directly affected this
+project. As such, Altaform is not guaranteed to function properly on earlier
+versions of HHVM prior to 3.24.
 
 
 
@@ -46,7 +46,6 @@ guarantee earlier version of HHVM will work.
 Path | Library | Usage
 -----|---------|------
 [\_altaform](https://github.com/darkain/altaform-core) | Altaform Core | URL router, user access
-[\_closure](https://github.com/darkain/closure) | Closure | Adds closure support to PHP 5.x
 [\_getvar](https://github.com/darkain/getvar) | GetVar | Handler for $\_GET/$\_POST data
 [\_pudl](https://github.com/darkain/pudl) | PHP Universal Database Library (PUDL) | DB connection and SQL query generator/processor
 [\_tbx](https://github.com/darkain/TinyButXtreme) | TinyButExtreme (TBX) | HTML5 template processor
@@ -57,10 +56,10 @@ Path | Library | Usage
 ## Global Variables
 Name | Library | Usage | Documentation
 -----|---------|-------|--------------
-$af | Altaform Core & TBX | Instance of the [altaform](https://github.com/darkain/altaform-core/blob/master/_altaform.php.inc) class, inherits [tbx](https://github.com/darkain/TinyButXtreme/blob/master/tbx_class.php.inc) class | [Documentation](https://github.com/darkain/altaform-core/blob/master/README.md)
-$afurl | Altaform Core | Instance of the [afurl](https://github.com/darkain/altaform-core/blob/master/af_url.php.inc) class
-$user | Altaform Core | Instance of the [af_user](https://github.com/darkain/altaform-core/blob/master/af_user.php.inc) class
-$get | GetVar | Instance of the [getvar](https://github.com/darkain/getvar/blob/master/getvar.php.inc) class | [Documentation](https://github.com/darkain/getvar/blob/master/README.md)
+$af | Altaform Core & TBX | Instance of the [altaform](https://github.com/darkain/altaform-core/blob/master/_altaform.inc.php) class, inherits [tbx](https://github.com/darkain/TinyButXtreme/blob/master/tbx_class.php.inc) class | [Documentation](https://github.com/darkain/altaform-core/blob/master/README.md)
+$afurl | Altaform Core | Instance of the [afurl](https://github.com/darkain/altaform-core/blob/master/core/afUrl.inc.php) class
+$user | Altaform Core | Instance of the [af_user](https://github.com/darkain/altaform-core/blob/master/core/afUser.inc.php) class
+$get | GetVar | Instance of the [getvar](https://github.com/darkain/getvar/blob/master/getvar.inc.php) class | [Documentation](https://github.com/darkain/getvar/blob/master/README.md)
 $db | PUDL | Instance of one of the [pudl](https://github.com/darkain/pudl/blob/master/pudl.php) classes (depends on database type) | [Documentation](https://github.com/darkain/pudl/blob/master/README.md)
 
 

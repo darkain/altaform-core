@@ -72,18 +72,18 @@ require_once('_pudl/pudlInterfaces.php');
 
 
 //Getvar Library (GET/POST variables)
-require_once('_getvar/getvar.php.inc');
+require_once('_getvar/getvar.inc.php');
 $get = new getvar;
 
 
 
 //Altaform Base Code
-require_once('_altaform.php.inc');
+require_once('_altaform.inc.php');
 
 
 
 //URL Parser
-require_once('af_url.php.inc');
+require_once('core/afUrl.inc.php');
 
 
 

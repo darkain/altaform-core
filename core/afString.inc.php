@@ -46,7 +46,7 @@ class afString {
 
 		if (method_exists($value,'__toString')) {
 			return $value->__toString();
-		} elseif (is_a($value, 'DateTime')) {
+		} elseif ($value instanceof DateTime) {
 			return $value->format('c');
 		}
 
