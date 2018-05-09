@@ -22,6 +22,7 @@ require_once('core/afUpload.inc.php');
 require_once('core/afYoutube.inc.php');
 require_once('core/afActivity.inc.php');
 require_once('core/afMimetype.inc.php');
+require_once('core/afFunctions.inc.php');
 
 // TBX - THE RENDERING SYSTEM
 require_once('_tbx/tbx.php.inc');

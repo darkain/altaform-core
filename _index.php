@@ -77,11 +77,6 @@ $get = new getvar;
 
 
 
-//Main Library
-require_once('common.php.inc');
-
-
-
 //Altaform Base Code
 require_once('_altaform.php.inc');
 
