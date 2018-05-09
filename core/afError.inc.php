@@ -617,7 +617,7 @@ register_shutdown_function(function() {
 
 
 
-function _pudl_log($callback, $db, $result=NULL) {
+function afPudlLog($callback, $db, $result=NULL) {
 	global $af;
 
 	$path = $af instanceof altaform ? $af->path() : '';

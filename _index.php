@@ -248,7 +248,7 @@ if (!empty($afconfig->pudl)  &&  tbx_array($afconfig->pudl)) {
 	require_once('core/afUser.inc.php');
 	$db = pudl::instance($afconfig->pudl);
 
-	$db->on('log',		'_pudl_log');
+	$db->on('log',		'afPudlLog');
 
 	if (!empty($afconfig->pudl['connected'])) {
 		call_user_func($afconfig->pudl['connected']);
