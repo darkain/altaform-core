@@ -26,12 +26,13 @@ trait afAuth {
 
 		if (!empty($session)) {
 			if ($id = (int) $get->session('AF:USER_ID')) {
-				$data = $db->cache(AF_HOUR, 'AF-SESSION-'.$session)->row([
-					'us' => _pudl_user()
-				], [
-					'user_id' => $id,
-					pudl::find('user_permission', $this->_authtype),
-				]);
+				$data = $db->cache(AF_HOUR, 'AF-SESSION-'.$session)->row(
+					[afUser::prefix => afUser::thumbnail()],
+					[
+						'user_id' => $id,
+						pudl::find('user_permission', $this->_authtype),
+					]
+				);
 				if (!empty($data)) $user = new afUser($data);
 			}
 		}
