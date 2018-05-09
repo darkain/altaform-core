@@ -173,10 +173,10 @@ trait afRouter {
 	private function chdir($__path) {
 		assert500(@chdir($__path), 'Unable to enter directory');
 
-		if (!is_file('_altaform.php.inc')) return;
+		if (!is_file('_altaform.inc.php')) return;
 
 		extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
-		require('_altaform.php.inc');
+		require('_altaform.inc.php');
 
 		$__list = get_defined_vars();
 
