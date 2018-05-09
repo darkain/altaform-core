@@ -225,7 +225,7 @@ class afUpload {
 		//SET'S THE IMAGES COLOR SPACE TO SRGB - ANDROID/IOS COMPATIBLITY
 		try {
 			$image->profileImage('icc',
-				file_get_contents(__DIR__.'/srgb.icc')
+				file_get_contents(__DIR__.'/../srgb.icc')
 			);
 		} catch (ImagickException $exception) {}
 
@@ -328,7 +328,7 @@ class afUpload {
 			$resized->stripImage();
 			try {
 				$resized->profileImage('icc',
-					file_get_contents(__DIR__.'/srgb.icc')
+					file_get_contents(__DIR__.'/../srgb.icc')
 				);
 			} catch (ImagickException $exception) {}
 		}
