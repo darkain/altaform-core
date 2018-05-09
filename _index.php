@@ -139,10 +139,10 @@ if (is_file('_config/'.$afurl->domain.'/config.php.inc')) {
 
 
 //Load additional configuation file
-if (is_file($afconfig->root . '/_altaform.php.inc')) {
+if (is_file($afconfig->root . '/_altaform.inc.php')) {
 	$__cwd = getcwd();
 	chdir($afconfig->root);
-	require('_altaform.php.inc');
+	require('_altaform.inc.php');
 	chdir($__cwd);
 	unset($__cwd);
 }
