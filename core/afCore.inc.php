@@ -1,9 +1,5 @@
 <?php
 
-// DISABLE DOUBLE-LOADING
-if (class_exists('altaform', false)) return;
-
-
 
 
 class		altaform

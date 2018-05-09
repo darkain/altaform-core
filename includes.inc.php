@@ -1,6 +1,10 @@
 <?php
 
 
+// DISABLE DOUBLE-LOADING
+if (class_exists('altaform', false)) return;
+
+
 // TBX - THE RENDERING SYSTEM
 require_once('_tbx/tbx.php.inc');
 
