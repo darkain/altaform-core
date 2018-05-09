@@ -316,5 +316,5 @@ class		altaform
 	public static		$af			= NULL;
 	public static		$types		= [];
 	public static		$class		= 'altaform';
-	public static		$version	= 'Altaform-Core 2.8.4';
+	public static		$version	= 'Altaform-Core 2.9.0';
 }
