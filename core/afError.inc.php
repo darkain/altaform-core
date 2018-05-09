@@ -557,7 +557,7 @@ set_error_handler(function($errno, $errstr, $errfile=NULL, $errline=NULL, $errco
 	switch ($errno) {
 		case E_WARNING:		case E_USER_WARNING:
 		case E_NOTICE:		case E_USER_NOTICE:
-			$die = ($afconfig instanceof af_config)
+			$die = ($afconfig instanceof afConfig)
 				? !!$afconfig->debug
 				: false;
 	}

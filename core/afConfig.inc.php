@@ -8,7 +8,7 @@ require_once('_pudl/pudlObject.php');
 
 
 
-class			af_config
+class			afConfig
 	extends		pudlObject
 	implements	tbx_plugin {
 
@@ -162,4 +162,4 @@ class			af_config
 
 
 
-$afconfig = new af_config;
+$afconfig = new afConfig;

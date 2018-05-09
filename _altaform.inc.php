@@ -3,6 +3,8 @@
 // DISABLE DOUBLE-LOADING
 if (class_exists('altaform', false)) return;
 
+// TBX - THE RENDERING SYSTEM
+require_once('_tbx/tbx.php.inc');
 
 // CORE FUNCTIONALITY
 require_once('core/afIp.inc.php');
@@ -16,6 +18,7 @@ require_once('core/afMail.inc.php');
 require_once('core/afTime.inc.php');
 require_once('core/afVoid.inc.php');
 require_once('core/afAudit.inc.php');
+require_once('core/afConfig.inc.php');
 require_once('core/afDevice.inc.php');
 require_once('core/afString.inc.php');
 require_once('core/afUpload.inc.php');
@@ -23,12 +26,6 @@ require_once('core/afYoutube.inc.php');
 require_once('core/afActivity.inc.php');
 require_once('core/afMimetype.inc.php');
 require_once('core/afFunctions.inc.php');
-
-// TBX - THE RENDERING SYSTEM
-require_once('_tbx/tbx.php.inc');
-
-// ALTAFORM CONFIGURATION
-require_once('af_config.php.inc');
 
 // LIST OF ALTAFORM TRAITS - USED TO HELP ORGANIZE CODE
 require_once('traits/afAuth.inc.php');
