@@ -34,35 +34,142 @@ class afCli {
 		return empty($_SERVER['argc']);
 	}
 
-	public static function line()		{ return PHP_EOL; }
-	public static function code($code)	{ return "\033[" . $code . 'm'; }
-	public static function reset()		{ return static::code(0); }
+	public static function line() {
+		return PHP_EOL;
+	}
 
-	public static function bold(		$enabled=true)	{ return static::code($enabled ? 1 : 21); }
-	public static function dim(			$enabled=true)	{ return static::code($enabled ? 2 : 22); }
-	public static function underlined(	$enabled=true)	{ return static::code($enabled ? 4 : 24); }
-	public static function blink(		$enabled=true)	{ return static::code($enabled ? 5 : 25); }
-	public static function reverse(		$enabled=true)	{ return static::code($enabled ? 7 : 27); }
-	public static function hidden(		$enabled=true)	{ return static::code($enabled ? 8 : 28); }
+	public static function code($code, $text=NULL) {
+		return ($text === NULL)
+			? ("\033[" . $code . 'm')
+			: ("\033[" . $code . 'm' . $text . static::reset());
+	}
 
-	public static function fgBlack()					{ return static::code(30); }
-	public static function fgRed(		$light=false)	{ return static::code($light ? 91 : 31); }
-	public static function fgGreen(		$light=false)	{ return static::code($light ? 92 : 32); }
-	public static function fgYellow(	$light=false)	{ return static::code($light ? 93 : 33); }
-	public static function fgBlue(		$light=false)	{ return static::code($light ? 94 : 34); }
-	public static function fgMagenta(	$light=false)	{ return static::code($light ? 95 : 35); }
-	public static function fgCyan(		$light=false)	{ return static::code($light ? 96 : 36); }
-	public static function fgGray(		$light=false)	{ return static::code($light ? 37 : 90); }
-	public static function fgWhite(		$light=false)	{ return static::code($light ? 39 : 97); }
+	public static function reset() {
+		return static::code(0);
+	}
 
-	public static function bgBlack()					{ return static::code(40); }
-	public static function bgRed(		$light=false)	{ return static::code($light ? 101 : 41); }
-	public static function bgGreen(		$light=false)	{ return static::code($light ? 102 : 42); }
-	public static function bgYellow(	$light=false)	{ return static::code($light ? 103 : 43); }
-	public static function bgBlue(		$light=false)	{ return static::code($light ? 104 : 44); }
-	public static function bgMagenta(	$light=false)	{ return static::code($light ? 105 : 45); }
-	public static function bgCyan(		$light=false)	{ return static::code($light ? 106 : 46); }
-	public static function bgGray(		$light=false)	{ return static::code($light ? 47 : 100); }
-	public static function bgWhite(		$light=false)	{ return static::code($light ? 49 : 107); }
+	public static function bold($enabled=true, $text=NULL) {
+		if (is_string($enabled)  &&  $text === NULL) { $text=$enabled; $enabled=true; }
+		return static::code($enabled ? 1 : 21, $text);
+	}
+
+	public static function dim($enabled=true, $text=NULL) {
+		if (is_string($enabled)  &&  $text === NULL) { $text=$enabled; $enabled=true; }
+		return static::code($enabled ? 2 : 22, $text);
+	}
+
+	public static function underlined($enabled=true, $text=NULL) {
+		if (is_string($enabled)  &&  $text === NULL) { $text=$enabled; $enabled=true; }
+		return static::code($enabled ? 4 : 24, $text);
+	}
+
+	public static function blink($enabled=true, $text=NULL) {
+		if (is_string($enabled)  &&  $text === NULL) { $text=$enabled; $enabled=true; }
+		return static::code($enabled ? 5 : 25, $text);
+	}
+
+	public static function reverse($enabled=true, $text=NULL) {
+		if (is_string($enabled)  &&  $text === NULL) { $text=$enabled; $enabled=true; }
+		return static::code($enabled ? 7 : 27, $text);
+	}
+
+	public static function hidden($enabled=true, $text=NULL) {
+		if (is_string($enabled)  &&  $text === NULL) { $text=$enabled; $enabled=true; }
+		return static::code($enabled ? 8 : 28, $text);
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// FOREGROUND COLORS
+	////////////////////////////////////////////////////////////////////////////
+	public static function fgBlack($light=false, $text=NULL) {
+		if (is_string($light)  &&  $text === NULL) { $text=$light; $light=false; }
+		return static::code($light ? 31 : 30, $text);
+	}
+
+	public static function fgRed($light=false, $text=NULL) {
+		if (is_string($light)  &&  $text === NULL) { $text=$light; $light=false; }
+		return static::code($light ? 91 : 31, $text);
+	}
+
+	public static function fgGreen($light=false, $text=NULL) {
+		if (is_string($light)  &&  $text === NULL) { $text=$light; $light=false; }
+		return static::code($light ? 92 : 32, $text);
+	}
+
+	public static function fgYellow($light=false, $text=NULL) {
+		if (is_string($light)  &&  $text === NULL) { $text=$light; $light=false; }
+		return static::code($light ? 93 : 33, $text);
+	}
+
+	public static function fgBlue($light=false, $text=NULL) {
+		if (is_string($light)  &&  $text === NULL) { $text=$light; $light=false; }
+		return static::code($light ? 94 : 34, $text);
+	}
+
+	public static function fgMagenta($light=false, $text=NULL) {
+		if (is_string($light)  &&  $text === NULL) { $text=$light; $light=false; }
+		return static::code($light ? 95 : 35, $text);
+	}
+
+	public static function fgCyan($light=false, $text=NULL) {
+		if (is_string($light)  &&  $text === NULL) { $text=$light; $light=false; }
+		return static::code($light ? 96 : 36, $text);
+	}
+
+	public static function fgGray($light=false, $text=NULL) {
+		if (is_string($light)  &&  $text === NULL) { $text=$light; $light=false; }
+		return static::code($light ? 37 : 90, $text);
+	}
+
+	public static function fgWhite($light=false, $text=NULL) {
+		if (is_string($light)  &&  $text === NULL) { $text=$light; $light=false; }
+		return static::code($light ? 39 : 97, $text);
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// BACKGROUND COLORS
+	////////////////////////////////////////////////////////////////////////////
+	public static function bgBlack($light=false, $text=NULL) {
+		return static::code($light ? 97 : 40, $text);
+	}
+
+	public static function bgRed($light=false, $text=NULL) {
+		return static::code($light ? 101 : 41, $text);
+	}
+
+	public static function bgGreen($light=false, $text=NULL) {
+		return static::code($light ? 102 : 42, $text);
+	}
+
+	public static function bgYellow($light=false, $text=NULL) {
+		return static::code($light ? 103 : 43, $text);
+	}
+
+	public static function bgBlue($light=false, $text=NULL) {
+		return static::code($light ? 104 : 44, $text);
+	}
+
+	public static function bgMagenta($light=false, $text=NULL) {
+		return static::code($light ? 105 : 45, $text);
+	}
+
+	public static function bgCyan($light=false, $text=NULL) {
+		return static::code($light ? 106 : 46, $text);
+	}
+
+	public static function bgGray($light=false, $text=NULL) {
+		return static::code($light ? 47 : 100, $text);
+	}
+
+	public static function bgWhite($light=false, $text=NULL) {
+		return static::code($light ? 49 : 107, $text);
+	}
+
 
 }
