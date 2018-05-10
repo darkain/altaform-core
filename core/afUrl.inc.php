@@ -301,9 +301,11 @@ class		afUrl {
 		if (empty($options[CURLOPT_USERAGENT])) {
 			$agent = ini_get('user_agent');
 			if (empty($agent)) $agent = afDevice::agent();
-			if (!empty($agent)) {
-				curl_setopt($ch, CURLOPT_USERAGENT, $agent);
-			}
+			curl_setopt(
+				$ch,
+				CURLOPT_USERAGENT,
+				!empty($agent) ? $agent : ('Altaform ' . altaform::$version)
+			);
 		}
 
 		if (!empty($session)) {
