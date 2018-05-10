@@ -11,5 +11,5 @@ class afVoid {
 	public function __isset($name)	{ return true; }
 	public function __unset($name)	{}
 	public function __debugInfo()	{ return []; }
-	public static function __set_state($array) { return new af_void; }
+	public static function __set_state($array) { return new afVoid; }
 }
