@@ -366,6 +366,18 @@ class afError {
 
 
 
+function error400($text=false, $log=false, $details=false) {
+	afError::render('400 Bad Request', [
+		'<div id="af-fatal"><h1>ERROR: 400</h1>',
+		'<h2>BAD REQUEST</h2>',
+		'<h3>' . afError::html($details) . '</h3>',
+		($text !== false ? '<i>' . $text . '</i>' : '') . '</div>',
+	], $log, 'error400.tpl');
+}
+
+
+
+
 function error401($text=false, $log=false, $details=false) {
 	afError::render('401 Unauthorized', [
 		'<div id="af-fatal"><h1>ERROR: 401</h1>',
@@ -477,6 +489,12 @@ function error503($text=false, $log=true, $details=false) {
 }
 
 
+
+
+function assert400($item, $text=false, $log=false) {
+	if ($item instanceof pudlOrm) return $item->assert400($text);
+	return (empty($item) && $item!=='') ? error400($text, $log) : $item;
+}
 
 
 function assert401($item, $text=false, $log=false) {
