@@ -48,6 +48,10 @@ trait afRouter {
 
 
 		for ($i=1; $i<$count; $i++) {
+			assert400(
+				preg_match('/\.(php|inc|hh|tpl)$/i', $this->part[$i]) === 0,
+				'Invalid path - possible hacking attempt'
+			);
 
 			//FORCE VIRTUAL PATHING IF SPECIAL CHARACTERS ARE FOUND
 			//SPECIAL CHARACTER ALLOWED: [SPACE] ! + - . _
