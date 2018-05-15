@@ -10,6 +10,8 @@ function canredir($path) {
 
 	$parts = parse_url($path);
 
+	if (empty($parts)) return false;
+
 	if (empty($parts['scheme'])) {
 		return empty($parts['host']);
 	}
