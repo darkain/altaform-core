@@ -1,7 +1,7 @@
 <?php
 
 
-require_once('afVoid.inc.php');
+require_once(__DIR__.'/afVoid.inc.php');
 
 
 class		afGit

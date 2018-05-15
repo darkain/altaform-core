@@ -19,7 +19,7 @@ set_include_path(get_include_path() . PATH_SEPARATOR . getcwd());
 
 
 //PHP Error handling functions
-require_once('core/afError.inc.php');
+require_once(__DIR__.'/core/afError.inc.php');
 
 
 
@@ -73,12 +73,12 @@ $get = new getvar;
 
 
 //Altaform Base Code
-require_once('includes.inc.php');
+require_once(__DIR__.'/includes.inc.php');
 
 
 
 //URL Parser
-require_once('core/afUrl.inc.php');
+require_once(__DIR__.'/core/afUrl.inc.php');
 
 
 
@@ -235,7 +235,7 @@ if (!empty( $get->server('HTTP_ORIGIN') )) {
 if (!empty($afconfig->pudl)  &&  tbx_array($afconfig->pudl)) {
 	require_once('_pudl/pudl.php');
 	require_once('_pudl/pudlSession.php');
-	require_once('core/afUser.inc.php');
+	require_once(__DIR__.'/core/afUser.inc.php');
 	$db = pudl::instance($afconfig->pudl);
 
 	$db->on('log',		'afPudlLog');
@@ -263,7 +263,7 @@ if (!empty($afconfig->pudl)  &&  tbx_array($afconfig->pudl)) {
 						->collection('pudl_altaform');
 
 } else {
-	require_once('afUser.php.inc');
+	require_once(__DIR__.'/core/afUser.inc.php');
 	$af = altaform::create();
 }
 
