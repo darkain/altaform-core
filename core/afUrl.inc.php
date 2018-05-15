@@ -349,18 +349,24 @@ class		afUrl {
 			))
 		);
 
-		if (empty($af)  ||  !$af->jq()) {
-			if (!headers_sent()) header("Location: $url", true, $type);
-			echo '<html><head><meta http-equiv="refresh" content="0;URL=\'';
-			echo tbx::html($url) . '\'" /></head><body>';
-		}
 
-		echo "<script>window.top.location.href=";
-		echo json_encode($url);
-		echo ";</script>";
+		if (function_exists('afCli')  &&  afCli()) {
+			echo 'Location: ' . $url;
 
-		if (empty($af)  ||  !$af->jq()) {
-			echo "</body></html>\n";
+		} else {
+			if (empty($af)  ||  !$af->jq()) {
+				if (!headers_sent()) header('Location: '.$url, true, $type);
+				echo '<html><head><meta http-equiv="refresh" content="0;URL=\'';
+				echo tbx::html($url) . '\'" /></head><body>';
+			}
+
+			echo "<script>window.top.location.href=";
+			echo json_encode($url);
+			echo ";</script>";
+
+			if (empty($af)  ||  !$af->jq()) {
+				echo "</body></html>\n";
+			}
 		}
 
 		if ($die) exit;
