@@ -66,11 +66,6 @@ if (version_compare(phpversion(), '7.1', '>=')) {
 
 
 
-//PUDL Interfaces
-require_once('_pudl/pudlInterfaces.php');
-
-
-
 //Getvar Library (GET/POST variables)
 require_once('_getvar/getvar.inc.php');
 $get = new getvar;
