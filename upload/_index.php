@@ -1,7 +1,5 @@
 <?php
 
-require_once('_altaform/upload.php.inc');
-
 
 $user->requireLogin();
 
