@@ -85,9 +85,11 @@ class afIp {
 	////////////////////////////////////////////////////////////////////////////
 	public static function local() {
 		$address	= false;
-		$socket		= socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
-		socket_connect(		$socket, '8.8.8.8', 53);
-		socket_getsockname(	$socket, $address);
+		$socket		= @socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
+		if ($socket !== false) {
+			@socket_connect(	$socket, '8.8.8.8', 53);
+			@socket_getsockname($socket, $address);
+		}
 		return $address;
 	}
 
