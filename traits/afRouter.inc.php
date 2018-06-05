@@ -1,6 +1,13 @@
 <?php
 
 
+//TODO:
+//		switch afRouter from trait to class
+//		do not inherit from afRouter in Altaform anywhere anymore
+//		create $afrouter instance of afRouter
+//		all internal code routing will be handled by this one class
+
+
 trait afRouter {
 
 

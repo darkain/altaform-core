@@ -253,6 +253,7 @@ class			afUser
 	const	classname	= __CLASS__;
 	const	column		= 'user_id';
 	const	icon		= 'user_icon';
+	const	json		= 'user_json';
 	const	table		= 'pudl_user';
 	const	prefix		= 'us';
 
