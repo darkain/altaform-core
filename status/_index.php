@@ -153,6 +153,14 @@ foreach ($offline as $name => $time) {
 ////////////////////////////////////////////////////////////
 // OUTPUT ALL THE THINGS !!!
 ////////////////////////////////////////////////////////////
-$af->header();
-	$af->renderBlock('_index.tpl', 'server', $servers);
-$af->footer();
+if (!afcli()) {
+	$af->header();
+		$af->renderBlock('_index.tpl', 'server', $servers);
+	$af->footer();
+} else {
+	echo "[\n";
+	foreach ($servers as $server) {
+		echo json_encode($server) . ",\n\n";
+	}
+	echo "{}\n]\n";
+}
