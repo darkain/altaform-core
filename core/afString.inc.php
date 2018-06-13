@@ -84,13 +84,13 @@ class afString {
 		if (!$count) return $string;
 
 		switch (ord($string)) {
-			case 0x20:	// space
-			case 0x13:	// carriage return
-			case 0x10:	// new line
-			case 0x0B:	// vertical tab
-			case 0x09:	// tab
-			case 0x00:	// null terminator
-			return ltrim($string);
+			case 0x00:				// null terminator
+			case 0x09:				// tab
+			case 0x0B:				// vertical tab
+			case 0x10:				// new line
+			case 0x13:				// carriage return
+			case 0x20:				// space
+				return ltrim($string);
 		}
 
 		return $string;
@@ -106,13 +106,13 @@ class afString {
 		if (!$count) return $string;
 
 		switch (ord($string[$count-1])) {
-			case 0x20:	// space
-			case 0x13:	// carriage return
-			case 0x10:	// new line
-			case 0x0B:	// vertical tab
-			case 0x09:	// tab
-			case 0x00:	// null terminator
-			return rtrim($string);
+			case 0x00:				// null terminator
+			case 0x09:				// tab
+			case 0x0B:				// vertical tab
+			case 0x10:				// new line
+			case 0x13:				// carriage return
+			case 0x20:				// space
+				return rtrim($string);
 		}
 
 		return $string;
@@ -126,8 +126,13 @@ class afString {
 		if ($count < 1) return $string;
 
 		for ($begin=0; $begin<$count; $begin++) {
-			switch ($string[$begin]) {
-				case ' ': case "\n": case "\r": case "\t": case "\0": case "\x0B":
+			switch (ord($string[$begin])) {
+				case 0x00:			// null terminator
+				case 0x09:			// tab
+				case 0x0B:			// vertical tab
+				case 0x10:			// new line
+				case 0x13:			// carriage return
+				case 0x20:			// space
 					continue;
 
 				default:
@@ -136,8 +141,13 @@ class afString {
 		}
 
 		for ($end=$count-1; $end>=$begin; $end--) {
-			switch ($string[$end]) {
-				case ' ': case "\n": case "\r": case "\t": case "\0": case "\x0B":
+			switch (ord($string[$end])) {
+				case 0x00:			// null terminator
+				case 0x09:			// tab
+				case 0x0B:			// vertical tab
+				case 0x10:			// new line
+				case 0x13:			// carriage return
+				case 0x20:			// space
 					continue;
 
 				default:
@@ -159,11 +169,26 @@ class afString {
 		$count = strlen($string);
 
 		for ($i=0; $i<$count-1; $i++) {
-			switch ($string[$i]) {
-				case ' ': case "\n": case "\r": case "\t": case "\0": case "\x0B":
-					switch ($string[$i+1]) {
-						case ' ': case "\n": case "\r": case "\t": case "\0": case "\x0B":
-							return preg_replace('/\s\s+/', ' ', $string);
+			switch (ord($string[$i])) {
+				case 0x00:			// null terminator
+				case 0x09:			// tab
+				case 0x0B:			// vertical tab
+				case 0x10:			// new line
+				case 0x13:			// carriage return
+				case 0x20:			// space
+
+					switch (ord($string[$i+1])) {
+						case 0x00:	// null terminator
+						case 0x09:	// tab
+						case 0x0B:	// vertical tab
+						case 0x10:	// new line
+						case 0x13:	// carriage return
+						case 0x20:	// space
+							return preg_replace(
+								'/[\s\x00\x10\x13][\s\x00\x10\x13]+/',
+								' ',
+								$string
+							);
 					}
 					continue;
 
@@ -204,7 +229,9 @@ class afString {
 		$string = str_replace('&nbsp;', ' ', $string);
 		$string = preg_replace('/\s\s+/', ' ', $string);
 		$string = trim($string);
-		if (is_numeric($length) && $length >= 1) $string = static::truncateWord($string, $length);
+		if (is_numeric($length) && $length >= 1) {
+			$string = static::truncateWord($string, $length);
+		}
 		return $string;
 	}
 
@@ -212,7 +239,11 @@ class afString {
 
 
 	public static function stripwhitespace($string) {
-		return str_replace(['+', ' ', "\t", "\r", "\n", "\0", "\x0B"], '', $string);
+		return str_replace(
+			['+', ' ', "\t", "\r", "\n", "\0", "\x0B"],
+			'',
+			$string
+		);
 	}
 
 
@@ -228,11 +259,9 @@ class afString {
 
 
 	public static function linkify($string) {
-		global $afurl;
-
 		$string = preg_replace(
 			'@(?<![.*>])\b(?:(?:(ht|f)tps?)://|(?<![./*>])((www|m)\.)|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))[-A-Z0-9+&#/%=~_|$?!:;,.]*[A-Z0-9+&#/%=~_|$]@i',
-			'<a href="' . $afurl->base . '/anchor/\0" target="_blank">\0</a>',
+			'<a href="\0" target="_blank">\0</a>',
 			htmlspecialchars($string, ENT_NOQUOTES)
 		);
 
@@ -363,34 +392,77 @@ class afString {
 				return static::maxDigits( ($value / pow($size, $i)), 4 ) . $sep . $units[$i];
 			}
 		}
+
 		return false;
 	}
 
 
 
 
-	public static function toBytes($string) {
+	public static function toBytes($string, $precision=0, $mode=PHP_ROUND_HALF_UP) {
 		$value	= (float)trim($string);
 		$rest	= trim(substr($string, strlen((string)$value)));
 		$rest	= preg_replace('/[^A-Z]/', '', strtoupper($rest));
 		switch (strtoupper($rest)) {
-			case 'B': return round($value);
-			case 'K': case 'KIB': return round($value * pow(1024, 1));
-			case 'M': case 'MIB': return round($value * pow(1024, 2));
-			case 'G': case 'GIB': return round($value * pow(1024, 3));
-			case 'T': case 'TIB': return round($value * pow(1024, 4));
-			case 'P': case 'PIB': return round($value * pow(1024, 5));
-			case 'E': case 'EIB': return round($value * pow(1024, 6));
-			case 'Z': case 'ZIB': return round($value * pow(1024, 7));
-			case 'Y': case 'YIB': return round($value * pow(1024, 8));
-			case 'KB': return round($value * pow(1000, 1));
-			case 'MB': return round($value * pow(1000, 2));
-			case 'GB': return round($value * pow(1000, 3));
-			case 'TB': return round($value * pow(1000, 4));
-			case 'PB': return round($value * pow(1000, 5));
-			case 'EB': return round($value * pow(1000, 6));
-			case 'ZB': return round($value * pow(1000, 7));
-			case 'YB': return round($value * pow(1000, 8));
+			case '':
+			case 'B':
+				return (int) round($value, $precision, $mode);
+
+			case 'K':
+			case 'KIB':
+				return (int) round($value * pow(1024, 1), $precision, $mode);
+
+			case 'M':
+			case 'MIB':
+				return (int) round($value * pow(1024, 2), $precision, $mode);
+
+			case 'G':
+			case 'GIB':
+				return (int) round($value * pow(1024, 3), $precision, $mode);
+
+			case 'T':
+			case 'TIB':
+				return (int) round($value * pow(1024, 4), $precision, $mode);
+
+			case 'P':
+			case 'PIB':
+				return (int) round($value * pow(1024, 5), $precision, $mode);
+
+			case 'E':
+			case 'EIB':
+				return (int) round($value * pow(1024, 6), $precision, $mode);
+
+			case 'Z':
+			case 'ZIB':
+				return (int) round($value * pow(1024, 7), $precision, $mode);
+
+			case 'Y':
+			case 'YIB':
+				return (int) round($value * pow(1024, 8), $precision, $mode);
+
+			case 'KB':
+				return (int) round($value * pow(1000, 1), $precision, $mode);
+
+			case 'MB':
+				return (int) round($value * pow(1000, 2), $precision, $mode);
+
+			case 'GB':
+				return (int) round($value * pow(1000, 3), $precision, $mode);
+
+			case 'TB':
+				return (int) round($value * pow(1000, 4), $precision, $mode);
+
+			case 'PB':
+				return (int) round($value * pow(1000, 5), $precision, $mode);
+
+			case 'EB':
+				return (int) round($value * pow(1000, 6), $precision, $mode);
+
+			case 'ZB':
+				return (int) round($value * pow(1000, 7), $precision, $mode);
+
+			case 'YB':
+				return (int) round($value * pow(1000, 8), $precision, $mode);
 		}
 		return 0;
 	}
