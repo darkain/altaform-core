@@ -16,11 +16,13 @@ class		afUrl {
 		global $get;
 
 		if (afCli()) {
-			ob_end_clean();
+			if (ob_get_level()) ob_end_clean();
 			$host = ['_cli'];
 			$args = $get->server('argv');
 			if (is_array($args)) {
 				$_SERVER['REQUEST_URI'] = isset($args[1]) ? $args[1] : '/';
+			} else {
+				$_SERVER['REQUEST_URI'] = '/';
 			}
 
 		} else {
@@ -48,7 +50,13 @@ class		afUrl {
 
 		if (substr($this->uri, 0, 2) === '//') $this->redirect('/');
 
-		if (empty($this->parts['path'])) error404();
+		if (empty($this->parts['path'])) {
+			if (afCli()) {
+				$this->parts['path'] = '/';
+			} else {
+				error500();
+			}
+		}
 
 		if ($this->parts['path'][0] !== '/') {
 			$this->parts['path'] = '/' . $this->parts['path'];
