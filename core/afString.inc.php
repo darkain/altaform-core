@@ -185,7 +185,7 @@ class afString {
 						case 0x13:	// carriage return
 						case 0x20:	// space
 							return preg_replace(
-								'/[\s\x00\x10\x13][\s\x00\x10\x13]+/',
+								'/[\s\x00\x0B\x10\x13][\s\x00\x0B\x10\x13]+/',
 								' ',
 								$string
 							);
