@@ -26,9 +26,11 @@ function afUnit($result, $expected=true) {
 
 
 $list = scandir(__DIR__);
+shuffle($list);
 
 
 foreach ($list as $item) {
 	if (strtolower(substr($item, -8)) !== '.inc.php') continue;
+	echo afCli::fgWhite("Testing:\t") . afCli::fgCyan(1,$item) . "\n";
 	require_once(__DIR__ . '/' . $item);
 }

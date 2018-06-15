@@ -45,10 +45,10 @@ require_once(__DIR__ . '/../core/afUrl.inc.php');
 
 
 
-echo "PHP:\t" . PHP_VERSION . "\n";
+echo afCli::fgWhite("PHP Version:\t") . afCli::fgCyan(PHP_VERSION) . "\n\n";
 
 
 require(__DIR__.'/all.php');
 
 
-echo $afUnit . ' Altaform unit tests completed successfully' . "\n";
+echo afCli::fgGreen(1,"\nSuccess:\t".$afUnit) . afCli::fgGreen(' Altaform unit tests completed') . "\n\n";
