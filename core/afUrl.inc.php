@@ -350,12 +350,11 @@ class		afUrl {
 
 		if (tbx_array($url)) $url = $afurl($url, true);
 
-		assert422(
-			empty(array_intersect(
-				str_split($url),
-				["\r", "\n", "\t", "\0", '<', '>']
-			))
+		$intersect = array_intersect(
+			str_split($url),
+			["\r", "\n", "\t", "\0", '<', '>']
 		);
+		assert422(empty($intersect));
 
 
 		if (function_exists('afCli')  &&  afCli()) {
