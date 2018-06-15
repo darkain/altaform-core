@@ -1,9 +1,14 @@
 <?php
 
 
+$afUnit = 0;
 
 function afUnit($result, $expected=true) {
+	global $afUnit;
+	$afUnit++;
+
 	if ($result === $expected) return;
+
 	$trace = debug_backtrace()[0];
 	echo "\n\n";
 	echo "ERROR: FAILED!!\n\n";

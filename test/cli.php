@@ -51,4 +51,4 @@ echo "PHP:\t" . PHP_VERSION . "\n";
 require(__DIR__.'/all.php');
 
 
-echo "ALL GOOD!!\n";
+echo $afUnit . ' Altaform unit tests completed successfully' . "\n";
