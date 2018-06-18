@@ -4,7 +4,7 @@
 $db->create('pudl_altaform', [
 	'af_key'	=> 'varchar(255) NOT NULL',
 	'af_value'	=> 'varchar(21588) NOT NULL',
-], false, 'ENGINE=InnoDB DEFAULT CHARSET=utf8');
+], false, 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4');
 
 
 $db(
