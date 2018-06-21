@@ -25,12 +25,19 @@ function afUnit($result, $expected=true) {
 
 
 
-$list = scandir(__DIR__);
+//PREP THE DIRECTORY
+$parent	= dirname(dirname(__DIR__));
+$dir	= substr(__DIR__, strlen($parent)-strlen(__DIR__)+1);
+$list	= scandir(__DIR__);
 shuffle($list);
 
 
+
+//RUN ALL UNIT TESTS
 foreach ($list as $item) {
 	if (strtolower(substr($item, -8)) !== '.inc.php') continue;
-	echo afCli::fgWhite("Testing:\t") . afCli::fgCyan(1,$item) . "\n";
+	echo afCli::fgWhite("Testing:\t");
+	echo afCli::fgCyan($dir.'/');
+	echo afCli::fgCyan(1,$item) . "\n";
 	require_once(__DIR__ . '/' . $item);
 }
