@@ -28,13 +28,14 @@ class		afUrl {
 		} else {
 			$host = explode(':', $get->server('HTTP_HOST', ''));
 			if (empty($host[0])) $host = explode(':', $get->server('SERVER_ADDR', ''));
-			assert500($host[0] !== '_cli', 'RESTRICTED DOMAIN NAME');
+			$host[0] = strtolower($host[0]);
+			assert400($host[0] !== '_cli', 'RESTRICTED DOMAIN NAME');
 		}
 
 		$this->directory	= getcwd();
 		$this->encoding		= array_map('trim', explode(',', $get->server('HTTP_ACCEPT_ENCODING','')));
 		$this->uri			= urldecode($get->server('REQUEST_URI', ''));
-		$this->domain		= strtolower(reset($host));
+		$this->domain		= reset($host);
 		$this->origin		= $get->server('HTTP_ORIGIN', '');
 		$this->referer		= $get->server('HTTP_REFERER', '');
 		$this->https		= strtolower($get->server('HTTPS', ''));
