@@ -217,9 +217,9 @@ setlocale(LC_CTYPE,			$afconfig->locale);
 
 
 //HTTP Options / origins
-if (!empty( $get->server('HTTP_ORIGIN') )) {
-	if (in_array($get->server('HTTP_ORIGIN'), $afconfig->origins)) {
-		header('Access-Control-Allow-Origin: '.$get->server('HTTP_ORIGIN'));
+if (!empty($afurl->origin)) {
+	if (in_array($afurl->origin, $afconfig->origins)) {
+		header('Access-Control-Allow-Origin: ' . $afurl->origin);
 		header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
 		header('Access-Control-Allow-Headers: Content-Type, Cache-Control, X-Requested-With');
 		header('Access-Control-Allow-Credentials: true');

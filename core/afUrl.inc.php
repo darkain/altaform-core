@@ -35,6 +35,7 @@ class		afUrl {
 		$this->encoding		= array_map('trim', explode(',', $get->server('HTTP_ACCEPT_ENCODING','')));
 		$this->uri			= urldecode($get->server('REQUEST_URI', ''));
 		$this->domain		= strtolower(reset($host));
+		$this->origin		= $get->server('HTTP_ORIGIN', '');
 		$this->referer		= $get->server('HTTP_REFERER', '');
 		$this->https		= strtolower($get->server('HTTPS', ''));
 		$this->https		= $this->https !== 'off'  &&  !empty($this->https);
@@ -458,6 +459,7 @@ class		afUrl {
 	public $directory;
 	public $uri;
 	public $domain;
+	public $origin;
 	public $referer;
 	public $https;
 	public $protocol;
