@@ -8,15 +8,23 @@
 //		all internal code routing will be handled by this one class
 
 
-trait afRouter {
+class afRouter {
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// INITIALIZE AF ROUTER
+	////////////////////////////////////////////////////////////////////////////
+	public function __construct() {
+		$this->directory = getcwd();
+	}
+
+
 
 
 	////////////////////////////////////////////////////////////////////////////
 	// ROUTE THE HTTP REQUEST
 	////////////////////////////////////////////////////////////////////////////
-	public function route() {
-		global $af;
-
+	public function route($af) {
 		//RECURSION LIMIT
 		static $recurse = 0;
 		assert500(
@@ -67,7 +75,7 @@ trait afRouter {
 				if (is_dir('_virtual')) {
 					$this->chdir( $this->virtualize($i, '_virtual') );
 					if ($this->reparse  ||  $this->reparse === NULL) return true;
-					if ($count-$i === 1) return $this->index();
+					if ($count-$i === 1) return $this->index($af);
 					continue;
 				}
 
@@ -81,7 +89,7 @@ trait afRouter {
 			if (is_dir($this->part[$i])) {
 				$this->chdir( $this->part[$i] );
 				if ($this->reparse  ||  $this->reparse === NULL) return true;
-				if ($count-$i === 1) return $this->index();
+				if ($count-$i === 1) return $this->index($af);
 				continue;
 			}
 
@@ -99,7 +107,7 @@ trait afRouter {
 				$this->chdir( $this->virtualize($i, '_virtual') );
 				if ($this->reparse  ||  $this->reparse === NULL) return true;
 
-				return $this->index();
+				return $this->index($af);
 			}
 
 
@@ -204,8 +212,7 @@ trait afRouter {
 	////////////////////////////////////////////////////////////////////////////
 	// PROCESS INDEX FILE, IF AVAILABLE
 	////////////////////////////////////////////////////////////////////////////
-	private function index() {
-		global $af;
+	private function index($af) {
 		if (is_file('_index.php'))	return '_index.php';
 		if (is_file('_index.hh'))	return $this->hhvm('_index.hh');
 		if (is_file('_index.tpl'))	return $af->auto(true, '_index.tpl');
@@ -254,9 +261,11 @@ trait afRouter {
 	// MEMBER VARIABLES
 	////////////////////////////////////////////////////////////////////////////
 	public $id			= 0;
+	public $path		= '';
 	public $part		= [];
 	public $virtual		= [];
 	public $redirected	= [];
 	public $reparse		= true;
 	public $homepage	= 'homepage';
+	public $directory	= '';
 }

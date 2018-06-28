@@ -94,7 +94,7 @@ class afError {
 
 
 	public static function process($data) {
-		global $af, $afurl, $db, $get, $user;
+		global $af, $afurl, $afrouter, $db, $get, $user;
 
 		if (!is_array($data)) $data = ['details'=>$data];
 
@@ -143,8 +143,8 @@ class afError {
 			'ip-httpd'		=> !class_exists('afIp')	? '' :	afIp::server(),
 		]);
 
-		if (!empty($afurl->redirected)) {
-			$return['redirected'] = static::json($afurl->redirected, false);
+		if (!empty($afrouter->redirected)) {
+			$return['redirected'] = static::json($afrouter->redirected, false);
 		}
 
 		ksort($return, SORT_NATURAL);

@@ -2,9 +2,9 @@
 
 
 
-class		afUrl {
+class		afUrl
+	extends	afRouter {
 	use		afCallable;
-	use		afRouter;
 
 
 
@@ -13,6 +13,8 @@ class		afUrl {
 	// PARSE THE URL AND QUERY STRING FRAGMENTS
 	////////////////////////////////////////////////////////////////////////////
 	public function __construct() {
+		parent::__construct();
+
 		global $get;
 
 		if (afCli()) {
@@ -32,7 +34,6 @@ class		afUrl {
 			assert400($host[0] !== '_cli', 'RESTRICTED DOMAIN NAME');
 		}
 
-		$this->directory	= getcwd();
 		$this->encoding		= array_map('trim', explode(',', $get->server('HTTP_ACCEPT_ENCODING','')));
 		$this->uri			= urldecode($get->server('REQUEST_URI', ''));
 		$this->domain		= reset($host);
@@ -470,7 +471,6 @@ class		afUrl {
 	////////////////////////////////////////////////////////////////////////////
 	// MEMBER VARIABLES SET IN CONSTRUCTOR
 	////////////////////////////////////////////////////////////////////////////
-	public $directory;
 	public $uri;
 	public $domain;
 	public $origin;
@@ -487,7 +487,6 @@ class		afUrl {
 	// MEMBER VARIABLES SET DYNAMICALLY OR BY CONFIG
 	////////////////////////////////////////////////////////////////////////////
 	public $gz			= '';
-	public $path		= '';
 	public $base		= '';
 	public $cdn			= '';
 	public $static		= '';
@@ -503,6 +502,7 @@ class		afUrl {
 // CREATE GLOBAL INSTANCE OF AFURL
 ////////////////////////////////////////////////////////////////////////////////
 $afurl = new afUrl;
+$afrouter = $afurl; //TEMPORARY DURING TRANSITION
 
 
 
