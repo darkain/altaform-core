@@ -374,7 +374,7 @@ class afUpload {
 		return static::exif_read_data(
 			'data://' . $image->getImageMimeType() .
 			';base64,' . base64_encode(
-				substr($image->getImageBlob(), 0, 1024*1024)
+				substr($image->getImageBlob(), 0, AF_MEGABYTE)
 			)
 		);
 	}

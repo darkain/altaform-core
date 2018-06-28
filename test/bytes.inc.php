@@ -11,7 +11,7 @@ afUnit(
 
 
 afUnit(
-	afString::fromBytes(123*1024),
+	afString::fromBytes(123 * AF_KILOBYTE),
 	'123 KiB'
 );
 
@@ -19,7 +19,7 @@ afUnit(
 
 
 afUnit(
-	afString::fromBytes(123*1024*1024),
+	afString::fromBytes(123 * AF_MEGABYTE),
 	'123 MiB'
 );
 
@@ -27,7 +27,7 @@ afUnit(
 
 
 afUnit(
-	afString::fromBytes(123*1024*1024*1024),
+	afString::fromBytes(123 * AF_GIGABYTE),
 	'123 GiB'
 );
 
@@ -43,7 +43,7 @@ afUnit(
 
 
 afUnit(
-	afString::fromBytes(123*1024, BYTE_FORMAT_KIB),
+	afString::fromBytes(123 * AF_KILOBYTE, BYTE_FORMAT_KIB),
 	'123 KiB'
 );
 
@@ -51,7 +51,7 @@ afUnit(
 
 
 afUnit(
-	afString::fromBytes(123*1024*1024, BYTE_FORMAT_KIB),
+	afString::fromBytes(123 * AF_MEGABYTE, BYTE_FORMAT_KIB),
 	'123 MiB'
 );
 
@@ -59,7 +59,7 @@ afUnit(
 
 
 afUnit(
-	afString::fromBytes(123*1024*1024*1024, BYTE_FORMAT_KIB),
+	afString::fromBytes(123 AF_GIGABYTE, BYTE_FORMAT_KIB),
 	'123 GiB'
 );
 
@@ -75,7 +75,7 @@ afUnit(
 
 
 afUnit(
-	afString::fromBytes(123*1024, BYTE_FORMAT_KIB, '-'),
+	afString::fromBytes(123 * AF_KILOBYTE, BYTE_FORMAT_KIB, '-'),
 	'123-KiB'
 );
 
@@ -83,7 +83,7 @@ afUnit(
 
 
 afUnit(
-	afString::fromBytes(123*1024*1024, BYTE_FORMAT_KIB, '-'),
+	afString::fromBytes(123 * AF_MEGABYTE, BYTE_FORMAT_KIB, '-'),
 	'123-MiB'
 );
 
@@ -91,7 +91,7 @@ afUnit(
 
 
 afUnit(
-	afString::fromBytes(123*1024*1024*1024, BYTE_FORMAT_KIB, '-'),
+	afString::fromBytes(123 * AF_GIGABYTE, BYTE_FORMAT_KIB, '-'),
 	'123-GiB'
 );
 
@@ -107,7 +107,7 @@ afUnit(
 
 
 afUnit(
-	afString::fromBytes(123*1024, BYTE_FORMAT_KB),
+	afString::fromBytes(123 * AF_KILOBYTE, BYTE_FORMAT_KB),
 	'126 KB'
 );
 
@@ -115,7 +115,7 @@ afUnit(
 
 
 afUnit(
-	afString::fromBytes(123*1024*1024, BYTE_FORMAT_KB),
+	afString::fromBytes(123 * AF_MEGABYTE, BYTE_FORMAT_KB),
 	'129 MB'
 );
 
@@ -123,7 +123,7 @@ afUnit(
 
 
 afUnit(
-	afString::fromBytes(123*1024*1024*1024, BYTE_FORMAT_KB),
+	afString::fromBytes(123 * AF_GIGABYTE, BYTE_FORMAT_KB),
 	'132.1 GB'
 );
 
@@ -139,7 +139,7 @@ afUnit(
 
 
 afUnit(
-	afString::fromBytes(123*1024, BYTE_FORMAT_K),
+	afString::fromBytes(123 * AF_KILOBYTE, BYTE_FORMAT_K),
 	'123 K'
 );
 
@@ -147,7 +147,7 @@ afUnit(
 
 
 afUnit(
-	afString::fromBytes(123*1024*1024, BYTE_FORMAT_K),
+	afString::fromBytes(123 * AF_MEGABYTE, BYTE_FORMAT_K),
 	'123 M'
 );
 
@@ -155,7 +155,7 @@ afUnit(
 
 
 afUnit(
-	afString::fromBytes(123*1024*1024*1024, BYTE_FORMAT_K),
+	afString::fromBytes(123 * AF_GIGABYTE, BYTE_FORMAT_K),
 	'123 G'
 );
 
@@ -172,7 +172,7 @@ afUnit(
 
 afUnit(
 	afString::toBytes('123K'),
-	123*1024
+	123 * AF_KILOBYTE
 );
 
 
@@ -180,7 +180,7 @@ afUnit(
 
 afUnit(
 	afString::toBytes('123M'),
-	123*1024*1024
+	123 * AF_MEGABYTE
 );
 
 
@@ -188,7 +188,7 @@ afUnit(
 
 afUnit(
 	afString::toBytes('123G'),
-	123*1024*1024*1024
+	123 * AF_GIGABYTE
 );
 
 
@@ -219,7 +219,7 @@ afUnit(
 
 afUnit(
 	afString::toBytes('123 KiB'),
-	123*1024
+	123 * AF_KILOBYTE
 );
 
 
@@ -227,7 +227,7 @@ afUnit(
 
 afUnit(
 	afString::toBytes('123 MiB'),
-	123*1024*1024
+	123 * AF_MEGABYTE
 );
 
 
@@ -235,7 +235,7 @@ afUnit(
 
 afUnit(
 	afString::toBytes('123 GiB'),
-	123*1024*1024*1024
+	123 * AF_GIGABYTE
 );
 
 
@@ -243,7 +243,7 @@ afUnit(
 
 afUnit(
 	afString::toBytes('123K'),
-	123*1024
+	123 * AF_KILOBYTE
 );
 
 
@@ -251,7 +251,7 @@ afUnit(
 
 afUnit(
 	afString::toBytes('123M'),
-	123*1024*1024
+	123 * AF_MEGABYTE
 );
 
 
@@ -259,7 +259,7 @@ afUnit(
 
 afUnit(
 	afString::toBytes('123G'),
-	123*1024*1024*1024
+	123 * AF_GIGABYTE
 );
 
 
@@ -267,7 +267,7 @@ afUnit(
 
 afUnit(
 	afString::toBytes('123-K'),
-	123*1024
+	123 * AF_KILOBYTE
 );
 
 
@@ -275,7 +275,7 @@ afUnit(
 
 afUnit(
 	afString::toBytes('123-M'),
-	123*1024*1024
+	123 * AF_MEGABYTE
 );
 
 
@@ -283,5 +283,5 @@ afUnit(
 
 afUnit(
 	afString::toBytes('123-G'),
-	123*1024*1024*1024
+	123 * AF_GIGABYTE
 );
