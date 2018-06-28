@@ -59,7 +59,7 @@ afUnit(
 
 
 afUnit(
-	afString::fromBytes(123 AF_GIGABYTE, BYTE_FORMAT_KIB),
+	afString::fromBytes(123 * AF_GIGABYTE, BYTE_FORMAT_KIB),
 	'123 GiB'
 );
 
