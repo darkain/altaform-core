@@ -1,6 +1,22 @@
 <?php
 
 
+
+define('AF_BYTE',				1);
+define('AF_KILOBYTE',			1024 * AF_BYTE);
+define('AF_MEGABYTE',			1024 * AF_KILOBYTE);
+define('AF_GIGABYTE',			1024 * AF_MEGABYTE);
+define('AF_TERABYTE',			1024 * AF_GIGABYTE);
+define('AF_PETABYTE',			1024 * AF_TERABYTE);
+define('AF_EXABYTE',			1024 * AF_PETABYTE);
+define('AF_ZETTABYTE',			1024 * AF_EXABYTE);
+define('AF_YOTTABYTE',			1024 * AF_ZETTABYTE);
+define('AF_XENOTTABYTE',		1024 * AF_YOTTABYTE);
+define('AF_SHILENTNOBYTE',		1024 * AF_XENOTTABYTE);
+define('AF_DOMEGEMEGROTTEBYTE',	1024 * AF_SHILENTNOBYTE);
+
+
+
 class afFile {
 
 

@@ -410,35 +410,35 @@ class afString {
 
 			case 'K':
 			case 'KIB':
-				return (int) round($value * pow(1024, 1), $precision, $mode);
+				return (int) round($value * AF_KILOBYTE, $precision, $mode);
 
 			case 'M':
 			case 'MIB':
-				return (int) round($value * pow(1024, 2), $precision, $mode);
+				return (int) round($value * AF_MEGABYTE, $precision, $mode);
 
 			case 'G':
 			case 'GIB':
-				return (int) round($value * pow(1024, 3), $precision, $mode);
+				return (int) round($value * AF_GIGABYTE, $precision, $mode);
 
 			case 'T':
 			case 'TIB':
-				return (int) round($value * pow(1024, 4), $precision, $mode);
+				return (int) round($value * AF_TERABYTE, $precision, $mode);
 
 			case 'P':
 			case 'PIB':
-				return (int) round($value * pow(1024, 5), $precision, $mode);
+				return (int) round($value * AF_PETABYTE, $precision, $mode);
 
 			case 'E':
 			case 'EIB':
-				return (int) round($value * pow(1024, 6), $precision, $mode);
+				return (int) round($value * AF_EXABYTE, $precision, $mode);
 
 			case 'Z':
 			case 'ZIB':
-				return (int) round($value * pow(1024, 7), $precision, $mode);
+				return (int) round($value * AF_ZETTABYTE, $precision, $mode);
 
 			case 'Y':
 			case 'YIB':
-				return (int) round($value * pow(1024, 8), $precision, $mode);
+				return (int) round($value * AF_YOTTABYTE, $precision, $mode);
 
 			case 'KB':
 				return (int) round($value * pow(1000, 1), $precision, $mode);
