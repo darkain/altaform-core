@@ -295,6 +295,19 @@ class		afUrl {
 
 
 	////////////////////////////////////////////////////////////////////////////
+	// INITIATE A GET REQUEST TO THE GIVEN URL
+	////////////////////////////////////////////////////////////////////////////
+	public static function get($url, $options=[], $maxlen=NULL) {
+		$ctx = stream_context_create(['http' => $options]);
+		return !empty($maxlen)
+			? @file_get_contents($url, false, $ctx, 0, $maxlen)
+			: @file_get_contents($url, false, $ctx);
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
 	// INITIATE A POST REQUEST TO THE GIVEN URL
 	////////////////////////////////////////////////////////////////////////////
 	public static function post($url, $post=[], $options=[], $session=false) {
