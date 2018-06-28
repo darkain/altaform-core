@@ -25,6 +25,10 @@ function afUnit($result, $expected=true) {
 
 
 
+require_once(__DIR__.'/../core/afFile.inc.php');
+
+
+
 //PREP THE DIRECTORY
 $parent	= dirname(dirname(__DIR__));
 $dir	= substr(__DIR__, strlen($parent)-strlen(__DIR__)+1);
