@@ -69,7 +69,7 @@ class afError {
 		if ($db instanceof pudl) $db->rollback();
 		echo "\n";
 		flush();
-		die();
+		exit(1);
 	}
 
 
@@ -666,5 +666,5 @@ function af_dump($var, $die=true) {
 		echo '</pre>';
 	}
 
-	if ($die) exit;
+	if ($die) exit(1);
 }
