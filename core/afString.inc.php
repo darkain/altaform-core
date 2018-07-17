@@ -122,6 +122,8 @@ class afString {
 
 
 	public static function trim($string) {
+		if (!is_string($string)) $string = (string)$string;
+
 		$count = strlen($string);
 		if ($count < 1) return $string;
 
@@ -166,6 +168,8 @@ class afString {
 
 
 	public static function doublespace($string) {
+		if (!is_string($string)) $string = (string)$string;
+
 		$count = strlen($string);
 
 		for ($i=0; $i<$count-1; $i++) {
