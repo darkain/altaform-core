@@ -113,10 +113,11 @@ foreach ($databases as $item) {
 		$version		= $connect->variables('version');
 		$memory			= $connect->status('Innodb_buffer_pool_bytes_data');
 		$state			= $connect->globals('wsrep_local_state');
+		$readonly		= $connect->readonly() ? ' (READ ONLY)' : false;
 
 		$servers[]		= [
 			'path'		=> $name,
-			'version'	=> !empty($version) ? (reset($version) . ' : ' . reset($state)) : NULL,
+			'version'	=> !empty($version) ? (reset($version) . $readonly . ' : ' . reset($state)) : NULL,
 			'boot'		=> !empty($uptime) ? $af->time() - reset($uptime) : NULL,
 			'uptime'	=> !empty($uptime) ? afTime::since($af->time() - reset($uptime), AF_YEAR*7) : NULL,
 			'memory'	=> !empty($memory) ? afString::fromBytes(reset($memory)) : NULL,
