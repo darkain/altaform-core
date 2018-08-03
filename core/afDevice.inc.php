@@ -32,23 +32,222 @@
 
 
 class afDevice {
-	static $device = false;
+
+	////////////////////////////////////////////////////////////////////////////
+	// MAIN CONSTRUCTOR - INITIALIZE USER AGENT INFO
+	////////////////////////////////////////////////////////////////////////////
+	public function __construct() {
+		static::device();
+	}
 
 
-	public function __construct() { static::device(); }
-
-	public function __invoke() { return static::device(); }
-
-	public function __toString() { return static::device(); }
 
 
+	////////////////////////////////////////////////////////////////////////////
+	// INVOKING THIS CLASS RETURNS THE USER AGENT STRING
+	////////////////////////////////////////////////////////////////////////////
+	public function __invoke() {
+		return static::device();
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// CONVERTING THIS CLASS TO A STRING RETURNS THE USER AGENT STRING
+	////////////////////////////////////////////////////////////////////////////
+	public function __toString() {
+		return static::device();
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// GET THE USER AGENT STRING
+	////////////////////////////////////////////////////////////////////////////
+	public static function agent($agent=false) {
+		if ($agent !== false) {
+			self::$agent = afString::reducewhitespace(
+				strtolower((string)$agent)
+			);
+		}
+
+		if (empty(self::$device)) static::device();
+
+		return self::$agent;
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// MANUALLY SET A NEW USER AGENT STRING
+	////////////////////////////////////////////////////////////////////////////
+	public static function set($device) {
+		self::$device = $device;
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// FORCE AUTOMATIC REDETECTION OF USER AGENT STRING
+	////////////////////////////////////////////////////////////////////////////
+	public static function redetect() {
+		self::$device = false;
+		return static::device();
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// CHECK IF USER AGENT IS NEW ENOUGH TO SUPPORT ENHANCED HTTPS SECURITY
+	////////////////////////////////////////////////////////////////////////////
+	public static function secure() {
+		if (static::is('windows nt 5.')) return false;
+		foreach (self::$secure as $key => $agent) {
+			if (static::is($agent)) {
+				return is_string($key) ? static::is($key) : true;
+			}
+		}
+		return false;
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// CHECK IF USER AGENT IS A DESKTOP BROWSER
+	////////////////////////////////////////////////////////////////////////////
+	public static function desktop() {
+		return (static::device() === 'desktop' );
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// CHECK IF USER AGENT IS A MOBILE DEVICE, SUCH AS A SMART PHONE
+	////////////////////////////////////////////////////////////////////////////
+	public static function mobile() {
+		return (static::device() === 'mobile');
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// CHECK IF USER AGENT IS A MOBILE TABLET DEVICE
+	////////////////////////////////////////////////////////////////////////////
+	public static function tablet() {
+		return (static::device() === 'tablet');
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// CHECK IF USER AGENT IS A SMART TV
+	////////////////////////////////////////////////////////////////////////////
+	public static function tv() {
+		return (static::device() === 'tv');
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// CHECK IF USER AGENT MATCHES A PARTICULAR STRING
+	////////////////////////////////////////////////////////////////////////////
+	public static function is($type) {
+		return strpos(self::agent(), $type) !== false;
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// CHECK IF USER AGENT IS LEGACY MICROSOFT INTERNET EXPLORER BROWSER
+	////////////////////////////////////////////////////////////////////////////
+	public static function trident() {
+		return	static::is('trident/')	||
+				static::is('bingpreview/');
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// CHECK IF USER AGENT IS MODERN MICROSOFT EDGE BROWSER
+	////////////////////////////////////////////////////////////////////////////
+	public static function edge() {
+		return static::is('edge/');
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// CHECK IF USER AGENT IS WEBKIT BASED (CHROME, OPERA, SAFARI, VIVALDI)
+	////////////////////////////////////////////////////////////////////////////
+	public static function webkit() {
+		return static::is('applewebkit/') && !self::edge();
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// CHECK IF USER AGENT IS MAINLINE FIREFOX OR DEBIAN'S ICEWEASEL PORT
+	////////////////////////////////////////////////////////////////////////////
+	public static function firefox() {
+		return	static::is('firefox/')	||
+				static::is('iceweasel/');
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// CHECK IF USER AGENT IS LEGACY KONQUEROR BROWSER
+	////////////////////////////////////////////////////////////////////////////
+	public static function konqueror() {
+		return static::is('konqueror/');
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// CHECK IF USER AGENT IS IDENTIFYING ITSELF AS A BOT
+	////////////////////////////////////////////////////////////////////////////
+	public static function bot() {
+		return	static::is('spider/')	||
+				static::is('bot/')		||
+				static::is('baidu/')	||
+				static::is('cawl/')		||
+				static::is('slurp/');
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// MAIN USER AGENT PROCESSING AND DETECTION METHOD
+	// categorizr function
+	////////////////////////////////////////////////////////////////////////////
 	static function device() {
 		global $get;
 
 		if (self::$device !== false) return self::$device;
 
 		//Set User Agent = self::$agent
-		self::$agent = strtolower($get->server('HTTP_USER_AGENT', ''));
+		if (empty(self::$agent)) {
+			self::$device = 'unknown';
+			self::agent(afCli() ? 'cli' : $get->server('HTTP_USER_AGENT'));
+		}
 
 		// No user agent
 		if (empty(self::$agent)) {
@@ -106,6 +305,9 @@ class afDevice {
 		} else if ((preg_match('/Bot|Crawler|Spider|Yahoo|ia_archiver|Covario-IDS|findlinks|DataparkSearch|larbin|Mediapartners-Google|NG-Search|Snappy|Teoma|Jeeves|TinEye|Validator/i', self::$agent)) && (!preg_match('/Mobile/i', self::$agent))) {
 			self::$device = 'desktop';
 
+		} else if (afCli()) {
+			self::$device = 'desktop';
+
 		// Otherwise assume it is a Mobile Device
 		} else {
 			self::$device = 'mobile';
@@ -118,33 +320,24 @@ class afDevice {
 
 
 
-	public static function is_secure() {
-		if (static::is('windows nt 5.')) return false;
-		foreach (self::$secure as $key => $agent) {
-			if (static::is($agent)) {
-				return is_string($key) ? static::is($key) : true;
-			}
-		}
-		return false;
+
+	////////////////////////////////////////////////////////////////////////////
+	// DISPLAY DEVICE INFO ON VAR_DUMP
+	////////////////////////////////////////////////////////////////////////////
+	public function __debugInfo() {
+		return [
+			'device'	=> self::$device,
+			'agent'		=> self::$agent,
+		];
 	}
 
 
 
-	public static function set($device)	{ self::$device = $device; }
-	public static function desktop()	{ return (static::device() === 'desktop'	); }
-	public static function tablet()		{ return (static::device() === 'tablet'		); }
-	public static function tv()			{ return (static::device() === 'tv'			); }
-	public static function mobile()		{ return (static::device() === 'mobile'		); }
-	public static function redetect()	{ self::$device = false; return static::device(); }
 
-	public static function agent()		{ return self::$agent; }
-	public static function is($type)	{ return strpos(self::$agent, $type)!==false; }
-	public static function trident()	{ return static::is('trident/')		||  static::is('bingpreview/'); }
-	public static function edge()		{ return static::is('edge/'); }
-	public static function webkit()		{ return static::is('applewebkit/')	||  !self::edge(); }
-	public static function konqueror()	{ return static::is('konqueror/'); }
-	public static function firefox()	{ return static::is('firefox/')		||  static::is('iceweasel/'); }
-	public static function bot()		{ return static::is('spider/')		||  static::is('bot/')  ||  static::is('baidu/')  ||  static::is('cawl/')  ||  static::is('slurp/'); }
+	////////////////////////////////////////////////////////////////////////////
+	// LOCAL VARIABLES
+	////////////////////////////////////////////////////////////////////////////
+	public static $device	= false;
 
 	public static $agent	= '';
 
@@ -155,5 +348,3 @@ class afDevice {
 	];
 
 }
-
-afDevice::device();

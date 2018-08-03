@@ -242,6 +242,13 @@ class afString {
 
 
 
+	public static function reducewhitespace($string) {
+		return preg_replace('/\s\s+/', ' ', $string);
+	}
+
+
+
+
 	public static function stripwhitespace($string) {
 		return str_replace(
 			['+', ' ', "\t", "\r", "\n", "\0", "\x0B"],
