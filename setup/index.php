@@ -11,7 +11,7 @@ assert500(
 
 
 assert500(
-	$db->tableExists('pudl_user_auth'),
+	$db->tableExists('pudl_authentication'),
 	'AUTH TABLE DOES NOT EXIST'
 );
 
@@ -23,7 +23,7 @@ assert500(
 
 
 assert500(
-	$db->row('pudl_user_auth') === false,
+	$db->row('pudl_authentication') === false,
 	'AUTH TABLE IS ALREADY POPULATED'
 );
 

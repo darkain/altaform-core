@@ -16,7 +16,7 @@ if ($user->loggedIn()) {
 ////////////////////////////////////////////////////////////////////////////////
 assert401(
 	$auth = $db->row([
-		'ua' => 'pudl_user_auth',
+		'ua' => 'pudl_authentication',
 		'us' => 'pudl_user',
 	], [
 		'auth_account' => $get->auth_account,

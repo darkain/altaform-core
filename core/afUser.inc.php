@@ -46,7 +46,7 @@ class			afUser
 			],
 
 			'table'		=> [static::prefix	=> [static::table,
-				['left'	=> ['ua'=>'pudl_user_auth'], 'using'=>'user_id'],
+				['left'	=> ['ua'=>'pudl_authentication'], 'using'=>'user_id'],
 			]],
 		];
 	}
@@ -136,7 +136,7 @@ class			afUser
 
 		$this->auth_account = $account;
 
-		return $db->upsert('pudl_user_auth', [
+		return $db->upsert('pudl_authentication', [
 			static::column	=> $this->id(),
 			'auth_account'	=> $account,
 			'auth_password'	=> password_hash($password, PASSWORD_DEFAULT),
