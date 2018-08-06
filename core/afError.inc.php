@@ -602,7 +602,7 @@ set_exception_handler(function($e) {
 		if ($e->getCode() === PUDL_X_CONNECTION) {
 			$afconfig->debug = false;
 			$afconfig->error['email'] = false;
-			error503();
+			if (!afCli()) error503($e->getMessage());
 		}
 	}
 
