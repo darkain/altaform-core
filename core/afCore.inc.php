@@ -257,8 +257,12 @@ class		altaform
 
 	public function timeout($seconds) {
 		global $db;
+
 		set_time_limit($seconds);
-		$db->timeout($seconds);
+
+		if ($db instanceof pudl) {
+			$db->timeout($seconds);
+		}
 	}
 
 

@@ -266,8 +266,6 @@ if (!empty($afconfig->pudl)  &&  tbx_array($afconfig->pudl)) {
 		)
 	);
 
-	if (afCli()) $db->timeout(AF_DAY);
-
 	$af->settings = $db	->cache(AF_MINUTE*5, 'altaform_settings')
 						->collection('pudl_altaform');
 
@@ -275,6 +273,14 @@ if (!empty($afconfig->pudl)  &&  tbx_array($afconfig->pudl)) {
 	require_once(__DIR__.'/core/afUser.inc.php');
 	$af = altaform::create();
 }
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// EXTENDED TIMEOUT VALUE
+////////////////////////////////////////////////////////////////////////////////
+if (afCli()) $af->timeout(AF_DAY);
 
 
 
