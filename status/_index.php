@@ -128,6 +128,8 @@ foreach ($databases as $item) {
 			$db->onlineServer($item);
 		}
 	}
+
+	$connect->disconnect();
 }
 
 
