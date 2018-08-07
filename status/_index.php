@@ -89,7 +89,7 @@ if (!empty($list['wsrep_incoming_addresses'])) {
 	}
 }
 
-sort($databases);
+natsort($databases);
 
 
 pudlMySqli::dieOnError(false);
