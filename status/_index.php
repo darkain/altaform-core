@@ -112,12 +112,15 @@ foreach ($databases as $item) {
 		$uptime			= $connect->globals('Uptime');
 		$version		= $connect->variables('version');
 		$memory			= $connect->status('Innodb_buffer_pool_bytes_data');
-		$state			= $connect->globals('wsrep_local_state');
 		$readonly		= $connect->readonly() ? ' (READ ONLY)' : false;
+
+		$state			= current($connect->globals('wsrep_local_state'))
+						. ' : '
+						. current($connect->variables('system_versioning_alter_history'));
 
 		$servers[]		= [
 			'path'		=> $name,
-			'version'	=> !empty($version) ? (reset($version) . $readonly . ' : ' . reset($state)) : NULL,
+			'version'	=> !empty($version) ? (reset($version) . $readonly . ' : ' . $state) : NULL,
 			'boot'		=> !empty($uptime) ? $af->time() - reset($uptime) : NULL,
 			'uptime'	=> !empty($uptime) ? afTime::since($af->time() - reset($uptime), AF_YEAR*7) : NULL,
 			'memory'	=> !empty($memory) ? afString::fromBytes(reset($memory)) : NULL,
