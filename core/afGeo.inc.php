@@ -157,15 +157,13 @@ class afGeo {
 		$location = strtolower($location);
 		$location = ucwords($location);
 		$location = str_replace(',', ', ', $location);
-		$location = str_replace("\r", ' ', $location);
-		$location = str_replace("\n", ' ', $location);
-		$location = str_replace("\t", ' ', $location);
 		$location = str_replace('. ', ' ', $location);
 
-		$location = preg_replace('/\\busa\\b/i', '', $location);
-		$location = preg_replace('/\\bunited states\\b/i', '', $location);
-		$location = preg_replace('/\\bunited states of america\\b/i', '', $location);
-		$location = preg_replace('/\s+/', ' ', $location);
+		$location = afString::stripwhitespace($location, ' ');
+		$location = afString::reducewhitespace($location);
+
+		$location = preg_replace('/\\busa?\\b/i', '', $location);
+		$location = preg_replace('/\\bunited states( of america)?\\b/i', '', $location);
 
 		$location = trim($location);
 
