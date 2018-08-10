@@ -249,10 +249,10 @@ class afString {
 
 
 
-	public static function stripwhitespace($string) {
+	public static function stripwhitespace($string, $replace='') {
 		return str_replace(
 			['+', ' ', "\t", "\r", "\n", "\0", "\x0B"],
-			'',
+			$replace,
 			$string
 		);
 	}
