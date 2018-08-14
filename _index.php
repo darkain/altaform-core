@@ -93,6 +93,7 @@ if (!headers_sent()) {
 		header('X-UA-Compatible: IE=edge,chrome=1');
 	}
 
+	header('Feature-Policy: lazyload *');
 	header('X-Content-Type-Options: nosniff');
 	header('Content-Language: en_US');
 
