@@ -361,6 +361,32 @@ class afString {
 
 
 
+	////////////////////////////////////////////////////////////////////////////
+	// PASS IN A RATIONAL, GET A FLOAT: PASS IN "66-2/3" AND GET (66.6667)
+	////////////////////////////////////////////////////////////////////////////
+	static function unrational($string, $round=4) {
+		$string	= trim($string, " \t\0-()");
+		$value	= (float) $string;
+		$string	= substr($string, strlen($value));
+		$string	= ltrim($string, " \t\0-(");
+
+		if (!empty($string)) {
+			$parts = explode('/', $string);
+			if (count($parts) > 1) {
+				$parts[0] = (int) $parts[0];
+				$parts[1] = (int) $parts[1];
+				if ($parts[0] !== 0  &&  $parts[1] !== 0) {
+					$value += round($parts[0] / $parts[1], $round);
+				}
+			}
+		}
+
+		return $value;
+	}
+
+
+
+
 	//GENERATE NEW RANDOM PASSWORD OF $length CHARACTERS
 	public static function password($length=16) {
 		return afUser::password($length);
