@@ -352,9 +352,9 @@ class afString {
 		$r1 = (int)($h1 / $k1);
 		$r2 = (int)($h1 % $k1);
 
-		if ($r1  &&  $r2) return $r1 . '-' . $r2 . '/' . $k1;
-		if ($r2) return $r2 . '/' . $k1;
-		if ($r1) return $r1;
+		if ($r1  &&  $r2) return (string)($r1 . '-' . $r2 . '/' . $k1);
+		if ($r2) return (string)($r2 . '/' . $k1);
+		if ($r1) return (string)($r1);
 		return '';
 	}
 
@@ -365,19 +365,25 @@ class afString {
 	// PASS IN A RATIONAL, GET A FLOAT: PASS IN "66-2/3" AND GET (66.6667)
 	////////////////////////////////////////////////////////////////////////////
 	static function unrational($string, $round=4) {
-		$string	= trim($string, " \t\0-()");
-		$value	= (float) $string;
-		$string	= substr($string, strlen($value));
-		$string	= ltrim($string, " \t\0-(");
+		$value		= 0.0;
+		$rational	= [];
 
-		if (!empty($string)) {
-			$parts = explode('/', $string);
-			if (count($parts) > 1) {
-				$parts[0] = (int) $parts[0];
-				$parts[1] = (int) $parts[1];
-				if ($parts[0] !== 0  &&  $parts[1] !== 0) {
-					$value += round($parts[0] / $parts[1], $round);
-				}
+		$parts = preg_split('/[\s-+]/', $string, 2);
+		if (count($parts) === 2) {
+			$value		= (float)(int) trim($parts[0]);
+			$rational	= explode('/', $parts[1], 2);
+		} else {
+			$rational	= explode('/', $parts[0], 2);
+			if (count($rational) === 1) {
+				$value	= (float)(int) trim($parts[0]);
+			}
+		}
+
+		if (count($rational) === 2) {
+			$rational[0] = (float)(int) trim($rational[0]);
+			$rational[1] = (float)(int) trim($rational[1]);
+			if ($rational[0] !== 0  &&  $rational[1] !== 0) {
+				$value += round($rational[0] / $rational[1], $round);
 			}
 		}
 
