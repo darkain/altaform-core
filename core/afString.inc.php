@@ -368,7 +368,7 @@ class afString {
 		$value		= 0.0;
 		$rational	= [];
 
-		$parts = preg_split('/[\s-+]/', $string, 2);
+		$parts = preg_split('/[\s+-]/', $string, 2);
 		if (count($parts) === 2) {
 			$value		= (float)(int) trim($parts[0]);
 			$rational	= explode('/', $parts[1], 2);
