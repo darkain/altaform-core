@@ -135,7 +135,7 @@ class afString {
 				case 0x10:			// new line
 				case 0x13:			// carriage return
 				case 0x20:			// space
-					continue;
+					break;			// continue for statement
 
 				default:
 					break 2;
@@ -150,7 +150,7 @@ class afString {
 				case 0x10:			// new line
 				case 0x13:			// carriage return
 				case 0x20:			// space
-					continue;
+					break;			// continue for statement
 
 				default:
 					break 2;
@@ -194,10 +194,10 @@ class afString {
 								$string
 							);
 					}
-					continue;
+					break;			// continue for statement
 
 				default:
-					continue;
+					break;
 			}
 		}
 
