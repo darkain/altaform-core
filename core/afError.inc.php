@@ -565,19 +565,26 @@ function assertGrant($item, $text=false, $log=false) {
 
 
 
-set_error_handler(function($errno, $errstr, $errfile=NULL, $errline=NULL, $errcontext=[], $backtrace=[]) {
+////////////////////////////////////////////////////////////////////////////////
+// HANDLER FOR PHP ERRORS, WARNINGS, NOTICES (BUT NOT EXCEPTIONS)
+////////////////////////////////////////////////////////////////////////////////
+set_error_handler(function(	$errno,			$errstr,		$errfile=NULL,
+							$errline=NULL,	$errcontext=[],	$backtrace=[]) {
+
 	global $afconfig;
 
 	if (!(error_reporting()  &  $errno)) return false;
 
 	$die = true;
 
-	switch ($errno) {
-		case E_WARNING:		case E_USER_WARNING:
-		case E_NOTICE:		case E_USER_NOTICE:
-			$die = ($afconfig instanceof afConfig)
-				? !!$afconfig->debug
-				: false;
+	if (function_exists('afCli')  &&  !afCli()) {
+		switch ($errno) {
+			case E_WARNING:		case E_USER_WARNING:
+			case E_NOTICE:		case E_USER_NOTICE:
+				$die = ($afconfig instanceof afConfig)
+					? !!$afconfig->debug
+					: false;
+		}
 	}
 
 	afError::log([
@@ -593,6 +600,9 @@ set_error_handler(function($errno, $errstr, $errfile=NULL, $errline=NULL, $errco
 
 
 
+////////////////////////////////////////////////////////////////////////////////
+// HANDLER FOR PHP EXCEPTIONS (BOTH SYSTEM AND USER GENERATED)
+////////////////////////////////////////////////////////////////////////////////
 set_exception_handler(function($e) {
 	global $afconfig;
 
@@ -617,6 +627,9 @@ set_exception_handler(function($e) {
 
 
 
+////////////////////////////////////////////////////////////////////////////////
+// CATCH PHP PARSING ERRORS
+////////////////////////////////////////////////////////////////////////////////
 register_shutdown_function(function() {
 	if (!error_reporting()) return;
 
@@ -635,6 +648,9 @@ register_shutdown_function(function() {
 
 
 
+////////////////////////////////////////////////////////////////////////////////
+// LOG PUDL DATABASE QUERY ERRORS
+////////////////////////////////////////////////////////////////////////////////
 function afPudlLog($callback, $db, $result=NULL) {
 	global $af;
 
@@ -650,6 +666,9 @@ function afPudlLog($callback, $db, $result=NULL) {
 
 
 
+////////////////////////////////////////////////////////////////////////////////
+// OUR OWN CUSTOM DATA DUMP FUNCTION
+////////////////////////////////////////////////////////////////////////////////
 function af_dump($var, $die=true) {
 	global $af;
 
