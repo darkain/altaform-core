@@ -19,7 +19,16 @@ class afSidebar {
 
 	public function fetch($table='pudl_menu', $clause=false) {
 		global $db;
-		$this->data = $db->indexed($table, $clause, ['menu_sort', 'menu_id']);
+
+		$this->data = [];
+		$data = $db->rows($table, $clause, ['menu_sort', 'menu_id']);
+
+		if (pudl_array($data)) {
+			foreach ($data as $item) {
+				$this->data[reset($item)] = $item;
+			}
+		}
+
 		return $this;
 	}
 
