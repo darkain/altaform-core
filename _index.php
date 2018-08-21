@@ -246,6 +246,9 @@ if (!empty($afconfig->pudl)  &&  tbx_array($afconfig->pudl)) {
 	require_once('_pudl/pudl.php');
 	require_once('_pudl/pudlSession.php');
 	require_once(__DIR__.'/core/afUser.inc.php');
+
+	if (afCli()) $afconfig->pudl['timeout'] = AF_DAY;
+
 	$db = pudl::instance($afconfig->pudl);
 
 	$db->on('log',		'afPudlLog');
