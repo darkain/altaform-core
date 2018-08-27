@@ -71,7 +71,9 @@ class afRouter {
 			//FORCE VIRTUAL PATHING IF SPECIAL CHARACTERS ARE FOUND
 			//SPECIAL CHARACTER ALLOWED: [SPACE] ! + - . _
 			//ALL OTHERS FORCE VITUAL PATHING
-			if (preg_match('/[^\x21\x2B\x2D\x2E\x5F 0-9a-zA-Z]/', $this->part[$i])) {
+			if (!ctype_alnum(substr($this->part[$i], 0, 1)) ||
+				preg_match('/[^\x21\x2B\x2D\x2E\x5F 0-9a-zA-Z]/', $this->part[$i])) {
+
 				$this->virtualize($i);
 
 				if (is_dir('_virtual')) {
