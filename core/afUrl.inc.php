@@ -35,7 +35,7 @@ class		afUrl
 		}
 
 		$this->encoding		= array_map('trim', explode(',', $get->server('HTTP_ACCEPT_ENCODING','')));
-		$this->uri			= urldecode($get->server('REQUEST_URI', ''));
+		$this->uri			= $get->server('REQUEST_URI', '');
 		$this->domain		= reset($host);
 		$this->origin		= $get->server('HTTP_ORIGIN', '');
 		$this->referer		= $get->server('HTTP_REFERER', '');
@@ -84,16 +84,18 @@ class		afUrl
 
 		$this->part		= explode('/', $this->parts['path']);
 		$this->part[]	= '';
-		foreach ($this->part as $val) {
+		foreach ($this->part as &$val) {
 			if (!strlen($val)) continue;
+
+			$this->url .= '/' . $val;
+
+			$val = urldecode($val);
 
 			assert500(
 				!in_array($val[0], ['.', '+', '-', '_', "\\", 0x7F])
 				&& ord($val[0])>0x20,
 				'Invalid character in URL path: 0x' . dechex(ord($val[0]))
 			);
-
-			$this->url .= '/' . urlencode($val);
 		}
 	}
 
