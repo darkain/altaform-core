@@ -72,15 +72,18 @@ class afRouter {
 			//SPECIAL CHARACTER ALLOWED: [SPACE] ! + - . _
 			//ALL OTHERS FORCE VITUAL PATHING
 			if (preg_match('/[^\x21\x2B\x2D\x2E\x5F 0-9a-zA-Z]/', $this->part[$i])) {
+				$this->virtualize($i);
+
 				if (is_dir('_virtual')) {
-					$this->chdir( $this->virtualize($i, '_virtual') );
+					$this->chdir('_virtual');
 					if ($this->reparse  ||  $this->reparse === NULL) return true;
 					if ($count-$i === 1) return $this->index($af);
 					continue;
 				}
 
-				if (is_file('_virtual.php'))	return $this->virtualize($i, '_virtual.php');
-				if (is_file('_virtual.hh'))		return $this->virtualize($i, $this->hhvm('_virtual.hh'));
+				if (is_file('_virtual.php'))	return '_virtual.php';
+				if (is_file('_virtual.hh'))		return $this->hhvm('_virtual.hh');
+
 				error404();
 			}
 
@@ -100,28 +103,34 @@ class afRouter {
 				if (is_file($file.'.php'))		return $file.'.php';
 				if (is_file($file.'.hh'))		return $this->hhvm($file.'.hh');
 				if (is_file($file.'.tpl'))		return $af->auto(true, $file.'.tpl');
-				if (is_file('_virtual.php'))	return $this->virtualize($i, '_virtual.php');
-				if (is_file('_virtual.hh'))		return $this->virtualize($i, $this->hhvm('_virtual.hh'));
+
+				$this->virtualize($i);
+				if (is_file('_virtual.php'))	return '_virtual.php';
+				if (is_file('_virtual.hh'))		return $this->hhvm('_virtual.hh');
 				if (!is_dir('_virtual'))		error404();
 
-				$this->chdir( $this->virtualize($i, '_virtual') );
+				$this->chdir('_virtual');
 				if ($this->reparse  ||  $this->reparse === NULL) return true;
 
 				return $this->index($af);
 			}
 
 
-			//NO MATCHES FOUND OTHERWISE FOR FRAGEMENT, ATTEMPT VIRTUAL FOLDER
+			//NO MATCHES FOUND OTHERWISE FOR FRAGEMENT, VIRTUALIZE INSTEAD
+			$this->virtualize($i);
+
+
+			//ATTEMPT VIRTUAL FOLDER
 			if (is_dir('_virtual')) {
-				$this->chdir( $this->virtualize($i, '_virtual') );
+				$this->chdir('_virtual');
 				if ($this->reparse !== false) return true;
 				continue;
 			}
 
 
 			//NO MATCHES FOUND OTHERWISE FOR FRAGEMENT, ATTEMPT VIRTUAL FILE
-			if (is_file('_virtual.php'))		return $this->virtualize($i, '_virtual.php');
-			if (is_file('_virtual.hh'))			return $this->virtualize($i, $this->hhvm('_virtual.hh'));
+			if (is_file('_virtual.php'))		return '_virtual.php';
+			if (is_file('_virtual.hh'))			return $this->hhvm('_virtual.hh');
 
 
 			//NO MATCHES FOUND FOR FRAGEMENT, ERROR 404 PAGE!
@@ -225,8 +234,8 @@ class afRouter {
 	////////////////////////////////////////////////////////////////////////////
 	// PROCESS A VIRTUAL PATH
 	////////////////////////////////////////////////////////////////////////////
-	private function virtualize($start, $return=false) {
-		if (!empty($this->virtual)) return $return;
+	private function virtualize($start) {
+		if (!empty($this->virtual)) return;
 
 		$count = count($this->part)-1;
 		assert500($start<$count, 'Critical error processing path');
@@ -236,8 +245,6 @@ class afRouter {
 		}
 
 		$this->id = afString::int($this->virtual[0]);
-
-		return $return;
 	}
 
 
