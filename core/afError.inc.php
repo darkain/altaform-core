@@ -695,13 +695,17 @@ function af_dump($var, $die=true) {
 // VERIFY FILE OWNERSHIP AND GROUP MATCHES
 ////////////////////////////////////////////////////////////////////////////////
 function af_file_owner($path) {
-	static $owner = NULL;
-	static $group = NULL;
+	static $owner	= NULL;
+	static $group	= NULL;
 
-	if ($owner == NULL) $owner = fileowner($path);
-	if ($group == NULL) $group = filegroup($path);
+	if ($owner === NULL  ||  $group === NULL) {
+		$paths		= get_included_files();
+		$path		= $paths[count($paths)-2];
+		$owner		= fileowner($path);
+		$group		= filegroup($path);
+	}
 
-	if (fileowner($path) !== $owner  ||  filegroup($path) !== $group)  {
+	if (@fileowner($path) !== $owner  ||  @filegroup($path) !== $group)  {
 		throw new Exception(
 			"File ownerships do not match: " . $path
 		);
@@ -717,5 +721,5 @@ function af_file_owner($path) {
 ////////////////////////////////////////////////////////////////////////////////
 // VALIDATE MAIN ALTAFORM BOOSTRAP FILE AND THIS FILE OWNERSHIP
 ////////////////////////////////////////////////////////////////////////////////
-af_file_owner(__DIR__ . '/../_index.php');
+af_file_owner(NULL);
 af_file_owner(__FILE__);
