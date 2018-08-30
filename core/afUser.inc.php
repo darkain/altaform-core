@@ -1,8 +1,8 @@
 <?php
 
 
-require_once(__DIR__.'/../traits/afPermission.inc.php');
-require_once(__DIR__.'/../traits/afPreference.inc.php');
+require_once(af_file_owner(__DIR__.'/../traits/afPermission.inc.php'));
+require_once(af_file_owner(__DIR__.'/../traits/afPreference.inc.php'));
 
 //TODO:	ADD A TRAIT FOR 'ATTRIBUTES'
 //		CURRENTLY ONLY ATTRIBUTE IS UNVERIFIED PASSWORD

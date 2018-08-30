@@ -5,7 +5,7 @@
 //IF WE'RE ALREADY LOGGED IN, JUST REDIRECT PAGE
 ////////////////////////////////////////////////////////////////////////////////
 if ($user->loggedIn()) {
-	return require(__DIR__.'/redirect.inc.php');
+	return require(af_file_owner(__DIR__.'/redirect.inc.php'));
 }
 
 
@@ -54,4 +54,4 @@ $af->authenticate($auth);
 //REDIRECT THE USER
 ////////////////////////////////////////////////////////////////////////////////
 $user = new afUser($auth);
-require(__DIR__.'/redirect.inc.php');
+require(af_file_owner(__DIR__.'/redirect.inc.php'));

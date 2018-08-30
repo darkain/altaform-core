@@ -200,20 +200,20 @@ class afRouter {
 	////////////////////////////////////////////////////////////////////////////
 	// MOVE INTO A FOLDER, AND TEST SECURITY IF NEEDED
 	////////////////////////////////////////////////////////////////////////////
-	private function chdir($__path) {
-		assert500(@chdir($__path), 'Unable to enter directory');
+	private function chdir($__af_path__) {
+		assert500(@chdir($__af_path__), 'Unable to enter directory');
 
 		if (!is_file('_altaform.inc.php')) return;
 
 		extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
-		require('_altaform.inc.php');
+		require(af_file_owner('_altaform.inc.php'));
 
-		$__list = get_defined_vars();
+		$__af_list__ = get_defined_vars();
 
-		unset($__list['__path']);
+		unset($__af_list__['__af_path__']);
 
-		foreach ($__list as $__key => $__value) {
-			$GLOBALS[$__key] = $__value;
+		foreach ($__af_list__ as $__af_key__ => $__af_value__) {
+			$GLOBALS[$__af_key__] = $__af_value__;
 		}
 	}
 

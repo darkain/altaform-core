@@ -1,36 +1,51 @@
 <?php
 
 
+////////////////////////////////////////////////////////////////////////////////
 // DISABLE DOUBLE-LOADING
+////////////////////////////////////////////////////////////////////////////////
 if (class_exists('altaform', false)) return;
 
 
-//Enable automatic error display
+
+
+////////////////////////////////////////////////////////////////////////////////
+// ENABLE AUTOMATIC ERROR DISPLAY
+////////////////////////////////////////////////////////////////////////////////
 ini_set('display_errors', 'on');
 
 
 
 
-//Set the include path to make it easier to use include() and require()
+////////////////////////////////////////////////////////////////////////////////
+// SET THE INCLUDE PATH TO MAKE IT EASIER TO USE INCLUDE() AND REQUIRE()
+////////////////////////////////////////////////////////////////////////////////
 chdir(__DIR__.'/..');
 set_include_path(get_include_path() . PATH_SEPARATOR . getcwd());
 
 
 
 
-//PHP Error handling functions
+////////////////////////////////////////////////////////////////////////////////
+// PHP ERROR HANDLING FUNCTIONS
+////////////////////////////////////////////////////////////////////////////////
+//DONT USE AF_FILE_OWNER HERE AS IT DOESN'T EXIST YET.
 require_once(__DIR__.'/core/afError.inc.php');
 
 
 
 
-//Enable PHP Output Buffering
+////////////////////////////////////////////////////////////////////////////////
+// ENABLE PHP OUTPUT BUFFERING
+////////////////////////////////////////////////////////////////////////////////
 ob_start();
 
 
 
 
-//Set the internal character encoding to UTF-8
+////////////////////////////////////////////////////////////////////////////////
+// SET THE INTERNAL CHARACTER ENCODING TO UTF-8
+////////////////////////////////////////////////////////////////////////////////
 if (extension_loaded('mbstring')) {
 	mb_http_output('UTF-8');
 	mb_regex_encoding('UTF-8');
@@ -40,15 +55,19 @@ if (extension_loaded('mbstring')) {
 
 
 
-//we DONT need compression from PHP itself
-//web server / reverse proxy handles this task for us
+////////////////////////////////////////////////////////////////////////////////
+// WE DONT NEED COMPRESSION FROM PHP ITSELF
+// WEB SERVER / REVERSE PROXY HANDLES THIS TASK FOR US
+////////////////////////////////////////////////////////////////////////////////
 ini_set('zlib.output_compression', 'Off');
 ini_set('zlib.output_compression_level', '0');
 
 
 
 
-//DEFINE PHP_VERSION_ID IF NOT ALREADY DEFINED
+////////////////////////////////////////////////////////////////////////////////
+// DEFINE PHP_VERSION_ID IF NOT ALREADY DEFINED
+////////////////////////////////////////////////////////////////////////////////
 if (!defined('PHP_VERSION_ID')) {
 	$version = explode('.', PHP_VERSION);
 	define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
@@ -57,8 +76,10 @@ if (!defined('PHP_VERSION_ID')) {
 
 
 
-//FIX FOR PHP 7.1 FLOATING POINT PRECISION DURING SERIALIZATION
-//https://stackoverflow.com/questions/42981409/php7-1-json-encode-float-issue
+////////////////////////////////////////////////////////////////////////////////
+// FIX FOR PHP 7.1 FLOATING POINT PRECISION DURING SERIALIZATION
+// https://stackoverflow.com/questions/42981409/php7-1-json-encode-float-issue
+////////////////////////////////////////////////////////////////////////////////
 if (version_compare(phpversion(), '7.1', '>=')) {
 	ini_set( 'serialize_precision', -1 );
 }
@@ -66,28 +87,42 @@ if (version_compare(phpversion(), '7.1', '>=')) {
 
 
 
-//Getvar Library (GET/POST variables)
-require_once('_getvar/getvar.inc.php');
+////////////////////////////////////////////////////////////////////////////////
+// GETVAR LIBRARY (GET/POST VARIABLES)
+////////////////////////////////////////////////////////////////////////////////
+require_once(af_file_owner('_getvar/getvar.inc.php'));
 $get = new getvar;
 
 
 
-//Altaform Base Code
-require_once(__DIR__.'/includes.inc.php');
+
+////////////////////////////////////////////////////////////////////////////////
+// ALTAFORM BASE CODE
+////////////////////////////////////////////////////////////////////////////////
+require_once(af_file_owner(__DIR__.'/includes.inc.php'));
 
 
 
-//URL Parser
-require_once(__DIR__.'/core/afUrl.inc.php');
+
+////////////////////////////////////////////////////////////////////////////////
+// URL PARSER
+////////////////////////////////////////////////////////////////////////////////
+require_once(af_file_owner(__DIR__.'/core/afUrl.inc.php'));
 
 
 
-//If we're on the CLI, disable output buffering
+
+////////////////////////////////////////////////////////////////////////////////
+// IF WE'RE ON THE CLI, DISABLE OUTPUT BUFFERING
+////////////////////////////////////////////////////////////////////////////////
 if (afCli()  &&  ob_get_level()) ob_end_flush();
 
 
 
-//Set the content type for this document to HTML or TXT with UTF-8 encoding
+
+////////////////////////////////////////////////////////////////////////////////
+// SET THE CONTENT TYPE FOR THIS DOCUMENT TO HTML OR TXT WITH UTF-8 ENCODING
+////////////////////////////////////////////////////////////////////////////////
 if (!headers_sent()) {
 	if (afDevice::trident()) {
 		header('X-UA-Compatible: IE=edge,chrome=1');
@@ -107,7 +142,9 @@ if (!headers_sent()) {
 
 
 
-//Host Information for Config
+////////////////////////////////////////////////////////////////////////////////
+// HOST INFORMATION FOR CONFIG
+////////////////////////////////////////////////////////////////////////////////
 if (!afCli()) {
 	assert500(
 		$afurl->validateDomain($afurl->domain),
@@ -118,15 +155,17 @@ if (!afCli()) {
 
 
 
-//Main Configuration File
+////////////////////////////////////////////////////////////////////////////////
+// MAIN CONFIGURATION FILE
+////////////////////////////////////////////////////////////////////////////////
 if (is_file('_config/'.$afurl->domain.'/config.php.inc')) {
-	require_once('_config/'.$afurl->domain.'/config.php.inc');
+	require_once(af_file_owner('_config/'.$afurl->domain.'/config.php.inc'));
 } else if (is_file('_config/'.$afurl->domain)) {
-	require_once('_config/'.$afurl->domain);
+	require_once(af_file_owner('_config/'.$afurl->domain));
 } else if (is_file('_config/_virtual/config.php.inc')) {
-	require_once('_config/_virtual/config.php.inc');
+	require_once(af_file_owner('_config/_virtual/config.php.inc'));
 } else if (is_file('_config/_virtual.php.inc')) {
-	require_once('_config/_virtual.php.inc');
+	require_once(af_file_owner('_config/_virtual.php.inc'));
 } else {
 	error500('Unknown Domain: ' . $afurl->domain);
 }
@@ -134,25 +173,31 @@ if (is_file('_config/'.$afurl->domain.'/config.php.inc')) {
 
 
 
-//Load additional configuation file
+////////////////////////////////////////////////////////////////////////////////
+// LOAD ADDITIONAL CONFIGUATION FILE
+////////////////////////////////////////////////////////////////////////////////
 if (is_file($afconfig->root . '/_altaform.inc.php')) {
-	$__cwd = getcwd();
+	$__af_cwd__ = getcwd();
 	chdir($afconfig->root);
-	require('_altaform.inc.php');
-	chdir($__cwd);
-	unset($__cwd);
+	require(af_file_owner('_altaform.inc.php'));
+	chdir($__af_cwd__);
+	unset($__af_cwd__);
 }
 
 
 
 
-//Do post-load configuration updates
+////////////////////////////////////////////////////////////////////////////////
+// DO POST-LOAD CONFIGURATION UPDATES
+////////////////////////////////////////////////////////////////////////////////
 $afconfig->_onload();
 
 
 
 
-//Set default flags for Getvar
+////////////////////////////////////////////////////////////////////////////////
+// SET DEFAULT FLAGS FOR GETVAR
+////////////////////////////////////////////////////////////////////////////////
 if (isset($afconfig->getvar)) {
 	$get->flags($afconfig->getvar);
 }
@@ -160,13 +205,17 @@ if (isset($afconfig->getvar)) {
 
 
 
-//Initialize afurl
+////////////////////////////////////////////////////////////////////////////////
+// INITIALIZE AFURL
+////////////////////////////////////////////////////////////////////////////////
 $afurl->_all();
 
 
 
 
-//Disable implicit debugging
+////////////////////////////////////////////////////////////////////////////////
+// DISABLE IMPLICIT DEBUGGING
+////////////////////////////////////////////////////////////////////////////////
 if (is_object($afconfig->debug)) {
 	$afconfig->debug = false;
 }
@@ -174,13 +223,19 @@ if (is_object($afconfig->debug)) {
 
 
 
-//Disable automatic error display
+////////////////////////////////////////////////////////////////////////////////
+// DISABLE AUTOMATIC ERROR DISPLAY
+////////////////////////////////////////////////////////////////////////////////
 ini_set('display_errors', 'off');
 
 
 
 
-//Upgrade to HTTPS connection (modern)
+////////////////////////////////////////////////////////////////////////////////
+// UPGRADE TO HTTPS CONNECTION
+////////////////////////////////////////////////////////////////////////////////
+
+// MODERN BROWSERS
 if ($get->server('HTTP_UPGRADE_INSECURE_REQUESTS')) {
 	if ($afurl->https) {
 		$afurl->secure($afconfig->secure);
@@ -188,13 +243,13 @@ if ($get->server('HTTP_UPGRADE_INSECURE_REQUESTS')) {
 		$afurl->redirectSecure();
 	}
 
-//Upgrade to HTTPS connection (legacy)
+// LEGACY BROWSERS
 } else if (!$afurl->https  &&  !empty($afconfig->secure)) {
 	if (afDevice::secure()) {
 		$afurl->redirectSecure();
 	}
 
-//HSTS - HTTP Strict Transport Security
+// HSTS - HTTP STRICT TRANSPORT SECURITY
 } else if ($afurl->https) {
 	$afurl->secure($afconfig->secure);
 }
@@ -243,21 +298,21 @@ if (!empty($afurl->origin)) {
 // INITIALIZE THE DATABASE CONNECTION
 ////////////////////////////////////////////////////////////////////////////////
 if (!empty($afconfig->pudl)  &&  tbx_array($afconfig->pudl)) {
-	require_once('_pudl/pudl.php');
-	require_once('_pudl/pudlSession.php');
-	require_once(__DIR__.'/core/afUser.inc.php');
+	require_once(af_file_owner('_pudl/pudl.php'));
+	require_once(af_file_owner('_pudl/pudlSession.php'));
+	require_once(af_file_owner(__DIR__.'/core/afUser.inc.php'));
 
 	if (afCli()) $afconfig->pudl['timeout'] = AF_DAY;
 
 	$db = pudl::instance($afconfig->pudl);
 
-	$db->on('log',		'afPudlLog');
+	$db->on('log', 'afPudlLog');
 
 	if (!empty($afconfig->pudl['connected'])) {
 		call_user_func($afconfig->pudl['connected']);
 	}
 
-	//Hide PUDL config from $afconfig
+	// HIDE PUDL CONFIG FROM $afconfig
 	$afconfig->pudl = [];
 
 	$db->time(
@@ -274,7 +329,7 @@ if (!empty($afconfig->pudl)  &&  tbx_array($afconfig->pudl)) {
 						->collection('pudl_altaform');
 
 } else {
-	require_once(__DIR__.'/core/afUser.inc.php');
+	require_once(af_file_owner(__DIR__.'/core/afUser.inc.php'));
 	$af = altaform::create();
 }
 
@@ -304,7 +359,9 @@ $af->login();
 while ($afrouter->reparse) {
 	$afrouter->reparse = false;
 	$afrouter->path = $afrouter->route($af);
-	if (is_string($afrouter->path)) require($afrouter->path);
+	if (is_string($afrouter->path)) {
+		require(af_file_owner($afrouter->path));
+	}
 	chdir($afrouter->directory);
 }
 

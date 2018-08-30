@@ -1,5 +1,5 @@
 <?php
-require_once(__DIR__.'/../error.php.inc');
+require_once(af_file_owner(__DIR__.'/../error.php.inc'));
 
 $list = get_loaded_extensions();
 

@@ -6,9 +6,9 @@ class afMail {
 	public static function send($headers, $subject, $body, $attach=false) {
 		global $afurl, $af;
 
-		require_once('_phpmailer/src/Exception.php');
-		require_once('_phpmailer/src/PHPMailer.php');
-		require_once('_phpmailer/src/SMTP.php');
+		require_once(af_file_owner('_phpmailer/src/Exception.php'));
+		require_once(af_file_owner('_phpmailer/src/PHPMailer.php'));
+		require_once(af_file_owner('_phpmailer/src/SMTP.php'));
 
 		//Really gaiz, really? double-name space OF THE SAME NAME
 		//and THEN the class name, which is also the same!?

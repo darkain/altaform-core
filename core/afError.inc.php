@@ -687,3 +687,35 @@ function af_dump($var, $die=true) {
 
 	if ($die) exit(1);
 }
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// VERIFY FILE OWNERSHIP AND GROUP MATCHES
+////////////////////////////////////////////////////////////////////////////////
+function af_file_owner($path) {
+	static $owner = NULL;
+	static $group = NULL;
+
+	if ($owner == NULL) $owner = fileowner($path);
+	if ($group == NULL) $group = filegroup($path);
+
+	if (fileowner($path) !== $owner  ||  filegroup($path) !== $group)  {
+		throw new Exception(
+			"File ownerships do not match: " . $path
+		);
+		return false;
+	}
+
+	return $path;
+}
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// VALIDATE MAIN ALTAFORM BOOSTRAP FILE AND THIS FILE OWNERSHIP
+////////////////////////////////////////////////////////////////////////////////
+af_file_owner(__DIR__ . '/../_index.php');
+af_file_owner(__FILE__);
