@@ -360,7 +360,7 @@ $af->login();
 while ($afrouter->reparse) {
 	$afrouter->reparse = false;
 	$afrouter->path = $afrouter->route($af);
-	if (is_string($afrouter->path)) {
+	if (is_string($afrouter->path)  &&  $afrouter->path !== '') {
 		require(af_file_owner($afrouter->path));
 	}
 	chdir($afrouter->directory);
