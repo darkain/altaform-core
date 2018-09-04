@@ -332,12 +332,14 @@ class afError {
 
 
 	public static function json($item, $pretty=true) {
-		return @json_encode($item,
-			($pretty ? JSON_PRETTY_PRINT : 0) |
-			JSON_UNESCAPED_SLASHES |
-			JSON_UNESCAPED_UNICODE |
-			JSON_PARTIAL_OUTPUT_ON_ERROR
-		);
+		return !function_exists('json_encode')
+			?	print_r($item, true)
+			:	@json_encode($item,
+					($pretty ? JSON_PRETTY_PRINT : 0) |
+					JSON_UNESCAPED_SLASHES |
+					JSON_UNESCAPED_UNICODE |
+					JSON_PARTIAL_OUTPUT_ON_ERROR
+				);
 	}
 
 
