@@ -329,6 +329,7 @@ if (!empty($afconfig->pudl)  &&  tbx_array($afconfig->pudl)) {
 						->collection('pudl_altaform');
 
 } else {
+	require_once(af_file_owner('_pudl/pudl.php'));
 	require_once(af_file_owner(__DIR__.'/core/afUser.inc.php'));
 	$af = altaform::create();
 }
