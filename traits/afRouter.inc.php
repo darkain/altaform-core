@@ -208,7 +208,7 @@ class afRouter {
 		if (!is_file('_altaform.inc.php')) return;
 
 		extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
-		require(af_file_owner('_altaform.inc.php'));
+		require(is_owner('_altaform.inc.php'));
 
 		$__af_list__ = get_defined_vars();
 

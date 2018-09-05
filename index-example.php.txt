@@ -1,1 +1,1 @@
-<?php require_once('_altaform/_index.php');
+<?php require_once(__DIR__.'/_altaform/_index.php');

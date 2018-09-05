@@ -1,7 +1,7 @@
 <?php
 
 
-require_once(af_file_owner('_products/lib/AmazonECS.class.php'));
+require_once(is_owner('_products/lib/AmazonECS.class.php'));
 
 
 class afProduct {

@@ -1,0 +1,35 @@
+<?php
+
+
+////////////////////////////////////////////////////////////////////////////////
+// VERIFY FILE OWNERSHIP AND GROUP MATCHES
+////////////////////////////////////////////////////////////////////////////////
+function is_owner($path) {
+	static $owner	= NULL;
+	static $group	= NULL;
+
+	if ($owner === NULL  ||  $group === NULL) {
+		$owner		= fileowner(__FILE__);
+		$group		= filegroup(__FILE__);
+		return;
+	}
+
+	if (@fileowner($path) !== $owner  ||  @filegroup($path) !== $group)  {
+		throw new Exception(
+			"File ownerships do not match: " . $path
+		);
+		return false;
+	}
+
+	return $path;
+}
+
+is_owner(NULL);
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// VERIFY FILE OWNERSHIP AND GROUP MATCHES
+////////////////////////////////////////////////////////////////////////////////
+require_once(is_owner(__DIR__.'/_altaform/_index.php'));

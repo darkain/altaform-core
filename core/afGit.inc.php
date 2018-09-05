@@ -1,7 +1,7 @@
 <?php
 
 
-require_once(af_file_owner(__DIR__.'/afVoid.inc.php'));
+require_once(is_owner(__DIR__.'/afVoid.inc.php'));
 
 
 class		afGit

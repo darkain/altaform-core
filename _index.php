@@ -27,10 +27,19 @@ set_include_path(get_include_path() . PATH_SEPARATOR . getcwd());
 
 
 ////////////////////////////////////////////////////////////////////////////////
+// CREATE DUMMY IS_OWNER() FUNCTION IF IT DOESNT ALREADY EXIST
+////////////////////////////////////////////////////////////////////////////////
+if (!function_exists('is_owner')) {
+	function is_owner($path) { return $path; }
+}
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
 // PHP ERROR HANDLING FUNCTIONS
 ////////////////////////////////////////////////////////////////////////////////
-//DONT USE AF_FILE_OWNER HERE AS IT DOESN'T EXIST YET.
-require_once(__DIR__.'/core/afError.inc.php');
+require_once(is_owner(__DIR__.'/core/afError.inc.php'));
 
 
 
@@ -92,7 +101,7 @@ if (version_compare(phpversion(), '7.1', '>=')) {
 ////////////////////////////////////////////////////////////////////////////////
 // GETVAR LIBRARY (GET/POST VARIABLES)
 ////////////////////////////////////////////////////////////////////////////////
-require_once(af_file_owner('_getvar/getvar.inc.php'));
+require_once(is_owner('_getvar/getvar.inc.php'));
 $get = new getvar;
 
 
@@ -101,7 +110,7 @@ $get = new getvar;
 ////////////////////////////////////////////////////////////////////////////////
 // ALTAFORM BASE CODE
 ////////////////////////////////////////////////////////////////////////////////
-require_once(af_file_owner(__DIR__.'/includes.inc.php'));
+require_once(is_owner(__DIR__.'/includes.inc.php'));
 
 
 
@@ -109,7 +118,7 @@ require_once(af_file_owner(__DIR__.'/includes.inc.php'));
 ////////////////////////////////////////////////////////////////////////////////
 // URL PARSER
 ////////////////////////////////////////////////////////////////////////////////
-require_once(af_file_owner(__DIR__.'/core/afUrl.inc.php'));
+require_once(is_owner(__DIR__.'/core/afUrl.inc.php'));
 
 
 
@@ -161,13 +170,13 @@ if (!afCli()) {
 // MAIN CONFIGURATION FILE
 ////////////////////////////////////////////////////////////////////////////////
 if (is_file('_config/'.$afurl->domain.'/config.php.inc')) {
-	require_once(af_file_owner('_config/'.$afurl->domain.'/config.php.inc'));
+	require_once(is_owner('_config/'.$afurl->domain.'/config.php.inc'));
 } else if (is_file('_config/'.$afurl->domain)) {
-	require_once(af_file_owner('_config/'.$afurl->domain));
+	require_once(is_owner('_config/'.$afurl->domain));
 } else if (is_file('_config/_virtual/config.php.inc')) {
-	require_once(af_file_owner('_config/_virtual/config.php.inc'));
+	require_once(is_owner('_config/_virtual/config.php.inc'));
 } else if (is_file('_config/_virtual.php.inc')) {
-	require_once(af_file_owner('_config/_virtual.php.inc'));
+	require_once(is_owner('_config/_virtual.php.inc'));
 } else {
 	error500('Unknown Domain: ' . $afurl->domain);
 }
@@ -181,7 +190,7 @@ if (is_file('_config/'.$afurl->domain.'/config.php.inc')) {
 if (is_file($afconfig->root . '/_altaform.inc.php')) {
 	$__af_cwd__ = getcwd();
 	chdir($afconfig->root);
-	require(af_file_owner('_altaform.inc.php'));
+	require(is_owner('_altaform.inc.php'));
 	chdir($__af_cwd__);
 	unset($__af_cwd__);
 }
@@ -300,9 +309,9 @@ if (!empty($afurl->origin)) {
 // INITIALIZE THE DATABASE CONNECTION
 ////////////////////////////////////////////////////////////////////////////////
 if (!empty($afconfig->pudl)  &&  tbx_array($afconfig->pudl)) {
-	require_once(af_file_owner('_pudl/pudl.php'));
-	require_once(af_file_owner('_pudl/pudlSession.php'));
-	require_once(af_file_owner(__DIR__.'/core/afUser.inc.php'));
+	require_once(is_owner('_pudl/pudl.php'));
+	require_once(is_owner('_pudl/pudlSession.php'));
+	require_once(is_owner(__DIR__.'/core/afUser.inc.php'));
 
 	if (afCli()) $afconfig->pudl['timeout'] = AF_DAY;
 
@@ -331,8 +340,8 @@ if (!empty($afconfig->pudl)  &&  tbx_array($afconfig->pudl)) {
 						->collection('pudl_altaform');
 
 } else {
-	require_once(af_file_owner('_pudl/pudl.php'));
-	require_once(af_file_owner(__DIR__.'/core/afUser.inc.php'));
+	require_once(is_owner('_pudl/pudl.php'));
+	require_once(is_owner(__DIR__.'/core/afUser.inc.php'));
 	$af = altaform::create();
 }
 
@@ -363,7 +372,7 @@ while ($afrouter->reparse) {
 	$afrouter->reparse = false;
 	$afrouter->path = $afrouter->route($af);
 	if (is_string($afrouter->path)  &&  $afrouter->path !== '') {
-		require(af_file_owner($afrouter->path));
+		require(is_owner($afrouter->path));
 	}
 	chdir($afrouter->directory);
 }
