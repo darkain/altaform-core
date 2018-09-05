@@ -14,13 +14,17 @@ function is_owner($path) {
 		return;
 	}
 
-	$path = stream_resolve_include_path($path);
-
-	if (@fileowner($path) !== $owner  ||  @filegroup($path) !== $group)  {
+	$pathx = @stream_resolve_include_path($path);
+	if ($pathx === false) {
 		throw new Exception(
-			"File ownerships do not match: " . $path
+			'Error finding source code file: ' . $path
 		);
-		return false;
+	}
+
+	if (@fileowner($pathx) !== $owner  ||  @filegroup($pathx) !== $group)  {
+		throw new Exception(
+			'File ownerships do not match: ' . $path
+		);
 	}
 
 	return $path;
