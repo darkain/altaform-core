@@ -138,8 +138,9 @@ class		altaform
 
 		$list	= explode('.', $extension);
 		$ext	= new afMimetype(end($list));
+		$item	= $ext->ext();
 
-		$this->_extension = $ext->ext() || end($list);
+		$this->_extension = is_string($item) ? $item : end($list);
 
 		header('Content-Type: ' . $ext . '; charset=utf-8');
 
@@ -290,6 +291,7 @@ class		altaform
 	public				$device		= NULL;
 	public				$settings	= [];
 	public				$title		= '';
+	public				$hhvm		= 'PHP';
 	public static		$error		= false;
 	public static		$af			= NULL;
 	public static		$types		= [];

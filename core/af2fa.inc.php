@@ -45,7 +45,7 @@ class af2fa {
 		);
 
 		return str_pad(
-			($value[1] & 0x7FFFFFFF) % pow(10, $this->length),
+			(string)(($value[1] & 0x7FFFFFFF) % pow(10, $this->length)),
 			$this->length, '0', STR_PAD_LEFT
 		);
 	}
@@ -91,7 +91,7 @@ class af2fa {
 			$binary		.= str_pad(decbin($ord), 5, '0', STR_PAD_LEFT);
 		}
 
-		$length = floor(strlen($binary) / 8) * 2;
+		$length = (int) floor(strlen($binary) / 8) * 2;
 		$output = str_repeat('_', $length);
 
 		for ($i=0; $i<$length; $i++) {

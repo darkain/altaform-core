@@ -608,7 +608,7 @@ set_error_handler(function(	$errno,			$errstr,		$errfile=NULL,
 set_exception_handler(function($e) {
 	global $afconfig;
 
-	if (!error_reporting()) return false;
+	if (!error_reporting()) return;
 
 	if ($e instanceof pudlException) {
 		if ($e->getCode() === PUDL_X_CONNECTION) {
@@ -636,6 +636,7 @@ register_shutdown_function(function() {
 	if (!error_reporting()) return;
 
 	$e = error_get_last();
+	if (empty($e)) return;
 
 	if ($e['type'] !== E_ERROR  &&  $e['type'] !== E_PARSE) return;
 
