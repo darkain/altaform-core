@@ -555,9 +555,15 @@ class afUpload {
 	public static function error() { return self::$error; }
 
 
-
+	/** @var int[] */
 	public	static $thumbSize		= [50, 100, 150, 200];
+
+	/** @var array */
 	public	static $imageSize		= [500=>50, 800=>true, 1920=>true];
+
+	/** @var int */
 	public	static $smallest		= 500;
+
+	/** @var string|bool */
 	private	static $error			= false;
 }

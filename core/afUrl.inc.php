@@ -154,7 +154,8 @@ class		afUrl
 				$query .= ($query==='') ? '?' : '&';
 				$query .= http_build_query(
 					[$key => $value],
-					NULL, NULL,
+					NULL,
+					ini_get('arg_separator.output'),
 					PHP_QUERY_RFC3986
 				);
 			}
@@ -175,7 +176,13 @@ class		afUrl
 		$return = ($host ? $this->host : '') . $this($path, true);
 		if (empty($query))		return $return;
 		if (is_string($query))	return $return . '?' . $query;
-		return $return . '?' . http_build_query($query);
+
+		return $return . '?' . http_build_query(
+			$query,
+			NULL,
+			ini_get('arg_separator.output'),
+			PHP_QUERY_RFC3986
+		);
 	}
 
 
@@ -489,6 +496,8 @@ class		afUrl
 	// MEMBER VARIABLES SET DYNAMICALLY OR BY CONFIG
 	////////////////////////////////////////////////////////////////////////////
 	public $gz			= '';
+	public $all			= '';
+	public $full		= '';
 	public $base		= '';
 	public $cdn			= '';
 	public $static		= '';
