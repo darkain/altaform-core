@@ -30,6 +30,7 @@ set_include_path(get_include_path() . PATH_SEPARATOR . getcwd());
 // CREATE DUMMY IS_OWNER() FUNCTION IF IT DOESNT ALREADY EXIST
 ////////////////////////////////////////////////////////////////////////////////
 if (!function_exists('is_owner')) {
+	/** @suppress PhanRedefineFunction */
 	function is_owner($path) { return $path; }
 }
 
