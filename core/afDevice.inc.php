@@ -95,7 +95,7 @@ class afDevice {
 	// FORCE AUTOMATIC REDETECTION OF USER AGENT STRING
 	////////////////////////////////////////////////////////////////////////////
 	public static function redetect() {
-		self::$device = false;
+		self::$device = NULL;
 		return static::device();
 	}
 
@@ -241,7 +241,7 @@ class afDevice {
 	static function device() {
 		global $get;
 
-		if (self::$device !== false) return self::$device;
+		if (self::$device !== NULL) return self::$device;
 
 		//Set User Agent = self::$agent
 		if (empty(self::$agent)) {
@@ -337,10 +337,14 @@ class afDevice {
 	////////////////////////////////////////////////////////////////////////////
 	// LOCAL VARIABLES
 	////////////////////////////////////////////////////////////////////////////
-	public static $device	= false;
 
+	/** @var ?string */
+	public static $device	= NULL;
+
+	/** @var string */
 	public static $agent	= '';
 
+	/** @var string[] */
 	public static $secure	= [
 		'applewebkit/',	'konqueror/',
 		'firefox/',		'iceweasel/',
