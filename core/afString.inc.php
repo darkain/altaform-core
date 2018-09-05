@@ -549,8 +549,11 @@ class afString {
 
 
 	public static function language($input) {
+		$language = [];
+
 		foreach (self::$languages as $key => $val) {
-			preg_match_all($val, $input, $language[$key]);
+			preg_match_all($val, $input, $tmp);
+			$language[$key] = $tmp;
 		}
 
 		// Reduce our array hell down to the counts we actually care about
