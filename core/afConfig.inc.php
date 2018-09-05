@@ -4,7 +4,7 @@
 
 
 require_once(is_owner('_pudl/pudlObject.php'));
-require_once(is_owner('_tbx/tbx_plugin.php.inc'));
+require_once(is_owner('_tbx/tbx_plugin.inc.php'));
 
 
 

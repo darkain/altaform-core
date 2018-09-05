@@ -6,7 +6,7 @@ if (class_exists('altaform', false)) return;
 
 
 // TBX - THE RENDERING SYSTEM
-require_once(is_owner('_tbx/tbx.php.inc'));
+require_once(is_owner('_tbx/tbx.inc.php'));
 
 
 // CORE FUNCTIONALITY
