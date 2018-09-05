@@ -69,9 +69,11 @@ class afRouter {
 			);
 
 			//FORCE VIRTUAL PATHING IF SPECIAL CHARACTERS ARE FOUND
-			//SPECIAL CHARACTER ALLOWED: [SPACE] ! + - . _
+			//SPECIAL CHARACTER ALLOWED: [SPACE] ! + - . _ (NOTE: THIS IS CHANGING)
 			//ALL OTHERS FORCE VITUAL PATHING
-			if (!ctype_alnum(substr($this->part[$i], 0, 1)) ||
+			//TODO:	find another solution for the first-character checker.
+			//		underscore is required due to the reparsing system
+			if (/*!ctype_alnum(substr($this->part[$i], 0, 1)) ||*/
 				preg_match('/[^\x21\x2B\x2D\x2E\x5F 0-9a-zA-Z]/', $this->part[$i])) {
 
 				$this->virtualize($i);
