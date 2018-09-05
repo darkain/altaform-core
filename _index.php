@@ -79,22 +79,11 @@ ini_set('zlib.output_compression_level', '0');
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// DEFINE PHP_VERSION_ID IF NOT ALREADY DEFINED
-////////////////////////////////////////////////////////////////////////////////
-if (!defined('PHP_VERSION_ID')) {
-	$version = explode('.', PHP_VERSION);
-	define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
-}
-
-
-
-
-////////////////////////////////////////////////////////////////////////////////
 // FIX FOR PHP 7.1 FLOATING POINT PRECISION DURING SERIALIZATION
 // https://stackoverflow.com/questions/42981409/php7-1-json-encode-float-issue
 ////////////////////////////////////////////////////////////////////////////////
 if (version_compare(phpversion(), '7.1', '>=')) {
-	ini_set( 'serialize_precision', -1 );
+	ini_set('serialize_precision', -1);
 }
 
 
