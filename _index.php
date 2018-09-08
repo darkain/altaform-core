@@ -48,7 +48,7 @@ require_once(is_owner(__DIR__.'/core/afError.inc.php'));
 ////////////////////////////////////////////////////////////////////////////////
 // VERIFY REQUIRED EXTENSIONS ARE LOADED
 ////////////////////////////////////////////////////////////////////////////////
-foreach (['ctype', 'json'] as $ext) {
+foreach (['ctype', 'json', 'session'] as $ext) {
 	assert500(
 		extension_loaded($ext),
 		"The required PHP extension is missing: '$ext'"
