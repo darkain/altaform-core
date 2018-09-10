@@ -94,7 +94,7 @@ class afGeo {
 
 		$ctx = stream_context_create(['http'=>['timeout'=>1]]);
 
-		$json = @file_get_contents($af->config->geo.$ipaddress, 0, $ctx);
+		$json = @file_get_contents($af->config->geo.$ipaddress, false, $ctx);
 		if (empty($json)) return false;
 
 		$data = @json_decode($json, true);
