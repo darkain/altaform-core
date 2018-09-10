@@ -1,6 +1,10 @@
 <?php
 
 
+/** @var ?altaform */
+$af = NULL;
+
+
 
 class		altaform
 	extends	tbx {

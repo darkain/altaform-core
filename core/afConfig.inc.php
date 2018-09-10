@@ -93,10 +93,10 @@ class			afConfig
 
 	public function afkey($key=false) {
 		static $afkey = NULL;
-		if ($key === false) return $afkey;
+		if ($key === false) return (string)$afkey;
 		$oldkey	= $afkey;
 		$afkey	= $key;
-		return $oldkey;
+		return (string)$oldkey;
 	}
 
 

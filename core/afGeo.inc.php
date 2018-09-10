@@ -12,9 +12,13 @@ class afGeo {
 	public static function timezone($latitude, $longitude=false) {
 		global $af;
 
+		if (is_null($af)  ||  is_null($af->config)) return false;
+
 		if ($longitude === false) {
 			$geocode = is_object($latitude) ? $latitude : static::geocode($latitude);
+
 			if (empty($geocode->results[0]->geometry->location)) return false;
+
 			$latitude	= $geocode->results[0]->geometry->location->lat;
 			$longitude	= $geocode->results[0]->geometry->location->lng;
 		}
@@ -38,6 +42,7 @@ class afGeo {
 	public static function geocode($location) {
 		global $af;
 
+		if (is_null($af)  ||  is_null($af->config)) return NULL;
 		if (trim($location, " \t\n\r\0\x0B,") === '') return NULL;
 
 		$url	= 'https://maps.googleapis.com/maps/api/geocode/json'
@@ -58,7 +63,7 @@ class afGeo {
 	public static function geolocate($location) {
 		global $db;
 
-		if (empty($location)) return false;
+		if (is_null($db)  ||  empty($location)) return false;
 
 		if (!array_key_exists($location, self::$_geoloc)) {
 			self::$_geoloc[$location] = $db->rowId(
@@ -81,6 +86,7 @@ class afGeo {
 	public static function geoip($ipaddress=false) {
 		global $af;
 
+		if (is_null($af)  ||  is_null($af->config)) return false;
 		if (empty($af->config->geo)) return false;
 
 		if (empty($ipaddress)) $ipaddress = afIp::address();

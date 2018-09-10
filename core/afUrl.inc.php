@@ -34,13 +34,14 @@ class		afUrl
 			assert400($host[0] !== '_cli', 'RESTRICTED DOMAIN NAME');
 		}
 
+		$tmp				= strtolower($get->server('HTTPS', ''));
+		$this->https		= !empty($tmp)  &&  $tmp !== 'off';
+
 		$this->encoding		= array_map('trim', explode(',', $get->server('HTTP_ACCEPT_ENCODING','')));
 		$this->uri			= $get->server('REQUEST_URI', '');
 		$this->domain		= reset($host);
 		$this->origin		= $get->server('HTTP_ORIGIN', '');
 		$this->referer		= $get->server('HTTP_REFERER', '');
-		$this->https		= strtolower($get->server('HTTPS', ''));
-		$this->https		= $this->https !== 'off'  &&  !empty($this->https);
 		$this->protocol		= $this->https ? 'https' : 'http';
 		$this->host			= $this->protocol . '://' . $this->domain;
 		$this->af_host		= $this->host;
@@ -376,7 +377,7 @@ class		afUrl
 		if (tbx_array($url)) $url = $afurl($url, true);
 
 		$intersect = array_intersect(
-			str_split($url),
+			str_split((string)$url),
 			["\r", "\n", "\t", "\0", '<', '>']
 		);
 		assert422(empty($intersect));

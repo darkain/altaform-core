@@ -8,6 +8,10 @@ require_once(is_owner(__DIR__.'/../traits/afPreference.inc.php'));
 //		CURRENTLY ONLY ATTRIBUTE IS UNVERIFIED PASSWORD
 
 
+/** @var ?afUser */
+$user = NULL;
+
+
 
 class			afUser
 	extends		pudlOrm

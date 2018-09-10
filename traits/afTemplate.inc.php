@@ -1,6 +1,11 @@
 <?php
 
 
+'@phan-file-suppress PhanUndeclaredMethod';
+'@phan-file-suppress PhanUndeclaredProperty';
+
+
+
 define('AF_STAGE_NONE',		0);
 define('AF_STAGE_HEADER',	1);
 define('AF_STAGE_BODY',		2);
