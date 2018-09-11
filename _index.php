@@ -170,14 +170,14 @@ if (!afCli()) {
 ////////////////////////////////////////////////////////////////////////////////
 // MAIN CONFIGURATION FILE
 ////////////////////////////////////////////////////////////////////////////////
-if (is_file('_config/'.$afurl->domain.'/config.php.inc')) {
-	require_once(is_owner('_config/'.$afurl->domain.'/config.php.inc'));
+if (is_file('_config/'.$afurl->domain.'/config.inc.php')) {
+	require_once(is_owner('_config/'.$afurl->domain.'/config.inc.php'));
 } else if (is_file('_config/'.$afurl->domain)) {
 	require_once(is_owner('_config/'.$afurl->domain));
-} else if (is_file('_config/_virtual/config.php.inc')) {
-	require_once(is_owner('_config/_virtual/config.php.inc'));
-} else if (is_file('_config/_virtual.php.inc')) {
-	require_once(is_owner('_config/_virtual.php.inc'));
+} else if (is_file('_config/_virtual/config.inc.php')) {
+	require_once(is_owner('_config/_virtual/config.inc.php'));
+} else if (is_file('_config/_virtual.inc.php')) {
+	require_once(is_owner('_config/_virtual.inc.php'));
 } else {
 	error500('Unknown Domain: ' . $afurl->domain);
 }

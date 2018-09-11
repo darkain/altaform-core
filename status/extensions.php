@@ -1,5 +1,5 @@
 <?php
-require_once(is_owner(__DIR__.'/../error.php.inc'));
+require_once(is_owner(__DIR__.'/../core/afError.inc.php'));
 
 $list = get_loaded_extensions();
 
@@ -8,7 +8,7 @@ $need = [
 	'curl',			// read/write HTTP(s) GET/POST streams
 	'exif',			// photo metadata
 	'filter',		// IPv4/IPv6 filter
-	'hash',			// ??? - encryption
+	'hash',			// encryption - SHA256, SHA512
 	'iconv',		// UTF-8 conversion
 	'imagick',		// photo processing
 	'json',			// javascript object notation
@@ -16,7 +16,7 @@ $need = [
 	'mysqli',		// database
 	'openssl',		// fopen('https//example.com') HTTPS
 	'redis',		// database caching
-	'session',		// ???
+	'session',		// user session management (cookies)
 	'sockets',		// ???
 	'tokenizer',	// ???
 	'xml',			// ???
