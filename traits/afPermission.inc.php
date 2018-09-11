@@ -4,8 +4,8 @@
 trait afPermission {
 
 
-	protected	$permission		= '';
-	protected	$permissions	= [];
+//	protected	$permission		= [];
+//	protected	$permissions	= [];
 
 
 	public function hasPermission($permission) {
