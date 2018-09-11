@@ -111,7 +111,7 @@ class afMail {
 		$body .= $af->load($template)->merge($merge)->renderToString();
 		$body .= $af->footerEmail();
 
-		return static::send($header, $subject, $template, $attach);
+		return static::send($headers, $subject, $template, $attach);
 	}
 
 

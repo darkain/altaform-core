@@ -51,10 +51,10 @@ trait afPreference {
 		$this->_prefs		= $preferences;
 		$this->preference	= json_encode($preferences);
 
-		return $db->replace('pudl_user_preference', [
+		return $db->upsert('pudl_user_preference', [
 			'user_id'		=> $this->id(),
 			'preference'	=> $this->preference,
-		], true);
+		]);
 	}
 
 

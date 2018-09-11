@@ -28,7 +28,7 @@ assert500($path, 'Unknown error while processing image file');
 
 
 if (!empty($afconfig->cdn['local'])) {
-	$path = str_replace('cdn/', $afconfig->cdn['local'].'/', $path);
+	$path = str_replace('cdn/', $afconfig->cdn['local'].'/', (string)$path);
 }
 
 return $af->json(['location' => $path]);

@@ -1,11 +1,6 @@
 <?php
 
 
-/** @var ?altaform */
-$af = NULL;
-
-
-
 class		altaform
 	extends	tbx {
 	use		afAuth		{ postLogin as authLogin; }

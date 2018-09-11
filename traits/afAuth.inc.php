@@ -62,13 +62,13 @@ trait afAuth {
 		$this->authenticate(0, $destroy);
 
 		$user = new afAnonymous;
-		$user->permissions($user);
+		$user->permissions();
 
 		if (!$destroy) return;
 
 		if (ini_get('session.use_cookies')) {
 			$params = session_get_cookie_params();
-			setcookie(session_name(), '', $this->time() - 42000,
+			setcookie(session_name(), '', $this->time() - AF_YEAR,
 				$params['path'],	$params['domain'],
 				$params['secure'],	$params['httponly']
 			);

@@ -4,6 +4,10 @@
 trait afPermission {
 
 
+	protected	$permission		= '';
+	protected	$permissions	= [];
+
+
 	public function hasPermission($permission) {
 		if (empty($this->permission)) $this->permissions();
 

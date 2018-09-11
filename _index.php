@@ -321,7 +321,9 @@ if (!empty($afconfig->pudl)  &&  tbx_array($afconfig->pudl)) {
 	$db->on('log', 'afPudlLog');
 
 	if (!empty($afconfig->pudl['connected'])) {
-		call_user_func($afconfig->pudl['connected']);
+		if (is_callable($afconfig->pudl['connected'])) {
+			call_user_func($afconfig->pudl['connected']);
+		}
 	}
 
 	// HIDE PUDL CONFIG FROM $afconfig
