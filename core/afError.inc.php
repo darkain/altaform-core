@@ -122,7 +122,7 @@ class afError {
 			$userdata = [];
 		}
 
-		$return = array_merge($data, [
+		$return = array_merge([
 			'error-time'	=> @date('r'),
 			'error-path'	=> getcwd(),
 
@@ -141,7 +141,7 @@ class afError {
 			'ip-php'		=> !class_exists('afIp')	? '' :	afIp::local(),
 			'ip-client'		=> !class_exists('afIp')	? '' :	afIp::address(),
 			'ip-httpd'		=> !class_exists('afIp')	? '' :	afIp::server(),
-		]);
+		], $data);
 
 		if (!empty($afrouter->redirected)) {
 			$return['redirected'] = static::json($afrouter->redirected, false);
@@ -197,6 +197,7 @@ class afError {
 
 		static::email($out, !empty($arr['details']) ? $arr['details'] : '');
 
+		//TODO: $db SHOULD BE PASSED IN, RATHER THAN GLOBAL
 		if ($db instanceof pudl) $db->rollback();
 
 
@@ -610,20 +611,27 @@ set_exception_handler(function($e) {
 
 	if (!error_reporting()) return;
 
+	$info = [
+		'error-code'		=> get_class($e) . ':' . $e->getCode(),
+		'details'			=> $e->getMessage(),
+		'error-file'		=> $e->getFile(),
+		'error-line'		=> $e->getLine(),
+	];
+
 	if ($e instanceof pudlException) {
 		if ($e->getCode() === PUDL_X_CONNECTION) {
 			$afconfig->debug = false;
 			$afconfig->error['email'] = false;
 			if (!afCli()) error503($e->getMessage());
 		}
+
+		if ($e->db instanceof pudl) $info += [
+			'ip-database'	=> $e->db->server(),
+			'db-query'		=> $e->db->query(),
+		];
 	}
 
-	afError::log([
-		'error-code'	=> get_class($e) . ':' . $e->getCode(),
-		'details'		=> $e->getMessage(),
-		'error-file'	=> $e->getFile(),
-		'error-line'	=> $e->getLine(),
-	], true, $e->getTrace());
+	afError::log($info, true, $e->getTrace());
 });
 
 
