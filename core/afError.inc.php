@@ -323,11 +323,19 @@ class afError {
 
 	public static function html($item) {
 		global $af;
+
 		if (function_exists('afCli') && afCli()) return $item;
+
 		if (!defined('TBX_SPECIAL_CHARS')) {
-			define('TBX_SPECIAL_CHARS', ENT_NOQUOTES|ENT_HTML5);
+			define('TBX_SPECIAL_CHARS', ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE);
 		}
-		return htmlspecialchars((string)$item, TBX_SPECIAL_CHARS);
+
+		return htmlspecialchars(
+			(string) $item,
+			TBX_SPECIAL_CHARS,
+			'UTF-8',
+			true
+		);
 	}
 
 

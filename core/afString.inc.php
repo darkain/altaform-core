@@ -56,18 +56,30 @@ class afString {
 
 
 
+	public static function html($html) {
+		return htmlspecialchars(
+			(string) $html,
+			ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,
+			'UTF-8',
+			true
+		);
+	}
+
+
+
+
 	public static function attribute($array) {
 		$output = ' ';
 
 		foreach ($array as $key => $value) {
 			if (is_int($key)) {
-				$output .= htmlspecialchars($value) . ' ';
+				$output .= static::html($value) . ' ';
 				continue;
 			}
 
-			$output .= htmlspecialchars($key);
+			$output .= static::html($key);
 			$output .= '="';
-			$output .= htmlspecialchars($value);
+			$output .= static::html($value);
 			$output .= '" ';
 		}
 
@@ -273,7 +285,7 @@ class afString {
 		$string = preg_replace(
 			'@(?<![.*>])\b(?:(?:(ht|f)tps?)://|(?<![./*>])((www|m)\.)|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))[-A-Z0-9+&#/%=~_|$?!:;,.]*[A-Z0-9+&#/%=~_|$]@i',
 			'<a href="\0" target="_blank">\0</a>',
-			htmlspecialchars($string, ENT_NOQUOTES)
+			static::html($string)
 		);
 
 		return str_replace(["\r","\n"], ['','<br/>'], $string);
