@@ -56,10 +56,10 @@ class afString {
 
 
 
-	public static function html($html) {
+	public static function html($html, $noquotes=false) {
 		return htmlspecialchars(
 			(string) $html,
-			ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,
+			($noquotes?ENT_NOQUOTES:ENT_QUOTES) | ENT_HTML5 | ENT_SUBSTITUTE,
 			'UTF-8',
 			true
 		);
@@ -285,10 +285,10 @@ class afString {
 		$string = preg_replace(
 			'@(?<![.*>])\b(?:(?:(ht|f)tps?)://|(?<![./*>])((www|m)\.)|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))[-A-Z0-9+&#/%=~_|$?!:;,.]*[A-Z0-9+&#/%=~_|$]@i',
 			'<a href="\0" target="_blank">\0</a>',
-			static::html($string)
+			static::html($string, true)
 		);
 
-		return str_replace(["\r","\n"], ['','<br/>'], $string);
+		return str_replace(["\r\n","\r","\n"], '<br/>', $string);
 	}
 
 
