@@ -626,14 +626,14 @@ set_exception_handler(function($e) {
 		'error-line'		=> $e->getLine(),
 	];
 
-	if ($e instanceof pudlException) {
-		if ($e->getCode() === PUDL_X_CONNECTION) {
-			$afconfig->debug = false;
-			$afconfig->error['email'] = false;
-			if (!afCli()) error503($e->getMessage());
-		}
+	if ($e instanceof pudlConnectionException) {
+		$afconfig->debug = false;
+		$afconfig->error['email'] = false;
+		if (!afCli()) error503($e->getMessage());
+	}
 
-		if ($e->db instanceof pudl) $info += [
+	if (($e instanceof pudlException)  &&  ($e->db instanceof pudl)) {
+		$info += [
 			'ip-database'	=> $e->db->server(),
 			'db-query'		=> $e->db->query(),
 		];
