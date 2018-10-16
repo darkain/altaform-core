@@ -18,7 +18,7 @@ trait afAuth {
 	public function login($session=false) {
 		global $user, $db, $get;
 
-		if (empty($db)) return $user = new afUser;
+		if (empty($db)) return $user = new afUser($db);
 
 		$user = false;
 
@@ -33,11 +33,11 @@ trait afAuth {
 						pudl::find('user_permission', $this->_authtype),
 					]
 				);
-				if (!empty($data)) $user = new afUser($data);
+				if (!empty($data)) $user = new afUser($db, $data);
 			}
 		}
 
-		if (empty($user)) $user = new afAnonymous;
+		if (empty($user)) $user = new afAnonymous($db);
 
 		$user->user_session = $session;
 		if (empty($user->user_url)) $user->user_url = $user->user_id;
@@ -55,13 +55,13 @@ trait afAuth {
 	//LOG THE CURRENT USER OUT (DESTOY CURRENT USER'S SESSION)
 	////////////////////////////////////////////////////////////////////////////
 	public function logout($session=false, $destroy=true) {
-		global $user;
+		global $db, $user;
 
 		if (empty($session)) $session = session_id();
 
 		$this->authenticate(0, $destroy);
 
-		$user = new afAnonymous;
+		$user = new afAnonymous($db);
 		$user->permissions();
 
 		if (!$destroy) return;

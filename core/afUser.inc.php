@@ -23,8 +23,8 @@ class			afUser
 	////////////////////////////////////////////////////////////////////////////
 	//CONSTRUCTOR
 	////////////////////////////////////////////////////////////////////////////
-	public function __construct($item=false, $fetch=false) {
-		parent::__construct($item, $fetch);
+	public function __construct($db, $item=false, $fetch=false) {
+		parent::__construct($db, $item, $fetch);
 
 		$this->has_password
 			=	!empty($this->user_pass)
@@ -276,8 +276,8 @@ class			afUser
 //SHORTCUT CLASS FOR ANONYMOUS USER
 ////////////////////////////////////////////////////////////////////////////////
 class afAnonymous extends afUser {
-	public function __construct() {
-		parent::__construct(0, true);
+	public function __construct($db) {
+		parent::__construct($db, 0, true);
 	}
 
 	protected function _fetchCache() { return AF_DAY; }
