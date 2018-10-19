@@ -23,8 +23,8 @@ class			afUser
 	////////////////////////////////////////////////////////////////////////////
 	//CONSTRUCTOR
 	////////////////////////////////////////////////////////////////////////////
-	public function __construct($db, $item=false, $fetch=false) {
-		parent::__construct($db, $item, $fetch);
+	public function __construct(pudl $pudl, $item=false, $fetch=false) {
+		parent::__construct($pudl, $item, $fetch);
 
 		$this->has_password
 			=	!empty($this->user_pass)
@@ -73,15 +73,14 @@ class			afUser
 	//LOAD OR UPDATE THE PROFILE TABLE IN THE DATABASE
 	////////////////////////////////////////////////////////////////////////////
 	public function profile($data=false) {
-		global $db;
 		if (!$this->loggedIn()) return false;
 
 		if ($data !== false) {
 			$this->merge($data);
-			return $db->updateId('pudl_user_profile', $data, $this);
+			return $this->pudl()->updateId('pudl_user_profile', $data, $this);
 		}
 
-		return $this->merge($db->rowId('pudl_user_profile', $this));
+		return $this->merge($this->pudl()->rowId('pudl_user_profile', $this));
 	}
 
 
@@ -133,11 +132,9 @@ class			afUser
 	//SET THE USER ACCOUNT PASSWORD
 	////////////////////////////////////////////////////////////////////////////
 	public function setPassword($account, $password) {
-		global $db;
-
 		$this->auth_account = $account;
 
-		return $db->upsert('pudl_user_auth', [
+		return $this->pudl()->upsert('pudl_user_auth', [
 			static::column	=> $this->id(),
 			'auth_account'	=> $account,
 			'auth_password'	=> password_hash($password, PASSWORD_DEFAULT),
@@ -210,10 +207,8 @@ class			afUser
 	//ADD OR DELETE AN ITEM FROM THE USER'S MESSAGE QUEUE
 	////////////////////////////////////////////////////////////////////////////
 	function queue($service, $type, $data=false) {
-		global $db;
-
 		if ($data === false) {
-			$db->delete('pudl_queue', [
+			$this->pudl()->delete('pudl_queue', [
 				'queue_user'	=> $this->id(),
 				'queue_service'	=> $service,
 				'queue_type'	=> $type,
@@ -223,14 +218,14 @@ class			afUser
 
 		if (!tbx_array($data)) $data = [$data];
 
-		$db->insert('pudl_queue', [
+		$this->pudl()->insert('pudl_queue', [
 				'queue_user'	=> $this->id(),
 				'queue_service'	=> $service,
 				'queue_type'	=> $type,
-				'queue_time'	=> $db->time(),
+				'queue_time'	=> $this->pudl()->time(),
 				'queue_message'	=> $data,
 			], [
-				'queue_time'	=> $db->time(),
+				'queue_time'	=> $this->pudl()->time(),
 				'queue_message'	=> $data,
 				'queue_count'	=> pudl::_increment(1),
 			]
@@ -275,8 +270,8 @@ class			afUser
 //SHORTCUT CLASS FOR ANONYMOUS USER
 ////////////////////////////////////////////////////////////////////////////////
 class afAnonymous extends afUser {
-	public function __construct($db) {
-		parent::__construct($db, 0, true);
+	public function __construct(pudl $pudl) {
+		parent::__construct($pudl, 0, true);
 	}
 
 	protected function _fetchCache() { return AF_DAY; }

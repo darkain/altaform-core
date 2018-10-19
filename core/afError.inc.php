@@ -632,10 +632,10 @@ set_exception_handler(function($e) {
 		if (!afCli()) error503($e->getMessage());
 	}
 
-	if (($e instanceof pudlException)  &&  ($e->db instanceof pudl)) {
+	if (($e instanceof pudlException)  &&  ($e->pudl instanceof pudl)) {
 		$info += [
-			'ip-database'	=> $e->db->server(),
-			'db-query'		=> $e->db->query(),
+			'ip-database'	=> $e->pudl->server(),
+			'db-query'		=> $e->pudl->query(),
 		];
 	}
 
