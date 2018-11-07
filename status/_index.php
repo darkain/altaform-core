@@ -89,6 +89,13 @@ if (!empty($list['wsrep_incoming_addresses'])) {
 	}
 }
 
+if ($db instanceof pudlGalera) {
+	$databases = array_unique(array_merge(
+		$databases,
+		$db->pool()
+	));
+}
+
 natsort($databases);
 
 
@@ -96,7 +103,17 @@ pudlMySqli::dieOnError(false);
 foreach ($databases as $item) {
 	$name				= $item;
 	$nstime				= microtime(true);
-	$connect			= new pudlMySqli([$db, 'server'=>$name, 'backup'=>'']);
+
+	try {
+		$connect		= new pudlMySqli([
+			$db,
+			'server'	=> $name,
+			'backup'	=> '',
+			'timeout'	=> 2,
+		]);
+	} catch (pudlConnectionException $e) {
+		$connect		= new pudlMySqli([], false);
+	}
 
 	if (!empty($replacers[0])  &&  !empty($replacers[1])) {
 		$name = str_replace($replacers[0], $replacers[1], $name);
