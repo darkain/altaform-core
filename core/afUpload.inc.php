@@ -346,7 +346,7 @@ class afUpload {
 		$data['hash']		= md5($blob);
 		$data['size']		= strlen($blob);
 		$data['url']		= $afurl->cdn($data['hash']);
-		$data['thumb_hash']	= pudlFunction::unhex($data['hash']);
+		$data['thumb_hash']	= pudl::unhex($data['hash']);
 
 		//COPY BLOB TO IMAGE FILE SERVER
 		$data['good']		= static::write($data['hash'], $blob);
@@ -496,7 +496,7 @@ class afUpload {
 
 		//INSERT MAIN IMAGE
 		$db->insert('pudl_file', [
-			'file_hash'				=> pudlFunction::unhex($data['hash']),
+			'file_hash'				=> pudl::unhex($data['hash']),
 			'file_size'				=> $data['size'],
 			'file_uploaded'			=> $db->time(),
 			'file_name'				=> $data['name'],
@@ -509,7 +509,7 @@ class afUpload {
 		//INSERT EXIF DATA
 		if (!empty($data['exif'])) {
 			$db->insert('pudl_file_meta', [
-				'file_hash'			=> pudlFunction::unhex($data['hash']),
+				'file_hash'			=> pudl::unhex($data['hash']),
 				'file_meta_name'	=> 'exif',
 				'file_meta_value'	=> $data['exif'],
 			], 'file_hash=file_hash');
@@ -518,7 +518,7 @@ class afUpload {
 		//ASSOCIATE FILE WITH CURRENT USER, IF AVAILABLE
 		if (!empty($user['user_id'])) {
 			$db->insert('pudl_file_user', [
-				'file_hash'			=> pudlFunction::unhex($data['hash']),
+				'file_hash'			=> pudl::unhex($data['hash']),
 				'user_id'			=> $user['user_id'],
 				'user_time'			=> $db->time(),
 			], 'file_hash=file_hash');
@@ -541,8 +541,8 @@ class afUpload {
 			if (((int)$key) < 1  ||  !tbx_array($item)) continue;
 
 			$db->insert('pudl_file_thumb', [
-				'file_hash'			=> pudlFunction::unhex($data['hash']),
-				'thumb_hash'		=> pudlFunction::unhex($item['hash']),
+				'file_hash'			=> pudl::unhex($data['hash']),
+				'thumb_hash'		=> pudl::unhex($item['hash']),
 				'thumb_size'		=> $item['size'],
 				'thumb_type'		=> $item['type'],
 			], 'thumb_hash=thumb_hash');
