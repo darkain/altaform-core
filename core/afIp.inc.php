@@ -90,6 +90,7 @@ class afIp {
 			if ($socket !== false) {
 				@socket_connect(	$socket, '8.8.8.8', 53);
 				@socket_getsockname($socket, $address);
+				@socket_close(		$socket);
 			}
 		}
 		return $address;
