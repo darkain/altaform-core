@@ -279,7 +279,7 @@ class afError {
 		if (in_array($get->message, [
 			'Script error',
 			'Script error.',
-			"JavaScript: TypeError: 'undefined' is not a function"
+			"TypeError: 'undefined' is not a function"
 		]))	return;
 
 		// https://github.com/getsentry/raven-js/issues/756
