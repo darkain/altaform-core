@@ -276,8 +276,11 @@ class afError {
 		global $get;
 
 		// GENERIC ERROR MESSAGE IN JS FILE NOT HOSTED BY US (CROSS-SITE)
-		if ($get->message === 'Script error') return;
-		if ($get->message === 'Script error.') return;
+		if (in_array($get->message, [
+			'Script error',
+			'Script error.',
+			"JavaScript: TypeError: 'undefined' is not a function"
+		]))	return;
 
 		// https://github.com/getsentry/raven-js/issues/756
 		if (strpos($get->message, "evaluating 'elt.parentNode'")) return;
