@@ -174,7 +174,8 @@ class afUpload {
 
 
 		//SAVE THE FILE TO OUR STORAGE SYSTEM
-		static::write($data['hash'], $image->getImageBlob());
+		//TODO: THESE ERRORS NEED TO BE CONVERTED OVER INTO EXCEPTIONS
+		if (!static::write($data['hash'], $image->getImageBlob())) return false;
 
 
 		//RORATE THE IMAGE, IF NEEDED
@@ -478,7 +479,7 @@ class afUpload {
 	public static function write($hash, $blob) {
 		global $af, $afurl;
 		$path = $af->path() . 'files/' . $afurl->cdnPath($hash);
-		afDir::create(substr($path, 0, -32));
+		if (!afDir::create(substr($path, 0, -32))) return false;
 		return @file_put_contents($path, $blob);
 	}
 
