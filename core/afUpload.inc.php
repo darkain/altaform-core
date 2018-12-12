@@ -479,8 +479,13 @@ class afUpload {
 	public static function write($hash, $blob) {
 		global $af, $afurl;
 		$path = $af->path() . 'files/' . $afurl->cdnPath($hash);
-		if (!afDir::create(substr($path, 0, -32))) return false;
-		return @file_put_contents($path, $blob);
+		if (!afDir::create(substr($path, 0, -32))) {
+			self::$error = 'Unable to create path';
+			return false;
+		}
+		$return = @file_put_contents($path, $blob);
+		if ($return === false) self::$error = 'Unable to save image file';
+		return $return;
 	}
 
 
