@@ -1,8 +1,11 @@
 <?php
 
 
+////////////////////////////////////////////////////////////////////////////////
+// LIST OF ALL HTTP STATUS CODES
+////////////////////////////////////////////////////////////////////////////////
 $http_status_codes = [
-	// 1xx
+	// 1xx - MOSTLY UNUSED
 	100 => 'Continue',
 	101 => 'Switching Protocols',
 	102 => 'Processing',
@@ -102,13 +105,30 @@ $http_status_codes = [
 
 
 
+
+////////////////////////////////////////////////////////////////////////////////
+// DISPLAY THE HTTP ERROR STATUS PAGE FOR THE GIVEN CODE
+////////////////////////////////////////////////////////////////////////////////
 function httpError($code, $text=false, $log=false, $details=false) {
-	global $http_status_codes;
+	global $http_status_codes, $afurl, $afconfig, $get;
 
 	$code = (int) $code;
 	if (empty($http_status_codes[$code])) $code = 599;
 
 	//TODO: SPECIAL HANDLER FOR ERROR 404
+
+	if ($code === 404  &&  !empty($afurl)) {
+		if (empty($afurl->all)) $afurl->all = '_DOES_NOT_EXIST_';
+		if ($get->server('HTTP_REFERER') === $afurl->all) {
+			return $afurl->redirect([], 302);
+		}
+
+		$text = afDebug::html($afurl->all) . '<br/>' . $text;
+
+		if (!empty($afconfig->debug)) {
+			$text .= '<br/><pre>' . print_r($afurl,true) . '</pre>';
+		}
+	}
 
 	return afDebug::render(
 		$code . ' ' . $http_status_codes[$code], [
@@ -124,28 +144,10 @@ function httpError($code, $text=false, $log=false, $details=false) {
 
 
 
-function error404($text=false, $log=false, $details=false) {
-	global $afurl, $get, $afconfig;
 
-	if (!empty($afurl)) {
-		if (empty($afurl->all)) $afurl->all = '_DOES_NOT_EXIST_';
-		if ($get->server('HTTP_REFERER') === $afurl->all) {
-			return $afurl->redirect([], 302);
-		}
-
-		$text = afDebug::html($afurl->all) . '<br/>' . $text;
-
-		if (!empty($afconfig->debug)) {
-			$text .= '<br/><pre>' . print_r($afurl,true) . '</pre>';
-		}
-	}
-
-	return httpError(404, $text, $log, $details);
-}
-
-
-
-
+////////////////////////////////////////////////////////////////////////////////
+// ASSERT AND SHOW THE GIVEN STATUS CODE ON FAILURE
+////////////////////////////////////////////////////////////////////////////////
 function assertStatus($code, $item, $text=false, $log=false) {
 	if ($item instanceof pudlOrm) return $item->assertStatus($code, $text, $log);
 	return (empty($item) && $item!=='') ? httpError($code, $text, $log) : $item;
@@ -153,18 +155,32 @@ function assertStatus($code, $item, $text=false, $log=false) {
 
 
 
+
+////////////////////////////////////////////////////////////////////////////////
+// ASSERT THAT WE HAVE READ, WRITE, OR GRANT PERMISSIONS
+////////////////////////////////////////////////////////////////////////////////
 function assertRead($item, $text=false, $log=false) {
 	return ($item !== true && !in_array($item, ['read', 'write', 'grant']))
 		? error401($text, $log) : $item;
 }
 
 
+
+
+////////////////////////////////////////////////////////////////////////////////
+// ASSERT THAT WE HAVE WRITE OR GRANT PERMISSIONS
+////////////////////////////////////////////////////////////////////////////////
 function assertWrite($item, $text=false, $log=false) {
 	return ($item !== true && !in_array($item, ['write', 'grant']))
 		? error401($text, $log) : $item;
 }
 
 
+
+
+////////////////////////////////////////////////////////////////////////////////
+// ASSERT THAT WE HAVE "GRANT" PERMISSIONS (BASICALLY "ADMIN")
+////////////////////////////////////////////////////////////////////////////////
 function assertGrant($item, $text=false, $log=false) {
 	return ($item !== true && !in_array($item, ['grant']))
 		? error401($text, $log) : $item;
