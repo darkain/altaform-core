@@ -58,7 +58,11 @@ class		afUrl
 		if (substr($this->uri, 0, 2) === '//') $this->redirect('/');
 
 		if (empty($this->parts['path'])) {
-			httpError(400, 'No path specified');
+			if ($get instanceof getvar) {
+				httpError(400, 'No path specified');
+			} else {
+				$this->parts['path'] = '/';
+			}
 		}
 
 		if ($this->parts['path'][0] !== '/') {
