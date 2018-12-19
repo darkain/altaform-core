@@ -3,7 +3,7 @@
 //VERIFY SECURITY
 if (!$user->isStaff()) {
 	if (!$af->config->verify($get->h, $get->m, true)) {
-		error404();
+		httpError(404);
 	}
 }
 */

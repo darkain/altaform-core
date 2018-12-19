@@ -88,7 +88,7 @@ class afRouter {
 				if (is_file('_virtual.php'))	return '_virtual.php';
 				if (is_file('_virtual.hh'))		return $this->hhvm('_virtual.hh');
 
-				error404();
+				httpError(404);
 			}
 
 
@@ -111,7 +111,7 @@ class afRouter {
 				$this->virtualize($i);
 				if (is_file('_virtual.php'))	return '_virtual.php';
 				if (is_file('_virtual.hh'))		return $this->hhvm('_virtual.hh');
-				if (!is_dir('_virtual'))		error404();
+				if (!is_dir('_virtual'))		httpError(404);
 
 				$this->chdir('_virtual');
 				if ($this->reparse  ||  $this->reparse === NULL) return true;
@@ -138,7 +138,7 @@ class afRouter {
 
 
 			//NO MATCHES FOUND FOR FRAGEMENT, ERROR 404 PAGE!
-			error404();
+			httpError(404);
 		}
 	}
 
@@ -232,7 +232,7 @@ class afRouter {
 		if (is_file('_index.php'))	return '_index.php';
 		if (is_file('_index.hh'))	return $this->hhvm('_index.hh');
 		if (is_file('_index.tpl'))	return $af->auto(true, '_index.tpl');
-		error404();
+		httpError(404);
 	}
 
 
