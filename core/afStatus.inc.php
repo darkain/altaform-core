@@ -159,9 +159,10 @@ function assertStatus($code, $item, $text=false, $log=false) {
 ////////////////////////////////////////////////////////////////////////////////
 // ASSERT THAT WE HAVE READ, WRITE, OR GRANT PERMISSIONS
 ////////////////////////////////////////////////////////////////////////////////
-function assertRead($item, $text=false, $log=false) {
+function assertRead($item, $text=false, $log=false, $code=401) {
 	return ($item !== true && !in_array($item, ['read', 'write', 'grant']))
-		? error401($text, $log) : $item;
+			? httpError($code, $text, $log)
+			: $item;
 }
 
 
@@ -170,9 +171,10 @@ function assertRead($item, $text=false, $log=false) {
 ////////////////////////////////////////////////////////////////////////////////
 // ASSERT THAT WE HAVE WRITE OR GRANT PERMISSIONS
 ////////////////////////////////////////////////////////////////////////////////
-function assertWrite($item, $text=false, $log=false) {
+function assertWrite($item, $text=false, $log=false, $code=401) {
 	return ($item !== true && !in_array($item, ['write', 'grant']))
-		? error401($text, $log) : $item;
+			? httpError($code, $text, $log)
+			: $item;
 }
 
 
@@ -181,7 +183,8 @@ function assertWrite($item, $text=false, $log=false) {
 ////////////////////////////////////////////////////////////////////////////////
 // ASSERT THAT WE HAVE "GRANT" PERMISSIONS (BASICALLY "ADMIN")
 ////////////////////////////////////////////////////////////////////////////////
-function assertGrant($item, $text=false, $log=false) {
+function assertGrant($item, $text=false, $log=false, $code=401) {
 	return ($item !== true && !in_array($item, ['grant']))
-		? error401($text, $log) : $item;
+			? httpError($code, $text, $log)
+			: $item;
 }
