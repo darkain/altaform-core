@@ -5,7 +5,7 @@ $user->requireLogin();
 
 
 $data = afUpload::upload();
-assert500(
+assertStatus(500,
 	tbx_array($data),
 	'Unable to process image file - ' . afUpload::error()
 );
@@ -24,7 +24,10 @@ if (!empty($data['url'])) {
 }
 
 
-assert500($path, 'Unknown error while processing image file');
+assertStatus(500,
+	$path,
+	'Unknown error while processing image file'
+);
 
 
 if (!empty($afconfig->cdn['local'])) {

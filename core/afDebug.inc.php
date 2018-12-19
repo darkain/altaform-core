@@ -5,7 +5,7 @@ class afException extends Exception {}
 
 
 
-class afError {
+class afDebug {
 
 
 	public static function render($header, $text, $log=false, $template=false) {
@@ -207,7 +207,7 @@ class afError {
 		}
 
 
-		if (empty($afconfig->debug)) return error500('', true, $arr);
+		if (empty($afconfig->debug)) return httpError(500, '', true, $arr);
 
 
 		$html = "\n" . '<table class="af-debug-backtrace">' . "\n";
@@ -238,7 +238,7 @@ class afError {
 
 		$html .= '</table>';
 
-		error500($html, true, $arr);
+		httpError(500, $html, true, $arr);
 	}
 
 
@@ -380,205 +380,6 @@ class afError {
 
 
 
-function error400($text=false, $log=false, $details=false) {
-	afError::render('400 Bad Request', [
-		'<div id="af-fatal"><h1>ERROR: 400</h1>',
-		'<h2>BAD REQUEST</h2>',
-		'<h3>' . afError::html($details) . '</h3>',
-		($text !== false ? '<i>' . $text . '</i>' : '') . '</div>',
-	], $log, 'error400.tpl');
-}
-
-
-
-
-function error401($text=false, $log=false, $details=false) {
-	afError::render('401 Unauthorized', [
-		'<div id="af-fatal"><h1>ERROR: 401</h1>',
-		'<h2>AUTHORIZATION REQUIRED</h2>',
-		'<h3>' . afError::html($details) . '</h3>',
-		($text !== false ? '<i>' . $text . '</i>' : '') . '</div>',
-	], $log, 'error401.tpl');
-}
-
-
-
-
-function error402($text=false, $log=false, $details=false) {
-	afError::render('402 Payment Required', [
-		'<div id="af-fatal"><h1>ERROR: 402</h1>',
-		'<h2>PAYMENT REQUIRED</h2>',
-		'<h3>' . afError::html($details) . '</h3>',
-		($text !== false ? '<i>' . $text . '</i>' : '') . '</div>',
-	], $log, 'error402.tpl');
-}
-
-
-
-
-function error403($text=false, $log=false, $details=false) {
-	afError::render('403 Forbidden', [
-		'<div id="af-fatal"><h1>ERROR: 403</h1>',
-		'<h2>FORBIDDEN</h2>',
-		'<h3>' . afError::html($details) . '</h3>',
-		($text !== false ? '<i>' . $text . '</i>' : '') . '</div>',
-	], $log, 'error403.tpl');
-}
-
-
-
-
-function error404($text=false, $log=false, $details=false) {
-	global $afurl, $get, $afconfig;
-
-	if (!empty($afurl)) {
-		if (empty($afurl->all)) $afurl->all = '_DOES_NOT_EXIST_';
-		if ($get->server('HTTP_REFERER') === $afurl->all) {
-			$afurl->redirect([], 302);
-		}
-
-		$text = afError::html($afurl->all) . '<br/>' . $text;
-
-		if (!empty($afconfig->debug)) {
-			$text .= '<br/><pre>' . print_r($afurl,true) . '</pre>';
-		}
-	}
-
-	afError::render('404 File Not Found', [
-		'<div id="af-fatal"><h1>ERROR: 404</h1>',
-		'<h2>FILE NOT FOUND</h2>',
-		'<h3>' . afError::html($details) . '</h3>',
-		($text !== false ? '<i>' . $text . '</i>' : '') . '</div>',
-	], $log, 'error404.tpl');
-}
-
-
-
-
-function error405($text=false, $log=true, $details=false) {
-	afError::render('405 Method Not Allowed', [
-		'<div id="af-fatal"><h1>ERROR: 405</h1>',
-		'<h2>METHOD NOT ALLOWED</h2>',
-		'<h3>' . afError::html($details) . '</h3>',
-		($text !== false ? '<i>' . $text . '</i>' : '') . '</div>',
-	], $log, 'error405.tpl');
-}
-
-
-
-
-function error422($text=false, $log=true, $details=false) {
-	afError::render('422 Unprocessable Entity', [
-		'<div id="af-fatal"><h1>ERROR: 422</h1>',
-		'<h2>UNPROCESSABLE ENTITY</h2>',
-		'<h3>' . afError::html($details) . '</h3>',
-		($text !== false ? '<i>' . $text . '</i>' : '') . '</div>',
-	], $log, 'error422.tpl');
-}
-
-
-
-
-function error500($text=false, $log=true, $details=false) {
-	if (is_array($details)) $details = $details['details'];
-
-	afError::render('500 Internal Server Error', [
-		'<div id="af-fatal"><h1>ERROR: 500</h1>',
-		'<h2>INTERNAL SERVER ERROR</h2>',
-		'<h3>' . afError::html($details) . '</h3>',
-		($text !== false ? '<i>' . $text . '</i>' : '') . '</div>',
-	], $log, 'error500.tpl');
-}
-
-
-
-
-function error503($text=false, $log=true, $details=false) {
-	afError::render('503 Service Unavailable', [
-		'<div id="af-fatal"><h1>ERROR: 503</h1>',
-		'<h2>SERVICE UNAVAILABLE</h2>',
-		'<h3>' . afError::html($details) . '</h3>',
-		($text !== false ? '<i>' . $text . '</i>' : '') . '</div>',
-	], $log, 'error503.tpl');
-}
-
-
-
-
-function assert400($item, $text=false, $log=false) {
-	if ($item instanceof pudlOrm) return $item->assert400($text);
-	return (empty($item) && $item!=='') ? error400($text, $log) : $item;
-}
-
-
-function assert401($item, $text=false, $log=false) {
-	if ($item instanceof pudlOrm) return $item->assert401($text);
-	return (empty($item) && $item!=='') ? error401($text, $log) : $item;
-}
-
-
-function assert402($item, $text=false, $log=false) {
-	if ($item instanceof pudlOrm) return $item->assert402($text);
-	return (empty($item) && $item!=='') ? error402($text, $log) : $item;
-}
-
-
-function assert403($item, $text=false, $log=false) {
-	if ($item instanceof pudlOrm) return $item->assert403($text);
-	return (empty($item) && $item!=='') ? error403($text, $log) : $item;
-}
-
-
-function assert404($item, $text=false, $log=false) {
-	if ($item instanceof pudlOrm) return $item->assert404($text);
-	return (empty($item) && $item!=='') ? error404($text, $log) : $item;
-}
-
-
-function assert405($item, $text=false, $log=false) {
-	if ($item instanceof pudlOrm) return $item->assert405($text);
-	return (empty($item) && $item!=='') ? error405($text, $log) : $item;
-}
-
-
-function assert422($item, $text=false, $log=true) {
-	if ($item instanceof pudlOrm) return $item->assert422($text);
-	return (empty($item) && $item!=='') ? error422($text, $log) : $item;
-}
-
-
-function assert500($item, $text=false, $log=true) {
-	if ($item instanceof pudlOrm) return $item->assert500($text);
-	return (empty($item) && $item!=='') ? error500($text, $log) : $item;
-}
-
-
-function assert503($item, $text=false, $log=true) {
-	if ($item instanceof pudlOrm) return $item->assert503($text);
-	return (empty($item) && $item!=='') ? error503($text, $log) : $item;
-}
-
-
-function assertRead($item, $text=false, $log=false) {
-	return ($item !== true && !in_array($item, ['read', 'write', 'grant']))
-		? error401($text, $log) : $item;
-}
-
-
-function assertWrite($item, $text=false, $log=false) {
-	return ($item !== true && !in_array($item, ['write', 'grant']))
-		? error401($text, $log) : $item;
-}
-
-
-function assertGrant($item, $text=false, $log=false) {
-	return ($item !== true && !in_array($item, ['grant']))
-		? error401($text, $log) : $item;
-}
-
-
-
-
 ////////////////////////////////////////////////////////////////////////////////
 // HANDLER FOR PHP ERRORS, WARNINGS, NOTICES (BUT NOT EXCEPTIONS)
 ////////////////////////////////////////////////////////////////////////////////
@@ -601,7 +402,7 @@ set_error_handler(function(	$errno,			$errstr,		$errfile=NULL,
 		}
 	}
 
-	afError::log([
+	afDebug::log([
 		'error-code'	=> $errno,
 		'details'		=> $errstr,
 		'error-file'	=> $errfile,
@@ -632,7 +433,7 @@ set_exception_handler(function($e) {
 	if ($e instanceof pudlConnectionException) {
 		$afconfig->debug = false;
 		$afconfig->error['email'] = false;
-		if (!afCli()) error503($e->getMessage());
+		if (!afCli()) httpError(503, $e->getMessage());
 	}
 
 	if (($e instanceof pudlException)  &&  ($e->pudl instanceof pudl)) {
@@ -642,7 +443,7 @@ set_exception_handler(function($e) {
 		];
 	}
 
-	afError::log($info, true, $e->getTrace());
+	afDebug::log($info, true, $e->getTrace());
 });
 
 
@@ -659,7 +460,7 @@ register_shutdown_function(function() {
 
 	if ($e['type'] !== E_ERROR  &&  $e['type'] !== E_PARSE) return;
 
-	afError::log([
+	afDebug::log([
 		'error-code'	=> $e['type'],
 		'details'		=> $e['message'],
 		'error-file'	=> $e['file'],

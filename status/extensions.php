@@ -1,5 +1,5 @@
 <?php
-require_once(is_owner(__DIR__.'/../core/afError.inc.php'));
+require_once(is_owner(__DIR__.'/../core/afDebug.inc.php'));
 
 $list = get_loaded_extensions();
 
@@ -24,7 +24,7 @@ $need = [
 ];
 
 foreach ($need as $item) {
-	assert500(
+	assertStatus(500,
 		in_array($item, $list),
 		'Required PHP module not found: ' . $item
 	);

@@ -16,6 +16,16 @@ class		altaform
 
 		parent::__construct();
 
+		// VERIFY REQUIRED EXTENSIONS ARE LOADED
+		foreach (['ctype', 'json', 'session'] as $ext) {
+			assertStatus(500,
+				extension_loaded($ext),
+				"The required PHP extension is missing: '$ext'"
+			);
+		}
+
+
+		// INITIALIZE A BUNCH OF STUFF
 		$afconfig->af				= $this;
 		static::$af					= $this;
 		$this->url					= $afurl;

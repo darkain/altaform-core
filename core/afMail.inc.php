@@ -95,7 +95,7 @@ class afMail {
 		if (!empty($path)) @unlink($path);
 
 		if (!$return  &&  $af->debug()) {
-			error500($mail->ErrorInfo);
+			httpError(500, $mail->ErrorInfo);
 		}
 
 		return $return;

@@ -31,7 +31,10 @@ class		afUrl
 			$host = explode(':', $get->server('HTTP_HOST', ''));
 			if (empty($host[0])) $host = explode(':', $get->server('SERVER_ADDR', ''));
 			$host[0] = strtolower($host[0]);
-			assert400($host[0] !== '_cli', 'RESTRICTED DOMAIN NAME');
+			assertStatus(400,
+				$host[0] !== '_cli',
+				'RESTRICTED DOMAIN NAME'
+			);
 		}
 
 		$tmp				= strtolower($get->server('HTTPS', ''));
@@ -55,11 +58,7 @@ class		afUrl
 		if (substr($this->uri, 0, 2) === '//') $this->redirect('/');
 
 		if (empty($this->parts['path'])) {
-			if (afCli()) {
-				$this->parts['path'] = '/';
-			} else {
-				error500();
-			}
+			httpError(400, 'No path specified');
 		}
 
 		if ($this->parts['path'][0] !== '/') {
@@ -73,7 +72,7 @@ class		afUrl
 		}
 
 		if (substr($this->parts['path'], -1) === '/') {
-			assert405(
+			assertStatus(405,
 				$get->server('REQUEST_METHOD') !== 'POST',
 				'Attempting to redirect POST data. URL should not have trailing /'
 			);
@@ -92,9 +91,9 @@ class		afUrl
 
 			$val = urldecode($val);
 
-			assert500(
-				!in_array($val[0], ['.', '+', '-', '_', "\\", 0x7F])
-				&& ord($val[0])>0x20,
+			assertStatus(500,
+				(	!in_array($val[0], ['.', '+', '-', '_', "\\", 0x7F])
+					&& ord($val[0])>0x20	),
 				'Invalid character in URL path: 0x' . dechex(ord($val[0]))
 			);
 		}
@@ -365,13 +364,13 @@ class		afUrl
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//REDIRECT CLIENT TO A NEW URL
-	//301 Moved Permanently
-	//302 Found (temporary)
-	//307 Temporary Redirect (keeps POST data)
-	//308 Permanent Redirect (keeps POST data)
+	// REDIRECT CLIENT TO A NEW URL
+	// 301 Moved Permanently
+	// 302 Found (temporary)
+	// 307 Temporary Redirect (keeps POST data)
+	// 308 Permanent Redirect (keeps POST data)
 	////////////////////////////////////////////////////////////////////////////
-	public static function redirect($url, $type=301, $die=true) {
+	public static function redirect($url, $code=301, $die=true) {
 		global $af, $afurl;
 
 		if (tbx_array($url)) $url = $afurl($url, true);
@@ -380,7 +379,7 @@ class		afUrl
 			str_split((string)$url),
 			["\r", "\n", "\t", "\0", '<', '>']
 		);
-		assert422(empty($intersect));
+		assertStatus(422, empty($intersect));
 
 
 		if (function_exists('afCli')  &&  afCli()) {
@@ -388,7 +387,7 @@ class		afUrl
 
 		} else {
 			if (empty($af)  ||  !$af->jq()) {
-				if (!headers_sent()) header('Location: '.$url, true, $type);
+				if (!headers_sent()) header('Location: '.$url, true, $code);
 				echo '<html><head><meta http-equiv="refresh" content="0;URL=\'';
 				echo tbx::html($url) . '\'" /></head><body>';
 			}

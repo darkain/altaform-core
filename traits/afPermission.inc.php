@@ -8,6 +8,11 @@ trait afPermission {
 //	protected	$permissions	= [];
 
 
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// CHECK IF THE USER HAS THE GIVEN PERMISSION LEVEL (GLOBAL)
+	////////////////////////////////////////////////////////////////////////////
 	public function hasPermission($permission) {
 		if (empty($this->permission)) $this->permissions();
 
@@ -25,29 +30,66 @@ trait afPermission {
 
 
 
-	public function isAdmin() { return $this->hasPermission('admin'); }
-	public function isStaff() { return $this->hasPermission(['staff','admin']); }
+
+	////////////////////////////////////////////////////////////////////////////
+	// CHECK IF THE USER HAS 'ADMIN' PERMISSION LEVEL
+	////////////////////////////////////////////////////////////////////////////
+	public function isAdmin() {
+		return $this->hasPermission('admin');
+	}
 
 
 
-	public function requirePermission($permission) {
-		assert401(
+
+	////////////////////////////////////////////////////////////////////////////
+	// CHECK IF THE USER HAS 'STAFF' OR 'ADMIN' PERMISSION LEVELS
+	////////////////////////////////////////////////////////////////////////////
+	public function isStaff() {
+		return $this->hasPermission(['staff','admin']);
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// REQUIRE THE GIVEN PERMISSION LEVEL, OR EXIT TO HTTP ERROR STATUS SCREEN
+	////////////////////////////////////////////////////////////////////////////
+	public function requirePermission($permission, $code=401) {
+		assertStatus($code,
 			$this->hasPermission($permission),
 			'This page requires the following permission level: '
 			. (tbx_array($permission) ? implode(', ', $permission) : $permission)
 		);
+
 		return $this;
 	}
 
 
 
 
-	public function requireAdmin() { return $this->requirePermission('admin'); }
-	public function requireStaff() { return $this->requirePermission(['staff','admin']); }
+	////////////////////////////////////////////////////////////////////////////
+	// REQUIRE THE 'ADMIN' PERMISSION LEVEL
+	////////////////////////////////////////////////////////////////////////////
+	public function requireAdmin($code=401) {
+		return $this->requirePermission('admin', $code);
+	}
 
 
 
 
+	////////////////////////////////////////////////////////////////////////////
+	// REQUIRE THE 'STAFF' OR 'ADMIN' PERMISSION LEVELS
+	////////////////////////////////////////////////////////////////////////////
+	public function requireStaff($code=401) {
+		return $this->requirePermission(['staff','admin'], $code);
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// PROCESS THE USER PERMISSIONS LIST DATA
+	////////////////////////////////////////////////////////////////////////////
 	public function permissions() {
 		global $af;
 
@@ -76,6 +118,9 @@ trait afPermission {
 
 
 
+	////////////////////////////////////////////////////////////////////////////
+	// CHECK IF THE USER HAS THE GIVEN ACCESS RIGHTS (OBJECT)
+	////////////////////////////////////////////////////////////////////////////
 	public function hasAccess($access, $id=false) {
 		global $af, $db;
 
@@ -111,10 +156,13 @@ trait afPermission {
 
 
 
-	public function requireAccess($access, $id=false) {
-		assert401(
+	////////////////////////////////////////////////////////////////////////////
+	// REQUIRE THE USER HAS THE GIVEN ACCESS RIGHTS, OR EXIT TO HTTP ERROR
+	////////////////////////////////////////////////////////////////////////////
+	public function requireAccess($access, $id=false, $code=401) {
+		assertStatus($code,
 			$this->hasAccess($access, $id),
-			'This page requires the following permission level: '
+			'This page requires the following access rights: '
 			. (tbx_array($access) ? implode(', ', $access) : $access)
 		);
 		return $this;
@@ -123,6 +171,9 @@ trait afPermission {
 
 
 
+	////////////////////////////////////////////////////////////////////////////
+	// PROCESS THE USER ACCESS RIGHTS DATA
+	////////////////////////////////////////////////////////////////////////////
 	public function access() {
 		global $db;
 
@@ -141,6 +192,9 @@ trait afPermission {
 
 
 
+	////////////////////////////////////////////////////////////////////////////
+	// CHECK IF USER HAS EITHER OBJECT ACCESS OR GLOBAL PERMISSIONS
+	////////////////////////////////////////////////////////////////////////////
 	public function hasAccessPermission($access, $permission, $id=false) {
 		return $this->hasAccess($access, $id)
 			|| $this->hasPermission($permission);
@@ -149,6 +203,9 @@ trait afPermission {
 
 
 
+	////////////////////////////////////////////////////////////////////////////
+	// CHECK IF USER HAS EITHER OBJECT ACCESS OR GLOBAL ADMIN PERMISSIONS
+	////////////////////////////////////////////////////////////////////////////
 	public function hasAccessAdmin($access, $id=false) {
 		return $this->hasAccessPermission($access, 'admin', $id);
 	}
@@ -156,6 +213,9 @@ trait afPermission {
 
 
 
+	////////////////////////////////////////////////////////////////////////////
+	// CHECK IF USER HAS EITHER OBJECT ACCESS OR GLOBAL STAFF/ADMIN PERMISSIONS
+	////////////////////////////////////////////////////////////////////////////
 	public function hasAccessStaff($access, $id=false) {
 		return $this->hasAccessPermission($access, ['staff','admin'], $id);
 	}
@@ -163,8 +223,11 @@ trait afPermission {
 
 
 
-	public function requireAccessPermission($access, $permission, $id=false) {
-		assert401(
+	////////////////////////////////////////////////////////////////////////////
+	// REQUIRE OBJECT ACCESS OR GLOBAL PERMISSIONS
+	////////////////////////////////////////////////////////////////////////////
+	public function requireAccessPermission($access, $permission, $id=false, $code=401) {
+		assertStatus($code,
 			$this->hasAccessPermission($access, $permission, $id),
 			'This page requires the following permission level: '
 			. (tbx_array($access)		? implode(', ', $access)		: $access)
@@ -177,6 +240,9 @@ trait afPermission {
 
 
 
+	////////////////////////////////////////////////////////////////////////////
+	// REQUIRE OBJECT ACCESS OR GLOBAL ADMIN PERMISSIONS
+	////////////////////////////////////////////////////////////////////////////
 	public function requireAccessAdmin($access, $id=false) {
 		return $this->requireAccessPermission($access, 'admin', $id);
 	}
@@ -184,6 +250,9 @@ trait afPermission {
 
 
 
+	////////////////////////////////////////////////////////////////////////////
+	// REQUIRE OBJECT ACCESS OR GLOBAL STAFF/ADMIN PERMISSIONS
+	////////////////////////////////////////////////////////////////////////////
 	public function requireAccessStaff($access, $id=false) {
 		return $this->requireAccessPermission($access, ['staff','admin'], $id);
 	}

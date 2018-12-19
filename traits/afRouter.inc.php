@@ -27,7 +27,7 @@ class afRouter {
 	public function route($af) {
 		//RECURSION LIMIT
 		static $recurse = 0;
-		assert500(
+		assertStatus(500,
 			$recurse++ < 20,
 			'INTERNAL REDIRECT RECURSION LIMIT REACHED'
 		);
@@ -63,7 +63,7 @@ class afRouter {
 
 
 		for ($i=1; $i<$count; $i++) {
-			assert400(
+			assertStatus(400,
 				preg_match('/\.(php|inc|hh|tpl)$/i', $this->part[$i]) === 0,
 				'Invalid path - possible hacking attempt'
 			);
@@ -203,7 +203,10 @@ class afRouter {
 	// MOVE INTO A FOLDER, AND TEST SECURITY IF NEEDED
 	////////////////////////////////////////////////////////////////////////////
 	private function chdir($__af_path__) {
-		assert500(@chdir($__af_path__), 'Unable to enter directory');
+		assertStatus(500,
+			@chdir($__af_path__),
+			'Unable to enter directory'
+		);
 
 		if (!is_file('_altaform.inc.php')) return;
 
@@ -242,7 +245,10 @@ class afRouter {
 		if (!empty($this->virtual)) return;
 
 		$count = count($this->part)-1;
-		assert500($start<$count, 'Critical error processing path');
+		assertStatus(500,
+			$start<$count,
+			'Critical error processing path'
+		);
 
 		for ($x=$start; $x<$count; $x++) {
 			$this->virtual[] = $this->part[$x];
@@ -269,7 +275,7 @@ class afRouter {
 	////////////////////////////////////////////////////////////////////////////
 	private function hhvm($path) {
 		if (defined('HHVM_VERSION')) return $path;
-		error500(
+		httpError(500,
 			'HHVM_VERSION is not defined. ' .
 			'Cannot execute HACK language code from PHP.'
 		);

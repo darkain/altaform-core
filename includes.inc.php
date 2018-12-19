@@ -23,6 +23,7 @@ require_once(is_owner(__DIR__.'/core/afVoid.inc.php'));
 require_once(is_owner(__DIR__.'/core/afAudit.inc.php'));
 require_once(is_owner(__DIR__.'/core/afConfig.inc.php'));
 require_once(is_owner(__DIR__.'/core/afDevice.inc.php'));
+require_once(is_owner(__DIR__.'/core/afStatus.inc.php'));
 require_once(is_owner(__DIR__.'/core/afString.inc.php'));
 require_once(is_owner(__DIR__.'/core/afSystem.inc.php'));
 require_once(is_owner(__DIR__.'/core/afUpload.inc.php'));

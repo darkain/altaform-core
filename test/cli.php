@@ -30,7 +30,7 @@ function tbx_array($item) {
 chdir(__DIR__);
 
 
-require_once(__DIR__ . '/../core/afError.inc.php');
+require_once(__DIR__ . '/../core/afDebug.inc.php');
 require_once(__DIR__ . '/../core/afCli.inc.php');
 
 require_once(__DIR__ . '/../traits/afCallable.inc.php');

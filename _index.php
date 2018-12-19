@@ -40,20 +40,7 @@ if (!function_exists('is_owner')) {
 ////////////////////////////////////////////////////////////////////////////////
 // PHP ERROR HANDLING FUNCTIONS
 ////////////////////////////////////////////////////////////////////////////////
-require_once(is_owner(__DIR__.'/core/afError.inc.php'));
-
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-// VERIFY REQUIRED EXTENSIONS ARE LOADED
-////////////////////////////////////////////////////////////////////////////////
-foreach (['ctype', 'json', 'session'] as $ext) {
-	assert500(
-		extension_loaded($ext),
-		"The required PHP extension is missing: '$ext'"
-	);
-} unset($ext);
+require_once(is_owner(__DIR__.'/core/afDebug.inc.php'));
 
 
 
@@ -158,7 +145,7 @@ if (!headers_sent()) {
 // HOST INFORMATION FOR CONFIG
 ////////////////////////////////////////////////////////////////////////////////
 if (!afCli()) {
-	assert500(
+	assertStatus(500,
 		$afurl->validateDomain($afurl->domain),
 		'Invalid Domain: ' . $afurl->domain
 	);
@@ -179,7 +166,7 @@ if (is_file('_config/'.$afurl->domain.'/config.inc.php')) {
 } else if (is_file('_config/_virtual.inc.php')) {
 	require_once(is_owner('_config/_virtual.inc.php'));
 } else {
-	error500('Unknown Domain: ' . $afurl->domain);
+	httpError(500, 'Unknown Domain: ' . $afurl->domain);
 }
 
 
