@@ -143,8 +143,12 @@ class afUpload {
 		//ONLY SUPPORT JPEG / PNG / GIF FILES FOR NOW
 		try {
 			switch (strtoupper($image->getImageFormat())) {
-				case 'JPEG':  case 'JPG':  case 'PNG':  case 'GIF':
-				continue;
+				case 'JPEG':
+				case 'JPG':
+				case 'PNG':
+				case 'GIF':
+					// DO NOTHING!
+				break;
 
 				default:
 					self::$error = 'invalid file format';
