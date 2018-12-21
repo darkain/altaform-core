@@ -69,8 +69,10 @@ if (extension_loaded('mbstring')) {
 // WE DONT NEED COMPRESSION FROM PHP ITSELF
 // WEB SERVER / REVERSE PROXY HANDLES THIS TASK FOR US
 ////////////////////////////////////////////////////////////////////////////////
-ini_set('zlib.output_compression', 'Off');
-ini_set('zlib.output_compression_level', '0');
+if (!headers_sent()) {
+	@ini_set('zlib.output_compression', 'Off');
+	@ini_set('zlib.output_compression_level', '0');
+}
 
 
 
