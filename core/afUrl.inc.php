@@ -95,6 +95,10 @@ class		afUrl
 
 			$val = urldecode($val);
 
+			if ($get instanceof getvar) {
+				$val = $get->clean($val);
+			}
+
 			assertStatus(500,
 				(	!in_array($val[0], ['.', '+', '-', '_', "\\", 0x7F])
 					&& ord($val[0])>0x20	),
