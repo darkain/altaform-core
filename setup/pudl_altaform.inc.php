@@ -8,7 +8,7 @@ $db->create('pudl_altaform', [
 
 
 $db(
-	'ALTER TABLE ' . $db->_table('pudl_altaform') .
+	'ALTER TABLE ' . $db->identifiers('pudl_altaform', true) .
 	'	ADD PRIMARY KEY (' . $db->identifier('af_key') . '),' .
 	'	ADD KEY ' . $db->identifier('af_value') .
 		' (' . $db->identifier('af_value') . '(255))'

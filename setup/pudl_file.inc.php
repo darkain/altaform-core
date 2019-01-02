@@ -165,13 +165,13 @@ ALTER TABLE `pudl_mimetype`
 
 
 $db(
-	'CREATE TABLE ' . $db->_table('pudl_file_meta') . ' (
+	'CREATE TABLE ' . $db->identifiers('pudl_file_meta', true) . ' (
 	  `file_hash` varbinary(128) NOT NULL,
 	  `file_meta_name` varchar(32) COLLATE utf8mb4_bin NOT NULL,
 	  `file_meta_value` varchar(255) COLLATE utf8mb4_bin NOT NULL,
 	  PRIMARY KEY (`file_hash`,`file_meta_name`),
 	  KEY `file_meta_name` (`file_meta_name`),
-	  CONSTRAINT `pudl_file_meta` FOREIGN KEY (`file_hash`) REFERENCES ' . $db->_table('pudl_file') . ' (`file_hash`) ON DELETE CASCADE ON UPDATE CASCADE
+	  CONSTRAINT `pudl_file_meta` FOREIGN KEY (`file_hash`) REFERENCES ' . $db->identifiers('pudl_file', true) . ' (`file_hash`) ON DELETE CASCADE ON UPDATE CASCADE
 	) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci'
 );
 
