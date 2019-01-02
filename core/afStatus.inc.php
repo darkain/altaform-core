@@ -115,7 +115,11 @@ function httpError($code, $text=false, $log=false, $details=false) {
 	$code = (int) $code;
 	if (empty($http_status_codes[$code])) $code = 599;
 
-	//TODO: SPECIAL HANDLER FOR ERROR 404
+	if (is_array($details)) {
+		$details	= isset($details['details'])
+					? $details['details']
+					: 'Unknown Error';
+	}
 
 	if ($code === 404  &&  !empty($afurl)) {
 		if (empty($afurl->all)) $afurl->all = '_DOES_NOT_EXIST_';
