@@ -89,15 +89,17 @@ class		afUrl
 		$this->part		= explode('/', $this->parts['path']);
 		$this->part[]	= '';
 		foreach ($this->part as &$val) {
-			if (!strlen($val)) continue;
-
-			$this->url .= '/' . $val;
+			$tmp = $val;
 
 			$val = urldecode($val);
 
 			if ($get instanceof getvar) {
 				$val = $get->clean($val);
 			}
+
+			if (!strlen($val)) continue;
+
+			$this->url .= '/' . $tmp;
 
 			assertStatus(500,
 				(	!in_array($val[0], ['.', '+', '-', '_', "\\", 0x7F])
