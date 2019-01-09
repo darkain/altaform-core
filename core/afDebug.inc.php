@@ -365,14 +365,15 @@ class afDebug {
 	public static function nopassword(&$item, $key) {
 		if (is_int($key)) return;
 
-		switch ($key) {
-			case 'pass':
-			case 'password':
-			case 'hash':
-			case 'salt':
-			case 'key':
-			case 'secure':
+		$names = [
+			'pass',		'hash',		'salt',		'key',
+			'secure',	'token',	'secret',	'crypt',
+		];
+
+		foreach ($names as $name) {
+			if (stripos($key, $name) !== false) {
 				$item = '********';
+			}
 		}
 	}
 }
