@@ -297,6 +297,9 @@ class afDebug {
 		// IGNORE ISSUES WITH "hilitor" - unknown browser add-on
 		if (strpos($get->message, 'hilitor')) return;
 
+		// IGNORE ISSUE WITH "atomicFindClose" - unknown
+		if (strpos($get->message, 'atomicFindClose')) return;
+
 		// IGNORE SEZNAM SCREENSHOT GENERATOR
 		if (strpos($get->message, 'screenshot')) return;
 
