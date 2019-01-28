@@ -46,6 +46,8 @@ class			afUser
 				'ua.auth_verified',
 			],
 
+			//TODO:	WE SHOULD NOT BE PULLING IN AUTHENTICATION TABLE HERE.
+			//		AUTHENTICATION TABLE SHOULD ONLY BE PULLED FOR LOGIN/SESSION INFO ONLY.
 			'table'		=> [static::prefix	=> [static::table,
 				['left'	=> ['ua'=>'pudl_user_auth'], 'using'=>'user_id'],
 			]],
@@ -131,13 +133,13 @@ class			afUser
 	////////////////////////////////////////////////////////////////////////////
 	// SET THE USER ACCOUNT PASSWORD
 	////////////////////////////////////////////////////////////////////////////
-	public function setPassword($account, $password) {
+	public function setPassword($account, $password, $algo=PASSWORD_DEFAULT) {
 		$this->auth_account = $account;
 
 		return $this->pudl()->upsert('pudl_user_auth', [
 			static::column	=> $this->id(),
 			'auth_account'	=> $account,
-			'auth_password'	=> password_hash($password, PASSWORD_DEFAULT),
+			'auth_password'	=> password_hash($password, $algo),
 		]);
 	}
 
