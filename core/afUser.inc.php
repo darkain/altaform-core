@@ -166,19 +166,19 @@ class			afUser
 				. ' characters long';
 		}
 
-		if ($afconfig->password['upper']) {
+		if (!empty($afconfig->password['upper'])) {
 			if (!preg_match('/[a-z]/', $password)  ||  !preg_match('/[A-Z]/', $password)) {
 				return 'Password must contain both upper and lower case letters';
 			}
 		}
 
-		if ($afconfig->password['number']) {
+		if (!empty($afconfig->password['number'])) {
 			if (!preg_match('/[0-9]/', $password)) {
 				return 'Password must contain numbers';
 			}
 		}
 
-		if ($afconfig->password['symbol']) {
+		if (!empty($afconfig->password['symbol'])) {
 			if (!preg_match('/[^0-9a-zA-Z]/', $password)) {
 				return 'Password must contain special character symbols';
 			}
