@@ -208,10 +208,10 @@ class afRouter {
 			'Unable to enter directory'
 		);
 
-		if (!is_file('_altaform.inc.php')) return;
+		if (!is_file('_altaform.php')) return;
 
 		extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
-		require(is_owner('_altaform.inc.php'));
+		require(is_owner('_altaform.php'));
 
 		$__af_list__ = get_defined_vars();
 

@@ -176,10 +176,10 @@ if (is_file('_config/'.$afurl->domain.'/config.inc.php')) {
 ////////////////////////////////////////////////////////////////////////////////
 // LOAD ADDITIONAL CONFIGUATION FILE
 ////////////////////////////////////////////////////////////////////////////////
-if (is_file($afconfig->root . '/_altaform.inc.php')) {
+if (is_file($afconfig->root . '/_altaform.php')) {
 	$__af_cwd__ = getcwd();
 	chdir($afconfig->root);
-	require(is_owner('_altaform.inc.php'));
+	require(is_owner('_altaform.php'));
 	chdir($__af_cwd__);
 	unset($__af_cwd__);
 }
