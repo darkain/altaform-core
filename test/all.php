@@ -1,11 +1,11 @@
 <?php
 
 
-$afUnit = 0;
+$__af_test_total__ = 0;
 
 function afUnit($result, $expected=true) {
-	global $afUnit;
-	$afUnit++;
+	global $__af_test_total__;
+	$__af_test_total__++;
 
 	if ($result === $expected) return;
 

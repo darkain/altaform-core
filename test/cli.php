@@ -52,4 +52,5 @@ echo afCli::fgWhite("PHP Version:\t") . afCli::fgCyan(PHP_VERSION) . "\n\n";
 require(__DIR__.'/all.php');
 
 
-echo afCli::fgGreen(1,"\nSuccess:\t".$afUnit) . afCli::fgGreen(' Altaform unit tests completed') . "\n\n";
+echo afCli::fgGreen(1,"\nSuccess:\t".$__af_test_total__);
+echo afCli::fgGreen(' Altaform unit tests completed') . "\n\n";
