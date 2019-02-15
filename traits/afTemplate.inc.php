@@ -18,7 +18,7 @@ trait afTemplate {
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//LINK A JAVASCRIPT FILE IN HTML HEADER
+	// LINK A JAVASCRIPT FILE IN HTML HEADER
 	////////////////////////////////////////////////////////////////////////////
 	public function script($path) {
 		if (tbx_array($path)) {
@@ -35,7 +35,7 @@ trait afTemplate {
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//EMBED INLINE JAVASCRIPT IN HTML HEADER
+	// EMBED INLINE JAVASCRIPT IN HTML HEADER
 	////////////////////////////////////////////////////////////////////////////
 	public function javascript($script, $merge=false) {
 		$this->_js[] = [$script, $merge];
@@ -46,7 +46,7 @@ trait afTemplate {
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//EMBED INLINE JAVASCRIPT IN HTML HEADER FROM FILE
+	// EMBED INLINE JAVASCRIPT IN HTML HEADER FROM FILE
 	////////////////////////////////////////////////////////////////////////////
 	public function js($file, $merge=false) {
 		$data = @file_get_contents($file, true);
@@ -61,7 +61,7 @@ trait afTemplate {
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//LINK A CASCADING STYLE SHEET FILE IN HTML HEADER
+	// LINK A CASCADING STYLE SHEET FILE IN HTML HEADER
 	////////////////////////////////////////////////////////////////////////////
 	public function style($path) {
 		if (tbx_array($path)) {
@@ -78,7 +78,7 @@ trait afTemplate {
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//EMBED INLINE CASCADING STYLE SHEET IN HTML HEADER
+	// EMBED INLINE CASCADING STYLE SHEET IN HTML HEADER
 	////////////////////////////////////////////////////////////////////////////
 	public function sheet($styles, $merge=false) {
 		$this->_css[] = [$styles, $merge];
@@ -89,7 +89,7 @@ trait afTemplate {
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//EMBED INLINE CASCADING STYLE SHEET IN HTML HEADER FROM FILE
+	// EMBED INLINE CASCADING STYLE SHEET IN HTML HEADER FROM FILE
 	////////////////////////////////////////////////////////////////////////////
 	public function css($file, $merge=false) {
 		$data = @file_get_contents($file, true);
@@ -104,7 +104,7 @@ trait afTemplate {
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//ADD EXTRA CUSTOM META TAGS TO A PAGE (SUCH AS TWITTER CARDS)
+	// ADD EXTRA CUSTOM META TAGS TO A PAGE (SUCH AS TWITTER CARDS)
 	////////////////////////////////////////////////////////////////////////////
 	public function meta($meta) {
 		$this->_meta[] = $meta;
@@ -115,9 +115,9 @@ trait afTemplate {
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//ADD EXTRA CUSTOM META TAGS TO A PAGE (SUCH AS TWITTER CARDS)
+	// ADD EXTRA CUSTOM META TAGS TO A PAGE (SUCH AS TWITTER CARDS)
 	////////////////////////////////////////////////////////////////////////////
-	public function metas($meta) {
+	public function metas($metas) {
 		$this->_meta = array_merge($this->_meta, $meta);
 		return $this;
 	}
@@ -126,7 +126,29 @@ trait afTemplate {
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//LOAD A TEMPLATE FILE - OVERRIDE DEFAULT TBX FILE LOADER
+	// ADD CLASS NAME TO <BODY> TAG
+	////////////////////////////////////////////////////////////////////////////
+	public function class($class) {
+		$this->_classes[] = $class;
+		return $this;
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// ADD CLASS NAMES TO <BODY> TAG
+	////////////////////////////////////////////////////////////////////////////
+	public function classES($classes) {
+		$this->_classes = array_merge($this->_classes, $classes);
+		return $this;
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// LOAD A TEMPLATE FILE - OVERRIDE DEFAULT TBX FILE LOADER
 	////////////////////////////////////////////////////////////////////////////
 	public function onload(&$text) {
 		global $afurl, $og, $user;
@@ -143,7 +165,7 @@ trait afTemplate {
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//LOAD A TEMPLATE FILE - OVERRIDE DEFAULT TBX FILE LOADER
+	// LOAD A TEMPLATE FILE - OVERRIDE DEFAULT TBX FILE LOADER
 	////////////////////////////////////////////////////////////////////////////
 	public function load($file) {
 		if (tbx_array($file)) {
@@ -163,8 +185,8 @@ trait afTemplate {
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//NO PARAMS - RENDER HTML HEADER TEMPLATES
-	//PARAMS - ADD OPTIONS TO HTML HEADER TEMPLATES (deprecated)
+	// NO PARAMS - RENDER HTML HEADER TEMPLATES
+	// PARAMS - ADD OPTIONS TO HTML HEADER TEMPLATES (deprecated)
 	////////////////////////////////////////////////////////////////////////////
 	public function header($key=false, $data=false, $replace=false) {
 		if ($key === false) {
@@ -189,7 +211,7 @@ trait afTemplate {
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//SET A SPECIFIC HTML HEADER TEMPLATE OPTION
+	// SET A SPECIFIC HTML HEADER TEMPLATE OPTION
 	////////////////////////////////////////////////////////////////////////////
 	public function headers($key, $data) {
 		$this->_headers[$key] = $data;
@@ -200,8 +222,8 @@ trait afTemplate {
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//NO PARAMS - RENDER HTML FOOTER TEMPLATES
-	//PARAMS - ADD OPTIONS TO HTML FOOTER TEMPLATES (deprecated)
+	// NO PARAMS - RENDER HTML FOOTER TEMPLATES
+	// PARAMS - ADD OPTIONS TO HTML FOOTER TEMPLATES (deprecated)
 	////////////////////////////////////////////////////////////////////////////
 	public function footer($key=false, $data=false, $replace=false) {
 		if ($key === false) {
@@ -222,7 +244,7 @@ trait afTemplate {
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//SET A SPECIFIC HTML FOOTER TEMPLATE OPTION
+	// SET A SPECIFIC HTML FOOTER TEMPLATE OPTION
 	////////////////////////////////////////////////////////////////////////////
 	public function footers($key, $data) {
 		$this->_footers[$key] = $data;
@@ -233,7 +255,7 @@ trait afTemplate {
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//RENDER HTML HEADER
+	// RENDER HTML HEADER
 	////////////////////////////////////////////////////////////////////////////
 	public function headerHTML() {
 		if ($this->_stage !== AF_STAGE_NONE) return $this;
@@ -243,7 +265,7 @@ trait afTemplate {
 		$root	= $this->path() . $this->config->root;
 
 
-		//NOTE: PRERENDER MUST COME BEFORE LOAD, SINCE IT LOADS/RENDERS TOO
+		// NOTE: PRERENDER MUST COME BEFORE LOAD, SINCE IT LOADS/RENDERS TOO
 		list ($js, $css) = $this->prerender();
 
 
@@ -269,7 +291,7 @@ trait afTemplate {
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//RENDER PAGE HEADER
+	// RENDER PAGE HEADER
 	////////////////////////////////////////////////////////////////////////////
 	public function headerPage() {
 		if ($this->_stage !== AF_STAGE_HEADER) return $this;
@@ -285,7 +307,9 @@ trait afTemplate {
 			$this->load($root.'/header_page.tpl');
 		}
 
-		$this->merge($this->_headers)->render();
+		$this->merge($this->_headers);
+		$this->field('classes', $this->_classes);
+		$this->render();
 
 		$this->_stage = AF_STAGE_BODY;
 
@@ -296,7 +320,7 @@ trait afTemplate {
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//RENDER PAGE HEADER
+	// RENDER PAGE HEADER
 	////////////////////////////////////////////////////////////////////////////
 	public function headerEmail() {
 		$root	= $this->path() . $this->config->root;
@@ -314,7 +338,7 @@ trait afTemplate {
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//RENDER HTML FOOTER
+	// RENDER HTML FOOTER
 	////////////////////////////////////////////////////////////////////////////
 	public function footerHTML() {
 		if ($this->_stage !== AF_STAGE_FOOTER) return $this;
@@ -342,7 +366,7 @@ trait afTemplate {
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//RENDER PAGE FOOTER
+	// RENDER PAGE FOOTER
 	////////////////////////////////////////////////////////////////////////////
 	public function footerPage() {
 		global $db, $user;
@@ -381,7 +405,7 @@ trait afTemplate {
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//RENDER HTML FOOTER
+	// RENDER HTML FOOTER
 	////////////////////////////////////////////////////////////////////////////
 	public function footerEmail() {
 		$root	= $this->path() . $this->config->root;
@@ -399,21 +423,21 @@ trait afTemplate {
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//RENDER AN ENTIRE PAGE
+	// RENDER AN ENTIRE PAGE
 	////////////////////////////////////////////////////////////////////////////
 	public function renderPage($file, $merge=false) {
 		global $og, $user;
 
-		//ALLOW DEVICE SPECIFIC LOADING
+		// ALLOW DEVICE SPECIFIC LOADING
 		$device	= $file . '.' . afDevice::device();
 
-		//PULL THE CONTENTS OF THE TEMPLATE BEFORE ANYTHING ELSE!
+		// PULL THE CONTENTS OF THE TEMPLATE BEFORE ANYTHING ELSE!
 		$text = @file_get_contents( afFile::readable($device) ? $device : $file );
 		if ($text === false) {
 			throw new afException('Unable to load template file: '.$file);
 		}
 
-		//PULL OUT REQUIRED PERMISSIONS TAG
+		// PULL OUT REQUIRED PERMISSIONS TAG
 		preg_match("/\<permission[^>]*>(.*)\<\/permission\>/", $text, $matches);
 		if (!empty($matches[1])) {
 			if ($matches[1] === 'login') {
@@ -424,14 +448,14 @@ trait afTemplate {
 			$text = preg_replace("/\<permission[^>]*>(.*)\<\/permission\>/", '', $text);
 		}
 
-		//PULL OUT TITLE TAG
+		// PULL OUT TITLE TAG
 		preg_match("/\<title[^>]*>(.*)\<\/title\>/", $text, $matches);
 		if (!empty($matches[1])) {
 			$this->title	= $this->renderString($matches[1]);
 			$text			= preg_replace("/\<title[^>]*>(.*)\<\/title\>/", '', $text);
 		}
 
-		//PULL OUT STYLE TAG
+		// PULL OUT STYLE TAG
 		if (!$this->jq()) {
 			preg_match("/\<style[^>]*>(.*)\<\/style\>/s", $text, $matches);
 			if (!empty($matches[1])) {
@@ -440,14 +464,14 @@ trait afTemplate {
 			}
 		}
 
-		//PULL OUT DESCRIPTION TAG
+		// PULL OUT DESCRIPTION TAG
 		preg_match("/\<description[^>]*>(.*)\<\/description\>/s", $text, $matches);
 		if (!empty($matches[1])) {
 			$og['description'] = $this->renderString($matches[1]);
 			$text	= preg_replace("/\<description[^>]*>(.*)\<\/description\>/s", '', $text);
 		}
 
-		//PULL OUT IMAGE TAG
+		// PULL OUT IMAGE TAG
 		preg_match("/\<image[^>]*>(.*)\<\/image\>/", $text, $matches);
 		if (!empty($matches[1])) {
 			$og['image'] = $this->renderString($matches[1]);
@@ -465,7 +489,7 @@ trait afTemplate {
 			}
 		}
 
-		//RENDER ALL THE THINGS!
+		// RENDER ALL THE THINGS!
 		return $this
 			->header()
 				->loadString($text)
@@ -478,7 +502,7 @@ trait afTemplate {
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//AUTOMATICALLY INCLUDE JS AND CSS FILES IF AVAILABLE, AND RENDER OUTPUT
+	// AUTOMATICALLY INCLUDE JS AND CSS FILES IF AVAILABLE, AND RENDER OUTPUT
 	////////////////////////////////////////////////////////////////////////////
 	public function auto($render=false, $file=false) {
 		if ($file === false) {
@@ -513,7 +537,7 @@ trait afTemplate {
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//GET THE CURRENT PAGE RENDERING STAGE
+	// GET THE CURRENT PAGE RENDERING STAGE
 	////////////////////////////////////////////////////////////////////////////
 	public function stage() { return $this->_stage; }
 
@@ -521,7 +545,7 @@ trait afTemplate {
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//RESET THE CURRENT STAGE - USED BY ERROR HANDLER
+	// RESET THE CURRENT STAGE - USED BY ERROR HANDLER
 	////////////////////////////////////////////////////////////////////////////
 	public function resetStage() {
 		$this->_stage	= AF_STAGE_NONE;
@@ -532,7 +556,7 @@ trait afTemplate {
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//SET A CUSTOM NOTICE HEADER
+	// SET A CUSTOM NOTICE HEADER
 	////////////////////////////////////////////////////////////////////////////
 	public function notice($text) {
 		$this->_headers['notice'][] = ['text' => $text];
@@ -543,19 +567,19 @@ trait afTemplate {
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//PRE-RENDER JAVASCRIPT AND CSS FOR HTML HEADER
+	// PRE-RENDER JAVASCRIPT AND CSS FOR HTML HEADER
 	////////////////////////////////////////////////////////////////////////////
 	protected function prerender() {
 		$return = ['', ''];
 
-		//PRE-RENDER JAVASCRIPT
+		// PRE-RENDER JAVASCRIPT
 		foreach ($this->_js as $item) {
 			$return[0] .= $this	->loadString($item[0])
 								->merge($item[1])
 								->renderToString();
 		}
 
-		//PRE-RENDER CASCADING STYLE SHEETS
+		// PRE-RENDER CASCADING STYLE SHEETS
 		foreach ($this->_css as $item) {
 			$return[1] .= $this	->loadString($item[0])
 								->merge($item[1])
@@ -569,7 +593,7 @@ trait afTemplate {
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//CUSTOM TEMPLATE FORMATS
+	// CUSTOM TEMPLATE FORMATS
 	////////////////////////////////////////////////////////////////////////////
 	protected function _customFormat(&$text, $style) {
 		global $afurl;
@@ -600,6 +624,7 @@ trait afTemplate {
 	private $_script	= [];
 	private $_style		= [];
 	private $_meta		= [];
+	private $_classes	= [];
 	private $_headers	= [];
 	private $_footers	= [];
 	private $_stage		= AF_STAGE_NONE;
