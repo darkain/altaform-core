@@ -112,7 +112,7 @@ foreach ($databases as $item) {
 			'timeout'	=> 2,
 		]);
 	} catch (pudlConnectionException $e) {
-		$connect		= new pudlMySqli([], false);
+		$connect		= new pudlMySqli(['offline' => true]);
 	}
 
 	if (!empty($replacers[0])  &&  !empty($replacers[1])) {
