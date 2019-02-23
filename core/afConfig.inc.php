@@ -2,9 +2,10 @@
 
 
 
-
-require_once(is_owner('_pudl/pudlObject.php'));
-require_once(is_owner('_tbx/tbx_plugin.inc.php'));
+if (!class_exists('pudlObject')) {
+	require_once(is_owner('_pudl/pudlObject.php'));
+	require_once(is_owner('_tbx/tbx_plugin.inc.php'));
+}
 
 
 

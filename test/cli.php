@@ -7,6 +7,11 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline ) {
 });
 
 
+//GENERIC FILLERS FOR UNIT TESTING
+function is_owner($path) { return $path; }
+class pudlObject {}
+class pudlOrm {}
+interface tbx_plugin {}
 
 
 //PHP REQUIRES DEFAULT TIMEZONE TO BE SET NOW
@@ -29,20 +34,25 @@ function tbx_array($item) {
 //CHANGE TO THIS DIRECTORY FOR CONSISTENCY
 chdir(__DIR__);
 
-
-require_once(__DIR__ . '/../core/afDebug.inc.php');
-require_once(__DIR__ . '/../core/afStatus.inc.php');
-require_once(__DIR__ . '/../core/afCli.inc.php');
+require_once(__DIR__ . '/../core/afVoid.inc.php');
+if (empty($get))		$get		= new afVoid;
 
 require_once(__DIR__ . '/../traits/afCallable.inc.php');
 require_once(__DIR__ . '/../traits/afRouter.inc.php');
+require_once(__DIR__ . '/../traits/afNode.inc.php');
 
-require_once(__DIR__ . '/../core/afVoid.inc.php');
-if (empty($get))	$get	= new afVoid;
-
+require_once(__DIR__ . '/../core/afDebug.inc.php');
 require_once(__DIR__ . '/../core/afString.inc.php');
-require_once(__DIR__ . '/../core/afUrl.inc.php');
+require_once(__DIR__ . '/../core/afCli.inc.php');
+require_once(__DIR__ . '/../core/afStatus.inc.php');
 
+//THESE MUST COME AFTER OTHERS AND BE INCLUDED IN THIS ORDER
+require_once(__DIR__ . '/../core/afUrl.inc.php');
+require_once(__DIR__ . '/../core/afUser.inc.php');
+
+//AFCONFIG IS STAND ALONE
+require_once(__DIR__ . '/../core/afConfig.inc.php');
+if (empty($afconfig))	$afconfig	= new afConfig;
 
 
 

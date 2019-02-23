@@ -2,10 +2,6 @@
 
 
 
-//	TODO: ENABLE THIS SET OF UNIT TESTS OUTSIDE OF FULL ALTAFORM
-if (!class_exists('afconfig')) return;
-
-
 
 $password_backup	= $afconfig->password;
 $afconfig->password	= [];
