@@ -262,8 +262,7 @@ class			afUser
 	// ALLOWED CHARACTERS IN SYSTEM GENERATED PASSWORDS
 	////////////////////////////////////////////////////////////////////////////
 	const password_allowed =
-		'01234abcdefghijklmnopqrstuvwxyz-^/(' .
-		'56789ABCDEFGHIJKLMNOPQRSTUVWXYZ+)\$=';
+		'01234abcdefghijklmnopqrstuvwxyz-^/(56789ABCDEFGHIJKLMNOPQRSTUVWXYZ+)\$=';
 }
 
 
