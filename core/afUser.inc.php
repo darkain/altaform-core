@@ -194,10 +194,11 @@ class			afUser
 	// GENERATE A RANDOM PASSWORD
 	////////////////////////////////////////////////////////////////////////////
 	public static function password($length=16) {
+		$allowed	= static::password_allowed;
 		$password	= '';
-		$characters	= strlen(static::password_allowed)-1;
+		$characters	= strlen($allowed)-1;
 		for ($i=0; $i<$length; $i++) {
-			$password .= static::password_allowed[random_int(0, $characters)];
+			$password .= $allowed[random_int(0, $characters)];
 		}
 		return $password;
 	}
