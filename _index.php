@@ -356,17 +356,9 @@ $af->login();
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// PARSE THE URL AND LOAD THE PAGE!
-// THIS IS THE MAIN PART OF THE INIT SCRIPT THAT RUNS THE APPLICATION CODE
+// ROUTE THE REQUEST AND RUN THE APPLICATION
 ////////////////////////////////////////////////////////////////////////////////
-while ($afrouter->reparse) {
-	$afrouter->reparse = false;
-	$afrouter->path = $afrouter->route($af);
-	if (is_string($afrouter->path)  &&  $afrouter->path !== '') {
-		require(is_owner($afrouter->path));
-	}
-	chdir($afrouter->directory);
-}
+require('router/_index.php');
 
 
 

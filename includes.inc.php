@@ -37,10 +37,13 @@ require_once(is_owner(__DIR__.'/core/afFunctions.inc.php'));
 require_once(is_owner(__DIR__.'/traits/afAuth.inc.php'));
 require_once(is_owner(__DIR__.'/traits/afNode.inc.php'));
 require_once(is_owner(__DIR__.'/traits/afRobots.inc.php'));
-require_once(is_owner(__DIR__.'/traits/afRouter.inc.php'));
 require_once(is_owner(__DIR__.'/traits/afEncrypt.inc.php'));
 require_once(is_owner(__DIR__.'/traits/afCallable.inc.php'));
 require_once(is_owner(__DIR__.'/traits/afTemplate.inc.php'));
+
+
+// NEW ALTAFORM 3.0 INDEPENDENT MODULES
+require_once(is_owner(__DIR__.'/router/router.php'));
 
 
 // ALTAFORM CORE
