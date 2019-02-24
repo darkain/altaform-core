@@ -371,6 +371,7 @@ class afDebug {
 		$names = [
 			'pass',		'hash',		'salt',		'key',
 			'secure',	'token',	'secret',	'crypt',
+			'cookie',
 		];
 
 		foreach ($names as $name) {
