@@ -118,7 +118,7 @@ trait afTemplate {
 	// ADD EXTRA CUSTOM META TAGS TO A PAGE (SUCH AS TWITTER CARDS)
 	////////////////////////////////////////////////////////////////////////////
 	public function metas($metas) {
-		$this->_meta = array_merge($this->_meta, $meta);
+		$this->_meta = array_merge($this->_meta, $metas);
 		return $this;
 	}
 
