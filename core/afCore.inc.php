@@ -165,7 +165,7 @@ class		altaform
 		$this->authLogin();
 
 		if ($this->debug()  ||  $user->isAdmin()) {
-			$this->git = new afGit($this);
+			$this->git = new \af\git($this->path());
 		}
 	}
 

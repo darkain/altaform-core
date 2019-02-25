@@ -1,11 +1,19 @@
 <?php
 
+namespace af;
 
-require_once(is_owner(__DIR__.'/../modules/abyss.php'));
 
 
-class		afGit
-	extends	\af\abyss {
+require_once(is_owner(__DIR__.'/abyss.php'));
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// A SIMPLE CLASS FOR HANDLING COMMON GIT TASKS
+////////////////////////////////////////////////////////////////////////////////
+class		git
+	extends	abyss {
 
 
 
@@ -13,8 +21,8 @@ class		afGit
 	////////////////////////////////////////////////////////////////////////////
 	// CONSTRUCTOR - TAKE IN AN INSTANCE OF ALTAFORM CLASS AND STORE IT LOCALLY
 	////////////////////////////////////////////////////////////////////////////
-	public function __construct($altaform) {
-		$this->af = $altaform;
+	public function __construct($path) {
+		$this->path = $path;
 	}
 
 
@@ -39,7 +47,7 @@ class		afGit
 	public function __invoke() {
 		$command	= func_get_arg(0);
 		$path		= getcwd();
-		chdir($this->af->path());
+		chdir($this->path);
 		$return		= `git {$command}`;
 		chdir($path);
 		return $return;
@@ -71,5 +79,5 @@ class		afGit
 	////////////////////////////////////////////////////////////////////////////
 	// LOCAL VARIABLES
 	////////////////////////////////////////////////////////////////////////////
-	private $af;
+	private $path;
 }
