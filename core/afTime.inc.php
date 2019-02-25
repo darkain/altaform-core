@@ -2,13 +2,13 @@
 
 
 
-define('AF_YEAR',  31536000);
-define('AF_MONTH',  2592000);
-define('AF_WEEK',    604800);
-define('AF_DAY',      86400);
-define('AF_HOUR',      3600);
-define('AF_MINUTE',      60);
-define('AF_SECOND',       1);
+define('AF_SECOND',	  1);
+define('AF_MINUTE',	 60 * AF_SECOND);
+define('AF_HOUR',	 60 * AF_MINUTE);
+define('AF_DAY',	 24 * AF_HOUR);
+define('AF_WEEK',	  7 * AF_DAY);
+define('AF_MONTH',	 30 * AF_DAY);
+define('AF_YEAR',	365 * AF_DAY);
 
 
 
@@ -44,7 +44,7 @@ class afTime {
 
 	public static function since($timestamp, $maxoffset=86400) {
 		global $af;
-		if ($timestamp == 0) return "Never";
+		if ($timestamp == 0) return 'Never';
 
 		if ($af->time() > $timestamp) {
 			$tense = ' ago';
