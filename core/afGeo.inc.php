@@ -89,7 +89,7 @@ class afGeo {
 		if (is_null($af)  ||  is_null($af->config)) return false;
 		if (empty($af->config->geo)) return false;
 
-		if (empty($ipaddress)) $ipaddress = afIp::address();
+		if (empty($ipaddress)) $ipaddress = \af\ip::address();
 		if (empty($ipaddress)) return false;
 
 		$ctx = stream_context_create(['http'=>['timeout'=>1]]);

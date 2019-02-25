@@ -138,9 +138,9 @@ class afDebug {
 
 			'af-url'		=> empty($data['address'])	? $address : $data['address'],
 			'user-device'	=> !isset($af->device)		? '' :	$af->device(),
-			'ip-php'		=> !class_exists('afIp')	? '' :	afIp::local(),
-			'ip-client'		=> !class_exists('afIp')	? '' :	afIp::address(),
-			'ip-httpd'		=> !class_exists('afIp')	? '' :	afIp::server(),
+			'ip-php'		=> !class_exists('\af\ip')	? '' :	\af\ip::local(),
+			'ip-client'		=> !class_exists('\af\ip')	? '' :	\af\ip::address(),
+			'ip-httpd'		=> !class_exists('\af\ip')	? '' :	\af\ip::server(),
 		], $data);
 
 		if (!empty($afrouter->redirected)) {

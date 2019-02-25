@@ -11,12 +11,12 @@ require_once(is_owner('_tbx/tbx.inc.php'));
 
 // NEW ALTAFORM 3.0 INDEPENDENT MODULES
 require_once(is_owner(__DIR__.'/router/router.php'));
+require_once(is_owner(__DIR__.'/modules/ip.php'));
 require_once(is_owner(__DIR__.'/modules/cli.php'));
 require_once(is_owner(__DIR__.'/modules/abyss.php'));
 
 
 // ALTAFORM 2.0 CORE FUNCTIONALITY
-require_once(is_owner(__DIR__.'/core/afIp.inc.php'));
 require_once(is_owner(__DIR__.'/core/af2fa.inc.php'));
 require_once(is_owner(__DIR__.'/core/afDir.inc.php'));
 require_once(is_owner(__DIR__.'/core/afGeo.inc.php'));

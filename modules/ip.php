@@ -1,7 +1,14 @@
 <?php
 
+namespace af;
 
-class afIp {
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// A SIMPLE CLASS FOR HANDLING COMMON IP ADDRESS TASKS
+////////////////////////////////////////////////////////////////////////////////
+class ip {
 
 
 	////////////////////////////////////////////////////////////////////////////
@@ -52,11 +59,53 @@ class afIp {
 	// GET THE REMOTE CLIENT'S IP ADDRESS, OR '127.0.0.1' FOR COMMAND LINE
 	////////////////////////////////////////////////////////////////////////////
 	public static function address() {
-		global $get;
-		if (function_exists('\af\cli') && \af\cli()) return '127.0.0.1';
-		$address = $get->server('HTTP_X_FORWARDED_FOR');
-		if (empty($address)) $address = $get->server('REMOTE_ADDR');
-		return empty($address) ? false : $address;
+		if (function_exists('\af\cli') && cli()) {
+			return '127.0.0.1';
+		}
+
+		if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+			return $_SERVER['HTTP_X_FORWARDED_FOR'];
+		}
+
+		return !empty($_SERVER['REMOTE_ADDR'])
+			? $_SERVER['REMOTE_ADDR']
+			: NULL;
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// GET THE HTTPD SERVER ADDRESS (MAY BE IPv4 OR IPv6)
+	// THIS MAY BE DIFFERENT DUE TO PHP-FPM AND LOAD BALANCING BETWEEN NODES
+	////////////////////////////////////////////////////////////////////////////
+	public static function server() {
+		if (function_exists('\af\cli') && cli()) {
+			return '127.0.0.1';
+		}
+
+		return !empty($_SERVER['SERVER_ADDR'])
+			? $_SERVER['SERVER_ADDR']
+			: NULL;
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// GET THE IP ADDRESS OF THIS PHP INSTANCE (IPv4 ONLY)
+	////////////////////////////////////////////////////////////////////////////
+	public static function local() {
+		$address	= false;
+		if (function_exists('socket_create')) {
+			$socket	= @socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
+			if ($socket !== false) {
+				@socket_connect(	$socket, '8.8.8.8', 53);
+				@socket_getsockname($socket, $address);
+				@socket_close(		$socket);
+			}
+		}
+		return $address;
 	}
 
 
@@ -89,36 +138,5 @@ class afIp {
 	}
 
 
-
-
-	////////////////////////////////////////////////////////////////////////////
-	// GET THE IP ADDRESS OF THIS PHP INSTANCE (IPv4 ONLY)
-	////////////////////////////////////////////////////////////////////////////
-	public static function local() {
-		$address	= false;
-		if (function_exists('socket_create')) {
-			$socket	= @socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
-			if ($socket !== false) {
-				@socket_connect(	$socket, '8.8.8.8', 53);
-				@socket_getsockname($socket, $address);
-				@socket_close(		$socket);
-			}
-		}
-		return $address;
-	}
-
-
-
-
-	////////////////////////////////////////////////////////////////////////////
-	// GET THE HTTPD SERVER ADDRESS (MAY BE IPv4 OR IPv6)
-	// THIS MAY BE DIFFERENT DUE TO PHP-FPM AND LOAD BALANCING BETWEEN NODES
-	////////////////////////////////////////////////////////////////////////////
-	public static function server() {
-		global $get;
-		if (function_exists('\af\cli') && \af\cli()) return '127.0.0.1';
-		$address = $get->server('SERVER_ADDR');
-		return empty($address) ? false : $address;
-	}
 
 }

@@ -34,7 +34,7 @@ class afAudit {
 		}
 
 		//VALUES WE NEED TO PROCESS
-		$address	= afIp::address();
+		$address	= \af\ip::address();
 		$type		= $arguments[0];
 
 		//CONVERT TYPE STRINGS TO THEIR INTEGER VALUE
