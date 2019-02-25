@@ -43,7 +43,7 @@ class afDebug {
 		}
 
 		if (empty($ok)) {
-			if (function_exists('afCli') && afCli()) {
+			if (function_exists('\af\cli') && \af\cli()) {
 				if (is_array($text)) $text = implode("\n", $text);
 
 				$text = str_replace(
@@ -330,7 +330,7 @@ class afDebug {
 	public static function html($item) {
 		global $af;
 
-		if (function_exists('afCli') && afCli()) return $item;
+		if (function_exists('\af\cli') && \af\cli()) return $item;
 
 		if (!defined('TBX_SPECIAL_CHARS')) {
 			define('TBX_SPECIAL_CHARS', ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE);
@@ -397,7 +397,7 @@ set_error_handler(function(	$errno,			$errstr,		$errfile=NULL,
 
 	$die = true;
 
-	if (function_exists('afCli')  &&  !afCli()) {
+	if (function_exists('\af\cli')  &&  !\af\cli()) {
 		switch ($errno) {
 			case E_WARNING:		case E_USER_WARNING:
 			case E_NOTICE:		case E_USER_NOTICE:
@@ -438,7 +438,7 @@ set_exception_handler(function($e) {
 	if ($e instanceof pudlConnectionException) {
 		$afconfig->debug = false;
 		$afconfig->error['email'] = false;
-		if (!afCli()) httpError(503, $e->getMessage());
+		if (!\af\cli()) httpError(503, $e->getMessage());
 	}
 
 	if (($e instanceof pudlException)  &&  ($e->pudl instanceof pudl)) {
@@ -502,7 +502,7 @@ function af_dump($var, $die=true) {
 
 	if ($var instanceof pudlObject) $var = $var->raw();
 
-	if (function_exists('afCli') && afCli()) {
+	if (function_exists('\af\cli') && \af\cli()) {
 		if (isset($af)) $af->contentType('txt');
 		var_export($var);
 		echo "\n";

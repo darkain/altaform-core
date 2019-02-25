@@ -246,7 +246,7 @@ class afDevice {
 		//Set User Agent = self::$agent
 		if (empty(self::$agent)) {
 			self::$device = 'unknown';
-			self::agent(afCli() ? 'cli' : $get->server('HTTP_USER_AGENT'));
+			self::agent(\af\cli() ? 'cli' : $get->server('HTTP_USER_AGENT'));
 		}
 
 		// No user agent
@@ -305,7 +305,7 @@ class afDevice {
 		} else if ((preg_match('/Bot|Crawler|Spider|Yahoo|ia_archiver|Covario-IDS|findlinks|DataparkSearch|larbin|Mediapartners-Google|NG-Search|Snappy|Teoma|Jeeves|TinEye|Validator/i', self::$agent)) && (!preg_match('/Mobile/i', self::$agent))) {
 			self::$device = 'desktop';
 
-		} else if (afCli()) {
+		} else if (\af\cli()) {
 			self::$device = 'desktop';
 
 		// Otherwise assume it is a Mobile Device

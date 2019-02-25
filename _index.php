@@ -116,7 +116,7 @@ require_once(is_owner(__DIR__.'/core/afUrl.inc.php'));
 ////////////////////////////////////////////////////////////////////////////////
 // IF WE'RE ON THE CLI, DISABLE OUTPUT BUFFERING
 ////////////////////////////////////////////////////////////////////////////////
-if (afCli()  &&  ob_get_level()) ob_end_flush();
+if (\af\cli()  &&  ob_get_level()) ob_end_flush();
 
 
 
@@ -132,7 +132,7 @@ if (!headers_sent()) {
 	header('X-Content-Type-Options: nosniff');
 	header('Content-Language: en_US');
 
-	if (afCli()) {
+	if (\af\cli()) {
 		header('Content-Type: text/plain; charset=utf-8');
 	} else {
 		header('Content-Type: text/html; charset=utf-8');
@@ -145,7 +145,7 @@ if (!headers_sent()) {
 ////////////////////////////////////////////////////////////////////////////////
 // HOST INFORMATION FOR CONFIG
 ////////////////////////////////////////////////////////////////////////////////
-if (!afCli()) {
+if (!\af\cli()) {
 	assertStatus(500,
 		$afurl->validateDomain($afurl->domain),
 		'Invalid Domain: ' . $afurl->domain
@@ -302,7 +302,7 @@ if (!empty($afconfig->pudl)  &&  tbx_array($afconfig->pudl)) {
 	require_once(is_owner('_pudl/pudlSession.php'));
 	require_once(is_owner(__DIR__.'/core/afUser.inc.php'));
 
-	if (afCli()) $afconfig->pudl['timeout'] = AF_DAY;
+	if (\af\cli()) $afconfig->pudl['timeout'] = AF_DAY;
 
 	$db = pudl::instance($afconfig->pudl);
 
@@ -342,7 +342,7 @@ if (!empty($afconfig->pudl)  &&  tbx_array($afconfig->pudl)) {
 ////////////////////////////////////////////////////////////////////////////////
 // EXTENDED TIMEOUT VALUE
 ////////////////////////////////////////////////////////////////////////////////
-if (afCli()) $af->timeout(AF_DAY);
+if (\af\cli()) $af->timeout(AF_DAY);
 
 
 
@@ -377,4 +377,4 @@ while ($i--  &&  ob_get_level()) {
 ////////////////////////////////////////////////////////////////////////////////
 // NEW LINE FOR CLI MODE
 ////////////////////////////////////////////////////////////////////////////////
-if (afCli()) echo "\n";
+if (\af\cli()) echo "\n";

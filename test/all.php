@@ -40,8 +40,8 @@ shuffle($list);
 //RUN ALL UNIT TESTS
 foreach ($list as $item) {
 	if (strtolower(substr($item, -8)) !== '.inc.php') continue;
-	echo afCli::fgWhite("Testing:\t");
-	echo afCli::fgCyan($dir.'/');
-	echo afCli::fgCyan(1,$item) . "\n";
+	echo \af\cli::fgWhite("Testing:\t");
+	echo \af\cli::fgCyan($dir.'/');
+	echo \af\cli::fgCyan(1,$item) . "\n";
 	require_once(__DIR__ . '/' . $item);
 }

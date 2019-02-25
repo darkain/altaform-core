@@ -36,7 +36,7 @@ class		altaform
 		$this->_time				= time();
 		$this->_path				= getcwd();
 		$this->hhvm					= defined('HHVM_VERSION') ? 'HHVM' : 'PHP';
-		$this->_extension			= afCli() ? 'txt' : 'html';
+		$this->_extension			= \af\cli() ? 'txt' : 'html';
 		$this->_headers['notice']	= [];
 
 		if (substr($this->_path, -1) !== '/') $this->_path .= '/';

@@ -190,7 +190,7 @@ trait afTemplate {
 	////////////////////////////////////////////////////////////////////////////
 	public function header($key=false, $data=false, $replace=false) {
 		if ($key === false) {
-			if (afCli()) return $this;
+			if (\af\cli()) return $this;
 			if (!$this->jq()) return $this->headerHTML()->headerPage();
 
 			list($js, $css) = $this->prerender();
@@ -227,7 +227,7 @@ trait afTemplate {
 	////////////////////////////////////////////////////////////////////////////
 	public function footer($key=false, $data=false, $replace=false) {
 		if ($key === false) {
-			if ($this->jq() || afCli()) return $this;
+			if ($this->jq() || \af\cli()) return $this;
 			return $this->footerPage()->footerHTML();
 		}
 

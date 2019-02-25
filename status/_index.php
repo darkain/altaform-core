@@ -176,7 +176,7 @@ foreach ($offline as $name => $time) {
 ////////////////////////////////////////////////////////////
 // OUTPUT ALL THE THINGS !!!
 ////////////////////////////////////////////////////////////
-if (!afcli()) {
+if (!\af\cli()) {
 	$af->header();
 		$af->renderBlock('_index.tpl', 'server', $servers);
 	$af->footer();

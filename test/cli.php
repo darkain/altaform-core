@@ -39,6 +39,7 @@ if (empty($get))		$get		= new afVoid;
 
 // AF 3.0 CODE
 require_once(__DIR__ . '/../router/router.php');
+require_once(__DIR__ . '/../modules/cli.php');
 
 // AF 2.0 CODE
 require_once(__DIR__ . '/../traits/afCallable.inc.php');
@@ -46,7 +47,6 @@ require_once(__DIR__ . '/../traits/afNode.inc.php');
 
 require_once(__DIR__ . '/../core/afDebug.inc.php');
 require_once(__DIR__ . '/../core/afString.inc.php');
-require_once(__DIR__ . '/../core/afCli.inc.php');
 require_once(__DIR__ . '/../core/afStatus.inc.php');
 
 //THESE MUST COME AFTER OTHERS AND BE INCLUDED IN THIS ORDER
@@ -59,11 +59,11 @@ if (empty($afconfig))	$afconfig	= new afConfig;
 
 
 
-echo afCli::fgWhite("PHP Version:\t") . afCli::fgCyan(PHP_VERSION) . "\n\n";
+echo \af\cli::fgWhite("PHP Version:\t") . \af\cli::fgCyan(PHP_VERSION) . "\n\n";
 
 
 require(__DIR__.'/all.php');
 
 
-echo afCli::fgGreen(1,"\nSuccess:\t".$__af_test_total__);
-echo afCli::fgGreen(' Altaform unit tests completed') . "\n\n";
+echo \af\cli::fgGreen(1,"\nSuccess:\t".$__af_test_total__);
+echo \af\cli::fgGreen(' Altaform unit tests completed') . "\n\n";

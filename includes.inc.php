@@ -9,10 +9,14 @@ if (class_exists('altaform', false)) return;
 require_once(is_owner('_tbx/tbx.inc.php'));
 
 
-// CORE FUNCTIONALITY
+// NEW ALTAFORM 3.0 INDEPENDENT MODULES
+require_once(is_owner(__DIR__.'/router/router.php'));
+require_once(is_owner(__DIR__.'/modules/cli.php'));
+
+
+// ALTAFORM 2.0 CORE FUNCTIONALITY
 require_once(is_owner(__DIR__.'/core/afIp.inc.php'));
 require_once(is_owner(__DIR__.'/core/af2fa.inc.php'));
-require_once(is_owner(__DIR__.'/core/afCli.inc.php'));
 require_once(is_owner(__DIR__.'/core/afDir.inc.php'));
 require_once(is_owner(__DIR__.'/core/afGeo.inc.php'));
 require_once(is_owner(__DIR__.'/core/afGit.inc.php'));
@@ -40,10 +44,6 @@ require_once(is_owner(__DIR__.'/traits/afRobots.inc.php'));
 require_once(is_owner(__DIR__.'/traits/afEncrypt.inc.php'));
 require_once(is_owner(__DIR__.'/traits/afCallable.inc.php'));
 require_once(is_owner(__DIR__.'/traits/afTemplate.inc.php'));
-
-
-// NEW ALTAFORM 3.0 INDEPENDENT MODULES
-require_once(is_owner(__DIR__.'/router/router.php'));
 
 
 // ALTAFORM CORE

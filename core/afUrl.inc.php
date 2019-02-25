@@ -17,7 +17,7 @@ class		afUrl
 
 		global $get;
 
-		if (afCli()) {
+		if (function_exists('\af\cli')  &&  \af\cli()) {
 			if (ob_get_level()) ob_end_clean();
 			$host = ['_cli'];
 			$args = $get->server('argv');
@@ -392,7 +392,7 @@ class		afUrl
 		assertStatus(422, empty($intersect));
 
 
-		if (function_exists('afCli')  &&  afCli()) {
+		if (function_exists('\af\cli')  &&  \af\cli()) {
 			echo 'Location: ' . $url;
 
 		} else {
