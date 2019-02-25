@@ -38,7 +38,7 @@ require_once(__DIR__ . '/../core/afVoid.inc.php');
 if (empty($get))		$get		= new afVoid;
 
 // AF 3.0 CODE
-require_once(__DIR__ . '/../router/router.inc.php');
+require_once(__DIR__ . '/../router/router.php');
 
 // AF 2.0 CODE
 require_once(__DIR__ . '/../traits/afCallable.inc.php');
