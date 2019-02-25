@@ -1,11 +1,19 @@
 <?php
 
+namespace af;
 
-class af2fa {
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// A SIMPLE CLASS FOR HANDLING TWO-FACTOR AUTHENTICATION (2FA)
+// THIS CLASS GENERATES AND VALIDATES AUTHENTICATOR ONE-TIME PASSWORDS (OTP)
+////////////////////////////////////////////////////////////////////////////////
+class otp {
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//CAN SPECIFY A DIFFERENT CODE LENGTH UPON INSTANTIATION
+	// CAN SPECIFY A DIFFERENT CODE LENGTH UPON INSTANTIATION
 	////////////////////////////////////////////////////////////////////////////
 	public function __construct($length=6) {
 		$this->length = $length;
@@ -15,11 +23,11 @@ class af2fa {
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//GENERATE A NEW SECRET
+	// GENERATE A NEW SECRET
 	////////////////////////////////////////////////////////////////////////////
 	public function secret($length=16) {
 		$secret = '';
-		for ($i = 0; $i < $length; $i++) {
+		for ($i=0; $i<$length; $i++) {
 			$secret .= $this->chars[ random_int(0, strlen($this->chars)-1) ];
 		}
 		return $secret;
@@ -29,13 +37,14 @@ class af2fa {
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//GENERATE A CODE WITH A GIVEN SLICE OR CURRENT SLICE IF NONE IS SPECIFIED
+	// GENERATE A CODE WITH A GIVEN SLICE OR CURRENT SLICE IF NONE IS SPECIFIED
 	////////////////////////////////////////////////////////////////////////////
 	public function code($secret, $slice=false) {
-		if (empty($slice)) $slice = $this->slice();
+		if (is_object($slice))	$slice = $this->slice($slice);
+		if (empty($slice))		$slice = $this->slice();
 
 		$hash = hash_hmac('SHA1',
-			"\0\0\0\0" . pack('N*', $slice),
+			"\0\0\0\0" . pack('N*', (int)$slice),
 			$this->decode($secret),
 			true
 		);
@@ -54,19 +63,19 @@ class af2fa {
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//GET THE SCANNABLE QRCODE URL TO DISPLAY BACK TO THE END USER
+	// GET THE SCANNABLE QRCODE URL TO DISPLAY BACK TO THE END USER
 	////////////////////////////////////////////////////////////////////////////
 	public function qrcode($name, $secret, $size=200) {
-		return 'https://chart.googleapis.com/chart?chs='
-			. $size . 'x' . $size . '&chld=M|0&cht=qr&chl='
-			. urlencode('otpauth://totp/'.$name.'?secret='.$secret.'');
+		return 'https://chart.googleapis.com/chart?chs=' .
+			$size . 'x' . $size . '&chld=M|0&cht=qr&chl=' .
+			urlencode('otpauth://totp/' . $name . '?secret=' . $secret);
 	}
 
 
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//VERIFY A CODE TO A GIVEN SECRET, WITH OFFSET TOLERANCE FOR SLICES
+	// VERIFY A CODE TO A GIVEN SECRET, WITH OFFSET TOLERANCE FOR SLICES
 	////////////////////////////////////////////////////////////////////////////
 	public function verify($secret, $code, $offset=1) {
 		for ($i = -$offset; $i <= $offset; $i++) {
@@ -81,7 +90,7 @@ class af2fa {
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//BASE32 DECODER, SINCE PHP/HHVM DOES NOT HAVE THIS BUILT IN FOR SOME REASON
+	// BASE32 DECODER, SINCE PHP DOES NOT HAVE THIS BUILT IN FOR SOME REASON
 	////////////////////////////////////////////////////////////////////////////
 	protected function decode($data) {
 		$binary = '';
@@ -105,16 +114,19 @@ class af2fa {
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//GET THE CURRENT TIME SLICE
+	// GET THE CURRENT TIME SLICE
 	////////////////////////////////////////////////////////////////////////////
-	protected function slice() {
-		global $af;
-		return floor($af->time() / 30);
+	protected function slice($source=NULL) {
+		$time = $source ? $source->time() : time();
+		return floor($time / 30);
 	}
 
 
 
 
+	////////////////////////////////////////////////////////////////////////////
+	// LOCAL VARIABLES
+	////////////////////////////////////////////////////////////////////////////
 	protected $length	= 6;
 	protected $chars	= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
 }
