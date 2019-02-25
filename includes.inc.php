@@ -13,6 +13,7 @@ require_once(is_owner('_tbx/tbx.inc.php'));
 require_once(is_owner(__DIR__.'/router/router.php'));
 require_once(is_owner(__DIR__.'/modules/ip.php'));
 require_once(is_owner(__DIR__.'/modules/cli.php'));
+require_once(is_owner(__DIR__.'/modules/file.php'));
 require_once(is_owner(__DIR__.'/modules/path.php'));
 require_once(is_owner(__DIR__.'/modules/abyss.php'));
 
@@ -21,7 +22,6 @@ require_once(is_owner(__DIR__.'/modules/abyss.php'));
 require_once(is_owner(__DIR__.'/core/af2fa.inc.php'));
 require_once(is_owner(__DIR__.'/core/afGeo.inc.php'));
 require_once(is_owner(__DIR__.'/core/afGit.inc.php'));
-require_once(is_owner(__DIR__.'/core/afFile.inc.php'));
 require_once(is_owner(__DIR__.'/core/afMail.inc.php'));
 require_once(is_owner(__DIR__.'/core/afTime.inc.php'));
 require_once(is_owner(__DIR__.'/core/afAudit.inc.php'));

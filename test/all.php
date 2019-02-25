@@ -25,7 +25,7 @@ function afUnit($result, $expected=true) {
 
 
 
-require_once(__DIR__.'/../core/afFile.inc.php');
+require_once(__DIR__.'/../modules/file.php');
 
 
 

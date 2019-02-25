@@ -404,7 +404,7 @@ class afUpload {
 			if (substr($path, 0, 1) === '/'		||
 				substr($path, 0, 3) === '../'	||
 				substr($path, 0, 7) === 'file://') {
-				if (afFile::readable($path)) return md5_file($path);
+				if (\af\file::readable($path)) return md5_file($path);
 			}
 		}
 
