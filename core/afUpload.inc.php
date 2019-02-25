@@ -483,7 +483,7 @@ class afUpload {
 	public static function write($hash, $blob) {
 		global $af, $afurl;
 		$path = $af->path() . 'files/' . $afurl->cdnPath($hash);
-		if (!afDir::create(substr($path, 0, -32))) {
+		if (!\af\path::create(substr($path, 0, -32))) {
 			self::$error = 'Unable to create path';
 			return false;
 		}
