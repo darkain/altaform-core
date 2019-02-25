@@ -12,7 +12,7 @@ class afMail {
 
 		//Really gaiz, really? double-name space OF THE SAME NAME
 		//and THEN the class name, which is also the same!?
-		$mail = new PHPMailer\PHPMailer\PHPMailer;
+		$mail = new \PHPMailer\PHPMailer\PHPMailer;
 
 		if ($af->debug()) $mail->SMTPDebug = 2;
 
@@ -95,7 +95,7 @@ class afMail {
 		if (!empty($path)) @unlink($path);
 
 		if (!$return  &&  $af->debug()) {
-			httpError(500, $mail->ErrorInfo);
+			throw new Exception($mail->ErrorInfo);
 		}
 
 		return $return;
