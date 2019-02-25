@@ -1,14 +1,17 @@
 <?php
 
+namespace af;
+
+
 
 //TODO:
-//		switch afRouter from trait to class
-//		do not inherit from afRouter in Altaform anywhere anymore
-//		create $afrouter instance of afRouter
+//		switch \af\router from trait to class
+//		do not inherit from \af\router in Altaform anywhere anymore
+//		create $afrouter instance of \af\router
 //		all internal code routing will be handled by this one class
 
 
-class afRouter {
+class router {
 
 
 	////////////////////////////////////////////////////////////////////////////
@@ -246,7 +249,7 @@ class afRouter {
 
 		$count = count($this->part)-1;
 		assertStatus(500,
-			$start<$count,
+			$start < $count,
 			'Critical error processing path'
 		);
 
@@ -254,7 +257,7 @@ class afRouter {
 			$this->virtual[] = $this->part[$x];
 		}
 
-		$this->id = afString::int($this->virtual[0]);
+		$this->id = (int) $this->virtual[0];
 	}
 
 

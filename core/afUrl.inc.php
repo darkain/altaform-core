@@ -3,7 +3,7 @@
 
 
 class		afUrl
-	extends	afRouter {
+	extends	\af\router {
 	use		afCallable;
 
 
