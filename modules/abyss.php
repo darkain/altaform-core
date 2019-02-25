@@ -1,7 +1,16 @@
 <?php
 
 
-class afVoid {
+namespace af;
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// /DEV/NULL THE CLASS - DOES ABSOLUTELY NOTHING
+// THIS IS USED AS A PLACEHOLDER IN VARIOUS LOCATIONS
+////////////////////////////////////////////////////////////////////////////////
+class abyss {
 	public function __construct()	{}
 	public function __invoke()		{ return NULL; }
 	public function __toString()	{ return ''; }
@@ -11,5 +20,5 @@ class afVoid {
 	public function __isset($name)	{ return true; }
 	public function __unset($name)	{}
 	public function __debugInfo()	{ return []; }
-	public static function __set_state($array) { return new afVoid; }
+	public static function __set_state($array) { return new abyss; }
 }

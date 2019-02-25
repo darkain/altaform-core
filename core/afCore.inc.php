@@ -31,7 +31,7 @@ class		altaform
 		$this->url					= $afurl;
 		$this->config				= $afconfig;
 		$this->_session				= $dbsession;
-		$this->git					= new afVoid;
+		$this->git					= new \af\abyss;
 		$this->device				= new afDevice;
 		$this->_time				= time();
 		$this->_path				= getcwd();

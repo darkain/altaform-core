@@ -12,6 +12,7 @@ require_once(is_owner('_tbx/tbx.inc.php'));
 // NEW ALTAFORM 3.0 INDEPENDENT MODULES
 require_once(is_owner(__DIR__.'/router/router.php'));
 require_once(is_owner(__DIR__.'/modules/cli.php'));
+require_once(is_owner(__DIR__.'/modules/abyss.php'));
 
 
 // ALTAFORM 2.0 CORE FUNCTIONALITY
@@ -23,7 +24,6 @@ require_once(is_owner(__DIR__.'/core/afGit.inc.php'));
 require_once(is_owner(__DIR__.'/core/afFile.inc.php'));
 require_once(is_owner(__DIR__.'/core/afMail.inc.php'));
 require_once(is_owner(__DIR__.'/core/afTime.inc.php'));
-require_once(is_owner(__DIR__.'/core/afVoid.inc.php'));
 require_once(is_owner(__DIR__.'/core/afAudit.inc.php'));
 require_once(is_owner(__DIR__.'/core/afConfig.inc.php'));
 require_once(is_owner(__DIR__.'/core/afDevice.inc.php'));

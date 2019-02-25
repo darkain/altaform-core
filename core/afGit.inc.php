@@ -1,11 +1,11 @@
 <?php
 
 
-require_once(is_owner(__DIR__.'/afVoid.inc.php'));
+require_once(is_owner(__DIR__.'/../modules/void.php'));
 
 
 class		afGit
-	extends	afVoid {
+	extends	\af\abyss {
 
 
 
