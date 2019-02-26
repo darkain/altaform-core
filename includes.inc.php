@@ -16,6 +16,7 @@ require_once(is_owner(__DIR__.'/modules/cli.php'));
 require_once(is_owner(__DIR__.'/modules/git.php'));
 require_once(is_owner(__DIR__.'/modules/otp.php'));
 require_once(is_owner(__DIR__.'/modules/file.php'));
+require_once(is_owner(__DIR__.'/modules/mime.php'));
 require_once(is_owner(__DIR__.'/modules/path.php'));
 require_once(is_owner(__DIR__.'/modules/abyss.php'));
 
@@ -33,7 +34,6 @@ require_once(is_owner(__DIR__.'/core/afSystem.inc.php'));
 require_once(is_owner(__DIR__.'/core/afUpload.inc.php'));
 require_once(is_owner(__DIR__.'/core/afYoutube.inc.php'));
 require_once(is_owner(__DIR__.'/core/afActivity.inc.php'));
-require_once(is_owner(__DIR__.'/core/afMimetype.inc.php'));
 require_once(is_owner(__DIR__.'/core/afFunctions.inc.php'));
 
 

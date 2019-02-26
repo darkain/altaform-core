@@ -1,21 +1,30 @@
 <?php
 
 
+namespace af;
 
-class afMimetype {
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// A SIMPLE CLASS FOR HANDLING COMMON CONTENT/MIME TYPE TASKS
+////////////////////////////////////////////////////////////////////////////////
+class mime {
 
 
 	////////////////////////////////////////////////////////////////////////////
 	// CONTRUCTOR - PASS IN A FILE EXTENSION OR MIME TIME ID
 	////////////////////////////////////////////////////////////////////////////
-	public function __construct($type) {
-		global $db;
+	public function __construct(\pudl $pudl, $type) {
+		$this->pudl = $pudl;
 
-		if (is_numeric($type)) $type = (int) $type;
+		if (is_numeric($type)) {
+			$type = (int) $type;
+		}
 
 		if (!array_key_exists($type, self::$cache)) {
-			self::$cache[$type] = $db->cache(AF_DAY)->rowId(
-				'pudl_mimetype',
+			self::$cache[$type] = $pudl->cache(AF_DAY)->rowId(
+				'mimetype',
 				is_int($type) ? 'mime_id' : 'mime_ext',
 				$type
 			);
@@ -79,8 +88,19 @@ class afMimetype {
 
 
 	////////////////////////////////////////////////////////////////////////////
+	// GET THE DATABASE CONNECTION THIS MIME TYPE IS ASSOCIATED WITH
+	////////////////////////////////////////////////////////////////////////////
+	public function pudl() {
+		return $this->pudl;
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
 	// PRIVATE LOCAL VARIABLES
 	////////////////////////////////////////////////////////////////////////////
+	private $pudl;
 	private $type = NULL;
 
 

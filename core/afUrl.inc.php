@@ -234,10 +234,10 @@ class		afUrl
 	// GET THE CDN URL FOR THE GIVEN ITEM
 	////////////////////////////////////////////////////////////////////////////
 	public static function cdn($hash, $key='hash', $ext='mime') {
-		global $afurl;
+		global $afurl, $db;
 
 		if (!empty($hash[$ext])) {
-			$ext = new afMimetype($hash[$ext]);
+			$ext = new \af\mime($db, $hash[$ext]);
 		}
 
 		$hash	= static::cdnHash($hash, $key);
