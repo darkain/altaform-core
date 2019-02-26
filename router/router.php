@@ -7,7 +7,7 @@ namespace af;
 //TODO:
 //		switch \af\router from trait to class
 //		do not inherit from \af\router in Altaform anywhere anymore
-//		create $afrouter instance of \af\router
+//		create $router instance of \af\router
 //		all internal code routing will be handled by this one class
 
 

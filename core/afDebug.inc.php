@@ -94,7 +94,7 @@ class afDebug {
 
 
 	public static function process($data) {
-		global $af, $afurl, $afrouter, $db, $get, $user;
+		global $af, $afurl, $router, $db, $get, $user;
 
 		if (!is_array($data)) $data = ['details'=>$data];
 
@@ -143,8 +143,8 @@ class afDebug {
 			'ip-httpd'		=> !class_exists('\af\ip')	? '' :	\af\ip::server(),
 		], $data);
 
-		if (!empty($afrouter->redirected)) {
-			$return['redirected'] = static::json($afrouter->redirected, false);
+		if (!empty($router->redirected)) {
+			$return['redirected'] = static::json($router->redirected, false);
 		}
 
 		ksort($return, SORT_NATURAL);

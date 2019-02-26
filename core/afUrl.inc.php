@@ -523,7 +523,7 @@ class		afUrl
 // CREATE GLOBAL INSTANCE OF AFURL
 ////////////////////////////////////////////////////////////////////////////////
 $afurl = new afUrl;
-$afrouter = $afurl; //TEMPORARY DURING TRANSITION
+$router = $afurl; //TEMPORARY DURING TRANSITION
 
 
 
