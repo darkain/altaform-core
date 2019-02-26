@@ -11,6 +11,7 @@ require_once(is_owner('_tbx/tbx.inc.php'));
 
 // NEW ALTAFORM 3.0 INDEPENDENT MODULES
 require_once(is_owner(__DIR__.'/router/router.php'));
+require_once(is_owner(__DIR__.'/modules/x.php'));
 require_once(is_owner(__DIR__.'/modules/ip.php'));
 require_once(is_owner(__DIR__.'/modules/cli.php'));
 require_once(is_owner(__DIR__.'/modules/git.php'));
@@ -34,7 +35,6 @@ require_once(is_owner(__DIR__.'/core/afSystem.inc.php'));
 require_once(is_owner(__DIR__.'/core/afUpload.inc.php'));
 require_once(is_owner(__DIR__.'/core/afYoutube.inc.php'));
 require_once(is_owner(__DIR__.'/core/afActivity.inc.php'));
-require_once(is_owner(__DIR__.'/core/afFunctions.inc.php'));
 
 
 // LIST OF ALTAFORM TRAITS - USED TO HELP ORGANIZE CODE
