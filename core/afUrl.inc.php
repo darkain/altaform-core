@@ -2,8 +2,7 @@
 
 
 
-class		afUrl
-	extends	\af\router {
+class		afUrl {
 	use		afCallable;
 
 
@@ -12,9 +11,7 @@ class		afUrl
 	////////////////////////////////////////////////////////////////////////////
 	// PARSE THE URL AND QUERY STRING FRAGMENTS
 	////////////////////////////////////////////////////////////////////////////
-	public function __construct() {
-		parent::__construct();
-
+	public function __construct(\af\router $router) {
 		global $get;
 
 		if (function_exists('\af\cli')  &&  \af\cli()) {
@@ -48,8 +45,9 @@ class		afUrl
 		$this->protocol		= $this->https ? 'https' : 'http';
 		$this->host			= $this->protocol . '://' . $this->domain;
 		$this->af_host		= $this->host;
-		$this->parts		= (array)parse_url($this->uri);
-		$this->query		= str_replace(' ', '+', $this->uri . (empty($this->parts['query']) ? '?' : '&'));
+
+		$router->parts		= (array)parse_url($this->uri);
+		$this->query		= str_replace(' ', '+', $this->uri . (empty($router->parts['query']) ? '?' : '&'));
 
 		if (in_array('gzip', $this->encoding)  &&  !afDevice::trident()) {
 			$this->gz = '.gz';
@@ -57,38 +55,38 @@ class		afUrl
 
 		if (substr($this->uri, 0, 2) === '//') $this->redirect('/');
 
-		if (empty($this->parts['path'])) {
+		if (empty($router->parts['path'])) {
 			if ($get instanceof getvar) {
 				httpError(400, 'No path specified');
 			} else {
-				$this->parts['path'] = '/';
+				$router->parts['path'] = '/';
 			}
 		}
 
-		if ($this->parts['path'][0] !== '/') {
-			$this->parts['path'] = '/' . $this->parts['path'];
+		if ($router->parts['path'][0] !== '/') {
+			$router->parts['path'] = '/' . $router->parts['path'];
 		}
 
-		if ($this->parts['path'] === '/') {
+		if ($router->parts['path'] === '/') {
 			$this->url		= '/';
-			$this->part		= [];
+			$router->part		= [];
 			return;		//EARLY OUT FOR HOMEPAGE, NO FOLDERS TO PROCESS!
 		}
 
-		if (substr($this->parts['path'], -1) === '/') {
+		if (substr($router->parts['path'], -1) === '/') {
 			assertStatus(405,
 				$get->server('REQUEST_METHOD') !== 'POST',
 				'Attempting to redirect POST data. URL should not have trailing /'
 			);
 			$this->redirect(
-				str_replace(' ', '+', substr($this->parts['path'], 0, -1)) .
-				(empty($this->parts['query']) ? '' : ('?'.$this->parts['query']))
+				str_replace(' ', '+', substr($router->parts['path'], 0, -1)) .
+				(empty($router->parts['query']) ? '' : ('?'.$router->parts['query']))
 			);
 		}
 
-		$this->part		= explode('/', $this->parts['path']);
-		$this->part[]	= '';
-		foreach ($this->part as &$val) {
+		$router->part		= explode('/', $router->parts['path']);
+		$router->part[]	= '';
+		foreach ($router->part as &$val) {
 			$tmp = $val;
 
 			$val = urldecode($val);
@@ -115,12 +113,12 @@ class		afUrl
 	////////////////////////////////////////////////////////////////////////////
 	// POST-CONFIGURATION (AFCONFIG) OPTIONS
 	////////////////////////////////////////////////////////////////////////////
-	public function _all() {
+	public function _all(\af\router $router) {
 		$base		= $this->host . $this->base;
 		$this->full	= $base . $this->url;
 		$this->all	= $this->full;
-		if (!empty($this->parts['query'])  &&  $this->parts['query']!=='jq=1') {
-			$this->all .= '?' . $this->parts['query'];
+		if (!empty($router->parts['query'])  &&  $router->parts['query']!=='jq=1') {
+			$this->all .= '?' . $router->parts['query'];
 		}
 
 		if (empty($this->cdn))		$this->cdn		= $base . '/cdn';
@@ -522,8 +520,7 @@ class		afUrl
 ////////////////////////////////////////////////////////////////////////////////
 // CREATE GLOBAL INSTANCE OF AFURL
 ////////////////////////////////////////////////////////////////////////////////
-$afurl = new afUrl;
-$router = $afurl; //TEMPORARY DURING TRANSITION
+$afurl = new afUrl($router);
 
 
 

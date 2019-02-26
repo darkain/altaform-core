@@ -4,18 +4,15 @@ namespace af;
 
 
 
-//TODO:
-//		switch \af\router from trait to class
-//		do not inherit from \af\router in Altaform anywhere anymore
-//		create $router instance of \af\router
-//		all internal code routing will be handled by this one class
 
-
+////////////////////////////////////////////////////////////////////////////////
+// A SIMPLE CLASS FOR HANDLING COMMON URL ROUTING TASKS
+////////////////////////////////////////////////////////////////////////////////
 class router {
 
 
 	////////////////////////////////////////////////////////////////////////////
-	// INITIALIZE AF ROUTER
+	// INITIALIZE URL ROUTER
 	////////////////////////////////////////////////////////////////////////////
 	public function __construct() {
 		$this->directory = getcwd();
@@ -293,9 +290,18 @@ class router {
 	public $id			= 0;
 	public $path		= '';
 	public $part		= [];
+	public $parts		= [];
 	public $virtual		= [];
 	public $redirected	= [];
 	public $reparse		= true;
 	public $homepage	= 'homepage';
 	public $directory	= '';
 }
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// CREATE GLOBAL INSTANCE OF \af\router
+////////////////////////////////////////////////////////////////////////////////
+$router = new router;
