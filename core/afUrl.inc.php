@@ -46,33 +46,20 @@ class		afUrl {
 		$this->host			= $this->protocol . '://' . $this->domain;
 		$this->af_host		= $this->host;
 
-		$router->parts		= (array)parse_url($this->uri);
-		$this->query		= str_replace(' ', '+', $this->uri . (empty($router->parts['query']) ? '?' : '&'));
+		if (substr($this->uri, 0, 2) === '//') $this->redirect('/');
+
+		$this->url			= $router->parse($this->uri, $get);
+
+		$this->query		= str_replace(' ', '+',
+			$this->uri . (empty($router->parts['query']) ? '?' : '&')
+		);
 
 		if (in_array('gzip', $this->encoding)  &&  !afDevice::trident()) {
 			$this->gz = '.gz';
 		}
 
-		if (substr($this->uri, 0, 2) === '//') $this->redirect('/');
-
-		if (empty($router->parts['path'])) {
-			if ($get instanceof getvar) {
-				httpError(400, 'No path specified');
-			} else {
-				$router->parts['path'] = '/';
-			}
-		}
-
-		if ($router->parts['path'][0] !== '/') {
-			$router->parts['path'] = '/' . $router->parts['path'];
-		}
-
-		if ($router->parts['path'] === '/') {
-			$this->url		= '/';
-			$router->part		= [];
-			return;		//EARLY OUT FOR HOMEPAGE, NO FOLDERS TO PROCESS!
-		}
-
+		/*
+		// TODO: re-implement this
 		if (substr($router->parts['path'], -1) === '/') {
 			assertStatus(405,
 				$get->server('REQUEST_METHOD') !== 'POST',
@@ -83,28 +70,7 @@ class		afUrl {
 				(empty($router->parts['query']) ? '' : ('?'.$router->parts['query']))
 			);
 		}
-
-		$router->part		= explode('/', $router->parts['path']);
-		$router->part[]	= '';
-		foreach ($router->part as &$val) {
-			$tmp = $val;
-
-			$val = urldecode($val);
-
-			if ($get instanceof getvar) {
-				$val = $get->clean($val);
-			}
-
-			if (!strlen($val)) continue;
-
-			$this->url .= '/' . $tmp;
-
-			assertStatus(500,
-				(	!in_array($val[0], ['.', '+', '-', '_', "\\", 0x7F])
-					&& ord($val[0])>0x20	),
-				'Invalid character in URL path: 0x' . dechex(ord($val[0]))
-			);
-		}
+		*/
 	}
 
 
@@ -496,7 +462,6 @@ class		afUrl {
 	public $protocol;
 	public $host;
 	public $af_host;
-	public $parts;
 	public $query;
 	public $url;
 

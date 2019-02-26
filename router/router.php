@@ -146,6 +146,60 @@ class router {
 
 
 	////////////////////////////////////////////////////////////////////////////
+	// PARSE AN URI INTO FRAGMENTS
+	////////////////////////////////////////////////////////////////////////////
+	public function parse($uri, \getvar $get=NULL) {
+		$this->parts = (array) parse_url($uri);
+
+		// DEFAULT TO HOMEPAGE IF NO PATH IS SPECIFIED
+		if (empty($this->parts['path'])) {
+			$this->parts['path'] = '/';
+		}
+
+		// EARLY OUT FOR HOMEPAGE, NO FOLDERS TO PROCESS!
+		if ($this->parts['path'] === '/') {
+			$this->part	= [];
+			return '/';
+		}
+
+		// ADD INITIAL SLASH IF IT IS MISSING
+		if (substr($this->parts['path'], 0, 1) !== '/') {
+			$this->parts['path'] = '/' . $this->parts['path'];
+		}
+
+		// RETURN VALUE
+		$return = '';
+
+		$this->part		= explode('/', $this->parts['path']);
+		$this->part[]	= '';
+		foreach ($this->part as &$val) {
+			$tmp		= $val;
+
+			$val		= rawurldecode($val);
+
+			if ($get instanceof getvar) {
+				$val	= $get->clean($val);
+			}
+
+			if (!strlen($val)) continue;
+
+			$char		= substr($val, 0, 1);
+			$return		.= '/' . $tmp;
+
+			assertStatus(500,
+				(!in_array($char, static::badchars)  &&  ord($char) > 0x20),
+				'Invalid character in URL path: 0x' . dechex(ord($char))
+			);
+		}
+
+		// OKAY, WE DONE, RETURN IT
+		return $return;
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
 	// REPARSE THE ROUTE
 	////////////////////////////////////////////////////////////////////////////
 	public function reparse($prepend=[], $append=[], $replace=false) {
@@ -296,6 +350,14 @@ class router {
 	public $reparse		= true;
 	public $homepage	= 'homepage';
 	public $directory	= '';
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// MEMBER CONSTANTS
+	////////////////////////////////////////////////////////////////////////////
+	const badchars = ['.', '+', '-', '_', "\\", 0x7F];
 }
 
 
