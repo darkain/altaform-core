@@ -12,7 +12,7 @@ class afGeo {
 	public static function timezone($latitude, $longitude=false) {
 		global $af;
 
-		if (is_null($af)  ||  is_null($af->config)) return false;
+		if (empty($af)  ||  empty($af->config)) return false;
 
 		if ($longitude === false) {
 			$geocode = is_object($latitude) ? $latitude : static::geocode($latitude);
@@ -23,13 +23,14 @@ class afGeo {
 			$longitude	= $geocode->results[0]->geometry->location->lng;
 		}
 
-		$url	= 'https://maps.googleapis.com/maps/api/timezone/json'
-				. '?location=' . (float)$latitude . ',' . (float)$longitude
-				. '&timestamp=' . $af->time()
-				. '&key=' . $af->config->google['timezone'];
 
 		return @json_decode(
-			@file_get_contents($url)
+			@file_get_contents(
+				'https://maps.googleapis.com/maps/api/timezone/json' .
+				'?location=' . (float)$latitude . ',' . (float)$longitude .
+				'&timestamp=' . $af->time() .
+				'&key=' . $af->config->google['timezone']
+			)
 		);
 	}
 
@@ -45,12 +46,13 @@ class afGeo {
 		if (is_null($af)  ||  is_null($af->config)) return NULL;
 		if (trim($location, " \t\n\r\0\x0B,") === '') return NULL;
 
-		$url	= 'https://maps.googleapis.com/maps/api/geocode/json'
-				. '?address=' . rawurlencode($location)
-				. '&key=' . $af->config->google['geocoding'];
 
 		return @json_decode(
-			@file_get_contents($url)
+			@file_get_contents(
+				'https://maps.googleapis.com/maps/api/geocode/json' .
+				'?address=' . rawurlencode($location) .
+				'&key=' . $af->config->google['geocoding']
+			)
 		);
 	}
 
@@ -89,7 +91,7 @@ class afGeo {
 		if (is_null($af)  ||  is_null($af->config)) return false;
 		if (empty($af->config->geo)) return false;
 
-		if (empty($ipaddress)) $ipaddress = \af\ip::address();
+		if (empty($ipaddress)) $ipaddress = afIp::address();
 		if (empty($ipaddress)) return false;
 
 		$ctx = stream_context_create(['http'=>['timeout'=>1]]);
