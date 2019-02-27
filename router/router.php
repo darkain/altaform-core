@@ -148,7 +148,7 @@ class router {
 	////////////////////////////////////////////////////////////////////////////
 	// PARSE AN URI INTO FRAGMENTS
 	////////////////////////////////////////////////////////////////////////////
-	public function parse($uri, \getvar $get=NULL) {
+	public function parse($uri, $get=NULL) {
 		$this->parts = (array) parse_url($uri);
 
 		// DEFAULT TO HOMEPAGE IF NO PATH IS SPECIFIED
