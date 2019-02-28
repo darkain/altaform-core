@@ -1,6 +1,10 @@
 <?php
 
 
+require_once(is_owner(__DIR__.'/afStatus.inc.php'));
+
+
+
 class afException extends Exception {}
 
 
