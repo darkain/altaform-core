@@ -14,6 +14,7 @@ require_once(is_owner(__DIR__.'/router/router.php'));
 require_once(is_owner(__DIR__.'/modules/x.php'));
 require_once(is_owner(__DIR__.'/modules/ip.php'));
 require_once(is_owner(__DIR__.'/modules/cli.php'));
+require_once(is_owner(__DIR__.'/modules/geo.php'));
 require_once(is_owner(__DIR__.'/modules/git.php'));
 require_once(is_owner(__DIR__.'/modules/otp.php'));
 require_once(is_owner(__DIR__.'/modules/file.php'));
@@ -23,7 +24,6 @@ require_once(is_owner(__DIR__.'/modules/abyss.php'));
 
 
 // ALTAFORM 2.0 CORE FUNCTIONALITY
-require_once(is_owner(__DIR__.'/core/afGeo.inc.php'));
 require_once(is_owner(__DIR__.'/core/afMail.inc.php'));
 require_once(is_owner(__DIR__.'/core/afTime.inc.php'));
 require_once(is_owner(__DIR__.'/core/afAudit.inc.php'));

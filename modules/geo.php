@@ -1,23 +1,34 @@
 <?php
 
-class afGeo {
+namespace af;
 
-	static $_geoloc = [];
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// A SIMPLE CLASS FOR HANDLING GEOLOCATION TASKS
+////////////////////////////////////////////////////////////////////////////////
+class geo {
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// CONSTRUCTOR, REQUIRES INSTANCE OF AFCONFIG
+	////////////////////////////////////////////////////////////////////////////
+	public function __construct(\afConfig $config) {
+		$this->config = $config;
+	}
+
 
 
 
 	////////////////////////////////////////////////////////////////////////////
 	// USE GOOGLE MAPS API TO FIGURE OUT A LOCATION'S LOCAL TIME ZONE
 	////////////////////////////////////////////////////////////////////////////
-	public static function timezone($latitude, $longitude=false) {
-		global $af;
+	public function timezone($latitude, $longitude=NULL) {
+		if ($longitude === NULL  ||  $longitude === false) {
+			$geocode = is_object($latitude) ? $latitude : $this->geocode($latitude);
 
-		if (empty($af)  ||  empty($af->config)) return false;
-
-		if ($longitude === false) {
-			$geocode = is_object($latitude) ? $latitude : static::geocode($latitude);
-
-			if (empty($geocode->results[0]->geometry->location)) return false;
+			if (empty($geocode->results[0]->geometry->location)) return NULL;
 
 			$latitude	= $geocode->results[0]->geometry->location->lat;
 			$longitude	= $geocode->results[0]->geometry->location->lng;
@@ -28,8 +39,8 @@ class afGeo {
 			@file_get_contents(
 				'https://maps.googleapis.com/maps/api/timezone/json' .
 				'?location=' . (float)$latitude . ',' . (float)$longitude .
-				'&timestamp=' . $af->time() .
-				'&key=' . $af->config->google['timezone']
+				'&timestamp=' . time() .
+				'&key=' . $this->config->google['timezone']
 			)
 		);
 	}
@@ -40,18 +51,14 @@ class afGeo {
 	////////////////////////////////////////////////////////////////////////////
 	// USE GOOGLE MAPS API TO TRANSLATE A LOCATION NAME INTO LAT/LON
 	////////////////////////////////////////////////////////////////////////////
-	public static function geocode($location) {
-		global $af;
-
-		if (is_null($af)  ||  is_null($af->config)) return NULL;
+	public function geocode($location) {
 		if (trim($location, " \t\n\r\0\x0B,") === '') return NULL;
-
 
 		return @json_decode(
 			@file_get_contents(
 				'https://maps.googleapis.com/maps/api/geocode/json' .
 				'?address=' . rawurlencode($location) .
-				'&key=' . $af->config->google['geocoding']
+				'&key=' . $this->config->google['geocoding']
 			)
 		);
 	}
@@ -62,20 +69,20 @@ class afGeo {
 	////////////////////////////////////////////////////////////////////////////
 	// GET A CACHED GEOLOCATION FROM DATABASE
 	////////////////////////////////////////////////////////////////////////////
-	public static function geolocate($location) {
-		global $db;
+	public function geolocate(pudl $pudl, $location) {
+		if (empty($pudl)  ||  empty($location)) return NULL;
 
-		if (is_null($db)  ||  empty($location)) return false;
+		static $cache = [];
 
-		if (!array_key_exists($location, self::$_geoloc)) {
-			self::$_geoloc[$location] = $db->rowId(
-				'pudl_geolocation',
+		if (!array_key_exists($location, self::$cache)) {
+			self::$cache[$location] = $pudl->cache(AF_HOUR)->rowId(
+				'geolocation',
 				'location',
 				$location
 			);
 		}
 
-		return self::$_geoloc[$location];
+		return self::$cache[$location];
 	}
 
 
@@ -85,25 +92,22 @@ class afGeo {
 	// GET THE LOCATION OF A USER BASED ON THEIR IP ADDRESS
 	// IF ADDRESS IS FALSE, USE THE CURRENT CLIENT'S IP ADDRESS
 	////////////////////////////////////////////////////////////////////////////
-	public static function geoip($ipaddress=false) {
-		global $af;
+	public function geoip($ipaddress=false) {
+		if (empty($this->config->geo)) return NULL;
 
-		if (is_null($af)  ||  is_null($af->config)) return false;
-		if (empty($af->config->geo)) return false;
-
-		if (empty($ipaddress)) $ipaddress = afIp::address();
-		if (empty($ipaddress)) return false;
+		if (empty($ipaddress)) $ipaddress = ip::address();
+		if (empty($ipaddress)) return NULL;
 
 		$ctx = stream_context_create(['http'=>['timeout'=>1]]);
 
-		$json = @file_get_contents($af->config->geo.$ipaddress, false, $ctx);
-		if (empty($json)) return false;
+		$json = @file_get_contents($this->config->geo.$ipaddress, false, $ctx);
+		if (empty($json)) return NULL;
 
 		$data = @json_decode($json, true);
 
 		return (is_array($data)  &&  !empty($data))
 			? $data
-			: false;
+			: NULL;
 	}
 
 
@@ -112,31 +116,34 @@ class afGeo {
 	////////////////////////////////////////////////////////////////////////////
 	// RETURNS AN ARRAY WITH THE LAT, LON, AND ZOOM LEVEL OF A MAP
 	////////////////////////////////////////////////////////////////////////////
-	public static function centerMap() {
-		global $user, $get;
+	public function center($user=NULL, $get=NULL) {
 
-		//Specific map center requested by URL
-		if (($get->float('lat') !== 0  ||  $get->float('lon') !== 0)
-			&&  $get->float('zoom') > 0) {
-			return [
-				'lat'	=> $get->float('lat'),
-				'lon'	=> $get->float('lon'),
-				'zoom'	=> $get->float('zoom')
-			];
+		// Specific map center requested by URL
+		if (is_object($get)) {
+			if (($get->float('lat') !== 0  ||  $get->float('lon') !== 0)
+				&&  $get->float('zoom') > 0) {
+				return [
+					'lat'	=> $get->float('lat'),
+					'lon'	=> $get->float('lon'),
+					'zoom'	=> $get->float('zoom')
+				];
+			}
 		}
 
-		//User's profile default location
-		if (!empty($user['user_lat'])  &&  !empty($user['user_lat'])) {
-			return [
-				'lat'	=> $user['user_lat'],
-				'lon'	=> $user['user_lon'],
-				'zoom'	=> 7
-			];
+		// User's profile default location
+		if (is_object($user)) {
+			if (isset($user->user_lat)  &&  isset($user->user_lat)) {
+				return [
+					'lat'	=> $user->user_lat,
+					'lon'	=> $user->user_lon,
+					'zoom'	=> 7
+				];
+			}
 		}
 
-		//Geolocate User
-		$geoip = static::geoip();
-		if (!empty($geoip['latitude']) && !empty($geoip['longitude'])) {
+		// Geolocate User
+		$geoip = $this->geoip();
+		if (is_array($geoip)) {
 			return [
 				'lat'	=> $geoip['latitude'],
 				'lon'	=> $geoip['longitude'],
@@ -144,10 +151,22 @@ class afGeo {
 			];
 		}
 
-		//Default: North America
+
+		// Use default, since we cannot detect!
+		return $this->usa();
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// DEFAULT VALUE WHEN NO OTHER GEOLOCATION INFORMATION IS AVAILABLE
+	// http://www.kansastravel.org/geographicalcenter.htm
+	////////////////////////////////////////////////////////////////////////////
+	public function usa() {
 		return [
-			'lat'	=> 41,
-			'lon'	=> -100,
+			'lat'	=> 39.82834,
+			'lon'	=> -98.57948,
 			'zoom'	=> 4
 		];
 	}
@@ -156,12 +175,10 @@ class afGeo {
 
 
 	////////////////////////////////////////////////////////////////////////////
-	// SANITIZE A LOCATION NAME TO MATCH COSPIX FORMATTING.
+	// SANITIZE A LOCATION NAME TO MATCH ALTAFORM FORMATTING.
 	// MAY BE USEFUL TO OTHERS, TOO. IT HELPS WITH GOOGLE MAPS GEOLOCATION API
 	////////////////////////////////////////////////////////////////////////////
-	function clean_location_name($location) {
-		global $db;
-
+	function clean(pudl $pudl, $location) {
 		$location = strtolower($location);
 		$location = ucwords($location);
 		$location = str_replace(',', ', ', $location);
@@ -179,7 +196,7 @@ class afGeo {
 			$location = substr($location, 0, strlen($location)-1);
 		}
 
-		$states = $db->rows('pudl_state');
+		$states = $pudl->rows('state');
 
 		foreach ($states as $state) {
 			if (preg_match("/, $state[state_name]\\b/i", $location)) {
@@ -205,5 +222,12 @@ class afGeo {
 		return trim($location);
 	}
 
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// MEMBER VARIABLES
+	////////////////////////////////////////////////////////////////////////////
+	private $config = NULL;
 
 }
