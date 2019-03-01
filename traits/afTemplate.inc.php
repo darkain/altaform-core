@@ -151,12 +151,13 @@ trait afTemplate {
 	// LOAD A TEMPLATE FILE - OVERRIDE DEFAULT TBX FILE LOADER
 	////////////////////////////////////////////////////////////////////////////
 	public function onload(&$text) {
-		global $afurl, $og, $user;
+		global $afurl, $og, $user, $router;
 
-		$this('af',		$this,	$text);
-		$this('afurl',	$afurl,	$text);
-		$this('og',		$og,	$text);
-		$this('user',	$user,	$text);
+		$this('af',		$this,		$text);
+		$this('router',	$router,	$text);
+		$this('afurl',	$afurl,		$text);
+		$this('og',		$og,		$text);
+		$this('user',	$user,		$text);
 
 		return parent::onload($text);
 	}
