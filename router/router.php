@@ -187,7 +187,7 @@ class router {
 			$return		.= '/' . $tmp;
 
 			assertStatus(500,
-				(!in_array($char, static::badchars)  &&  ord($char) > 0x20),
+				(!in_array($char, $this->badchars)  &&  ord($char) > 0x20),
 				'Invalid character in URL path: 0x' . dechex(ord($char))
 			);
 		}
@@ -350,14 +350,7 @@ class router {
 	public $reparse		= true;
 	public $homepage	= 'homepage';
 	public $directory	= '';
-
-
-
-
-	////////////////////////////////////////////////////////////////////////////
-	// MEMBER CONSTANTS
-	////////////////////////////////////////////////////////////////////////////
-	const badchars = ['.', '+', '-', '_', "\\", 0x7F];
+	public $badchars	= ['.', '+', '-', '_', "\\", 0x7F];
 }
 
 
