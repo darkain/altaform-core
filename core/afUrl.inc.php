@@ -188,7 +188,7 @@ class		afUrl {
 		}
 		return ($fragment instanceof afUrlSafe)
 			? (string) $fragment
-			: strtolower(urlencode($fragment));
+			: strtolower(rawurlencode($fragment));
 	}
 
 

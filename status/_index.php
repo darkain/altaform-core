@@ -28,7 +28,7 @@ foreach ($servers as &$server) {
 
 	//$key	= afUser::password();
 	//$hash	= $af->config->auth($key, true);
-	$url	= $server;// . '?m=' . urlencode($key) . '&h=' . urlencode($hash);
+	$url	= $server;// . '?m=' . rawurlencode($key) . '&h=' . rawurlencode($hash);
 	$json	= pudl::jsonDecode(@file_get_contents($url, false, $ctx));
 
 	if (!empty($json)) {

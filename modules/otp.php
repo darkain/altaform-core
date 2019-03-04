@@ -68,7 +68,7 @@ class otp {
 	public function qrcode($name, $secret, $size=200) {
 		return 'https://chart.googleapis.com/chart?chs=' .
 			$size . 'x' . $size . '&chld=M|0&cht=qr&chl=' .
-			urlencode('otpauth://totp/' . $name . '?secret=' . $secret);
+			rawurlencode('otpauth://totp/' . $name . '?secret=' . $secret);
 	}
 
 

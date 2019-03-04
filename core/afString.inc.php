@@ -13,7 +13,7 @@ class afString {
 
 
 	public static function url($string) {
-		return strtolower(urlencode($string));
+		return strtolower(rawurlencode($string));
 	}
 
 
