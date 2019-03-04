@@ -112,12 +112,14 @@ class		altaform
 
 
 
-	public function json($data) {
+	public function json($data, $exit=true) {
 		$this->contentType('json');
 
 		echo ($data instanceof pudlData)
 			? $data->json()
 			: json_encode($data, JSON_PARTIAL_OUTPUT_ON_ERROR);
+
+		if ($exit) exit();
 	}
 
 
