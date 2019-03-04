@@ -34,4 +34,4 @@ if (!empty($afconfig->cdn['local'])) {
 	$path = str_replace('cdn/', $afconfig->cdn['local'].'/', (string)$path);
 }
 
-return $af->json(['location' => $path]);
+$af->json(['location' => $path]);
