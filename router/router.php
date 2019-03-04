@@ -173,8 +173,6 @@ class router {
 		$this->part		= explode('/', $this->parts['path']);
 		$this->part[]	= '';
 		foreach ($this->part as &$val) {
-			$tmp		= $val;
-
 			$val		= rawurldecode($val);
 
 			if ($get instanceof getvar) {
@@ -184,7 +182,7 @@ class router {
 			if (!strlen($val)) continue;
 
 			$char		= substr($val, 0, 1);
-			$return		.= '/' . $tmp;
+			$return		.= '/' . rawurlencode($val);
 
 			assertStatus(500,
 				(!in_array($char, $this->badchars)  &&  ord($char) > 0x20),
