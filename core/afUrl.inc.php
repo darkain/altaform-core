@@ -50,9 +50,7 @@ class		afUrl {
 
 		$this->url			= $router->parse($this->uri, $get);
 
-		$this->query		= str_replace(' ', '+',
-			$this->uri . (empty($router->parts['query']) ? '?' : '&')
-		);
+		$this->query		= $this->uri . (empty($router->parts['query']) ? '?' : '&');
 
 		if (in_array('gzip', $this->encoding)  &&  !afDevice::trident()) {
 			$this->gz = '.gz';
@@ -66,7 +64,7 @@ class		afUrl {
 				'Attempting to redirect POST data. URL should not have trailing /'
 			);
 			$this->redirect(
-				str_replace(' ', '+', substr($router->parts['path'], 0, -1)) .
+				rawurlencode(substr($router->parts['path'], 0, -1)) .
 				(empty($router->parts['query']) ? '' : ('?'.$router->parts['query']))
 			);
 		}
