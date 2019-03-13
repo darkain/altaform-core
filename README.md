@@ -57,8 +57,9 @@ Path | Library | Usage
 ## Global Variables
 Name | Library | Usage | Documentation
 -----|---------|-------|--------------
-$af | Altaform Core & TBX | Instance of the [altaform](https://github.com/darkain/altaform-core/blob/master/_altaform.inc.php) class, inherits [tbx](https://github.com/darkain/TinyButXtreme/blob/master/tbx_class.php.inc) class | [Documentation](https://github.com/darkain/altaform-core/blob/master/README.md)
+$af | Altaform Core & TBX | Instance of the [altaform](https://github.com/darkain/altaform-core/blob/master/core/afCore.inc.php) class, inherits [tbx](https://github.com/darkain/TinyButXtreme/blob/master/tbx_class.inc.php) class | [Documentation](https://github.com/darkain/altaform-core/blob/master/README.md)
 $afurl | Altaform Core | Instance of the [afUrl](https://github.com/darkain/altaform-core/blob/master/core/afUrl.inc.php) class
+$router | Altaform Core | Instance of the [afRouter](https://github.com/darkain/altaform-core/blob/master/router/router.php) class
 $user | Altaform Core | Instance of the [afUser](https://github.com/darkain/altaform-core/blob/master/core/afUser.inc.php) class
 $get | GetVar | Instance of the [getvar](https://github.com/darkain/getvar/blob/master/getvar.inc.php) class | [Documentation](https://github.com/darkain/getvar/blob/master/README.md)
 $db | PUDL | Instance of one of the [pudl](https://github.com/darkain/pudl/blob/master/pudl.php) classes (depends on database type) | [Documentation](https://github.com/darkain/pudl/blob/master/README.md)
