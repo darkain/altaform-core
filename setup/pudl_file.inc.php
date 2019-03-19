@@ -3,7 +3,7 @@
 /*
 
 
-CREATE TABLE `pudl_file` (
+CREATE TABLE `file` (
   `file_hash` varbinary(128) NOT NULL COMMENT 'Hash value of file contents',
   `file_parent` varbinary(128) DEFAULT NULL,
   `file_size` bigint(20) UNSIGNED NOT NULL COMMENT 'File size on disc, in bytes',
@@ -31,7 +31,7 @@ CREATE TABLE `pudl_file` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
-CREATE TABLE `pudl_file_thumb` (
+CREATE TABLE `file_thumb` (
   `thumb_hash` varbinary(128) NOT NULL COMMENT 'Hash value of thumbnail contents',
   `file_hash` varbinary(128) NOT NULL,
   `thumb_size` bigint(20) UNSIGNED NOT NULL,
@@ -40,27 +40,24 @@ CREATE TABLE `pudl_file_thumb` (
   KEY `file_hash` (`file_hash`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-
-ALTER TABLE `pudl_mimetype`
-  ADD CONSTRAINT `pudl_mime_icon` FOREIGN KEY (`mime_icon`) REFERENCES `pudl_file` (`file_hash`) ON DELETE SET NULL ON UPDATE CASCADE;
 */
 
 
 $db(
-	'CREATE TABLE ' . $db->identifiers('pudl_file_meta', true) . ' (
+	'CREATE TABLE ' . $db->identifiers('file_meta', true) . ' (
 	  `file_hash` varbinary(128) NOT NULL,
 	  `file_meta_name` varchar(32) COLLATE utf8mb4_bin NOT NULL,
 	  `file_meta_value` varchar(255) COLLATE utf8mb4_bin NOT NULL,
 	  PRIMARY KEY (`file_hash`,`file_meta_name`),
 	  KEY `file_meta_name` (`file_meta_name`),
-	  CONSTRAINT `pudl_file_meta` FOREIGN KEY (`file_hash`) REFERENCES ' . $db->identifiers('pudl_file', true) . ' (`file_hash`) ON DELETE CASCADE ON UPDATE CASCADE
+	  CONSTRAINT `pudl_file_meta` FOREIGN KEY (`file_hash`) REFERENCES ' . $db->identifiers('file', true) . ' (`file_hash`) ON DELETE CASCADE ON UPDATE CASCADE
 	) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci'
 );
 
 
 /*
 
-CREATE TABLE IF NOT EXISTS `pudl_file_user` (
+CREATE TABLE IF NOT EXISTS `file_user` (
   `file_hash` varbinary(128) NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
   `user_time` bigint(20) NOT NULL,
