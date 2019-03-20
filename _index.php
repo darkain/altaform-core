@@ -327,10 +327,10 @@ if (!empty($afconfig->pudl)  &&  tbx_array($afconfig->pudl)) {
 
 	$db->time(
 		$af = altaform::create(
-			new pudlSession($db, 'pudl_session',
-				$afconfig->session['name'],
-				$afconfig->session['domain'],
-				$afurl->https
+			new pudlSession($db, 'session',
+				$afconfig->session + [
+					'secure' => $afurl->https,
+				]
 			)
 		)
 	);
