@@ -20,6 +20,14 @@ class		afUrl {
 			$args = $get->server('argv');
 			if (is_array($args)) {
 				$_SERVER['REQUEST_URI'] = isset($args[1]) ? $args[1] : '/';
+				for ($i=2; $i<count($args); $i++) {
+					$chunk = explode('=', $args[$i], 2);
+					if (count($chunk) > 1) {
+						$_GET[$chunk[0]] = $chunk[1];
+					} else {
+						$_GET[] = $chunk[0];
+					}
+				}
 			} else {
 				$_SERVER['REQUEST_URI'] = '/';
 			}
