@@ -275,12 +275,20 @@ if ($get->server('HTTP_UPGRADE_INSECURE_REQUESTS')) {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// DISABLE FRAMES, XSS, AND MODIFY REFERRER
+// DISABLE FRAMES, XSS, MODIFY REFERRER, AND USE A CUSTOM FEATURE POLICY
 ////////////////////////////////////////////////////////////////////////////////
 if (!headers_sent()) {
 	header('X-Frame-Options: '	. $afconfig->frames);
 	header('X-XSS-Protection: '	. $afconfig->xss);
 	header('Referrer-Policy: '	. $afconfig->referrer);
+
+	$policy = '';
+	foreach ($afconfig->features as $key => $value) {
+		if (!empty($policy)) $policy .= '; ';
+		$policy .= $key . ' ' . $value;
+	}
+	header('Feature-Policy: '	. $policy);
+	unset($policy, $key, $value);
 }
 
 

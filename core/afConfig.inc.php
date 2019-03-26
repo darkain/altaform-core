@@ -39,6 +39,12 @@ class			afConfig
 		// Default allow referrer (security)
 		$this->referrer		= 'strict-origin-when-cross-origin';
 
+		// Default deny all features (security)
+		$this->features		= [
+			'sync-xhr'		=> "'self'",	// Some xhr may not be async
+			'fullscreen'	=> "*",			// YouTube embedding
+		];
+
 		// Default allowed cross-site origins (security)
 		$this->origins		= [
 			'localhost', '127.0.0.1', '::1',
