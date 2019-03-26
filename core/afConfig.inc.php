@@ -18,48 +18,54 @@ class			afConfig
 
 
 	public function __construct() {
-		//Debugging is initially on, and disabled by init
+		// Debugging is initially on, and disabled by init
 		$this->debug		= $this;
 
-		//Default to "online" mode
+		// Default to "online" mode
 		$this->offline		= false;
 
-		//Default application directory
+		// Default application directory
 		$this->root			= '_app';
 
-		//Default no forced HTTPS (security)
+		// Default no forced HTTPS (security)
 		$this->secure		= false;
 
-		//Default prevent framing site (security)
+		// Default prevent framing site (security)
 		$this->frames		= 'sameorigin';
 
-		//Default allowed cross-site origins (security)
+		// Default prevent framing site (security)
+		$this->xss			= '1; mode=block';
+
+		// Default allow referrer (security)
+		$this->referrer		= 'strict-origin-when-cross-origin';
+
+		// Default allowed cross-site origins (security)
 		$this->origins		= [
 			'localhost', '127.0.0.1', '::1',
 		];
 
-		//Default timezone (localization)
+		// Default timezone (localization)
 		$this->timezone		= 'UTC';
 
-		//Default locale (language / localization)
+		// Default locale (language / localization)
 		$this->locale		= 'en_US.UTF-8';
 
-		//Default session (cookies)
+		// Default session (cookies)
 		$this->session		= [
 			'name'			=> false,
 			'domain'		=> false,
 			'redirect'		=> 'root',
 		];
 
-		//Defaults for password complexity
+		// Defaults for password complexity
 		$this->password		= [
-			'length'		=> 6,		//Minimum length
-			'upper'			=> true,	//Require upper+lower case
-			'number'		=> true,	//Require numbers
-			'symbol'		=> false,	//Require special chararacters
+			'length'		=> 6,		// Minimum length
+			'upper'			=> true,	// Require upper+lower case
+			'number'		=> true,	// Require numbers
+			'symbol'		=> false,	// Require special chararacters
 		];
 
-		//Default all permissions are disabled
+		// Default all permissions are disabled
 		$this->permission	= [
 			'banned'		=> 0,
 			'guest'			=> 0,

@@ -275,10 +275,12 @@ if ($get->server('HTTP_UPGRADE_INSECURE_REQUESTS')) {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// DISABLE FRAMES
+// DISABLE FRAMES, XSS, AND MODIFY REFERRER
 ////////////////////////////////////////////////////////////////////////////////
 if (!headers_sent()) {
-	header('X-Frame-Options: ' . $afconfig->frames);
+	header('X-Frame-Options: '	. $afconfig->frames);
+	header('X-XSS-Protection: '	. $afconfig->xss);
+	header('Referrer-Policy: '	. $afconfig->referrer);
 }
 
 
@@ -287,7 +289,7 @@ if (!headers_sent()) {
 ////////////////////////////////////////////////////////////////////////////////
 // HTTP OPTIONS / ORIGINS
 ////////////////////////////////////////////////////////////////////////////////
-if (!empty($afurl->origin)) {
+if (!empty($afurl->origin)  &&  !headers_sent()) {
 	if (in_array($afurl->origin, $afconfig->origins)) {
 		header('Access-Control-Allow-Origin: ' . $afurl->origin);
 		header('Access-Control-Allow-Methods: POST, GET, OPTIONS');

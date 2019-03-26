@@ -406,7 +406,7 @@ class		afUrl {
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//HANDLE SSL, TLS, HTTPS, HSTS RELATED CONFIG PROCESSING
+	// HANDLE SSL, TLS, HTTPS, HSTS RELATED CONFIG PROCESSING
 	////////////////////////////////////////////////////////////////////////////
 	public function secure($data) {
 		if (headers_sent()) return;
@@ -430,7 +430,7 @@ class		afUrl {
 
 	////////////////////////////////////////////////////////////////////////////
 	// VALIDATE THE GIVEN DOMAIN NAME
-	//http://stackoverflow.com/questions/1755144/how-to-validate-domain-name-in-php
+	// http://stackoverflow.com/questions/1755144/how-to-validate-domain-name-in-php
 	////////////////////////////////////////////////////////////////////////////
 	public static function validateDomain($domain) {
 		if (!is_string($domain))	return false;
