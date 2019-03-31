@@ -136,9 +136,19 @@ class afMail {
 
 
 	public static function validdns($domain) {
-		if (checkdnsrr($domain . '.', 'MX')) return true;
-		if (checkdnsrr($domain . '.', 'A' )) return true;
-		return false;
+		static $cache = [];
+
+		if (array_key_exists($domain, $cache)) {
+			return $cache[$domain];
+
+		} else if (checkdnsrr($domain . '.', 'MX')) {
+			return ($cache[$domain] = true);
+
+		} else if (checkdnsrr($domain . '.', 'A' )) {
+			return ($cache[$domain] = true);
+		}
+
+		return ($cache[$domain] = false);
 	}
 
 
