@@ -110,7 +110,7 @@ $http_status_codes = [
 // DISPLAY THE HTTP ERROR STATUS PAGE FOR THE GIVEN CODE
 ////////////////////////////////////////////////////////////////////////////////
 function httpError($code, $text=false, $log=false, $details=false) {
-	global $http_status_codes, $afurl, $afconfig, $get;
+	global $http_status_codes, $afurl, $router, $afconfig, $get;
 
 	$code = (int) $code;
 	if (empty($http_status_codes[$code])) $code = 599;
@@ -131,6 +131,7 @@ function httpError($code, $text=false, $log=false, $details=false) {
 
 		if (!empty($afconfig->debug)) {
 			$text .= '<br/><pre>' . print_r($afurl,true) . '</pre>';
+			$text .= '<br/><pre>' . print_r($router,true) . '</pre>';
 		}
 	}
 
