@@ -68,6 +68,11 @@ class router {
 				'Invalid path - possible hacking attempt'
 			);
 
+			assertStatus(400,
+				\afString::utf8($this->part[$i]),
+				'Invalid UTF-8 sequence - possible hacking attempt'
+			);
+
 			//FORCE VIRTUAL PATHING IF SPECIAL CHARACTERS ARE FOUND
 			//SPECIAL CHARACTER ALLOWED: [SPACE] ! + - . _ (NOTE: THIS IS CHANGING)
 			//ALL OTHERS FORCE VITUAL PATHING
