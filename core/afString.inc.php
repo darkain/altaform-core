@@ -69,13 +69,13 @@ class afString {
 
 		foreach ($array as $key => $value) {
 			if (is_int($key)) {
-				$output .= altaform::html($value) . ' ';
+				$output .= static::html($value) . ' ';
 				continue;
 			}
 
-			$output .= altaform::html($key);
+			$output .= static::html($key);
 			$output .= '="';
-			$output .= altaform::html($value);
+			$output .= static::html($value);
 			$output .= '" ';
 		}
 
@@ -120,6 +120,21 @@ class afString {
 	////////////////////////////////////////////////////////////////////////////
 	public static function unslash($value) {
 		return str_replace('⁄', '/', $value);
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// MAKE STRING HTML SAFE
+	////////////////////////////////////////////////////////////////////////////
+	public static function html($string) {
+		return htmlspecialchars(
+			(string) $string,
+			ENT_NOQUOTES | ENT_HTML5 | ENT_SUBSTITUTE,
+			'UTF-8',
+			true
+		);
 	}
 
 
@@ -175,7 +190,7 @@ class afString {
 		$string = preg_replace(
 			'@(?<![.*>])\b(?:(?:(ht|f)tps?)://|(?<![./*>])((www|m)\.)|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))[-A-Z0-9+&#/%=~_|$?!:;,.]*[A-Z0-9+&#/%=~_|$]@i',
 			'<a href="\0" target="_blank">\0</a>',
-			altaform::html($string, ENT_NOQUOTES | ENT_HTML5 | ENT_SUBSTITUTE)
+			static::html($string)
 		);
 
 		return str_replace(["\r\n","\r","\n"], '<br/>', $string);
@@ -492,7 +507,7 @@ class afString {
 	public static function language($input) {
 		$language = [];
 
-		foreach (self::$languages as $key => $val) {
+		foreach (static::$languages as $key => $val) {
 			preg_match_all($val, $input, $tmp);
 			$language[$key] = $tmp;
 		}
