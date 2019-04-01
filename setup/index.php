@@ -75,7 +75,7 @@ $user = afUser::create($db, [
 //GENERATE A RANDOM PASSWORD FOR ADMIN USER
 //TODO: SET PASSWORD STRENGTH
 ////////////////////////////////////////////////////////////////////////////////
-$password = afString::password();
+$password = afUser::password();
 $user->setPassword('admin', $password);
 
 

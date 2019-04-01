@@ -463,12 +463,7 @@ class afUpload {
 
 	public static function exifClean(&$data) {
 		if (is_string($data)) {
-			if (extension_loaded('mbstring')) {
-				$data = @mb_convert_encoding($data, 'UTF-8', 'UTF-8');
-			} else {
-				$data = @iconv('UTF-8', 'UTF-8//IGNORE', $data);
-			}
-
+			$data = afString::toUtf8($data, 'UTF-8');
 			$data = preg_replace('/[\x00-\x1F]/', ' ', $data);
 			$data = afString::doubletrim($data);
 

@@ -12,13 +12,11 @@ define('BYTE_FORMAT_KIB',	0x0003);
 class afString {
 
 
-	public static function url($string) {
-		return strtolower(rawurlencode($string));
-	}
 
 
-
-
+	////////////////////////////////////////////////////////////////////////////
+	// CONVERT A STRING TO AN INTEGER
+	////////////////////////////////////////////////////////////////////////////
 	public static function int($string) {
 		if (is_int($string))		return $string;
 		if (!is_string($string))	return 0;
@@ -30,6 +28,9 @@ class afString {
 
 
 
+	////////////////////////////////////////////////////////////////////////////
+	// STRIP CURRENCY SYMBOL FROM STRING, AND RETURN VALUE AS A FLOAT
+	////////////////////////////////////////////////////////////////////////////
 	public static function currency($value) {
 		return (float) preg_replace(
 			'/^[\$\s\x{A2}-\x{A5}\x{20A0}-\x{20CF}\x{10192}]+/u',
@@ -40,12 +41,16 @@ class afString {
 
 
 
+	////////////////////////////////////////////////////////////////////////////
+	// CONVERT A VALUE TO A STRING
+	////////////////////////////////////////////////////////////////////////////
 	public static function string($value) {
 		if (is_string($value))	return $value;
 		if (!is_object($value))	return @(string)$value;
 
-		if (method_exists($value,'__toString')) {
+		if (method_exists($value, '__toString')) {
 			return $value->__toString();
+
 		} elseif ($value instanceof DateTime) {
 			return $value->format('c');
 		}
@@ -56,30 +61,21 @@ class afString {
 
 
 
-	public static function html($html, $noquotes=false) {
-		return htmlspecialchars(
-			(string) $html,
-			($noquotes?ENT_NOQUOTES:ENT_QUOTES) | ENT_HTML5 | ENT_SUBSTITUTE,
-			'UTF-8',
-			true
-		);
-	}
-
-
-
-
+	////////////////////////////////////////////////////////////////////////////
+	// GENERATE A KEY/VALUE STRING FROM AN ARRAY
+	////////////////////////////////////////////////////////////////////////////
 	public static function attribute($array) {
 		$output = ' ';
 
 		foreach ($array as $key => $value) {
 			if (is_int($key)) {
-				$output .= static::html($value) . ' ';
+				$output .= altaform::html($value) . ' ';
 				continue;
 			}
 
-			$output .= static::html($key);
+			$output .= altaform::html($key);
 			$output .= '="';
-			$output .= static::html($value);
+			$output .= altaform::html($value);
 			$output .= '" ';
 		}
 
@@ -89,143 +85,29 @@ class afString {
 
 
 
-	public static function ltrim($string) {
-		if (!is_string($string)) $string = (string)$string;
-
-		$count = strlen($string);
-		if (!$count) return $string;
-
-		switch (ord($string)) {
-			case 0x00:				// null terminator
-			case 0x09:				// tab
-			case 0x0B:				// vertical tab
-			case 0x10:				// new line
-			case 0x13:				// carriage return
-			case 0x20:				// space
-				return ltrim($string);
-		}
-
-		return $string;
-	}
-
-
-
-
-	public static function rtrim($string) {
-		if (!is_string($string)) $string = (string)$string;
-
-		$count = strlen($string);
-		if (!$count) return $string;
-
-		switch (ord($string[$count-1])) {
-			case 0x00:				// null terminator
-			case 0x09:				// tab
-			case 0x0B:				// vertical tab
-			case 0x10:				// new line
-			case 0x13:				// carriage return
-			case 0x20:				// space
-				return rtrim($string);
-		}
-
-		return $string;
-	}
-
-
-
-
-	public static function trim($string) {
-		if (!is_string($string)) $string = (string)$string;
-
-		$count = strlen($string);
-		if ($count < 1) return $string;
-
-		for ($begin=0; $begin<$count; $begin++) {
-			switch (ord($string[$begin])) {
-				case 0x00:			// null terminator
-				case 0x09:			// tab
-				case 0x0B:			// vertical tab
-				case 0x10:			// new line
-				case 0x13:			// carriage return
-				case 0x20:			// space
-					break;			// continue for statement
-
-				default:
-					break 2;
-			}
-		}
-
-		for ($end=$count-1; $end>=$begin; $end--) {
-			switch (ord($string[$end])) {
-				case 0x00:			// null terminator
-				case 0x09:			// tab
-				case 0x0B:			// vertical tab
-				case 0x10:			// new line
-				case 0x13:			// carriage return
-				case 0x20:			// space
-					break;			// continue for statement
-
-				default:
-					break 2;
-			}
-		}
-
-		if ($begin > 0  ||  $end < $count-1) {
-			return substr($string, $begin, $end-$begin+1);
-		}
-
-		return $string;
-	}
-
-
-
-
+	////////////////////////////////////////////////////////////////////////////
+	// REMOVE CONSECUTIVE WHITE-SPACE CHARACTERS, REPLACING WITH A SINGLE SPACE
+	////////////////////////////////////////////////////////////////////////////
 	public static function doublespace($string) {
-		if (!is_string($string)) $string = (string)$string;
-
-		$count = strlen($string);
-
-		for ($i=0; $i<$count-1; $i++) {
-			switch (ord($string[$i])) {
-				case 0x00:			// null terminator
-				case 0x09:			// tab
-				case 0x0B:			// vertical tab
-				case 0x10:			// new line
-				case 0x13:			// carriage return
-				case 0x20:			// space
-
-					switch (ord($string[$i+1])) {
-						case 0x00:	// null terminator
-						case 0x09:	// tab
-						case 0x0B:	// vertical tab
-						case 0x10:	// new line
-						case 0x13:	// carriage return
-						case 0x20:	// space
-							return preg_replace(
-								'/[\s\x00\x0B\x10\x13][\s\x00\x0B\x10\x13]+/',
-								' ',
-								$string
-							);
-					}
-					break;			// continue for statement
-
-				default:
-					break;
-			}
-		}
-
-		return $string;
+		return preg_replace('/[\0\s][\0\s]+/', ' ', (string)$string);
 	}
 
 
 
 
+	////////////////////////////////////////////////////////////////////////////
+	// SAME AS DOUBLESPACE, WHILE ALSO TRIMMING THE ENDS
+	////////////////////////////////////////////////////////////////////////////
 	public static function doubletrim($string) {
-		return static::doublespace( static::trim($string) );
+		return trim(static::doublespace($string));
 	}
 
 
 
 
+	////////////////////////////////////////////////////////////////////////////
+	// CONVERT ASCII SLASH TO UNICODE SLASH
+	////////////////////////////////////////////////////////////////////////////
 	public static function slash($value) {
 		return str_replace('/', '⁄', $value);
 	}
@@ -233,6 +115,9 @@ class afString {
 
 
 
+	////////////////////////////////////////////////////////////////////////////
+	// CONVERT UNICODE SLASH TO ASCII SLASH
+	////////////////////////////////////////////////////////////////////////////
 	public static function unslash($value) {
 		return str_replace('⁄', '/', $value);
 	}
@@ -240,10 +125,13 @@ class afString {
 
 
 
+	////////////////////////////////////////////////////////////////////////////
+	// REMOVE HTML FROM STRING
+	////////////////////////////////////////////////////////////////////////////
 	public static function striphtml($string, $length=false) {
 		$string = preg_replace('#<[^>]+>#', ' ', $string);
 		$string = str_replace('&nbsp;', ' ', $string);
-		$string = preg_replace('/\s\s+/', ' ', $string);
+		$string = static::doublespace($string);
 		$string = trim($string);
 		if (is_numeric($length) && $length >= 1) {
 			$string = static::truncateWord($string, $length);
@@ -254,13 +142,9 @@ class afString {
 
 
 
-	public static function reducewhitespace($string) {
-		return preg_replace('/\s\s+/', ' ', $string);
-	}
-
-
-
-
+	////////////////////////////////////////////////////////////////////////////
+	// REMOTE WHITE-SPACE, INCLUDING LEGACY URL ENCODED '+' SIGN
+	////////////////////////////////////////////////////////////////////////////
 	public static function stripwhitespace($string, $replace='') {
 		return str_replace(
 			['+', ' ', "\t", "\r", "\n", "\0", "\x0B"],
@@ -272,6 +156,9 @@ class afString {
 
 
 
+	////////////////////////////////////////////////////////////////////////////
+	// ???
+	////////////////////////////////////////////////////////////////////////////
 	public static function truncateword($string, $length) {
 		$length = (int) $length;
 		if (strlen($string) <= $length) return $string;
@@ -281,11 +168,14 @@ class afString {
 
 
 
+	////////////////////////////////////////////////////////////////////////////
+	// REPLACE TEXT THAT LOOKS LIKE A URL WITH A FULL ANCHOR TAG
+	////////////////////////////////////////////////////////////////////////////
 	public static function linkify($string) {
 		$string = preg_replace(
 			'@(?<![.*>])\b(?:(?:(ht|f)tps?)://|(?<![./*>])((www|m)\.)|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))[-A-Z0-9+&#/%=~_|$?!:;,.]*[A-Z0-9+&#/%=~_|$]@i',
 			'<a href="\0" target="_blank">\0</a>',
-			static::html($string, true)
+			altaform::html($string, ENT_NOQUOTES | ENT_HTML5 | ENT_SUBSTITUTE)
 		);
 
 		return str_replace(["\r\n","\r","\n"], '<br/>', $string);
@@ -294,17 +184,25 @@ class afString {
 
 
 
-	public static function implode($array) {
+	////////////////////////////////////////////////////////////////////////////
+	// HUMAN READABLE ARRAY IMPLODING
+	////////////////////////////////////////////////////////////////////////////
+	public static function implode($array, $final='and') {
 		if (empty($array)  ||  !tbx_array($array)) return '';
 		if (count($array) === 1) return reset($array);
-		if (count($array) === 2) return reset($array) . ' and ' . end($array);
-		$last = array_pop($array);
-		return implode(', ', $array) . ', and ' . $last;
+		if (count($array) === 2) return implode(' ', reset($array), $final, end($array));
+
+		$last		= array_pop($array);
+		$array[]	= $final . ' ' . $last;
+		return implode(', ', $array);
 	}
 
 
 
 
+	////////////////////////////////////////////////////////////////////////////
+	// EMBED A BINARY FILE DIRECTLY INTO A STRING
+	////////////////////////////////////////////////////////////////////////////
 	public static function embed($path, $mimetype=false) {
 		$text = '';
 		if (!empty($mimetype)) $text .= "data:$mimetype;base64,";
@@ -314,6 +212,9 @@ class afString {
 
 
 
+	////////////////////////////////////////////////////////////////////////////
+	// ???
+	////////////////////////////////////////////////////////////////////////////
 	public static function regex($string) {
 		$string = str_replace('\\',	'\\\\',	$string);
 		$string = str_replace('/',	'\\/',	$string);
@@ -342,8 +243,7 @@ class afString {
 
 	////////////////////////////////////////////////////////////////////////////
 	// PASS IN A FLOAT, GET A RATIONAL: PASS IN (66.66667) AND GET "66-2/3"
-	// Source:
-	// https://stackoverflow.com/questions/14330713/converting-float-decimal-to-fraction
+	// https://stackoverflow.com/questions/14330713
 	////////////////////////////////////////////////////////////////////////////
 	static function rational($n, $tolerance=1.e-4) {
 		$n = (float) $n;
@@ -374,7 +274,8 @@ class afString {
 
 
 	////////////////////////////////////////////////////////////////////////////
-	// PASS IN A RATIONAL, GET A FLOAT: PASS IN "66-2/3" AND GET (66.6667)
+	// PASS IN A RATIONAL, GET A FLOAT
+	// EXAMPLE: "66-2/3" BECOMES (66.6667)
 	////////////////////////////////////////////////////////////////////////////
 	static function unrational($string, $round=4) {
 		$value		= 0.0;
@@ -405,14 +306,9 @@ class afString {
 
 
 
-	//GENERATE NEW RANDOM PASSWORD OF $length CHARACTERS
-	public static function password($length=16) {
-		return afUser::password($length);
-	}
-
-
-
-
+	////////////////////////////////////////////////////////////////////////////
+	// ???
+	////////////////////////////////////////////////////////////////////////////
 	public static function maxDigits($value, $digits) {
 		return round($value, max(0, $digits-strlen((string)round($value))));
 	}
@@ -420,6 +316,9 @@ class afString {
 
 
 
+	////////////////////////////////////////////////////////////////////////////
+	// CONVERT FROM INTEGER TO FILE SIZE STRING
+	////////////////////////////////////////////////////////////////////////////
 	public static function fromBytes($value, $format=false, $sep=' ') {
 		if ($format === false) $format = BYTE_FORMAT_KIB;
 
@@ -454,6 +353,9 @@ class afString {
 
 
 
+	////////////////////////////////////////////////////////////////////////////
+	// CONVERT FROM FILE SIZE STRING TO INTEGER
+	////////////////////////////////////////////////////////////////////////////
 	public static function toBytes($string, $precision=0, $mode=PHP_ROUND_HALF_UP) {
 		$value	= (float)trim($string);
 		$rest	= trim(substr($string, strlen((string)$value)));
@@ -525,34 +427,58 @@ class afString {
 
 
 
+	////////////////////////////////////////////////////////////////////////////
+	// CHECK IF THE GIVEN STRING IS ASCII ENCODED
+	////////////////////////////////////////////////////////////////////////////
 	public static function ascii($string) {
-		return mb_check_encoding($string, 'ASCII');
+		return (bool) (extension_loaded('mbstring')
+			? @mb_check_encoding($string, 'ASCII')
+			: !@preg_match('/[^\x09\x0A\x0D\x20-\x7f]/', $string));
 	}
 
 
 
 
+
+	////////////////////////////////////////////////////////////////////////////
+	// CHECK IF THE GIVEN STRING IS UTF-8 ENCODED
+	////////////////////////////////////////////////////////////////////////////
 	public static function utf8($string) {
-		return mb_check_encoding($string, 'UTF-8');
+		return (bool) (extension_loaded('mbstring')
+			? @mb_check_encoding($string, 'UTF-8')
+			: @preg_match('//u', $string));
 	}
 
 
 
 
-	public static function toAscii($string) {
-		return @iconv('UTF-8', 'ASCII//TRANSLIT', $string);
+	////////////////////////////////////////////////////////////////////////////
+	// CONVERT THE GIVEN STRING FROM UTF-8 TO ASCII ENCODING
+	////////////////////////////////////////////////////////////////////////////
+	public static function toAscii($string, $from='UTF-8') {
+		return extension_loaded('mbstring')
+			? @mb_convert_encoding($string, $from, 'ASCII')
+			: @iconv($from, 'ASCII//TRANSLIT', $string);
 	}
 
 
 
 
-	public static function toUtf8($string) {
-		return @iconv('ASCII', 'UTF-8//TRANSLIT', $string);
+	////////////////////////////////////////////////////////////////////////////
+	// CONVERT THE GIVEN STRING FROM ASCII TO UTF-8 ENCODING
+	////////////////////////////////////////////////////////////////////////////
+	public static function toUtf8($string, $from='ASCII') {
+		return extension_loaded('mbstring')
+			? @mb_convert_encoding($string, $from, 'UTF-8')
+			: @iconv($from, 'UTF-8//TRANSLIT', $string);
 	}
 
 
 
 
+	////////////////////////////////////////////////////////////////////////////
+	// ???
+	////////////////////////////////////////////////////////////////////////////
 	public static function removeBreaks($string) {
 		return preg_replace('/[\pZ\pC]/u', ' ', $string);
 	}
@@ -560,6 +486,9 @@ class afString {
 
 
 
+	////////////////////////////////////////////////////////////////////////////
+	// ATTEMPT TO DETECT NATIVE SPOKEN LANGUAGE
+	////////////////////////////////////////////////////////////////////////////
 	public static function language($input) {
 		$language = [];
 
@@ -584,6 +513,9 @@ class afString {
 
 
 
+	////////////////////////////////////////////////////////////////////////////
+	// LISTING OF NATIVE LANGAUGES
+	////////////////////////////////////////////////////////////////////////////
 	public static $languages = [
 		'eng' => '/[a-z]/i',
 		'jpn' => '/[\x{3040}-\x{30ff}]/u',

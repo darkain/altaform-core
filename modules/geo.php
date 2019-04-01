@@ -185,7 +185,7 @@ class geo {
 		$location = str_replace('. ', ' ', $location);
 
 		$location = afString::stripwhitespace($location, ' ');
-		$location = afString::reducewhitespace($location);
+		$location = afString::doublespace($location);
 
 		$location = preg_replace('/\\busa?\\b/i', '', $location);
 		$location = preg_replace('/\\bunited states( of america)?\\b/i', '', $location);

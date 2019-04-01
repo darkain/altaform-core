@@ -68,7 +68,7 @@ class afDevice {
 	////////////////////////////////////////////////////////////////////////////
 	public static function agent($agent=false) {
 		if ($agent !== false) {
-			self::$agent = afString::reducewhitespace(
+			self::$agent = afString::doublespace(
 				strtolower((string)$agent)
 			);
 		}

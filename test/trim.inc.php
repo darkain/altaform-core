@@ -4,70 +4,6 @@
 
 
 afUnit(
-	afString::ltrim('test'),
-	'test'
-);
-
-
-
-
-afUnit(
-	afString::ltrim(' test '),
-	'test '
-);
-
-
-
-
-afUnit(
-	afString::rtrim('test'),
-	'test'
-);
-
-
-
-
-afUnit(
-	afString::rtrim(' test '),
-	' test'
-);
-
-
-
-
-afUnit(
-	afString::trim('test'),
-	'test'
-);
-
-
-
-
-afUnit(
-	afString::trim(' test'),
-	'test'
-);
-
-
-
-
-afUnit(
-	afString::trim('test '),
-	'test'
-);
-
-
-
-
-afUnit(
-	afString::trim(' test '),
-	'test'
-);
-
-
-
-
-afUnit(
 	afString::doublespace('test'),
 	'test'
 );
@@ -108,6 +44,6 @@ afUnit(
 
 
 afUnit(
-	afString::doublespace("a \x00 b \x09 c \x0b d \x10 e \x13 f \x20 g"),
+	afString::doublespace("a \x00 b \x09 c \x0B d \x0A e \x0D f \x20 g"),
 	'a b c d e f g'
 );

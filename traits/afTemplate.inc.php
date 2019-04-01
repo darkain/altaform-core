@@ -604,10 +604,6 @@ trait afTemplate {
 				$text = $afurl->cdn($text);
 			break;
 
-			case 'url':
-				$text = afString::url($text);
-			break;
-
 			case 'linkify':
 				$text = afString::linkify($text);
 			break;
