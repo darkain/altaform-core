@@ -5,6 +5,8 @@
 '@phan-file-suppress PhanUndeclaredProperty';
 
 
+use Leafo\ScssPhp\Compiler;
+
 
 define('AF_STAGE_NONE',		0);
 define('AF_STAGE_HEADER',	1);
@@ -92,11 +94,19 @@ trait afTemplate {
 	// EMBED INLINE CASCADING STYLE SHEET IN HTML HEADER FROM FILE
 	////////////////////////////////////////////////////////////////////////////
 	public function css($file, $merge=false) {
-		$data = @file_get_contents($file, true);
-		if ($data === false) {
-			throw new afException('Unable to load CSS file: '.$file);
+		require_once('_scss/scss.inc.php');
+
+		$text = @file_get_contents($file, true);
+		if ($text === false) {
+			throw new afException('Unable to load (S)CSS file: '.$file);
 		}
-		$this->_css[] = [$data, $merge];
+
+		if (substr($file, -5) === '.scss') {
+			$text = (new Compiler)->compile($text);
+		}
+
+		$this->_css[] = [$text, $merge];
+
 		return $this;
 	}
 
