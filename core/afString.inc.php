@@ -205,7 +205,7 @@ class afString {
 	public static function implode($array, $final='and') {
 		if (empty($array)  ||  !tbx_array($array)) return '';
 		if (count($array) === 1) return reset($array);
-		if (count($array) === 2) return implode(' ', reset($array), $final, end($array));
+		if (count($array) === 2) return implode(' ', [reset($array), $final, end($array)]);
 
 		$last		= array_pop($array);
 		$array[]	= $final . ' ' . $last;
