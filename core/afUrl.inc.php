@@ -156,13 +156,21 @@ class		afUrl {
 		$return = ($host ? $this->host : '') . $this($path, true);
 		if (empty($query))		return $return;
 		if (is_string($query))	return $return . '?' . $query;
+		return $return . '?' . $this->query($query);
+	}
 
-		return $return . '?' . http_build_query(
-			$query,
-			NULL,
-			ini_get('arg_separator.output'),
-			PHP_QUERY_RFC3986
-		);
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// HELPER FUNCTION TO BUILD A QUERY STRING (ALWAYS RFC 3986)
+	////////////////////////////////////////////////////////////////////////////
+	public static function query($data, $prefix=NULL, $separator=NULL) {
+		if ($separator === NULL) {
+			$separator = ini_get('arg_separator.output');
+		}
+
+		return http_build_query($data, $prefix, $separator,  PHP_QUERY_RFC3986);
 	}
 
 
