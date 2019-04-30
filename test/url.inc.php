@@ -1,8 +1,6 @@
 <?php
 
 
-require('travis.bork');
-
 
 $base = $afurl->base;
 $afurl->base = '/foo';
@@ -82,8 +80,8 @@ afUnit(
 
 
 afUnit(
-	$afurl->query(['x'=>1e25]),
-	'x=1.0E%2B25'
+	$afurl->query(['x'=>'a + b']),
+	'x=a%20%2B%20b'
 );
 
 
