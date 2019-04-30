@@ -177,7 +177,7 @@ class		afUrl {
 				return (string) $data;
 		}
 
-		if ($separator === NULL) {
+		if ($separator === '') {
 			$separator = ini_get('arg_separator.output');
 		}
 

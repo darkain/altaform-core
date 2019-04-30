@@ -1,5 +1,9 @@
 <?php
 
+
+require('travis.bork');
+
+
 $base = $afurl->base;
 $afurl->base = '/foo';
 
