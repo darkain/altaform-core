@@ -9,7 +9,7 @@ trait afNode {
 
 		$message = json_encode($message);
 
-		$url = $afurl->push . '?' . http_build_query([
+		$url = $afurl->push . '?' . afUrl::query([
 			'time'		=> $af->time(),
 			'auth'		=> $af->config->auth($message),
 			'user'		=> (int) $this->user_id,

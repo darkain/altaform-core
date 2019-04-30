@@ -132,12 +132,7 @@ class		afUrl {
 
 			} else {
 				$query .= ($query==='') ? '?' : '&';
-				$query .= http_build_query(
-					[$key => $value],
-					NULL,
-					ini_get('arg_separator.output'),
-					PHP_QUERY_RFC3986
-				);
+				$query .= static::query([$key => $value]);
 			}
 		}
 
@@ -167,7 +162,7 @@ class		afUrl {
 	////////////////////////////////////////////////////////////////////////////
 	// HELPER FUNCTION TO BUILD A QUERY STRING (ALWAYS RFC 3986)
 	////////////////////////////////////////////////////////////////////////////
-	public static function query($data, $prefix=NULL, $separator=NULL) {
+	public static function query($data, $prefix='', $separator=NULL) {
 		switch (true) {
 			case $data === NULL:
 			case $data === '':
