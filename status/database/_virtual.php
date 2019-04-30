@@ -48,7 +48,7 @@ $servers[]		= [
 	'server'	=> $server,
 	'version'	=> !empty($version) ? (reset($version) . $readonly . ' : ' . $state) : NULL,
 	'boot'		=> !empty($uptime) ? $af->time() - reset($uptime) : NULL,
-	'uptime'	=> !empty($uptime) ? afTime::since($af->time() - reset($uptime), AF_YEAR*7) : NULL,
+	'uptime'	=> !empty($uptime) ? \af\time::since($af->time() - reset($uptime), AF_YEAR*7) : NULL,
 	'memory'	=> !empty($memory) ? afString::fromBytes(reset($memory)) : NULL,
 	'delay'		=> sprintf('%0.4f', microtime(true) - $nstime),
 ];

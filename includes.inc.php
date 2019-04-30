@@ -20,13 +20,13 @@ require_once(is_owner(__DIR__.'/modules/otp.php'));
 require_once(is_owner(__DIR__.'/modules/file.php'));
 require_once(is_owner(__DIR__.'/modules/mime.php'));
 require_once(is_owner(__DIR__.'/modules/path.php'));
+require_once(is_owner(__DIR__.'/modules/time.php'));
 require_once(is_owner(__DIR__.'/modules/abyss.php'));
 require_once(is_owner(__DIR__.'/modules/audit.php'));
 
 
 // ALTAFORM 2.0 CORE FUNCTIONALITY
 require_once(is_owner(__DIR__.'/core/afMail.inc.php'));
-require_once(is_owner(__DIR__.'/core/afTime.inc.php'));
 require_once(is_owner(__DIR__.'/core/afConfig.inc.php'));
 require_once(is_owner(__DIR__.'/core/afDevice.inc.php'));
 require_once(is_owner(__DIR__.'/core/afStatus.inc.php'));
