@@ -152,11 +152,13 @@ class		afUrl {
 	////////////////////////////////////////////////////////////////////////////
 	// BUILD A COMPLETE URL
 	////////////////////////////////////////////////////////////////////////////
-	public function build($path, $query=false, $host=false) {
-		$return = ($host ? $this->host : '') . $this($path, true);
-		if (empty($query))		return $return;
-		if (is_string($query))	return $return . '?' . $query;
-		return $return . '?' . $this->query($query);
+	public function build($path, $query=NULL, $host=NULL) {
+		$path	= ($host ? $this->host : '') . $this($path, true);
+		$query	= static::query($query);
+
+		return ($query !== '')
+			? ($path . '?' . $query)
+			: ($path);
 	}
 
 
@@ -166,6 +168,20 @@ class		afUrl {
 	// HELPER FUNCTION TO BUILD A QUERY STRING (ALWAYS RFC 3986)
 	////////////////////////////////////////////////////////////////////////////
 	public static function query($data, $prefix=NULL, $separator=NULL) {
+		switch (true) {
+			case $data === NULL:
+			case $data === '':
+			case is_bool($data):
+			case is_array($data)	&&  empty($data):
+			case is_object($data)	&&  empty($data):
+				return '';
+
+			case is_string($data):
+			case is_int($data):
+			case is_float($data):
+				return (string) $data;
+		}
+
 		if ($separator === NULL) {
 			$separator = ini_get('arg_separator.output');
 		}
