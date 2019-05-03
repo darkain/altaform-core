@@ -37,7 +37,7 @@ class audit {
 
 		// GET THE DATABASE
 		$pudl = $arguments[0];
-		if (!($pudl instanceof pudl)) {
+		if (!($pudl instanceof \pudl)) {
 			throw new \afException(
 				'"' . gettype($pudl) . '" is not an instance of class "pudl"'
 			);
@@ -61,7 +61,7 @@ class audit {
 		// THROW AN EXCEPTION IF NO TYPE NUMBER AVAILABLE
 		if (empty($type)) {
 			throw new \afException(
-				'Invalid object type for afAudit::' . $action . '()'
+				'Invalid object type for \af\audit::' . $action . '()'
 			);
 		}
 
