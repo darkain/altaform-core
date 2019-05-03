@@ -30,7 +30,7 @@ class audit {
 
 		// VALIDATE NUMBER OF ARGUMENTS
 		if (count($arguments) < 4) {
-			throw new afException(
+			throw new \afException(
 				'Invalid number of arguments for afAudit::' . $action . '()'
 			);
 		}
@@ -38,7 +38,7 @@ class audit {
 		// GET THE DATABASE
 		$pudl = $arguments[0];
 		if (!($pudl instanceof pudl)) {
-			throw new afException(
+			throw new \afException(
 				'"' . gettype($pudl) . '" is not an instance of class "pudl"'
 			);
 		}
@@ -60,7 +60,7 @@ class audit {
 
 		// THROW AN EXCEPTION IF NO TYPE NUMBER AVAILABLE
 		if (empty($type)) {
-			throw new afException(
+			throw new \afException(
 				'Invalid object type for afAudit::' . $action . '()'
 			);
 		}
