@@ -42,6 +42,7 @@ class		afUrl {
 			);
 		}
 
+
 		$tmp				= strtolower($get->server('HTTPS', ''));
 		$this->https		= !empty($tmp)  &&  $tmp !== 'off';
 
@@ -53,6 +54,9 @@ class		afUrl {
 		$this->protocol		= $this->https ? 'https' : 'http';
 		$this->host			= $this->protocol . '://' . $this->domain;
 		$this->af_host		= $this->host;
+
+		$this->method		= strtolower($get->server('REQUEST_METHOD'));
+		if (empty($this->method)) $this->method = 'get';
 
 		if (substr($this->uri, 0, 2) === '//') $this->redirect('/');
 
@@ -68,7 +72,7 @@ class		afUrl {
 		// TODO: re-implement this
 		if (substr($router->parts['path'], -1) === '/') {
 			assertStatus(405,
-				$get->server('REQUEST_METHOD') !== 'POST',
+				$this->method !== 'post',
 				'Attempting to redirect POST data. URL should not have trailing /'
 			);
 			$this->redirect(
@@ -493,6 +497,7 @@ class		afUrl {
 	////////////////////////////////////////////////////////////////////////////
 	// MEMBER VARIABLES SET DYNAMICALLY OR BY CONFIG
 	////////////////////////////////////////////////////////////////////////////
+	public $method		= 'get';
 	public $gz			= '';
 	public $all			= '';
 	public $full		= '';
