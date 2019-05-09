@@ -273,7 +273,16 @@ class			afUser
 ////////////////////////////////////////////////////////////////////////////////
 class afAnonymous extends afUser {
 	public function __construct(pudl $pudl) {
-		parent::__construct($pudl, 0, true);
+		try {
+			parent::__construct($pudl, 0, true);
+
+		} catch (pudlException $e) {
+			$this->user_id		= 0;
+			$this->user_name	= 'anonymous';
+			$this->user_json	= [];
+			$this->user_icon	= NULL;
+			$this->user_session	= NULL;
+		}
 	}
 
 	protected function _fetchCache() { return AF_DAY; }
