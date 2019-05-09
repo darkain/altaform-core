@@ -345,8 +345,13 @@ if (!empty($afconfig->pudl)  &&  tbx_array($afconfig->pudl)) {
 		)
 	);
 
-	$af->settings = $db	->cache(AF_MINUTE*5, 'altaform_settings')
-						->collection('pudl_altaform');
+	// LOAD ALTAFORM SETTINGS
+	try {
+		$af->settings = $db	->cache(AF_MINUTE*5, 'altaform_settings')
+							->collection('pudl_altaform');
+	} catch (pudlException $e) {
+		$af->settings = [];
+	}
 
 } else {
 	require_once(is_owner('_pudl/pudl.php'));
