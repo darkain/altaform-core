@@ -25,29 +25,33 @@ class router {
 	// ROUTE THE HTTP REQUEST
 	////////////////////////////////////////////////////////////////////////////
 	public function route($af) {
-		//RECURSION LIMIT
+
+		// RECURSION LIMIT
 		static $recurse = 0;
 		assertStatus(500,
 			$recurse++ < 20,
 			'INTERNAL REDIRECT RECURSION LIMIT REACHED'
 		);
 
-		//RESET VIRTUAL PATHING, IN CASE THIS IS A REPROCESS
+		// USED FOR "REST" STYLE API
+		$method = '.' . $af->url->method;
+
+		// RESET VIRTUAL PATHING, IN CASE THIS IS A REPROCESS
 		$this->virtual = [];
 
-		//NUMBER OF ITEMS IN URL PATH
+		// NUMBER OF ITEMS IN URL PATH
 		$count = count($this->part) - 1;
 
-		//STORE PATH INFORMATION FOR DEBUGGING
+		// STORE PATH INFORMATION FOR DEBUGGING
 		$this->redirected[] = array_slice($this->part, 1, $count-1);
 
-		//LOAD OUR HOME PAGE!!
+		// LOAD OUR HOME PAGE!!
 		if ($count < 2) {
 			return $this->reparse($this->homepage);
 		}
 
 
-		//HANDLE GOOGLE DOMAIN AUTHENTICATION
+		// HANDLE GOOGLE DOMAIN AUTHENTICATION
 		if ($count === 2  &&  substr($this->part[1], 0, 6) === 'google') {
 			if (!empty($af->config->google['auth'])) {
 				$auth = &$af->config->google['auth'];
@@ -73,11 +77,11 @@ class router {
 				'Invalid UTF-8 sequence - possible hacking attempt'
 			);
 
-			//FORCE VIRTUAL PATHING IF SPECIAL CHARACTERS ARE FOUND
-			//SPECIAL CHARACTER ALLOWED: [SPACE] ! + - . _ (NOTE: THIS IS CHANGING)
-			//ALL OTHERS FORCE VITUAL PATHING
-			//TODO:	find another solution for the first-character checker.
-			//		underscore is required due to the reparsing system
+			// FORCE VIRTUAL PATHING IF SPECIAL CHARACTERS ARE FOUND
+			// SPECIAL CHARACTER ALLOWED: [SPACE] ! + - . _ (NOTE: THIS IS CHANGING)
+			// ALL OTHERS FORCE VITUAL PATHING
+			// TODO:	find another solution for the first-character checker.
+			//			underscore is required due to the reparsing system
 			if (/*!ctype_alnum(substr($this->part[$i], 0, 1)) ||*/
 				preg_match('/[^\x21\x2B\x2D\x2E\x5F 0-9a-zA-Z]/', $this->part[$i])) {
 
@@ -86,50 +90,66 @@ class router {
 				if (is_dir('_virtual')) {
 					$this->chdir('_virtual');
 					if ($this->reparse  ||  $this->reparse === NULL) return true;
-					if ($count-$i === 1) return $this->index($af);
+					if ($count-$i === 1) return $this->index($af, $method);
 					continue;
 				}
 
-				if (is_file('_virtual.php'))	return '_virtual.php';
-				if (is_file('_virtual.hh'))		return $this->hhvm('_virtual.hh');
+				// REST
+				if (is_file('_virtual'.$method.'.php'))	return '_virtual'.$method.'.php';
+				if (is_file('_virtual'.$method.'.hh'))	return $this->hhvm('_virtual'.$method.'.hh');
+
+				// NORMAL
+				if (is_file('_virtual.php'))			return '_virtual.php';
+				if (is_file('_virtual.hh'))				return $this->hhvm('_virtual.hh');
 
 				httpError(404);
 			}
 
 
-			//IF FRAGMENT IS DIRECTORY, MOVE INTO IT
+			// IF FRAGMENT IS DIRECTORY, MOVE INTO IT
 			if (is_dir($this->part[$i])) {
 				$this->chdir( $this->part[$i] );
 				if ($this->reparse  ||  $this->reparse === NULL) return true;
-				if ($count-$i === 1) return $this->index($af);
+				if ($count-$i === 1) return $this->index($af, $method);
 				continue;
 			}
 
 
-			//IF WE'RE ON FINAL FRAGMENT, ATTEMPT TO LOAD FILE
+			// IF WE'RE ON FINAL FRAGMENT, ATTEMPT TO LOAD FILE
 			if ($count-$i === 1) {
 				$file = $this->part[$i];
-				if (is_file($file.'.php'))		return $file.'.php';
-				if (is_file($file.'.hh'))		return $this->hhvm($file.'.hh');
-				if (is_file($file.'.tpl'))		return $af->auto(true, $file.'.tpl');
 
+				// REST
+				if (is_file($file.$method.'.php'))		return $file.$method.'.php';
+				if (is_file($file.$method.'.hh'))		return $this->hhvm($file.$method.'.hh');
+
+				// NORMAL
+				if (is_file($file.'.php'))				return $file.'.php';
+				if (is_file($file.'.hh'))				return $this->hhvm($file.'.hh');
+				if (is_file($file.'.tpl'))				return $af->auto(true, $file.'.tpl');
+
+				// REST
 				$this->virtualize($i);
-				if (is_file('_virtual.php'))	return '_virtual.php';
-				if (is_file('_virtual.hh'))		return $this->hhvm('_virtual.hh');
-				if (!is_dir('_virtual'))		httpError(404);
+				if (is_file('_virtual'.$method.'.php'))	return '_virtual'.$method.'.php';
+				if (is_file('_virtual'.$method.'.hh'))	return $this->hhvm('_virtual'.$method.'.hh');
+
+				//NORMAL
+				if (is_file('_virtual.php'))			return '_virtual.php';
+				if (is_file('_virtual.hh'))				return $this->hhvm('_virtual.hh');
+				if (!is_dir('_virtual'))				httpError(404);
 
 				$this->chdir('_virtual');
 				if ($this->reparse  ||  $this->reparse === NULL) return true;
 
-				return $this->index($af);
+				return $this->index($af, $method);
 			}
 
 
-			//NO MATCHES FOUND OTHERWISE FOR FRAGEMENT, VIRTUALIZE INSTEAD
+			// NO MATCHES FOUND OTHERWISE FOR FRAGEMENT, VIRTUALIZE INSTEAD
 			$this->virtualize($i);
 
 
-			//ATTEMPT VIRTUAL FOLDER
+			// ATTEMPT VIRTUAL FOLDER
 			if (is_dir('_virtual')) {
 				$this->chdir('_virtual');
 				if ($this->reparse !== false) return true;
@@ -137,12 +157,16 @@ class router {
 			}
 
 
-			//NO MATCHES FOUND OTHERWISE FOR FRAGEMENT, ATTEMPT VIRTUAL FILE
-			if (is_file('_virtual.php'))		return '_virtual.php';
-			if (is_file('_virtual.hh'))			return $this->hhvm('_virtual.hh');
+			// NO MATCHES FOUND OTHERWISE FOR FRAGEMENT, ATTEMPT VIRTUAL FILE (REST)
+			if (is_file('_virtual'.$method.'.php'))		return '_virtual'.$method.'.php';
+			if (is_file('_virtual'.$method.'.hh'))		return $this->hhvm('_virtual'.$method.'.hh');
+
+			// NO MATCHES FOUND OTHERWISE FOR FRAGEMENT, ATTEMPT VIRTUAL FILE (NORMAL)
+			if (is_file('_virtual.php'))				return '_virtual.php';
+			if (is_file('_virtual.hh'))					return $this->hhvm('_virtual.hh');
 
 
-			//NO MATCHES FOUND FOR FRAGEMENT, ERROR 404 PAGE!
+			// NO MATCHES FOUND FOR FRAGEMENT, ERROR 404 PAGE!
 			httpError(404);
 		}
 	}
@@ -285,10 +309,17 @@ class router {
 	////////////////////////////////////////////////////////////////////////////
 	// PROCESS INDEX FILE, IF AVAILABLE
 	////////////////////////////////////////////////////////////////////////////
-	private function index($af) {
+	private function index($af, $method) {
+
+		// REST
+		if (is_file('_index'.$method.'.php'))	return '_index'.$method.'.php';
+		if (is_file('_index'.$method.'.hh'))	return $this->hhvm('_index'.$method.'.hh');
+
+		// NORMAL
 		if (is_file('_index.php'))	return '_index.php';
 		if (is_file('_index.hh'))	return $this->hhvm('_index.hh');
 		if (is_file('_index.tpl'))	return $af->auto(true, '_index.tpl');
+
 		httpError(404);
 	}
 
