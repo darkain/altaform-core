@@ -56,7 +56,9 @@ class		afUrl {
 		$this->af_host		= $this->host;
 
 		$this->method		= strtolower($get->server('REQUEST_METHOD'));
-		if (empty($this->method)) $this->method = 'get';
+		if (!in_array($this->method, $this->_methods)) {
+			$this->method = $this->_methods[0];
+		}
 
 		if (substr($this->uri, 0, 2) === '//') $this->redirect('/');
 
@@ -508,6 +510,21 @@ class		afUrl {
 	public $push		= '';
 	public $encoding	= [];
 	public $jq			= false;
+
+	////////////////////////////////////////////////////////////////////////////
+	// LIST OF POSSIBLE HTTP METHODS
+	////////////////////////////////////////////////////////////////////////////
+	private $_methods = [
+		'get',
+		'post',
+		'put',
+		'head',
+		'delete',
+		'connect',
+		'options',
+		'trace',
+		'patch',
+	];
 }
 
 
