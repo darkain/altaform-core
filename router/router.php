@@ -96,11 +96,9 @@ class router {
 
 				// REST
 				if (is_file('_virtual'.$method.'.php'))	return '_virtual'.$method.'.php';
-				if (is_file('_virtual'.$method.'.hh'))	return $this->hhvm('_virtual'.$method.'.hh');
 
 				// NORMAL
 				if (is_file('_virtual.php'))			return '_virtual.php';
-				if (is_file('_virtual.hh'))				return $this->hhvm('_virtual.hh');
 
 				httpError(404);
 			}
@@ -121,21 +119,17 @@ class router {
 
 				// REST
 				if (is_file($file.$method.'.php'))		return $file.$method.'.php';
-				if (is_file($file.$method.'.hh'))		return $this->hhvm($file.$method.'.hh');
 
 				// NORMAL
 				if (is_file($file.'.php'))				return $file.'.php';
-				if (is_file($file.'.hh'))				return $this->hhvm($file.'.hh');
 				if (is_file($file.'.tpl'))				return $af->auto(true, $file.'.tpl');
 
 				// REST
 				$this->virtualize($i);
 				if (is_file('_virtual'.$method.'.php'))	return '_virtual'.$method.'.php';
-				if (is_file('_virtual'.$method.'.hh'))	return $this->hhvm('_virtual'.$method.'.hh');
 
 				//NORMAL
 				if (is_file('_virtual.php'))			return '_virtual.php';
-				if (is_file('_virtual.hh'))				return $this->hhvm('_virtual.hh');
 				if (!is_dir('_virtual'))				httpError(404);
 
 				$this->chdir('_virtual');
@@ -159,11 +153,9 @@ class router {
 
 			// NO MATCHES FOUND OTHERWISE FOR FRAGEMENT, ATTEMPT VIRTUAL FILE (REST)
 			if (is_file('_virtual'.$method.'.php'))		return '_virtual'.$method.'.php';
-			if (is_file('_virtual'.$method.'.hh'))		return $this->hhvm('_virtual'.$method.'.hh');
 
 			// NO MATCHES FOUND OTHERWISE FOR FRAGEMENT, ATTEMPT VIRTUAL FILE (NORMAL)
 			if (is_file('_virtual.php'))				return '_virtual.php';
-			if (is_file('_virtual.hh'))					return $this->hhvm('_virtual.hh');
 
 
 			// NO MATCHES FOUND FOR FRAGEMENT, ERROR 404 PAGE!
@@ -313,11 +305,9 @@ class router {
 
 		// REST
 		if (is_file('_index'.$method.'.php'))	return '_index'.$method.'.php';
-		if (is_file('_index'.$method.'.hh'))	return $this->hhvm('_index'.$method.'.hh');
 
 		// NORMAL
 		if (is_file('_index.php'))	return '_index.php';
-		if (is_file('_index.hh'))	return $this->hhvm('_index.hh');
 		if (is_file('_index.tpl'))	return $af->auto(true, '_index.tpl');
 
 		httpError(404);
@@ -353,20 +343,6 @@ class router {
 	////////////////////////////////////////////////////////////////////////////
 	public function id() {
 		return $this->id;
-	}
-
-
-
-
-	////////////////////////////////////////////////////////////////////////////
-	// IF $path IS A HACK FILE, THROW AN ERROR WHEN TRYING TO RUN IT ON PHP
-	////////////////////////////////////////////////////////////////////////////
-	private function hhvm($path) {
-		if (defined('HHVM_VERSION')) return $path;
-		httpError(500,
-			'HHVM_VERSION is not defined. ' .
-			'Cannot execute HACK language code from PHP.'
-		);
 	}
 
 

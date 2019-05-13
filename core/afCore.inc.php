@@ -35,7 +35,6 @@ class		altaform
 		$this->device				= new afDevice;
 		$this->_time				= time();
 		$this->_path				= getcwd();
-		$this->hhvm					= defined('HHVM_VERSION') ? 'HHVM' : 'PHP';
 		$this->_extension			= \af\cli() ? 'txt' : 'html';
 		$this->_headers['notice']	= [];
 
@@ -302,7 +301,6 @@ class		altaform
 	public				$device		= NULL;
 	public				$settings	= [];
 	public				$title		= '';
-	public				$hhvm		= 'PHP';
 	public static		$error		= false;
 	public static		$af			= NULL;
 	public static		$types		= [];
