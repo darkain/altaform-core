@@ -348,7 +348,7 @@ if (!empty($afconfig->pudl)  &&  tbx_array($afconfig->pudl)) {
 	// LOAD ALTAFORM SETTINGS
 	try {
 		$af->settings = $db	->cache(AF_MINUTE*5, 'altaform_settings')
-							->collection('pudl_altaform');
+							->collection('altaform');
 	} catch (pudlException $e) {
 		$af->settings = [];
 	}

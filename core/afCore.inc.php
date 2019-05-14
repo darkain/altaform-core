@@ -247,7 +247,7 @@ class		altaform
 		}
 
 		//INSERT NEW VALUE
-		$return = $db->upsert('pudl_altaform', [
+		$return = $db->upsert('altaform', [
 			'af_key'	=> $key,
 			'af_value'	=> $value,
 		]);
