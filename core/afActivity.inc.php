@@ -9,7 +9,7 @@ class afActivity {
 		$userid = static::uid($userid);
 		if (empty($userid)) return false;
 
-		return $db->insert('pudl_activity', [
+		return $db->insert('activity', [
 			'activity_timestamp'	=> $db->time(),
 			'user_id'				=> $userid,
 			'object_id'				=> $id,
@@ -29,7 +29,7 @@ class afActivity {
 		$userid = static::uid($userid);
 		if (empty($userid)) return false;
 
-		return $db->insert('pudl_activity', [
+		return $db->insert('activity', [
 			'activity_timestamp'	=> $db->time(),
 			'user_id'				=> $userid,
 			'file_hash'				=> $hash,
@@ -49,7 +49,7 @@ class afActivity {
 		$userid = static::uid($userid);
 		if (empty($userid)) return false;
 
-		return $db->delete('pudl_activity', [
+		return $db->delete('activity', [
 			'user_id'			=> $userid,
 			'object_id'			=> $id,
 			'object_type_id'	=> $af->type($type),
@@ -64,7 +64,7 @@ class afActivity {
 		$userid = static::uid($userid);
 		if (empty($userid)) return false;
 
-		return $db->delete('pudl_activity', [
+		return $db->delete('activity', [
 			'user_id'			=> $userid,
 			'file_hash'			=> $hash,
 			'object_type_id'	=> $af->type($type),

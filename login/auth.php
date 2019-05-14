@@ -16,8 +16,8 @@ if ($user->loggedIn()) {
 ////////////////////////////////////////////////////////////////////////////////
 assertStatus(401,
 	$auth = $db->row([
-		'ua' => 'pudl_user_auth',
-		'us' => 'pudl_user',
+		'ua' => 'user_auth',
+		'us' => 'user',
 	], [
 		'auth_account' => $get->auth_account,
 		'us.user_id=ua.user_id',

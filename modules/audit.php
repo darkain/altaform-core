@@ -70,7 +70,7 @@ class audit {
 		if (!isset($arguments[5])) $arguments[5] = NULL;
 
 		// INSERT AUDIT DATA INTO DATABASE
-		return $pudl->insert('pudl_audit', [
+		return $pudl->insert('audit', [
 			'user_id'			=> $user,
 			'user_ip'			=> empty($address) ? NULL : $address,
 			'object_id'			=> (int) $arguments[3],

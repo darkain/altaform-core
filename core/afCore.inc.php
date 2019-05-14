@@ -220,7 +220,7 @@ class		altaform
 		global $db;
 
 		if (!is_array(self::$types)  ||  empty(self::$types)) {
-			self::$types = $db->cache(AF_MINUTE*5)->collection('pudl_object_type');
+			self::$types = $db->cache(AF_MINUTE*5)->collection('object_type');
 		}
 
 		if (!is_array(self::$types)) return false;

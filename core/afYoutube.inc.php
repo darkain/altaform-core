@@ -45,7 +45,7 @@ class afyoutube {
 		$seconds += ((int)$matches[3]) * AF_MONTH;
 		$seconds += ((int)$matches[2]) * AF_YEAR;
 
-		$db->insert('pudl_youtube', [
+		$db->insert('youtube', [
 			'youtube_id'			=> $id,
 			'youtube_length'		=> $seconds,
 			'youtube_title'			=> str_replace("'", '', $json['items'][0]['snippet']['title']),

@@ -17,7 +17,7 @@ class afSidebar {
 
 
 
-	public function fetch($table='pudl_menu', $clause=false) {
+	public function fetch($table='menu', $clause=false) {
 		global $db;
 
 		$this->data = [];

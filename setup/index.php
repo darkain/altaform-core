@@ -5,25 +5,25 @@
 //VERIFY TABLES EXIST AND ARE CURRENTLY EMPTY
 ////////////////////////////////////////////////////////////////////////////////
 assertStatus(500,
-	$db->tableExists('pudl_user'),
+	$db->tableExists('user'),
 	'USER TABLE DOES NOT EXIST'
 );
 
 
 assertStatus(500,
-	$db->tableExists('pudl_user_auth'),
+	$db->tableExists('user_auth'),
 	'AUTH TABLE DOES NOT EXIST'
 );
 
 
 assertStatus(500,
-	$db->row('pudl_user') === false,
+	$db->row('user') === false,
 	'USER TABLE IS ALREADY POPULATED'
 );
 
 
 assertStatus(500,
-	$db->row('pudl_user_auth') === false,
+	$db->row('user_auth') === false,
 	'AUTH TABLE IS ALREADY POPULATED'
 );
 

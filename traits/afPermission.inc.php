@@ -141,7 +141,7 @@ trait afPermission {
 			if ($id instanceof pudlOrm) $id = $id->id();
 			else if (tbx_array($id)) $id = $id['object_id'];
 
-			$row = $db->row('pudl_object_access', [
+			$row = $db->row('object_access', [
 				'object_id'			=> $id,
 				'object_type_id'	=> $af->type(reset($access)),
 				'user_id'			=> $this->id(),
@@ -180,7 +180,7 @@ trait afPermission {
 		if (isset($this->access)) return $this;
 
 		$this->access	= [];
-		$access			= $db->rowsId('pudl_user_access', $this);
+		$access			= $db->rowsId('user_access', $this);
 
 		foreach ($access as $item) {
 			$this->access[ $item['user_access'] ] = $item['object_access'];

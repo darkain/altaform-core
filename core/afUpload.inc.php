@@ -497,10 +497,10 @@ class afUpload {
 		if ($transaction) $db->begin();
 
 		//GET INTERNAL MIME TYPE DATA
-		$mime = $db->rowId('pudl_mimetype', 'mime_type', $data['mime']);
+		$mime = $db->rowId('mimetype', 'mime_type', $data['mime']);
 
 		//INSERT MAIN IMAGE
-		$db->insert('pudl_file', [
+		$db->insert('file', [
 			'file_hash'				=> pudl::unhex($data['hash']),
 			'file_size'				=> $data['size'],
 			'file_uploaded'			=> $db->time(),
@@ -513,7 +513,7 @@ class afUpload {
 
 		//INSERT EXIF DATA
 		if (!empty($data['exif'])) {
-			$db->insert('pudl_file_meta', [
+			$db->insert('file_meta', [
 				'file_hash'			=> pudl::unhex($data['hash']),
 				'file_meta_name'	=> 'exif',
 				'file_meta_value'	=> $data['exif'],
@@ -522,7 +522,7 @@ class afUpload {
 
 		//ASSOCIATE FILE WITH CURRENT USER, IF AVAILABLE
 		if (!empty($user['user_id'])) {
-			$db->insert('pudl_file_user', [
+			$db->insert('file_user', [
 				'file_hash'			=> pudl::unhex($data['hash']),
 				'user_id'			=> $user['user_id'],
 				'user_time'			=> $db->time(),
@@ -545,7 +545,7 @@ class afUpload {
 		foreach ($data as $key => $item) {
 			if (((int)$key) < 1  ||  !tbx_array($item)) continue;
 
-			$db->insert('pudl_file_thumb', [
+			$db->insert('file_thumb', [
 				'file_hash'			=> pudl::unhex($data['hash']),
 				'thumb_hash'		=> pudl::unhex($item['hash']),
 				'thumb_size'		=> $item['size'],

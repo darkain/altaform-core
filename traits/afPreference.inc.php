@@ -22,7 +22,7 @@ trait afPreference {
 		}
 
 		return $this->_prefs = $this->parsePreferences(
-			$db->cellId('pudl_user_preference', 'preference', 'user_id', $this)
+			$db->cellId('user_preference', 'preference', 'user_id', $this)
 		);
 	}
 
@@ -51,7 +51,7 @@ trait afPreference {
 		$this->_prefs		= $preferences;
 		$this->preference	= json_encode($preferences);
 
-		return $db->upsert('pudl_user_preference', [
+		return $db->upsert('user_preference', [
 			'user_id'		=> $this->id(),
 			'preference'	=> $this->preference,
 		]);

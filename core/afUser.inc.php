@@ -49,7 +49,7 @@ class			afUser
 			//TODO:	WE SHOULD NOT BE PULLING IN AUTHENTICATION TABLE HERE.
 			//		AUTHENTICATION TABLE SHOULD ONLY BE PULLED FOR LOGIN/SESSION INFO ONLY.
 			'table'		=> [static::prefix	=> [static::table,
-				['left'	=> ['ua'=>'pudl_user_auth'], 'using'=>'user_id'],
+				['left'	=> ['ua'=>'user_auth'], 'using'=>'user_id'],
 			]],
 		];
 	}
@@ -79,10 +79,10 @@ class			afUser
 
 		if ($data !== false) {
 			$this->merge($data);
-			return $this->pudl()->updateId('pudl_user_profile', $data, $this);
+			return $this->pudl()->updateId('user_profile', $data, $this);
 		}
 
-		return $this->merge($this->pudl()->rowId('pudl_user_profile', $this));
+		return $this->merge($this->pudl()->rowId('user_profile', $this));
 	}
 
 
@@ -136,7 +136,7 @@ class			afUser
 	public function setPassword($account, $password, $algo=PASSWORD_DEFAULT) {
 		$this->auth_account = $account;
 
-		return $this->pudl()->upsert('pudl_user_auth', [
+		return $this->pudl()->upsert('user_auth', [
 			static::column	=> $this->id(),
 			'auth_account'	=> $account,
 			'auth_password'	=> password_hash($password, $algo),
@@ -211,7 +211,7 @@ class			afUser
 	////////////////////////////////////////////////////////////////////////////
 	function queue($service, $type, $data=false) {
 		if ($data === false) {
-			$this->pudl()->delete('pudl_queue', [
+			$this->pudl()->delete('queue', [
 				'queue_user'	=> $this->id(),
 				'queue_service'	=> $service,
 				'queue_type'	=> $type,
@@ -221,7 +221,7 @@ class			afUser
 
 		if (!tbx_array($data)) $data = [$data];
 
-		$this->pudl()->insert('pudl_queue', [
+		$this->pudl()->insert('queue', [
 				'queue_user'	=> $this->id(),
 				'queue_service'	=> $service,
 				'queue_type'	=> $type,
@@ -252,7 +252,7 @@ class			afUser
 	const	column		= 'user_id';
 	const	icon		= 'user_icon';
 	const	json		= 'user_json';
-	const	table		= 'pudl_user';
+	const	table		= 'user';
 	const	prefix		= 'us';
 
 
