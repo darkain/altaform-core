@@ -15,12 +15,12 @@ trait afAuth {
 	////////////////////////////////////////////////////////////////////////////
 	//PROCESS SESSION INFORMATION (EVERY PAGE REQUEST)
 	////////////////////////////////////////////////////////////////////////////
-	public function login($session=false) {
+	public function login($session=NULL) {
 		global $user, $db, $get;
 
 		if (empty($db)) return $user = new afUser($db);
 
-		$user = false;
+		$user = NULL;
 
 		if (empty($session)) $session = session_id();
 
@@ -40,6 +40,8 @@ trait afAuth {
 		if (empty($user)) $user = new afAnonymous($db);
 
 		if (empty($user->user_url)) $user->user_url = $user->user_id;
+
+		$user->user_session = $session;
 
 		$this->authenticate($user, false);
 		$user->permissions();
@@ -94,7 +96,7 @@ trait afAuth {
 
 		if (empty($account['user_id'])) return;
 
-		$db->uncache()->rowId('pudl_user', 'user_id', (int)$account['user_id']);
+		$db->uncache()->rowId('user', 'user_id', (int)$account['user_id']);
 
 		$rows = $db->selectRows(
 			'id',
