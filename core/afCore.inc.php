@@ -11,19 +11,16 @@ class		altaform
 
 
 
+	////////////////////////////////////////////////////////////////////////////
+	// PRIMARY ALTAFORM OBJECT CONSTRUCTOR
+	////////////////////////////////////////////////////////////////////////////
 	public function __construct($dbsession=false) {
 		global $afconfig, $afurl;
 
 		parent::__construct();
 
 		// VERIFY REQUIRED EXTENSIONS ARE LOADED
-		foreach (['ctype', 'json', 'session'] as $ext) {
-			assertStatus(500,
-				extension_loaded($ext),
-				"The required PHP extension is missing: '$ext'"
-			);
-		}
-
+		$this->checkExtension(['ctype', 'json', 'session']);
 
 		// INITIALIZE A BUNCH OF STUFF
 		$afconfig->af				= $this;
@@ -49,6 +46,10 @@ class		altaform
 
 
 
+	////////////////////////////////////////////////////////////////////////////
+	// CREATE AN INSTANCE OF ALTAFORM
+	// TODO: there are much MUCH better ways to do this. Reference PUDL
+	////////////////////////////////////////////////////////////////////////////
 	public static function create() {
 		return (new ReflectionClass(self::$class))
 				->newInstanceArgs(func_get_args());
@@ -57,6 +58,26 @@ class		altaform
 
 
 
+	////////////////////////////////////////////////////////////////////////////
+	// VERIFY WE HAVE THE REQUIRED EXTENSIONS
+	////////////////////////////////////////////////////////////////////////////
+	public static function checkExtension($extensions) {
+		if (!is_array($extensions)) $extensions = [$extensions];
+
+		foreach ($extensions as $extension) {
+			assertStatus(500,
+				extension_loaded($extension),
+				'The required PHP extension is missing: ' . $extension
+			);
+		}
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// SEND "OK" STATUS TO DYNAMIC CLIENT INTERFACE
+	////////////////////////////////////////////////////////////////////////////
 	public static function ok($die=true) {
 		echo "AF-OK\n";
 		if ($die) die();
@@ -65,6 +86,9 @@ class		altaform
 
 
 
+	////////////////////////////////////////////////////////////////////////////
+	// SEND "REFRESH" STATUS TO DYNAMIC CLIENT INTERFACE (UPDATE CONTENT)
+	////////////////////////////////////////////////////////////////////////////
 	public static function refresh($die=true) {
 		echo "AF-REFRESH\n";
 		if ($die) die();
@@ -73,6 +97,9 @@ class		altaform
 
 
 
+	////////////////////////////////////////////////////////////////////////////
+	// SEND "RELOAD" STATUS TO DYNAMIC CLIENT INTERFACE (FULL F5 RELOAD PAGE)
+	////////////////////////////////////////////////////////////////////////////
 	public static function reload($die=true) {
 		echo "AF-RELOAD\n";
 		if ($die) die();
@@ -81,6 +108,9 @@ class		altaform
 
 
 
+	////////////////////////////////////////////////////////////////////////////
+	// SEND "LOAD" STATUS TO DYNAMIC CLIENT INTERFACE (LOAD A DIFFERENT PAGE)
+	////////////////////////////////////////////////////////////////////////////
 	public static function afload($path, $die=true) {
 		echo "AF-LOAD\n";
 		echo static::$af->url($path, true);
@@ -91,6 +121,9 @@ class		altaform
 
 
 
+	////////////////////////////////////////////////////////////////////////////
+	// SEND "REDIRECT" STATUS TO DYNAMIC CLIENT INTERFACE (REDIRECT TO PAGE)
+	////////////////////////////////////////////////////////////////////////////
 	public static function redirect($path, $die=true) {
 		echo "AF-REDIRECT\n";
 		echo static::$af->url($path, true);
@@ -101,6 +134,10 @@ class		altaform
 
 
 
+	////////////////////////////////////////////////////////////////////////////
+	// CHECK TO SEE IF THIS IS A "JQ" REQUEST OR NOT
+	// TODO: THIS IS AN OLD HACK AND NEEDS REPLACED BY A BETTER METHOD
+	////////////////////////////////////////////////////////////////////////////
 	public function jq() {
 		global $get;
 		if (!isset($get)) return false;
@@ -111,6 +148,9 @@ class		altaform
 
 
 
+	////////////////////////////////////////////////////////////////////////////
+	// OUTPUT TO BROWSER AS JSON DATA INSTEAD OF HTML, TXT, ETC.
+	////////////////////////////////////////////////////////////////////////////
 	public function json($data, $exit=true) {
 		$this->contentType('json');
 
