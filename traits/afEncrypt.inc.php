@@ -18,20 +18,20 @@ trait afEncrypt {
 			throw new afException('Encryption cipher or key not set');
 		}
 
-		$data	= json_encode($data);
-		$ivlen	= openssl_cipher_iv_length($this->config->encrypt['cipher']);
-		$iv		= openssl_random_pseudo_bytes($ivlen);
-		$hash	= hash_hmac('sha256', $data, $iv);
+		$data		= json_encode($data);
+		$ivlen		= openssl_cipher_iv_length($this->config->encrypt['cipher']);
+		$iv			= openssl_random_pseudo_bytes($ivlen);
+		$hash		= hash_hmac('sha256', $data, $iv);
 
 		return [
-			'iv'	=> rtrim(base64_encode($iv), '='),
-			'raw'	=> openssl_encrypt(
-				$hash . ':' . $data,
-				$this->config->encrypt['cipher'],
-				$this->config->encrypt['key'] . $this->{'af.encrypt'},
-				$options=0,
-				$iv
-			),
+			'iv'	=>	rtrim(base64_encode($iv), '='),
+			'raw'	=>	rtrim(openssl_encrypt(
+							$hash . ':' . $data,
+							$this->config->encrypt['cipher'],
+							$this->config->encrypt['key'] . $this->{'af.encrypt'},
+							$options=0,
+							$iv
+						), '='),
 		];
 	}
 
@@ -52,9 +52,9 @@ trait afEncrypt {
 
 		if (empty($encrypted['iv'])  ||  empty($encrypted['raw'])) return NULL;
 
-		$iv = @base64_decode($encrypted['iv']);
+		$iv			= @base64_decode($encrypted['iv']);
 
-		$decrypted = @openssl_decrypt(
+		$decrypted	= @openssl_decrypt(
 			$encrypted['raw'],
 			$this->config->encrypt['cipher'],
 			$this->config->encrypt['key'] . $this->{'af.encrypt'},
