@@ -10,6 +10,8 @@ trait afEncrypt {
 	// ENCRYPT A STRING, RETURNING AN ARRAY
 	////////////////////////////////////////////////////////////////////////////
 	public function encrypt($data) {
+		$this->checkExtension('openssl');
+
 		$data	= json_encode($data);
 		$ivlen	= openssl_cipher_iv_length($this->config->pci['cipher']);
 		$iv		= openssl_random_pseudo_bytes($ivlen);
@@ -34,6 +36,8 @@ trait afEncrypt {
 	// DECRYPT A PREVIOUSLY ENCRYPTED STRING
 	////////////////////////////////////////////////////////////////////////////
 	public function decrypt($encrypted) {
+		$this->checkExtension('openssl');
+
 		if (empty($encrypted['iv'])  ||  empty($encrypted['raw'])) return NULL;
 
 		$iv = @base64_decode($encrypted['iv']);
