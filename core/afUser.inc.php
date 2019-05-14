@@ -281,7 +281,6 @@ class afAnonymous extends afUser {
 			$this->user_name	= 'anonymous';
 			$this->user_json	= [];
 			$this->user_icon	= NULL;
-			$this->user_session	= NULL;
 		}
 	}
 

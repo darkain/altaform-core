@@ -39,7 +39,6 @@ trait afAuth {
 
 		if (empty($user)) $user = new afAnonymous($db);
 
-		$user->user_session = $session;
 		if (empty($user->user_url)) $user->user_url = $user->user_id;
 
 		$this->authenticate($user, false);
