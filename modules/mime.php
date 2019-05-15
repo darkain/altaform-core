@@ -23,11 +23,15 @@ class mime {
 		}
 
 		if (!array_key_exists($type, self::$cache)) {
-			self::$cache[$type] = $pudl->cache(AF_DAY)->rowId(
-				'mimetype',
-				is_int($type) ? 'mime_id' : 'mime_ext',
-				$type
-			);
+			try {
+				self::$cache[$type] = $pudl->cache(AF_DAY)->rowId(
+					'mimetype',
+					is_int($type) ? 'mime_id' : 'mime_ext',
+					$type
+				);
+			} catch (pudlException $e) {
+				self::$cache[$type] = NULL;
+			}
 		}
 
 		$this->type	= is_array(self::$cache[$type])
