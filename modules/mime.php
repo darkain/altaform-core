@@ -29,7 +29,7 @@ class mime {
 					is_int($type) ? 'mime_id' : 'mime_ext',
 					$type
 				);
-			} catch (pudlException $e) {
+			} catch (\pudlException $e) {
 				self::$cache[$type] = NULL;
 			}
 		}
