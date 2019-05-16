@@ -57,6 +57,8 @@ class afSidebar {
 
 		if ($menu === false) $menu = $this->menu;
 
+		// BACKUP CURRENT STRING, AND PREP OUTPUT TEXT
+		$temp = (string) $af;
 		$text = '';
 
 		foreach ($menu as $item) {
@@ -77,6 +79,9 @@ class afSidebar {
 				$text .= $af->renderToString();
 			}
 		}
+
+		// RESTORE PREVIOUSLY LOADED STRING
+		$af->loadString($temp);
 
 		return $text;
 	}
