@@ -187,7 +187,7 @@ class		altaform
 		if (headers_sent()) return $this;
 
 		$list	= explode('.', $extension);
-		$ext	= new \af\mime($this->_session->pudl(), end($list));
+		$ext	= new \af\mime(end($list), $this->_session->pudl());
 		$item	= $ext->ext();
 
 		$this->_extension = is_string($item) ? $item : end($list);

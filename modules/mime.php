@@ -15,25 +15,43 @@ class mime {
 	////////////////////////////////////////////////////////////////////////////
 	// CONTRUCTOR - PASS IN A FILE EXTENSION OR MIME TIME ID
 	////////////////////////////////////////////////////////////////////////////
-	public function __construct(\pudl $pudl, $type) {
+	public function __construct($type, \pudl $pudl=NULL) {
 		$this->pudl = $pudl;
 
 		if (is_numeric($type)) {
 			$type = (int) $type;
+		} else {
+			$type = strtolower($type);
 		}
 
-		if (!array_key_exists($type, self::$cache)) {
-			try {
-				self::$cache[$type] = $pudl->cache(AF_DAY)->rowId(
-					'mimetype',
-					is_int($type) ? 'mime_id' : 'mime_ext',
-					$type
-				);
-			} catch (\pudlException $e) {
+
+		if ($pudl instanceof pudl) {
+			if (!array_key_exists($type, self::$cache)) {
+				try {
+					self::$cache[$type] = $pudl->cache(AF_DAY)->rowId(
+						'mimetype',
+						is_int($type) ? 'mime_id' : 'mime_ext',
+						$type
+					);
+				} catch (\pudlException $e) {}
+			}
+		}
+
+
+		// DEFAULT FALLBACK IF TABLE ISN'T INITIALIZED YET
+		if (empty(self::$cache[$type])) {
+			if (!empty($this::$defaults[$type])) {
+				self::$cache[$type] = [
+					'mime_ext'	=> $type,
+					'mime_type'	=> $this::$defaults[$type],
+				];
+			} else {
 				self::$cache[$type] = NULL;
 			}
 		}
 
+
+		// STORE THE VALUE
 		$this->type	= is_array(self::$cache[$type])
 					? self::$cache[$type]
 					: $type;
@@ -105,7 +123,7 @@ class mime {
 	// PRIVATE LOCAL VARIABLES
 	////////////////////////////////////////////////////////////////////////////
 	private $pudl;
-	private $type = NULL;
+	private $type	=	NULL;
 
 
 
@@ -113,7 +131,22 @@ class mime {
 	////////////////////////////////////////////////////////////////////////////
 	// PRIVATE STATIC VARIABLES
 	////////////////////////////////////////////////////////////////////////////
-	private static $cache = [];
+	private static $cache		= [];
+
+	private static $defaults	= [
+		'htm'		=>	'text/html',
+		'html'		=>	'text/html',
+		'css'		=>	'text/css',
+		'js'		=>	'application/javascript',
+		'txt'		=>	'text/plain',
+		'jpg'		=>	'image/jpeg',
+		'jpeg'		=>	'image/jpeg',
+		'gif'		=>	'image/gif',
+		'png'		=>	'image/png',
+		'svg'		=>	'image/svg+xml',
+		'json'		=>	'application/json',
+		'xml'		=>	'text/xml',
+	];
 
 
 
@@ -121,6 +154,6 @@ class mime {
 	////////////////////////////////////////////////////////////////////////////
 	// LOCAL CONSTANTS
 	////////////////////////////////////////////////////////////////////////////
-	const unknown = 'application/octet-stream';
+	const unknown	=	'application/octet-stream';
 
 }
