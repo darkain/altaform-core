@@ -23,6 +23,7 @@ require_once(is_owner(__DIR__.'/modules/path.php'));
 require_once(is_owner(__DIR__.'/modules/time.php'));
 require_once(is_owner(__DIR__.'/modules/abyss.php'));
 require_once(is_owner(__DIR__.'/modules/audit.php'));
+require_once(is_owner(__DIR__.'/modules/sidebar.php'));
 
 
 // ALTAFORM 2.0 CORE FUNCTIONALITY
