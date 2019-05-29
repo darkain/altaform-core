@@ -40,6 +40,7 @@ require_once(__DIR__ . '/../router/router.php');
 require_once(__DIR__ . '/../modules/cli.php');
 require_once(__DIR__ . '/../modules/abyss.php');
 require_once(__DIR__ . '/../modules/mime.php');
+require_once(__DIR__ . '/../modules/time.php');
 
 // INIT AF 3.0 MODULES
 if (empty($get))		$get		= new \af\abyss;
