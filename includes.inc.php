@@ -24,6 +24,7 @@ require_once(is_owner(__DIR__.'/modules/time.php'));
 require_once(is_owner(__DIR__.'/modules/abyss.php'));
 require_once(is_owner(__DIR__.'/modules/audit.php'));
 require_once(is_owner(__DIR__.'/modules/sidebar.php'));
+require_once(is_owner(__DIR__.'/modules/activity.php'));
 
 
 // ALTAFORM 2.0 CORE FUNCTIONALITY
@@ -35,7 +36,6 @@ require_once(is_owner(__DIR__.'/core/afString.inc.php'));
 require_once(is_owner(__DIR__.'/core/afSystem.inc.php'));
 require_once(is_owner(__DIR__.'/core/afUpload.inc.php'));
 require_once(is_owner(__DIR__.'/core/afYoutube.inc.php'));
-require_once(is_owner(__DIR__.'/core/afActivity.inc.php'));
 
 
 // LIST OF ALTAFORM TRAITS - USED TO HELP ORGANIZE CODE
