@@ -110,6 +110,30 @@ class time {
 
 
 	////////////////////////////////////////////////////////////////////////////
+	// CONVERT ISO-8601 DURATION INTO NUMBER OF SECONDS
+	////////////////////////////////////////////////////////////////////////////
+	public static function duration($duration) {
+		preg_match(
+			'/^(-|)?P([0-9.]+Y|)?([0-9.]+M|)?([0-9.]+D|)?T?([0-9.]+H|)?([0-9.]+M|)?([0-9.]+S|)?$/',
+			str_replace(',', '.', $duration),
+			$matches
+		);
+
+		if (count($matches) < 8) return 0;
+
+		return	(int)(
+				((float)$matches[7])
+			+  (((float)$matches[6]) * AF_MINUTE)
+			+  (((float)$matches[5]) * AF_HOUR)
+			+  (((float)$matches[4]) * AF_DAY)
+			+  (((float)$matches[3]) * AF_MONTH)
+			+  (((float)$matches[2]) * AF_YEAR));
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
 	// GET THE NEAREST TIME ZONE
 	////////////////////////////////////////////////////////////////////////////
 	public static function nearestZone($lat, $lon) {
