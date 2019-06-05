@@ -158,7 +158,7 @@ class afDebug {
 
 
 
-	public static function log($data, $die=true, $backtrace=[]) {
+	public static function log($data, $exit=true, $backtrace=[]) {
 		global $af, $db, $user, $afconfig;
 
 		if (class_exists('altaform')) altaform::$error = true;
@@ -180,7 +180,7 @@ class afDebug {
 			}
 		}
 
-		$error = (ob_get_level()  &&  $die) ? static::html(ob_get_clean()) : '';
+		$error = (ob_get_level()  &&  $exit) ? static::html(ob_get_clean()) : '';
 
 		$arr = $arrout = static::process($data);
 
@@ -205,7 +205,7 @@ class afDebug {
 		if ($db instanceof pudl) $db->rollback();
 
 
-		if (!$die) {
+		if (!$exit) {
 			error_reporting($olderr);
 			return $arr;
 		}
@@ -399,13 +399,13 @@ set_error_handler(function(	$errno,			$errstr,		$errfile=NULL,
 
 	if (!(error_reporting()  &  $errno)) return false;
 
-	$die = true;
+	$exit = true;
 
 	if (function_exists('\af\cli')  &&  !\af\cli()) {
 		switch ($errno) {
 			case E_WARNING:		case E_USER_WARNING:
 			case E_NOTICE:		case E_USER_NOTICE:
-				$die = ($afconfig instanceof afConfig)
+				$exit = ($afconfig instanceof afConfig)
 					? !!$afconfig->debug
 					: false;
 		}
@@ -416,9 +416,9 @@ set_error_handler(function(	$errno,			$errstr,		$errfile=NULL,
 		'details'		=> $errstr,
 		'error-file'	=> $errfile,
 		'error-line'	=> $errline,
-	], $die, $backtrace);
+	], $exit, $backtrace);
 
-	return $die;
+	return $exit;
 });
 
 
@@ -501,7 +501,7 @@ function afPudlLog($callback, $db, $result=NULL) {
 ////////////////////////////////////////////////////////////////////////////////
 // OUR OWN CUSTOM DATA DUMP FUNCTION
 ////////////////////////////////////////////////////////////////////////////////
-function af_dump($var, $die=true) {
+function af_dump($var, $exit=true) {
 	global $af;
 
 	if ($var instanceof pudlObject) $var = $var->raw();
@@ -517,5 +517,5 @@ function af_dump($var, $die=true) {
 		echo '</pre>';
 	}
 
-	if ($die) exit(1);
+	if ($exit) exit(1);
 }

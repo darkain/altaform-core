@@ -76,11 +76,25 @@ class		altaform
 
 
 	////////////////////////////////////////////////////////////////////////////
+	// TERMINATE EXECUTION, OPTIONALLY SPECIFYING EXIT CODE
+	////////////////////////////////////////////////////////////////////////////
+	public static function exit($exit=true) {
+		if ($exit === false  ||  $exit === NULL) return;
+
+		is_bool($exit)
+			? exit(0)
+			: exit($exit);
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
 	// SEND "OK" STATUS TO DYNAMIC CLIENT INTERFACE
 	////////////////////////////////////////////////////////////////////////////
-	public static function ok($die=true) {
+	public static function ok($exit=true) {
 		echo "AF-OK\n";
-		if ($die) die();
+		static::exit($exit);
 	}
 
 
@@ -89,9 +103,9 @@ class		altaform
 	////////////////////////////////////////////////////////////////////////////
 	// SEND "REFRESH" STATUS TO DYNAMIC CLIENT INTERFACE (UPDATE CONTENT)
 	////////////////////////////////////////////////////////////////////////////
-	public static function refresh($die=true) {
+	public static function refresh($exit=true) {
 		echo "AF-REFRESH\n";
-		if ($die) die();
+		static::exit($exit);
 	}
 
 
@@ -100,9 +114,9 @@ class		altaform
 	////////////////////////////////////////////////////////////////////////////
 	// SEND "RELOAD" STATUS TO DYNAMIC CLIENT INTERFACE (FULL F5 RELOAD PAGE)
 	////////////////////////////////////////////////////////////////////////////
-	public static function reload($die=true) {
+	public static function reload($exit=true) {
 		echo "AF-RELOAD\n";
-		if ($die) die();
+		static::exit($exit);
 	}
 
 
@@ -111,11 +125,11 @@ class		altaform
 	////////////////////////////////////////////////////////////////////////////
 	// SEND "LOAD" STATUS TO DYNAMIC CLIENT INTERFACE (LOAD A DIFFERENT PAGE)
 	////////////////////////////////////////////////////////////////////////////
-	public static function afload($path, $die=true) {
+	public static function afload($path, $exit=true) {
 		echo "AF-LOAD\n";
 		echo static::$af->url($path, true);
 		echo "\n";
-		if ($die) die();
+		static::exit($exit);
 	}
 
 
@@ -124,25 +138,11 @@ class		altaform
 	////////////////////////////////////////////////////////////////////////////
 	// SEND "REDIRECT" STATUS TO DYNAMIC CLIENT INTERFACE (REDIRECT TO PAGE)
 	////////////////////////////////////////////////////////////////////////////
-	public static function redirect($path, $die=true) {
+	public static function redirect($path, $exit=true) {
 		echo "AF-REDIRECT\n";
 		echo static::$af->url($path, true);
 		echo "\n";
-		if ($die) die();
-	}
-
-
-
-
-	////////////////////////////////////////////////////////////////////////////
-	// CHECK TO SEE IF THIS IS A "JQ" REQUEST OR NOT
-	// TODO: THIS IS AN OLD HACK AND NEEDS REPLACED BY A BETTER METHOD
-	////////////////////////////////////////////////////////////////////////////
-	public function jq() {
-		global $get;
-		if (!isset($get)) return false;
-		if (!($get instanceof getvar)) return false;
-		return $get->bool('jq');
+		static::exit($exit);
 	}
 
 
@@ -158,7 +158,21 @@ class		altaform
 			? $data->json()
 			: json_encode($data, JSON_PARTIAL_OUTPUT_ON_ERROR);
 
-		if ($exit) exit();
+		static::exit($exit);
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// CHECK TO SEE IF THIS IS A "JQ" REQUEST OR NOT
+	// TODO: THIS IS AN OLD HACK AND NEEDS REPLACED BY A BETTER METHOD
+	////////////////////////////////////////////////////////////////////////////
+	public function jq() {
+		global $get;
+		if (!isset($get)) return false;
+		if (!($get instanceof getvar)) return false;
+		return $get->bool('jq');
 	}
 
 

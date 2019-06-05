@@ -375,7 +375,7 @@ class		afUrl {
 	// 307 Temporary Redirect (keeps POST data)
 	// 308 Permanent Redirect (keeps POST data)
 	////////////////////////////////////////////////////////////////////////////
-	public static function redirect($url, $code=301, $die=true) {
+	public static function redirect($url, $code=301, $exit=true) {
 		global $af, $afurl;
 
 		if (tbx_array($url)) $url = $afurl($url, true);
@@ -406,7 +406,7 @@ class		afUrl {
 			}
 		}
 
-		if ($die) exit;
+		altaform::exit($exit);
 	}
 
 
