@@ -25,6 +25,7 @@ require_once(is_owner(__DIR__.'/modules/time.php'));
 require_once(is_owner(__DIR__.'/modules/abyss.php'));
 require_once(is_owner(__DIR__.'/modules/audit.php'));
 require_once(is_owner(__DIR__.'/modules/status.php'));
+require_once(is_owner(__DIR__.'/modules/system.php'));
 require_once(is_owner(__DIR__.'/modules/sidebar.php'));
 require_once(is_owner(__DIR__.'/modules/youtube.php'));
 require_once(is_owner(__DIR__.'/modules/activity.php'));
@@ -34,7 +35,6 @@ require_once(is_owner(__DIR__.'/modules/activity.php'));
 require_once(is_owner(__DIR__.'/core/afConfig.inc.php'));
 require_once(is_owner(__DIR__.'/core/afDevice.inc.php'));
 require_once(is_owner(__DIR__.'/core/afString.inc.php'));
-require_once(is_owner(__DIR__.'/core/afSystem.inc.php'));
 require_once(is_owner(__DIR__.'/core/afUpload.inc.php'));
 
 
