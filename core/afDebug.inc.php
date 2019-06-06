@@ -1,7 +1,7 @@
 <?php
 
 
-require_once(is_owner(__DIR__.'/afStatus.inc.php'));
+require_once(is_owner(__DIR__.'/../modules/status.php'));
 
 
 
@@ -211,7 +211,9 @@ class afDebug {
 		}
 
 
-		if (empty($afconfig->debug)) return httpError(500, '', true, $arr);
+		if (empty($afconfig->debug)) {
+			return \af\error(500, '', true, $arr);
+		}
 
 
 		$html = "\n" . '<table class="af-debug-backtrace">' . "\n";
@@ -242,7 +244,7 @@ class afDebug {
 
 		$html .= '</table>';
 
-		httpError(500, $html, true, $arr);
+		\af\error(500, $html, true, $arr);
 	}
 
 
@@ -442,7 +444,7 @@ set_exception_handler(function($e) {
 	if ($e instanceof pudlConnectionException) {
 		$afconfig->debug = false;
 		$afconfig->error['email'] = false;
-		if (!\af\cli()) httpError(503, $e->getMessage());
+		if (!\af\cli()) \af\error(503, $e->getMessage());
 	}
 
 	if (($e instanceof pudlException)  &&  ($e->pudl instanceof pudl)) {

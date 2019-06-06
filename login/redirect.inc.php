@@ -106,4 +106,4 @@ if (canredir($af->config->session['redirect'])) {
 ////////////////////////////////////////////////////////////////////////////////
 // JUST ERROR, SOMETHING IS SERIOUSLY WRONG
 ////////////////////////////////////////////////////////////////////////////////
-httpError(400, 'Unable to redirect. Possible hacking attempt?');
+\af\error(400, 'Unable to redirect. Possible hacking attempt?');

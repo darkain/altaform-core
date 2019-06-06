@@ -36,7 +36,7 @@ class		afUrl {
 			$host = explode(':', $get->server('HTTP_HOST', ''));
 			if (empty($host[0])) $host = explode(':', $get->server('SERVER_ADDR', ''));
 			$host[0] = strtolower($host[0]);
-			assertStatus(400,
+			\af\assert(400,
 				$host[0] !== '_cli',
 				'RESTRICTED DOMAIN NAME'
 			);
@@ -73,7 +73,7 @@ class		afUrl {
 		/*
 		// TODO: re-implement this
 		if (substr($router->parts['path'], -1) === '/') {
-			assertStatus(405,
+			\af\assert(405,
 				$this->method !== 'post',
 				'Attempting to redirect POST data. URL should not have trailing /'
 			);
@@ -384,7 +384,7 @@ class		afUrl {
 			str_split((string)$url),
 			["\r", "\n", "\t", "\0", '<', '>']
 		);
-		assertStatus(422, empty($intersect));
+		\af\assert(422, empty($intersect));
 
 
 		if (function_exists('\af\cli')  &&  \af\cli()) {

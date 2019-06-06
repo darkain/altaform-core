@@ -1,10 +1,14 @@
 <?php
 
 
+
+
 ////////////////////////////////////////////////////////////////////////////////
 // LIST OF ALL HTTP STATUS CODES
 ////////////////////////////////////////////////////////////////////////////////
-$http_status_codes = [
+namespace af\status;
+
+$codes = [
 	// 1xx - MOSTLY UNUSED
 	100 => 'Continue',								//	RFC7231 Section 6.2.1
 	101 => 'Switching Protocols',					//	RFC7231 Section 6.2.2
@@ -109,7 +113,9 @@ $http_status_codes = [
 ////////////////////////////////////////////////////////////////////////////////
 // DISPLAY THE HTTP ERROR STATUS PAGE FOR THE GIVEN CODE
 ////////////////////////////////////////////////////////////////////////////////
-function httpError($code, $text=false, $log=false, $details=false) {
+namespace af;
+
+function error($code, $text=false, $log=false, $details=false) {
 	global $http_status_codes, $afurl, $router, $afconfig, $get;
 
 	$code = (int) $code;
@@ -127,7 +133,7 @@ function httpError($code, $text=false, $log=false, $details=false) {
 			return $afurl->redirect([], 302);
 		}
 
-		$text = afDebug::html($afurl->all) . '<br/>' . $text;
+		$text = \afDebug::html($afurl->all) . '<br/>' . $text;
 
 		if (!empty($afconfig->debug)) {
 			$text .= '<br/><pre>' . print_r($afurl,true) . '</pre>';
@@ -135,11 +141,11 @@ function httpError($code, $text=false, $log=false, $details=false) {
 		}
 	}
 
-	return afDebug::render(
+	return \afDebug::render(
 		$code . ' ' . $http_status_codes[$code], [
 			'<div id="af-fatal"><h1>ERROR: '.$code.'</h1>',
 			'<h2>' . $http_status_codes[$code] . '</h2>',
-			'<h3>' . afDebug::html($details) . '</h3>',
+			'<h3>' . \afDebug::html($details) . '</h3>',
 			($text !== false ? '<i>' . $text . '</i>' : '') . '</div>',
 		],
 		$log,
@@ -153,9 +159,11 @@ function httpError($code, $text=false, $log=false, $details=false) {
 ////////////////////////////////////////////////////////////////////////////////
 // ASSERT AND SHOW THE GIVEN STATUS CODE ON FAILURE
 ////////////////////////////////////////////////////////////////////////////////
-function assertStatus($code, $item, $text=false, $log=false) {
-	if ($item instanceof pudlOrm) return $item->assertStatus($code, $text, $log);
-	return (empty($item) && $item!=='') ? httpError($code, $text, $log) : $item;
+namespace af;
+
+function assert($code, $item, $text=false, $log=false) {
+	if ($item instanceof pudlOrm) return $item->assert($code, $text, $log);
+	return (empty($item) && $item!=='') ? \af\error($code, $text, $log) : $item;
 }
 
 
@@ -164,9 +172,11 @@ function assertStatus($code, $item, $text=false, $log=false) {
 ////////////////////////////////////////////////////////////////////////////////
 // ASSERT THAT WE HAVE READ, WRITE, OR GRANT PERMISSIONS
 ////////////////////////////////////////////////////////////////////////////////
-function assertRead($item, $text=false, $log=false, $code=401) {
+namespace af\assert;
+
+function read($item, $text=false, $log=false, $code=401) {
 	return ($item !== true && !in_array($item, ['read', 'write', 'grant']))
-			? httpError($code, $text, $log)
+			? \af\error($code, $text, $log)
 			: $item;
 }
 
@@ -176,9 +186,11 @@ function assertRead($item, $text=false, $log=false, $code=401) {
 ////////////////////////////////////////////////////////////////////////////////
 // ASSERT THAT WE HAVE WRITE OR GRANT PERMISSIONS
 ////////////////////////////////////////////////////////////////////////////////
-function assertWrite($item, $text=false, $log=false, $code=401) {
+namespace af\assert;
+
+function write($item, $text=false, $log=false, $code=401) {
 	return ($item !== true && !in_array($item, ['write', 'grant']))
-			? httpError($code, $text, $log)
+			? \af\error($code, $text, $log)
 			: $item;
 }
 
@@ -188,8 +200,10 @@ function assertWrite($item, $text=false, $log=false, $code=401) {
 ////////////////////////////////////////////////////////////////////////////////
 // ASSERT THAT WE HAVE "GRANT" PERMISSIONS (BASICALLY "ADMIN")
 ////////////////////////////////////////////////////////////////////////////////
-function assertGrant($item, $text=false, $log=false, $code=401) {
+namespace af\assert;
+
+function grant($item, $text=false, $log=false, $code=401) {
 	return ($item !== true && !in_array($item, ['grant']))
-			? httpError($code, $text, $log)
+			? \af\error($code, $text, $log)
 			: $item;
 }

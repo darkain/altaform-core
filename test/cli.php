@@ -41,6 +41,7 @@ require_once(__DIR__ . '/../modules/cli.php');
 require_once(__DIR__ . '/../modules/abyss.php');
 require_once(__DIR__ . '/../modules/mime.php');
 require_once(__DIR__ . '/../modules/time.php');
+require_once(__DIR__ . '/../modules/status.php');
 
 // INIT AF 3.0 MODULES
 if (empty($get))		$get		= new \af\abyss;
@@ -52,7 +53,6 @@ require_once(__DIR__ . '/../traits/afNode.inc.php');
 
 require_once(__DIR__ . '/../core/afDebug.inc.php');
 require_once(__DIR__ . '/../core/afString.inc.php');
-require_once(__DIR__ . '/../core/afStatus.inc.php');
 
 //THESE MUST COME AFTER OTHERS AND BE INCLUDED IN THIS ORDER
 require_once(__DIR__ . '/../core/afUrl.inc.php');

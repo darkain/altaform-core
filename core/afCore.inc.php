@@ -65,7 +65,7 @@ class		altaform
 		if (!is_array($extensions)) $extensions = [$extensions];
 
 		foreach ($extensions as $extension) {
-			assertStatus(500,
+			\af\assert(500,
 				extension_loaded($extension),
 				'The required PHP extension is missing: ' . $extension
 			);

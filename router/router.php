@@ -28,7 +28,7 @@ class router {
 
 		// RECURSION LIMIT
 		static $recurse = 0;
-		assertStatus(500,
+		\af\assert(500,
 			$recurse++ < 20,
 			'INTERNAL REDIRECT RECURSION LIMIT REACHED'
 		);
@@ -67,12 +67,12 @@ class router {
 
 
 		for ($i=1; $i<$count; $i++) {
-			assertStatus(400,
+			\af\assert(400,
 				preg_match('/\.(php|inc|hh|tpl)$/i', $this->part[$i]) === 0,
 				'Invalid path - possible hacking attempt'
 			);
 
-			assertStatus(400,
+			\af\assert(400,
 				\afString::utf8($this->part[$i]),
 				'Invalid UTF-8 sequence - possible hacking attempt'
 			);
@@ -100,7 +100,7 @@ class router {
 				// NORMAL
 				if (is_file('_virtual.php'))			return '_virtual.php';
 
-				httpError(404);
+				\af\error(404);
 			}
 
 
@@ -130,7 +130,7 @@ class router {
 
 				//NORMAL
 				if (is_file('_virtual.php'))			return '_virtual.php';
-				if (!is_dir('_virtual'))				httpError(404);
+				if (!is_dir('_virtual'))				\af\error(404);
 
 				$this->chdir('_virtual');
 				if ($this->reparse  ||  $this->reparse === NULL) return true;
@@ -159,7 +159,7 @@ class router {
 
 
 			// NO MATCHES FOUND FOR FRAGEMENT, ERROR 404 PAGE!
-			httpError(404);
+			\af\error(404);
 		}
 	}
 
@@ -205,7 +205,7 @@ class router {
 			$char		= substr($val, 0, 1);
 			$return		.= '/' . rawurlencode($val);
 
-			assertStatus(500,
+			\af\assert(500,
 				(!in_array($char, static::$badchars)  &&  ord($char) > 0x20),
 				'Invalid character in URL path: 0x' . dechex(ord($char))
 			);
@@ -276,7 +276,7 @@ class router {
 	// MOVE INTO A FOLDER, AND TEST SECURITY IF NEEDED
 	////////////////////////////////////////////////////////////////////////////
 	private function chdir($__af_path__) {
-		assertStatus(500,
+		\af\assert(500,
 			@chdir($__af_path__),
 			'Unable to enter directory'
 		);
@@ -310,7 +310,7 @@ class router {
 		if (is_file('_index.php'))	return '_index.php';
 		if (is_file('_index.tpl'))	return $af->auto(true, '_index.tpl');
 
-		httpError(404);
+		\af\error(404);
 	}
 
 
@@ -323,7 +323,7 @@ class router {
 		if (!empty($this->virtual)) return;
 
 		$count = count($this->part)-1;
-		assertStatus(500,
+		\af\assert(500,
 			$start < $count,
 			'Critical error processing path'
 		);

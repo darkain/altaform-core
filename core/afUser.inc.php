@@ -102,7 +102,7 @@ class			afUser
 	// GENERATE 401 ERROR PAGE AND EXIT SCRIPT IF USER ISN'T LOGGED IN
 	////////////////////////////////////////////////////////////////////////////
 	public function requireLogin($code=401) {
-		assertStatus($code, $this->loggedIn());
+		\af\assert($code, $this->loggedIn());
 		return $this;
 	}
 

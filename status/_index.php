@@ -10,7 +10,7 @@ $af->style($afurl->static.'/css/theme.blue.css');
 
 
 if (empty($servers)  ||  !tbx_array($servers)) {
-	httpError(500, 'NO SERVERS SPECIFIED, OR INVALID SERVER FORMAT');
+	\af\error(500, 'NO SERVERS SPECIFIED, OR INVALID SERVER FORMAT');
 }
 
 

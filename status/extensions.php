@@ -24,7 +24,7 @@ $need = [
 ];
 
 foreach ($need as $item) {
-	assertStatus(500,
+	\af\assert(500,
 		in_array($item, $list),
 		'Required PHP module not found: ' . $item
 	);

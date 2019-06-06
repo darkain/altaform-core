@@ -14,7 +14,7 @@ if ($user->loggedIn()) {
 ////////////////////////////////////////////////////////////////////////////////
 // PULL THE REQUESTED ACCOUNT
 ////////////////////////////////////////////////////////////////////////////////
-assertStatus(401,
+\af\assert(401,
 	$auth = $db->row([
 		'ua' => 'user_auth',
 		'us' => 'user',
@@ -33,7 +33,7 @@ assertStatus(401,
 ////////////////////////////////////////////////////////////////////////////////
 $password = $get->password('auth_password');
 
-assertStatus(401,
+\af\assert(401,
 	password_verify($password, $auth['auth_password']),
 	'Invalid Email Address or Password'
 );

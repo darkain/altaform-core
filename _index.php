@@ -146,7 +146,7 @@ if (!headers_sent()) {
 // HOST INFORMATION FOR CONFIG
 ////////////////////////////////////////////////////////////////////////////////
 if (!\af\cli()) {
-	assertStatus(500,
+	\af\assert(500,
 		$afurl->validateDomain($afurl->domain),
 		'Invalid Domain: ' . $afurl->domain
 	);
@@ -167,7 +167,7 @@ if (is_file('_config/'.$afurl->domain.'/config.inc.php')) {
 } else if (is_file('_config/_virtual.inc.php')) {
 	require_once(is_owner('_config/_virtual.inc.php'));
 } else {
-	httpError(500, 'Unknown Domain: ' . $afurl->domain);
+	\af\error(500, 'Unknown Domain: ' . $afurl->domain);
 }
 
 

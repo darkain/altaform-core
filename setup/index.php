@@ -4,25 +4,25 @@
 ////////////////////////////////////////////////////////////////////////////////
 //VERIFY TABLES EXIST AND ARE CURRENTLY EMPTY
 ////////////////////////////////////////////////////////////////////////////////
-assertStatus(500,
+\af\assert(500,
 	$db->tableExists('user'),
 	'USER TABLE DOES NOT EXIST'
 );
 
 
-assertStatus(500,
+\af\assert(500,
 	$db->tableExists('user_auth'),
 	'AUTH TABLE DOES NOT EXIST'
 );
 
 
-assertStatus(500,
+\af\assert(500,
 	$db->row('user') === false,
 	'USER TABLE IS ALREADY POPULATED'
 );
 
 
-assertStatus(500,
+\af\assert(500,
 	$db->row('user_auth') === false,
 	'AUTH TABLE IS ALREADY POPULATED'
 );
