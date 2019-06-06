@@ -78,12 +78,12 @@ class		altaform
 	////////////////////////////////////////////////////////////////////////////
 	// TERMINATE EXECUTION, OPTIONALLY SPECIFYING EXIT CODE
 	////////////////////////////////////////////////////////////////////////////
-	public static function exit($exit=true) {
-		if ($exit === false  ||  $exit === NULL) return;
+	public static function end($end=true) {
+		if ($end === false  ||  $end === NULL) return;
 
-		is_bool($exit)
+		is_bool($end)
 			? exit(0)
-			: exit($exit);
+			: exit($end);
 	}
 
 
@@ -92,9 +92,9 @@ class		altaform
 	////////////////////////////////////////////////////////////////////////////
 	// SEND "OK" STATUS TO DYNAMIC CLIENT INTERFACE
 	////////////////////////////////////////////////////////////////////////////
-	public static function ok($exit=true) {
+	public static function ok($end=true) {
 		echo "AF-OK\n";
-		static::exit($exit);
+		static::end($end);
 	}
 
 
@@ -103,9 +103,9 @@ class		altaform
 	////////////////////////////////////////////////////////////////////////////
 	// SEND "REFRESH" STATUS TO DYNAMIC CLIENT INTERFACE (UPDATE CONTENT)
 	////////////////////////////////////////////////////////////////////////////
-	public static function refresh($exit=true) {
+	public static function refresh($end=true) {
 		echo "AF-REFRESH\n";
-		static::exit($exit);
+		static::end($end);
 	}
 
 
@@ -114,9 +114,9 @@ class		altaform
 	////////////////////////////////////////////////////////////////////////////
 	// SEND "RELOAD" STATUS TO DYNAMIC CLIENT INTERFACE (FULL F5 RELOAD PAGE)
 	////////////////////////////////////////////////////////////////////////////
-	public static function reload($exit=true) {
+	public static function reload($end=true) {
 		echo "AF-RELOAD\n";
-		static::exit($exit);
+		static::end($end);
 	}
 
 
@@ -125,11 +125,11 @@ class		altaform
 	////////////////////////////////////////////////////////////////////////////
 	// SEND "LOAD" STATUS TO DYNAMIC CLIENT INTERFACE (LOAD A DIFFERENT PAGE)
 	////////////////////////////////////////////////////////////////////////////
-	public static function afload($path, $exit=true) {
+	public static function afload($path, $end=true) {
 		echo "AF-LOAD\n";
 		echo static::$af->url($path, true);
 		echo "\n";
-		static::exit($exit);
+		static::end($end);
 	}
 
 
@@ -138,11 +138,11 @@ class		altaform
 	////////////////////////////////////////////////////////////////////////////
 	// SEND "REDIRECT" STATUS TO DYNAMIC CLIENT INTERFACE (REDIRECT TO PAGE)
 	////////////////////////////////////////////////////////////////////////////
-	public static function redirect($path, $exit=true) {
+	public static function redirect($path, $end=true) {
 		echo "AF-REDIRECT\n";
 		echo static::$af->url($path, true);
 		echo "\n";
-		static::exit($exit);
+		static::end($end);
 	}
 
 
@@ -151,14 +151,14 @@ class		altaform
 	////////////////////////////////////////////////////////////////////////////
 	// OUTPUT TO BROWSER AS JSON DATA INSTEAD OF HTML, TXT, ETC.
 	////////////////////////////////////////////////////////////////////////////
-	public function json($data, $exit=true) {
+	public function json($data, $end=true) {
 		$this->contentType('json');
 
 		echo ($data instanceof pudlData)
 			? $data->json()
 			: json_encode($data, JSON_PARTIAL_OUTPUT_ON_ERROR);
 
-		static::exit($exit);
+		static::end($end);
 	}
 
 
