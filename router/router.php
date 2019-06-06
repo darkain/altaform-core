@@ -28,7 +28,7 @@ class router {
 
 		// RECURSION LIMIT
 		static $recurse = 0;
-		\af\assert(500,
+		\af\affirm(500,
 			$recurse++ < 20,
 			'INTERNAL REDIRECT RECURSION LIMIT REACHED'
 		);
@@ -67,12 +67,12 @@ class router {
 
 
 		for ($i=1; $i<$count; $i++) {
-			\af\assert(400,
+			\af\affirm(400,
 				preg_match('/\.(php|inc|hh|tpl)$/i', $this->part[$i]) === 0,
 				'Invalid path - possible hacking attempt'
 			);
 
-			\af\assert(400,
+			\af\affirm(400,
 				\afString::utf8($this->part[$i]),
 				'Invalid UTF-8 sequence - possible hacking attempt'
 			);
@@ -205,7 +205,7 @@ class router {
 			$char		= substr($val, 0, 1);
 			$return		.= '/' . rawurlencode($val);
 
-			\af\assert(500,
+			\af\affirm(500,
 				(!in_array($char, static::$badchars)  &&  ord($char) > 0x20),
 				'Invalid character in URL path: 0x' . dechex(ord($char))
 			);
@@ -276,7 +276,7 @@ class router {
 	// MOVE INTO A FOLDER, AND TEST SECURITY IF NEEDED
 	////////////////////////////////////////////////////////////////////////////
 	private function chdir($__af_path__) {
-		\af\assert(500,
+		\af\affirm(500,
 			@chdir($__af_path__),
 			'Unable to enter directory'
 		);
@@ -323,7 +323,7 @@ class router {
 		if (!empty($this->virtual)) return;
 
 		$count = count($this->part)-1;
-		\af\assert(500,
+		\af\affirm(500,
 			$start < $count,
 			'Critical error processing path'
 		);

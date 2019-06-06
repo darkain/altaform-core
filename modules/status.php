@@ -157,12 +157,12 @@ function error($code, $text=false, $log=false, $details=false) {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// ASSERT AND SHOW THE GIVEN STATUS CODE ON FAILURE
+// AFFIRM AND SHOW THE GIVEN STATUS CODE ON FAILURE
 ////////////////////////////////////////////////////////////////////////////////
 namespace af;
 
-function assert($code, $item, $text=false, $log=false) {
-	if ($item instanceof pudlOrm) return $item->assert($code, $text, $log);
+function affirm($code, $item, $text=false, $log=false) {
+	if ($item instanceof pudlOrm) return $item->affirm($code, $text, $log);
 	return (empty($item) && $item!=='') ? \af\error($code, $text, $log) : $item;
 }
 
@@ -170,9 +170,9 @@ function assert($code, $item, $text=false, $log=false) {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// ASSERT THAT WE HAVE READ, WRITE, OR GRANT PERMISSIONS
+// AFFIRM THAT WE HAVE READ, WRITE, OR GRANT PERMISSIONS
 ////////////////////////////////////////////////////////////////////////////////
-namespace af\assert;
+namespace af\affirm;
 
 function read($item, $text=false, $log=false, $code=401) {
 	return ($item !== true && !in_array($item, ['read', 'write', 'grant']))
@@ -184,9 +184,9 @@ function read($item, $text=false, $log=false, $code=401) {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// ASSERT THAT WE HAVE WRITE OR GRANT PERMISSIONS
+// AFFIRM THAT WE HAVE WRITE OR GRANT PERMISSIONS
 ////////////////////////////////////////////////////////////////////////////////
-namespace af\assert;
+namespace af\affirm;
 
 function write($item, $text=false, $log=false, $code=401) {
 	return ($item !== true && !in_array($item, ['write', 'grant']))
@@ -198,9 +198,9 @@ function write($item, $text=false, $log=false, $code=401) {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// ASSERT THAT WE HAVE "GRANT" PERMISSIONS (BASICALLY "ADMIN")
+// AFFIRM THAT WE HAVE "GRANT" PERMISSIONS (BASICALLY "ADMIN")
 ////////////////////////////////////////////////////////////////////////////////
-namespace af\assert;
+namespace af\affirm;
 
 function grant($item, $text=false, $log=false, $code=401) {
 	return ($item !== true && !in_array($item, ['grant']))

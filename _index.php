@@ -146,7 +146,7 @@ if (!headers_sent()) {
 // HOST INFORMATION FOR CONFIG
 ////////////////////////////////////////////////////////////////////////////////
 if (!\af\cli()) {
-	\af\assert(500,
+	\af\affirm(500,
 		$afurl->validateDomain($afurl->domain),
 		'Invalid Domain: ' . $afurl->domain
 	);

@@ -55,7 +55,7 @@ trait afPermission {
 	// REQUIRE THE GIVEN PERMISSION LEVEL, OR EXIT TO HTTP ERROR STATUS SCREEN
 	////////////////////////////////////////////////////////////////////////////
 	public function requirePermission($permission, $code=401) {
-		\af\assert($code,
+		\af\affirm($code,
 			$this->hasPermission($permission),
 			'This page requires the following permission level: '
 			. (tbx_array($permission) ? implode(', ', $permission) : $permission)
@@ -160,7 +160,7 @@ trait afPermission {
 	// REQUIRE THE USER HAS THE GIVEN ACCESS RIGHTS, OR EXIT TO HTTP ERROR
 	////////////////////////////////////////////////////////////////////////////
 	public function requireAccess($access, $id=false, $code=401) {
-		\af\assert($code,
+		\af\affirm($code,
 			$this->hasAccess($access, $id),
 			'This page requires the following access rights: '
 			. (tbx_array($access) ? implode(', ', $access) : $access)
@@ -227,7 +227,7 @@ trait afPermission {
 	// REQUIRE OBJECT ACCESS OR GLOBAL PERMISSIONS
 	////////////////////////////////////////////////////////////////////////////
 	public function requireAccessPermission($access, $permission, $id=false, $code=401) {
-		\af\assert($code,
+		\af\affirm($code,
 			$this->hasAccessPermission($access, $permission, $id),
 			'This page requires the following permission level: '
 			. (tbx_array($access)		? implode(', ', $access)		: $access)
