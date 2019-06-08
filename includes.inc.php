@@ -8,6 +8,8 @@ if (class_exists('altaform', false)) return;
 // TBX - THE RENDERING SYSTEM
 require_once(is_owner('_tbx/tbx.inc.php'));
 
+// INCLUDE EXCEPTIONS BEFORE EVERYTHING ELSE
+require_once(is_owner(__DIR__.'/modules/exceptions.php'));
 
 // NEW ALTAFORM 3.0 INDEPENDENT MODULES
 require_once(is_owner(__DIR__.'/router/router.php'));
@@ -24,6 +26,8 @@ require_once(is_owner(__DIR__.'/modules/path.php'));
 require_once(is_owner(__DIR__.'/modules/time.php'));
 require_once(is_owner(__DIR__.'/modules/abyss.php'));
 require_once(is_owner(__DIR__.'/modules/audit.php'));
+require_once(is_owner(__DIR__.'/modules/device.php'));
+require_once(is_owner(__DIR__.'/modules/import.php'));
 require_once(is_owner(__DIR__.'/modules/status.php'));
 require_once(is_owner(__DIR__.'/modules/system.php'));
 require_once(is_owner(__DIR__.'/modules/sidebar.php'));
@@ -33,9 +37,7 @@ require_once(is_owner(__DIR__.'/modules/activity.php'));
 
 // ALTAFORM 2.0 CORE FUNCTIONALITY
 require_once(is_owner(__DIR__.'/core/afConfig.inc.php'));
-require_once(is_owner(__DIR__.'/core/afDevice.inc.php'));
 require_once(is_owner(__DIR__.'/core/afString.inc.php'));
-require_once(is_owner(__DIR__.'/core/afUpload.inc.php'));
 
 
 // LIST OF ALTAFORM TRAITS - USED TO HELP ORGANIZE CODE

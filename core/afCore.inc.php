@@ -29,7 +29,7 @@ class		altaform
 		$this->config				= $afconfig;
 		$this->_session				= $dbsession;
 		$this->git					= new \af\abyss;
-		$this->device				= new afDevice;
+		$this->device				= new \af\device;
 		$this->_time				= time();
 		$this->_path				= getcwd();
 		$this->_extension			= \af\cli() ? 'txt' : 'html';

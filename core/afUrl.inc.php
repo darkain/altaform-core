@@ -66,7 +66,7 @@ class		afUrl {
 
 		$this->query		= $this->uri . (empty($router->parts['query']) ? '?' : '&');
 
-		if (in_array('gzip', $this->encoding)  &&  !afDevice::trident()) {
+		if (in_array('gzip', $this->encoding)  &&  !\af\device::trident()) {
 			$this->gz = '.gz';
 		}
 
@@ -330,7 +330,7 @@ class		afUrl {
 
 		if (empty($options[CURLOPT_USERAGENT])) {
 			$agent = ini_get('user_agent');
-			if (empty($agent)) $agent = afDevice::agent();
+			if (empty($agent)) $agent = \af\device::agent();
 			curl_setopt(
 				$ch,
 				CURLOPT_USERAGENT,

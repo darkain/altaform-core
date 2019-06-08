@@ -183,7 +183,7 @@ trait afTemplate {
 			return $this->loadArray($file);
 		}
 
-		$device	= $file . '.' . afDevice::device();
+		$device	= $file . '.' . \af\device::device();
 		if (\af\file::readable($device)) return parent::load($device);
 
 		$pathed	= $this->path() . $device;
@@ -272,7 +272,7 @@ trait afTemplate {
 		if ($this->_stage !== AF_STAGE_NONE) return $this;
 		$this->_stage = AF_STAGE_HEADER;
 
-		$device	= afDevice::device();
+		$device	= \af\device::device();
 		$root	= $this->path() . $this->config->root;
 
 
@@ -307,7 +307,7 @@ trait afTemplate {
 	public function headerPage() {
 		if ($this->_stage !== AF_STAGE_HEADER) return $this;
 
-		$device	= afDevice::device();
+		$device	= \af\device::device();
 		$root	= $this->path() . $this->config->root;
 
 		if ($this->debug()  &&  \af\file::readable($root.'/header_page_debug.tpl.'.$device)) {
@@ -354,7 +354,7 @@ trait afTemplate {
 	public function footerHTML() {
 		if ($this->_stage !== AF_STAGE_FOOTER) return $this;
 
-		$device	= afDevice::device();
+		$device	= \af\device::device();
 		$root	= $this->path() . $this->config->root;
 		$ok		= false;
 
@@ -385,7 +385,7 @@ trait afTemplate {
 		if ($this->_stage !== AF_STAGE_BODY) return $this;
 		$this->_stage = AF_STAGE_FOOTER;
 
-		$device	= afDevice::device();
+		$device	= \af\device::device();
 		$root	= $this->path() . $this->config->root;
 
 		if ($this->debug()  &&  \af\file::readable($root.'/footer_page_debug.tpl.'.$device)) {
@@ -440,7 +440,7 @@ trait afTemplate {
 		global $og, $user;
 
 		// ALLOW DEVICE SPECIFIC LOADING
-		$device	= $file . '.' . afDevice::device();
+		$device	= $file . '.' . \af\device::device();
 
 		// PULL THE CONTENTS OF THE TEMPLATE BEFORE ANYTHING ELSE!
 		$text = @file_get_contents( \af\file::readable($device) ? $device : $file );

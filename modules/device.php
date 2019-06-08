@@ -1,5 +1,7 @@
 <?php
 
+namespace af;
+
 
 /**
 * Modification by Darkain Multimedia for use in Altaform
@@ -31,7 +33,7 @@
 **/
 
 
-class afDevice {
+class device {
 
 	////////////////////////////////////////////////////////////////////////////
 	// MAIN CONSTRUCTOR - INITIALIZE USER AGENT INFO
@@ -68,7 +70,7 @@ class afDevice {
 	////////////////////////////////////////////////////////////////////////////
 	public static function agent($agent=false) {
 		if ($agent !== false) {
-			self::$agent = afString::doublespace(
+			self::$agent = \afString::doublespace(
 				strtolower((string)$agent)
 			);
 		}
@@ -246,7 +248,7 @@ class afDevice {
 		//Set User Agent = self::$agent
 		if (empty(self::$agent)) {
 			self::$device = 'unknown';
-			self::agent(\af\cli() ? 'cli' : $get->server('HTTP_USER_AGENT'));
+			self::agent(cli() ? 'cli' : $get->server('HTTP_USER_AGENT'));
 		}
 
 		// No user agent
@@ -305,7 +307,7 @@ class afDevice {
 		} else if ((preg_match('/Bot|Crawler|Spider|Yahoo|ia_archiver|Covario-IDS|findlinks|DataparkSearch|larbin|Mediapartners-Google|NG-Search|Snappy|Teoma|Jeeves|TinEye|Validator/i', self::$agent)) && (!preg_match('/Mobile/i', self::$agent))) {
 			self::$device = 'desktop';
 
-		} else if (\af\cli()) {
+		} else if (cli()) {
 			self::$device = 'desktop';
 
 		// Otherwise assume it is a Mobile Device

@@ -1,11 +1,10 @@
 <?php
 
-
 require_once(is_owner(__DIR__.'/../modules/status.php'));
 
 
 
-class afException extends Exception {}
+
 
 
 

@@ -125,7 +125,7 @@ if (\af\cli()  &&  ob_get_level()) ob_end_flush();
 // SET THE CONTENT TYPE FOR THIS DOCUMENT TO HTML OR TXT WITH UTF-8 ENCODING
 ////////////////////////////////////////////////////////////////////////////////
 if (!headers_sent()) {
-	if (afDevice::trident()) {
+	if (\af\device::trident()) {
 		header('X-UA-Compatible: IE=edge,chrome=1');
 	}
 
@@ -262,7 +262,7 @@ if ($get->server('HTTP_UPGRADE_INSECURE_REQUESTS')) {
 
 // LEGACY BROWSERS
 } else if (!$afurl->https  &&  !empty($afconfig->secure)) {
-	if (afDevice::secure()) {
+	if (\af\device::secure()) {
 		$afurl->redirectSecure();
 	}
 

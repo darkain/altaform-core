@@ -4,12 +4,8 @@
 $user->requireLogin();
 
 
-$data = afUpload::upload();
-\af\affirm(500,
-	tbx_array($data),
-	'Unable to process image file - ' . afUpload::error()
-);
-
+$import	= new \af\import($af, $db);
+$data	= $importer->upload();
 
 $path = false;
 
