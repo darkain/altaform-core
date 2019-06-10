@@ -11,28 +11,30 @@ require_once(is_owner('_tbx/tbx.inc.php'));
 // INCLUDE EXCEPTIONS BEFORE EVERYTHING ELSE
 require_once(is_owner(__DIR__.'/modules/exceptions.php'));
 
-// NEW ALTAFORM 3.0 INDEPENDENT MODULES
+// ALTAFORM 3.0 URL ROUTER MODULES
 require_once(is_owner(__DIR__.'/router/router.php'));
-require_once(is_owner(__DIR__.'/modules/x.php'));
-require_once(is_owner(__DIR__.'/modules/ip.php'));
-require_once(is_owner(__DIR__.'/modules/cli.php'));
-require_once(is_owner(__DIR__.'/modules/geo.php'));
-require_once(is_owner(__DIR__.'/modules/git.php'));
-require_once(is_owner(__DIR__.'/modules/otp.php'));
-require_once(is_owner(__DIR__.'/modules/file.php'));
-require_once(is_owner(__DIR__.'/modules/mail.php'));
-require_once(is_owner(__DIR__.'/modules/mime.php'));
-require_once(is_owner(__DIR__.'/modules/path.php'));
-require_once(is_owner(__DIR__.'/modules/time.php'));
-require_once(is_owner(__DIR__.'/modules/abyss.php'));
-require_once(is_owner(__DIR__.'/modules/audit.php'));
-require_once(is_owner(__DIR__.'/modules/device.php'));
-require_once(is_owner(__DIR__.'/modules/import.php'));
-require_once(is_owner(__DIR__.'/modules/status.php'));
-require_once(is_owner(__DIR__.'/modules/system.php'));
-require_once(is_owner(__DIR__.'/modules/sidebar.php'));
-require_once(is_owner(__DIR__.'/modules/youtube.php'));
-require_once(is_owner(__DIR__.'/modules/activity.php'));
+
+// PRE-LOAD MAIN ALTAFORM 3.0 MODULES
+\af\module('x');
+\af\module('ip');
+\af\module('cli');
+\af\module('geo');
+\af\module('git');
+\af\module('otp');
+\af\module('file');
+\af\module('mail');
+\af\module('mime');
+\af\module('path');
+\af\module('time');
+\af\module('abyss');
+\af\module('audit');
+\af\module('device');
+\af\module('import');
+\af\module('status');
+\af\module('system');
+\af\module('sidebar');
+\af\module('youtube');
+\af\module('activity');
 
 
 // ALTAFORM 2.0 CORE FUNCTIONALITY

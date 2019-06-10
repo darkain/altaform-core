@@ -232,7 +232,7 @@ class		afUrl {
 		global $afurl, $db;
 
 		if (!empty($hash[$ext])) {
-			$ext = new \af\mime($db, $hash[$ext]);
+			$ext = new \af\mime($hash[$ext], $db);
 		}
 
 		$hash	= static::cdnHash($hash, $key);

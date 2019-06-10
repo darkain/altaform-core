@@ -1,10 +1,7 @@
 <?php
 
-require_once(is_owner(__DIR__.'/../modules/status.php'));
-
-
-
-
+//require_once(is_owner(__DIR__.'/../modules/status.php'));
+\af\module('status');
 
 
 

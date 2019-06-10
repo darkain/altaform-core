@@ -37,11 +37,14 @@ chdir(__DIR__);
 
 // AF 3.0 CODE
 require_once(__DIR__ . '/../router/router.php');
-require_once(__DIR__ . '/../modules/cli.php');
-require_once(__DIR__ . '/../modules/abyss.php');
-require_once(__DIR__ . '/../modules/mime.php');
-require_once(__DIR__ . '/../modules/time.php');
-require_once(__DIR__ . '/../modules/status.php');
+require_once(__DIR__ . '/../modules/module.php');
+
+// LOAD AF 3.0 MODULES
+\af\module('cli');
+\af\module('abyss');
+\af\module('mime');
+\af\module('time');
+\af\module('status');
 
 // INIT AF 3.0 MODULES
 if (empty($get))		$get		= new \af\abyss;

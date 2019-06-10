@@ -2,9 +2,7 @@
 
 namespace af;
 
-
-
-require_once(is_owner(__DIR__.'/abyss.php'));
+\af\module('abyss');
 
 
 
