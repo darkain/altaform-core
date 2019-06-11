@@ -48,7 +48,7 @@ require_once(is_owner(__DIR__.'/modules/module.php'));
 ////////////////////////////////////////////////////////////////////////////////
 // PHP ERROR HANDLING FUNCTIONS
 ////////////////////////////////////////////////////////////////////////////////
-require_once(is_owner(__DIR__.'/core/afDebug.inc.php'));
+\af\module('debug');
 
 
 
@@ -332,7 +332,7 @@ if (!empty($afconfig->pudl)  &&  tbx_array($afconfig->pudl)) {
 
 	$db = pudl::instance($afconfig->pudl);
 
-	$db->on('log', 'afPudlLog');
+	$db->on('log', '\af\pudlLog');
 
 	if (!empty($afconfig->pudl['connected'])) {
 		if (is_callable($afconfig->pudl['connected'])) {
@@ -408,4 +408,4 @@ while ($i--  &&  ob_get_level()) {
 ////////////////////////////////////////////////////////////////////////////////
 // NEW LINE FOR CLI MODE
 ////////////////////////////////////////////////////////////////////////////////
-if (\af\cli()) echo "\n";
+

@@ -133,7 +133,7 @@ function error($code, $text=false, $log=false, $details=false) {
 			return $afurl->redirect([], 302);
 		}
 
-		$text = \afDebug::html($afurl->all) . '<br/>' . $text;
+		$text = debug::html($afurl->all) . '<br/>' . $text;
 
 		if (!empty($afconfig->debug)) {
 			$text .= '<br/><pre>' . print_r($afurl,true) . '</pre>';
@@ -141,11 +141,11 @@ function error($code, $text=false, $log=false, $details=false) {
 		}
 	}
 
-	return \afDebug::render(
+	return debug::render(
 		$code . ' ' . $http_status_codes[$code], [
 			'<div id="af-fatal"><h1>ERROR: '.$code.'</h1>',
 			'<h2>' . $http_status_codes[$code] . '</h2>',
-			'<h3>' . \afDebug::html($details) . '</h3>',
+			'<h3>' . debug::html($details) . '</h3>',
 			($text !== false ? '<i>' . $text . '</i>' : '') . '</div>',
 		],
 		$log,

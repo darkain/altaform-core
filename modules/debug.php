@@ -1,11 +1,18 @@
 <?php
 
-//require_once(is_owner(__DIR__.'/../modules/status.php'));
-\af\module('status');
+
+namespace af;
+
+
+module('status');
 
 
 
-class afDebug {
+
+////////////////////////////////////////////////////////////////////////////////
+// DEBUGGER FOR ALTAFORM
+////////////////////////////////////////////////////////////////////////////////
+class debug {
 
 
 	public static function render($header, $text, $log=false, $template=false) {
@@ -18,13 +25,13 @@ class afDebug {
 			header($protocol . ' ' . $header);
 		}
 
-		if ($af instanceof altaform) {
+		if ($af instanceof \altaform) {
 			$af->title = $header;
 		}
 
 		$data = $log ? static::log($text, false) : static::process($text);
 
-		if (!empty($template)  &&  $af instanceof altaform  &&  !empty($af->config->root)) {
+		if (!empty($template)  &&  $af instanceof \altaform  &&  !empty($af->config->root)) {
 			if (is_file($af->path().$af->config->root.'/'.$template)) {
 				$ok = static::renderFile(
 					$af->path().$af->config->root.'/'.$template,
@@ -33,7 +40,7 @@ class afDebug {
 			}
 		}
 
-		if (empty($ok)  &&  $af instanceof altaform  &&  !empty($af->config->root)) {
+		if (empty($ok)  &&  $af instanceof \altaform  &&  !empty($af->config->root)) {
 			if (is_file($af->path().$af->config->root.'/error.tpl')) {
 				$ok = static::renderFile(
 					$af->path().$af->config->root.'/error.tpl',
@@ -43,7 +50,7 @@ class afDebug {
 		}
 
 		if (empty($ok)) {
-			if (function_exists('\af\cli') && \af\cli()) {
+			if (function_exists('\af\cli')  &&  cli()) {
 				if (is_array($text)) $text = implode("\n", $text);
 
 				$text = str_replace(
@@ -66,7 +73,7 @@ class afDebug {
 			}
 		}
 
-		if ($db instanceof pudl) $db->rollback();
+		if ($db instanceof \pudl) $db->rollback();
 		echo "\n";
 		flush();
 		exit(1);
@@ -114,8 +121,8 @@ class afDebug {
 			$address = !empty($afurl->all) ? $afurl->all : '';
 		}
 
-		if ($user instanceof pudlObject) {
-			$userdata = new pudlObject;
+		if ($user instanceof \pudlObject) {
+			$userdata = new \pudlObject;
 			$userdata->merge($user, false);
 			$userdata = $userdata->raw();
 		} else {
@@ -138,9 +145,9 @@ class afDebug {
 
 			'af-url'		=> empty($data['address'])	? $address : $data['address'],
 			'user-device'	=> !isset($af->device)		? '' :	$af->device(),
-			'ip-php'		=> !class_exists('\af\ip')	? '' :	\af\ip::local(),
-			'ip-client'		=> !class_exists('\af\ip')	? '' :	\af\ip::address(),
-			'ip-httpd'		=> !class_exists('\af\ip')	? '' :	\af\ip::server(),
+			'ip-php'		=> !class_exists('ip')	? '' :	ip::local(),
+			'ip-client'		=> !class_exists('ip')	? '' :	ip::address(),
+			'ip-httpd'		=> !class_exists('ip')	? '' :	ip::server(),
 		], $data);
 
 		if (!empty($router->redirected)) {
@@ -157,7 +164,7 @@ class afDebug {
 	public static function log($data, $end=true, $backtrace=[]) {
 		global $af, $db, $user, $afconfig;
 
-		if (class_exists('altaform')) altaform::$error = true;
+		if (class_exists('altaform')) \altaform::$error = true;
 
 		//ONLY LOG ERROR ONCE!
 		static $echo = false;
@@ -169,7 +176,7 @@ class afDebug {
 
 		if (empty($backtrace)) $backtrace = debug_backtrace(0);
 
-		if (!($user instanceof afUser)  ||  $user->isAdmin()) {
+		if (!($user instanceof \afUser)  ||  $user->isAdmin()) {
 			if (empty($afconfig)) {
 				$afconfig = (object)[];
 				$afconfig->debug = true;
@@ -191,14 +198,14 @@ class afDebug {
 		$out = str_replace("\n", "\r\n", print_r($arrout, true)) . "\r\n";
 
 		@file_put_contents(
-			($af instanceof altaform ? $af->path() : '') . '_log/' . @date('Y-m-d'),
+			($af instanceof \altaform ? $af->path() : '') . '_log/' . @date('Y-m-d'),
 			$out, FILE_APPEND
 		);
 
 		static::email($out, !empty($arr['details']) ? $arr['details'] : '');
 
 		//TODO: $db SHOULD BE PASSED IN, RATHER THAN GLOBAL
-		if ($db instanceof pudl) $db->rollback();
+		if ($db instanceof \pudl) $db->rollback();
 
 
 		if (!$end) {
@@ -208,7 +215,7 @@ class afDebug {
 
 
 		if (empty($afconfig->debug)) {
-			return \af\error(500, '', true, $arr);
+			return error(500, '', true, $arr);
 		}
 
 
@@ -240,7 +247,7 @@ class afDebug {
 
 		$html .= '</table>';
 
-		\af\error(500, $html, true, $arr);
+		error(500, $html, true, $arr);
 	}
 
 
@@ -332,7 +339,7 @@ class afDebug {
 	public static function html($item) {
 		global $af;
 
-		if (function_exists('\af\cli') && \af\cli()) return $item;
+		if (function_exists('\af\cli')  &&  cli()) return $item;
 
 		if (!defined('TBX_SPECIAL_CHARS')) {
 			define('TBX_SPECIAL_CHARS', ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE);
@@ -399,7 +406,7 @@ set_error_handler(function(	$errno,			$errstr,		$errfile=NULL,
 
 	$end = true;
 
-	if (function_exists('\af\cli')  &&  !\af\cli()) {
+	if (function_exists('\af\cli')  &&  !cli()) {
 		switch ($errno) {
 			case E_WARNING:		case E_USER_WARNING:
 			case E_NOTICE:		case E_USER_NOTICE:
@@ -409,7 +416,7 @@ set_error_handler(function(	$errno,			$errstr,		$errfile=NULL,
 		}
 	}
 
-	afDebug::log([
+	debug::log([
 		'error-code'	=> $errno,
 		'details'		=> $errstr,
 		'error-file'	=> $errfile,
@@ -437,20 +444,22 @@ set_exception_handler(function($e) {
 		'error-line'		=> $e->getLine(),
 	];
 
-	if ($e instanceof pudlConnectionException) {
+	if ($e instanceof \pudlConnectionException) {
 		$afconfig->debug = false;
 		$afconfig->error['email'] = false;
-		if (!\af\cli()) \af\error(503, $e->getMessage());
+		if (function_exists('\af\cli')  &&  !cli()) {
+			error(503, $e->getMessage());
+		}
 	}
 
-	if (($e instanceof pudlException)  &&  ($e->pudl instanceof pudl)) {
+	if (($e instanceof \pudlException)  &&  ($e->pudl instanceof \pudl)) {
 		$info += [
 			'ip-database'	=> $e->pudl->server(),
 			'db-query'		=> $e->pudl->query(),
 		];
 	}
 
-	afDebug::log($info, true, $e->getTrace());
+	debug::log($info, true, $e->getTrace());
 });
 
 
@@ -467,7 +476,7 @@ register_shutdown_function(function() {
 
 	if ($e['type'] !== E_ERROR  &&  $e['type'] !== E_PARSE) return;
 
-	afDebug::log([
+	debug::log([
 		'error-code'	=> $e['type'],
 		'details'		=> $e['message'],
 		'error-file'	=> $e['file'],
@@ -481,39 +490,14 @@ register_shutdown_function(function() {
 ////////////////////////////////////////////////////////////////////////////////
 // LOG PUDL DATABASE QUERY ERRORS
 ////////////////////////////////////////////////////////////////////////////////
-function afPudlLog($callback, $db, $result=NULL) {
+function pudlLog($callback, $db, $result=NULL) {
 	global $af;
 
-	$path = $af instanceof altaform ? $af->path() : '';
+	$path = $af instanceof \altaform ? $af->path() : '';
 
 	@file_put_contents(
 		$path . '_log/' . @date('Y-m-d') . '-query',
 		$db->query() . "\n",
 		FILE_APPEND
 	);
-}
-
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-// OUR OWN CUSTOM DATA DUMP FUNCTION
-////////////////////////////////////////////////////////////////////////////////
-function af_dump($var, $end=true) {
-	global $af;
-
-	if ($var instanceof pudlObject) $var = $var->raw();
-
-	if (function_exists('\af\cli') && \af\cli()) {
-		if (isset($af)) $af->contentType('txt');
-		var_export($var);
-		echo "\n";
-
-	} else {
-		echo '<pre>';
-		var_export($var);
-		echo '</pre>';
-	}
-
-	if ($end) exit(1);
 }

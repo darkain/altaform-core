@@ -21,6 +21,7 @@ require_once(is_owner(__DIR__.'/router/router.php'));
 \af\module('geo');
 \af\module('git');
 \af\module('otp');
+\af\module('dump');
 \af\module('file');
 \af\module('mail');
 \af\module('mime');

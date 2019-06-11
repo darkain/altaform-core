@@ -1,5 +1,6 @@
 <?php
-require_once(is_owner(__DIR__.'/../core/afDebug.inc.php'));
+\af\module('debug');
+
 
 $list = get_loaded_extensions();
 
