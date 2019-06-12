@@ -8,4 +8,5 @@ namespace {
 
 namespace af\exception {
 	class import extends \afException {}
+	class config extends \afException {}
 }

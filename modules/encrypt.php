@@ -1,8 +1,15 @@
 <?php
 
+namespace af;
 
 
-trait afEncrypt {
+
+
+////////////////////////////////////////////////////////////////////////////////
+// ENCRYPT OR DECRYPT INFO
+////////////////////////////////////////////////////////////////////////////////
+trait encrypt {
+
 
 
 
@@ -12,16 +19,16 @@ trait afEncrypt {
 	public function encrypt($data) {
 		$this->checkExtension('openssl');
 
-		if (empty($this->config->encrypt['cipher'])  ||
-			empty($this->config->encrypt['key'])  ||
-			is_null($this->{'af.encrypt'})) {
-			throw new afException('Encryption cipher or key not set');
+		if (empty(		$this->config->encrypt['cipher'])	||
+			empty(		$this->config->encrypt['key'])		||
+			is_null(	$this->{'af.encrypt'})) {
+			throw new exception\config('Encryption cipher or key not set');
 		}
 
-		$data		= json_encode($data);
-		$ivlen		= openssl_cipher_iv_length($this->config->encrypt['cipher']);
-		$iv			= openssl_random_pseudo_bytes($ivlen);
-		$hash		= hash_hmac('sha256', $data, $iv);
+		$data		=	json_encode($data);
+		$ivlen		=	openssl_cipher_iv_length($this->config->encrypt['cipher']);
+		$iv			=	openssl_random_pseudo_bytes($ivlen);
+		$hash		=	hash_hmac('sha256', $data, $iv);
 
 		return [
 			'iv'	=>	rtrim(base64_encode($iv), '='),
