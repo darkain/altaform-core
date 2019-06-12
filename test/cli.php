@@ -53,8 +53,6 @@ if (empty($get))		$get		= new \af\abyss;
 
 // AF 2.0 CODE
 require_once(__DIR__ . '/../traits/afCallable.inc.php');
-require_once(__DIR__ . '/../traits/afNode.inc.php');
-
 require_once(__DIR__ . '/../core/afString.inc.php');
 
 //THESE MUST COME AFTER OTHERS AND BE INCLUDED IN THIS ORDER
