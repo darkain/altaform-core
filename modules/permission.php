@@ -110,7 +110,7 @@ trait permission {
 		}
 
 		if (!empty($this->user_adfree)) {
-			if ($this->user_adfree > $af->time()) {
+			if ($this->user_adfree > $this->pudl()->time()) {
 				$this->permission['adfree'] = 1;
 			}
 		}
@@ -125,8 +125,6 @@ trait permission {
 	// CHECK IF THE USER HAS THE GIVEN ACCESS RIGHTS (OBJECT)
 	////////////////////////////////////////////////////////////////////////////
 	public function hasAccess($access, $id=false) {
-		global $af, $db;
-
 		if (empty($this->access)) $this->access();
 
 		if (!tbx_array($access)) {
@@ -141,12 +139,17 @@ trait permission {
 		}
 
 		if ($id !== false) {
-			if ($id instanceof pudlOrm) $id = $id->id();
-			else if (tbx_array($id)) $id = $id['object_id'];
+			if ($id instanceof pudlOrm) {
+				$id = $id->id();
+			} else if (tbx_array($id)) {
+				$id = $id['object_id'];
+			}
 
-			$row = $db->row('object_access', [
+			$type = altaform::type(reset($access), $this->pudl());
+
+			$row = $this->pudl()->row('object_access', [
 				'object_id'			=> $id,
-				'object_type_id'	=> $af->type(reset($access)),
+				'object_type_id'	=> $type,
 				'user_id'			=> $this->id(),
 			]);
 
@@ -178,12 +181,10 @@ trait permission {
 	// PROCESS THE USER ACCESS RIGHTS DATA
 	////////////////////////////////////////////////////////////////////////////
 	public function access() {
-		global $db;
-
 		if (isset($this->access)) return $this;
 
 		$this->access	= [];
-		$access			= $db->rowsId('user_access', $this);
+		$access			= $this->pudl()->rowsId('user_access', $this);
 
 		foreach ($access as $item) {
 			$this->access[ $item['user_access'] ] = $item['object_access'];
