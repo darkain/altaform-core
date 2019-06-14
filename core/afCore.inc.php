@@ -5,6 +5,7 @@
 // IMPORT REQUIRED MODULES
 ////////////////////////////////////////////////////////////////////////////////
 \af\module('auth');
+\af\module('robots');
 \af\module('encrypt');
 
 
@@ -16,7 +17,7 @@
 class		altaform
 	extends	tbx {
 	use		\af\auth		{ postLogin as authLogin; }
-	use		afRobots;
+	use		\af\robots;
 	use		afTemplate;
 	use		\af\encrypt;
 
