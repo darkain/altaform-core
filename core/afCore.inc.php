@@ -248,10 +248,8 @@ class		altaform
 	//PASS IN A NUMBER TO GET A NAME
 	//PASS IN A NAME TO GET A NUMBER
 	public static function type($name) {
-		global $db;
-
 		if (!is_array(self::$types)  ||  empty(self::$types)) {
-			self::$types = $db->cache(AF_MINUTE*5)->collection('object_type');
+			self::$types = $this->pudl->cache(AF_MINUTE*5)->collection('object_type');
 		}
 
 		if (!is_array(self::$types)) return false;
@@ -268,8 +266,6 @@ class		altaform
 
 
 	public function setting($key, $value=NULL) {
-		global $db;
-
 		//IF NO VALUE, RETURN EXISTING VALUE
 		if (func_num_args() === 1) {
 			return array_key_exists($key, $this->settings)
@@ -278,13 +274,13 @@ class		altaform
 		}
 
 		//INSERT NEW VALUE
-		$return = $db->upsert('altaform', [
+		$return = $this->pudl->upsert('altaform', [
 			'af_key'	=> $key,
 			'af_value'	=> $value,
 		]);
 
 		//PURGE VALUE CACHE FROM REDIS
-		$db->purge('altaform_settings');
+		$this->pudl->purge('altaform_settings');
 
 		return $return;
 	}
@@ -338,12 +334,10 @@ class		altaform
 
 
 	public function timeout($seconds) {
-		global $db;
-
 		set_time_limit($seconds);
 
-		if ($db instanceof pudl) {
-			$db->timeout($seconds);
+		if ($this->pudl instanceof pudl) {
+			$this->pudl->timeout($seconds);
 		}
 	}
 
