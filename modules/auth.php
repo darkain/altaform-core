@@ -1,11 +1,19 @@
 <?php
 
 
-trait afAuth {
+namespace af;
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// HANDLES USER AUTHENTICATION
+////////////////////////////////////////////////////////////////////////////////
+trait Auth {
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//INTERFACE - CALLBACK AFTER SESSION IS PROCESSED (EVERY PAGE REQUEST)
+	// INTERFACE - CALLBACK AFTER SESSION IS PROCESSED (EVERY PAGE REQUEST)
 	////////////////////////////////////////////////////////////////////////////
 	public function postLogin() {}
 
@@ -13,12 +21,15 @@ trait afAuth {
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//PROCESS SESSION INFORMATION (EVERY PAGE REQUEST)
+	// PROCESS SESSION INFORMATION (EVERY PAGE REQUEST)
 	////////////////////////////////////////////////////////////////////////////
 	public function login($session=NULL) {
-		global $user, $db, $get;
+		global $user, $get;
 
-		if (empty($db)) return $user = new afUser($db);
+		if (empty($this->pudl)) {
+			$user = new \afUser($this->pudl);
+			return $user;
+		}
 
 		$user = NULL;
 
@@ -26,18 +37,18 @@ trait afAuth {
 
 		if (!empty($session)) {
 			if ($id = (int) $get->session('AF:USER_ID')) {
-				$data = $db->cache(AF_HOUR, 'AF-SESSION-'.$session)->row(
-					[afUser::prefix => afUser::icon()],
+				$data = $this->pudl->cache(AF_HOUR, 'AF-SESSION-'.$session)->row(
+					[\afUser::prefix => \afUser::icon()],
 					[
 						'user_id' => $id,
-						pudl::find('user_permission', $this->_authtype),
+						\pudl::find('user_permission', $this->_authtype),
 					]
 				);
-				if (!empty($data)) $user = new afUser($db, $data);
+				if (!empty($data)) $user = new \afUser($this->pudl, $data);
 			}
 		}
 
-		if (empty($user)) $user = new afAnonymous($db);
+		if (empty($user)) $user = new \afAnonymous($this->pudl);
 
 		if (empty($user->user_url)) $user->user_url = $user->user_id;
 
@@ -53,16 +64,16 @@ trait afAuth {
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//LOG THE CURRENT USER OUT (DESTOY CURRENT USER'S SESSION)
+	// LOG THE CURRENT USER OUT (DESTOY CURRENT USER'S SESSION)
 	////////////////////////////////////////////////////////////////////////////
 	public function logout($session=false, $destroy=true) {
-		global $db, $user;
+		global $user;
 
 		if (empty($session)) $session = session_id();
 
 		$this->authenticate(0, $destroy);
 
-		$user = new afAnonymous($db);
+		$user = new \afAnonymous($this->pudl);
 		$user->permissions();
 
 		if (!$destroy) return;
@@ -83,29 +94,29 @@ trait afAuth {
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//DESTROY ALL INSTANCES OF THIS SESSION ACROSS DATABASE CLUSTER AND REDIS
+	// DESTROY ALL INSTANCES OF THIS SESSION ACROSS DATABASE CLUSTER AND REDIS
 	////////////////////////////////////////////////////////////////////////////
 	public function purgeSession($session=false, $account=false) {
-		global $db, $user;
+		global $user;
 
 		if ($account === false) {
 			$account = $user;
 			if (empty($session)) $session = session_id();
-			$db->sync()->purge('AF-SESSION-'.$session);
+			$this->pudl->sync()->purge('AF-SESSION-'.$session);
 		}
 
 		if (empty($account['user_id'])) return;
 
-		$db->uncache()->rowId('user', 'user_id', (int)$account['user_id']);
+		$this->pudl->uncache()->rowId('user', 'user_id', (int)$account['user_id']);
 
-		$rows = $db->selectRows(
+		$rows = $this->pudl->selectRows(
 			'id',
 			$this->_session->table(),
 			['user' => $account['user_id']]
 		);
 
 		foreach ($rows as $item) {
-			$db->purge('AF-SESSION-'.$item['id']);
+			$this->pudl->purge('AF-SESSION-'.$item['id']);
 		}
 	}
 
@@ -113,7 +124,7 @@ trait afAuth {
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//LOG THE CURRENT SESSION INTO THE GIVEN USER ACCOUNT (CALLED ONCE)
+	// LOG THE CURRENT SESSION INTO THE GIVEN USER ACCOUNT (CALLED ONCE)
 	////////////////////////////////////////////////////////////////////////////
 	public function authenticate($user, $purge=true) {
 		if ($this->_session) {
@@ -125,17 +136,18 @@ trait afAuth {
 
 
 
+
 	////////////////////////////////////////////////////////////////////////////
-	//STORES THE PUDLSESSION CLASS INSTANCE
+	// STORES THE PUDLSESSION CLASS INSTANCE
 	////////////////////////////////////////////////////////////////////////////
-	private	$_session	= false;
+	private	$_session	= NULL;
 
 
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//ACCEPTABLE ACCOUNT TYPES FOR LOGIN
+	// ACCEPTABLE ACCOUNT TYPES FOR LOGIN
 	////////////////////////////////////////////////////////////////////////////
-	public	$_authtype	= ['user','staff','admin'];
+	public	$_authtype	= ['user', 'staff', 'admin'];
 
 }

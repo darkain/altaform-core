@@ -4,6 +4,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 // IMPORT REQUIRED MODULES
 ////////////////////////////////////////////////////////////////////////////////
+\af\module('auth');
 \af\module('encrypt');
 
 
@@ -14,7 +15,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 class		altaform
 	extends	tbx {
-	use		afAuth		{ postLogin as authLogin; }
+	use		\af\auth		{ postLogin as authLogin; }
 	use		afRobots;
 	use		afTemplate;
 	use		\af\encrypt;
@@ -25,10 +26,15 @@ class		altaform
 	////////////////////////////////////////////////////////////////////////////
 	// PRIMARY ALTAFORM OBJECT CONSTRUCTOR
 	////////////////////////////////////////////////////////////////////////////
-	public function __construct($dbsession=false) {
+	public function __construct($pudl_session=NULL) {
 		global $afconfig, $afurl;
 
 		parent::__construct();
+
+		// PULL THE PUDL INSTANCE FROM THE SESSION
+		if (!empty($pudl_session)) {
+			$this->pudl = $pudl_session->pudl();
+		}
 
 		// VERIFY REQUIRED EXTENSIONS ARE LOADED
 		$this->checkExtension(['ctype', 'json', 'session']);
@@ -38,7 +44,7 @@ class		altaform
 		static::$af					= $this;
 		$this->url					= $afurl;
 		$this->config				= $afconfig;
-		$this->_session				= $dbsession;
+		$this->_session				= $pudl_session;
 		$this->git					= new \af\abyss;
 		$this->device				= new \af\device;
 		$this->_time				= time();
@@ -360,6 +366,7 @@ class		altaform
 	protected			$_time		= 0;
 	protected			$_path		= '';
 	protected			$_static	= '';
+	protected			$pudl		= NULL;
 	public				$git		= NULL;
 	public				$url		= NULL;
 	public				$config		= NULL;
