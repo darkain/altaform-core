@@ -7,6 +7,7 @@
 \af\module('auth');
 \af\module('robots');
 \af\module('encrypt');
+\af\module('template');
 
 
 
@@ -18,8 +19,8 @@ class		altaform
 	extends	tbx {
 	use		\af\auth		{ postLogin as authLogin; }
 	use		\af\robots;
-	use		afTemplate;
 	use		\af\encrypt;
+	use		\af\template;
 
 
 

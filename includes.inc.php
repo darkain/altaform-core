@@ -43,9 +43,5 @@ require_once(is_owner(__DIR__.'/core/afConfig.inc.php'));
 require_once(is_owner(__DIR__.'/core/afString.inc.php'));
 
 
-// LIST OF ALTAFORM TRAITS - USED TO HELP ORGANIZE CODE
-require_once(is_owner(__DIR__.'/traits/afTemplate.inc.php'));
-
-
 // ALTAFORM CORE
 require_once(is_owner(__DIR__.'/core/afCore.inc.php'));
