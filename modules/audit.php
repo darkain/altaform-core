@@ -55,7 +55,7 @@ class audit {
 
 		// CONVERT TYPE STRINGS TO THEIR INTEGER VALUE
 		if (!is_int($type)  &&  !ctype_digit($type)) {
-			$type = \altaform::type($type);
+			$type = \altaform::type($type, $pudl);
 		}
 
 		// THROW AN EXCEPTION IF NO TYPE NUMBER AVAILABLE
