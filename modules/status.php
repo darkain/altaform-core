@@ -6,9 +6,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 // LIST OF ALL HTTP STATUS CODES
 ////////////////////////////////////////////////////////////////////////////////
-namespace af\status;
+namespace af;
 
-$codes = [
+$http_status_codes = [
 	// 1xx - MOSTLY UNUSED
 	100 => 'Continue',								//	RFC7231 Section 6.2.1
 	101 => 'Switching Protocols',					//	RFC7231 Section 6.2.2
