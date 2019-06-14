@@ -1,11 +1,14 @@
 <?php
 
 
-trait afPermission {
+namespace af;
 
 
-//	protected	$permission		= [];
-//	protected	$permissions	= [];
+
+////////////////////////////////////////////////////////////////////////////////
+// HANDLES PERMISSION CHECKING FOR A USER
+////////////////////////////////////////////////////////////////////////////////
+trait permission {
 
 
 
@@ -256,5 +259,14 @@ trait afPermission {
 	public function requireAccessStaff($access, $id=false) {
 		return $this->requireAccessPermission($access, ['staff','admin'], $id);
 	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// MEMBER VARIABLES
+	////////////////////////////////////////////////////////////////////////////
+	protected	$permission		= [];
+	protected	$permissions	= [];
 
 }

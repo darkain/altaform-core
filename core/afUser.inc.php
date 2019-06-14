@@ -1,9 +1,9 @@
 <?php
 
 
-require_once(is_owner(__DIR__.'/../traits/afPermission.inc.php'));
 require_once(is_owner(__DIR__.'/../traits/afPreference.inc.php'));
 \af\module('node');
+\af\module('permission');
 
 //TODO:	ADD A TRAIT FOR 'ATTRIBUTES'
 //		CURRENTLY ONLY ATTRIBUTE IS UNVERIFIED PASSWORD
@@ -15,7 +15,7 @@ class			afUser
 	extends		pudlOrm
 	implements	afUrlx {
 	use			\af\node;
-	use			afPermission;
+	use			\af\permission;
 	use			afPreference;
 
 
