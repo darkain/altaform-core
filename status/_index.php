@@ -84,7 +84,16 @@ if (!empty($list['wsrep_incoming_addresses'])) {
 	$list = explode(',', $list);
 	foreach ($list as $item) {
 		$item = trim($item);
+
+		// Extra comma in list, let's ignore it!
 		if (empty($item)) continue;
+
+		// MariaDB 10.4 fix
+		if ($item === 'AUTO') continue;
+
+		// Only seen referenced in docs, not seen in actual use in my experience
+		if ($item === 'undefined') continue;
+
 		if (!in_array($item, $databases)) $databases[] = $item;
 	}
 }
