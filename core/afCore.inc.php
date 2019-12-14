@@ -249,10 +249,10 @@ class		altaform
 	//GET THE OBJECT TYPE, EITHER BY NUMBER OR NAME
 	//PASS IN A NUMBER TO GET A NAME
 	//PASS IN A NAME TO GET A NUMBER
-	public static function type($name, $pudl=NULL) {
-		if ($pudl instanceof pudl) {
+	public function type($name) {
+		if ($this->pudl instanceof pudl) {
 			if (!is_array(self::$types)  ||  empty(self::$types)) {
-				self::$types = $pudl->cache(AF_MINUTE*5)->collection('object_type');
+				self::$types = $this->pudl->cache(AF_MINUTE*5)->collection('object_type');
 			}
 		}
 

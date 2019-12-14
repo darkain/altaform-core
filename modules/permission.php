@@ -125,6 +125,8 @@ trait permission {
 	// CHECK IF THE USER HAS THE GIVEN ACCESS RIGHTS (OBJECT)
 	////////////////////////////////////////////////////////////////////////////
 	public function hasAccess($access, $id=false) {
+		global $af; //TODO: REMOVE GLOBAL
+
 		if (empty($this->access)) $this->access();
 
 		if (!tbx_array($access)) {
@@ -145,7 +147,7 @@ trait permission {
 				$id = $id['object_id'];
 			}
 
-			$type = altaform::type(reset($access), $this->pudl());
+			$type = $af->type(reset($access), $this->pudl());
 
 			$row = $this->pudl()->row('object_access', [
 				'object_id'			=> $id,

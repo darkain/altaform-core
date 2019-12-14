@@ -27,6 +27,7 @@ class audit {
 
 
 	public static function __callStatic($action, $arguments) {
+		global $af; //TODO: REMOVE GLOBAL
 
 		// VALIDATE NUMBER OF ARGUMENTS
 		if (count($arguments) < 4) {
@@ -55,7 +56,7 @@ class audit {
 
 		// CONVERT TYPE STRINGS TO THEIR INTEGER VALUE
 		if (!is_int($type)  &&  !ctype_digit($type)) {
-			$type = \altaform::type($type, $pudl);
+			$type = $af->type($type);
 		}
 
 		// THROW AN EXCEPTION IF NO TYPE NUMBER AVAILABLE

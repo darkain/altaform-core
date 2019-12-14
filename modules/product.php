@@ -19,8 +19,8 @@ class product {
 	////////////////////////////////////////////////////////////////////////////
 	// CONSTRUCTOR
 	////////////////////////////////////////////////////////////////////////////
-	public function __construct(altaform $af, pudl $pudl) {
-		$this->$af	= $af;
+	public function __construct(\altaform $af, \pudl $pudl) {
+		$this->af	= $af;
 		$this->pudl	= $pudl;
 	}
 
@@ -44,11 +44,11 @@ class product {
 		try {
 			if (empty(self::$amazon)) {
 				self::$amazon = new \AmazonECS(
-						$this->af->config->amazon['key'],
-						$this->af->config->amazon['secret'],
-						'com',
-						$this->af->config->amazon['tag']
-					);
+					$this->af->config->amazon['id'],
+					$this->af->config->amazon['secret'],
+					'com',
+					$this->af->config->amazon['tag']
+				);
 
 				self::$amazon->returnType(
 					\AmazonECS::RETURN_TYPE_ARRAY
