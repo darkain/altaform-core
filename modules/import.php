@@ -517,6 +517,11 @@ class import {
 
 		$return = @file_put_contents($path, $blob, LOCK_EX);
 
+		// RETRY WITHOUT FILE LOCK
+		if (empty($return)) {
+			$return = @file_put_contents($path, $blob);
+		}
+
 		// ZERO BYTES WRITTEN IS ALSO A FAILURE
 		if (empty($return)) {
 			throw new \af\exception\import('Unable to save image file');
