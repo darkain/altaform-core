@@ -371,7 +371,7 @@ class import {
 		$data['hash']		= md5($blob);
 		$data['size']		= strlen($blob);
 		$data['url']		= $this->af->url->cdn($data['hash']);
-		$data['thumb_hash']	= $this->unhex($data['hash']);
+		$data['thumb_hash']	= hex2bin($data['hash']);
 
 		//COPY BLOB TO IMAGE FILE SERVER
 		$data['good']		= $this->write($data['hash'], $blob);
@@ -415,11 +415,11 @@ class import {
 	////////////////////////////////////////////////////////////////////////////
 	public function getHash(&$image, $hash=false) {
 		if (!empty($hash)) {
-			if (is_string($hash)) 					return $this->unhex($hash);
+			if (is_string($hash)) 					return hex2bin($hash);
 			if (tbx_array($hash)) {
-				if (!empty($hash['hash']))			return $this->unhex($hash['hash']);
-				if (!empty($hash['file_hash']))		return $this->unhex($hash['file_hash']);
-				if (!empty($hash['thumb_hash']))	return $this->unhex($hash['thumb_hash']);
+				if (!empty($hash['hash']))			return hex2bin($hash['hash']);
+				if (!empty($hash['file_hash']))		return hex2bin($hash['file_hash']);
+				if (!empty($hash['thumb_hash']))	return hex2bin($hash['thumb_hash']);
 			}
 		}
 
@@ -438,18 +438,6 @@ class import {
 		}
 
 		return md5($image->getImageBlob());
-	}
-
-
-
-
-	////////////////////////////////////////////////////////////////////////////
-	// CONVERT A HEX STRING TO BINARY
-	////////////////////////////////////////////////////////////////////////////
-	public function unhex($hash) {
-		return (ctype_xdigit($hash)  &&  !(strlen($hash)%2))
-			? bin2hex($hash)
-			: $hash;
 	}
 
 
@@ -550,7 +538,7 @@ class import {
 
 		//INSERT MAIN IMAGE
 		$this->pudl->exsert('file', [
-			'file_hash'				=> $this->unhex($data['hash']),
+			'file_hash'				=> hex2bin($data['hash']),
 			'file_size'				=> $data['size'],
 			'file_uploaded'			=> $this->pudl->time(),
 			'file_name'				=> $data['name'],
@@ -563,7 +551,7 @@ class import {
 		//INSERT EXIF DATA
 		if (!empty($data['exif'])) {
 			$this->pudl->exsert('file_meta', [
-				'file_hash'			=> $this->unhex($data['hash']),
+				'file_hash'			=> hex2bin($data['hash']),
 				'file_meta_name'	=> 'exif',
 				'file_meta_value'	=> $data['exif'],
 			]);
@@ -572,7 +560,7 @@ class import {
 		//ASSOCIATE FILE WITH CURRENT USER, IF AVAILABLE
 		if (!empty($user['user_id'])) {
 			$this->pudl->exsert('file_user', [
-				'file_hash'			=> $this->unhex($data['hash']),
+				'file_hash'			=> hex2bin($data['hash']),
 				'user_id'			=> $user['user_id'],
 				'user_time'			=> $this->pudl->time(),
 			]);
@@ -596,8 +584,8 @@ class import {
 			if (((int)$key) < 1  ||  !tbx_array($item)) continue;
 
 			$this->pudl->exsert('file_thumb', [
-				'thumb_hash'		=> $this->unhex($item['hash']),
-				'file_hash'			=> $this->unhex($data['hash']),
+				'thumb_hash'		=> hex2bin($item['hash']),
+				'file_hash'			=> hex2bin($data['hash']),
 				'thumb_size'		=> $item['size'],
 				'thumb_type'		=> $item['type'],
 			]);
