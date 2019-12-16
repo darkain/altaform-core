@@ -491,9 +491,9 @@ class import {
 	////////////////////////////////////////////////////////////////////////////
 	protected function exifClean(&$data) {
 		if (is_string($data)) {
-			$data = afString::toUtf8($data, 'UTF-8');
+			$data = \afString::toUtf8($data, 'UTF-8');
 			$data = preg_replace('/[\x00-\x1F]/', ' ', $data);
-			$data = afString::doubletrim($data);
+			$data = \afString::doubletrim($data);
 
 		} else if (tbx_array($data)) {
 			foreach ($data as &$item) {
