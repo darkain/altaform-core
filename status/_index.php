@@ -124,10 +124,6 @@ foreach ($databases as $item) {
 		$connect		= new pudlMySqli(['offline' => true]);
 	}
 
-	if (!empty($replacers[0])  &&  !empty($replacers[1])) {
-		$name = str_replace($replacers[0], $replacers[1], $name);
-	}
-
 	if ($connect->connectErrno()) {
 		$servers[] = [
 			'path'		=> $name,
@@ -145,7 +141,7 @@ foreach ($databases as $item) {
 						. current($connect->variables('system_versioning_alter_history'));
 
 		$servers[]		= [
-			'path'		=> $name,
+			'path'		=> $connect->hostname(),
 			'version'	=> !empty($version) ? (reset($version) . $readonly . ' : ' . $state) : NULL,
 			'boot'		=> !empty($uptime) ? $af->time() - reset($uptime) : NULL,
 			'uptime'	=> !empty($uptime) ? \af\time::since($af->time() - reset($uptime), AF_YEAR*7) : NULL,
