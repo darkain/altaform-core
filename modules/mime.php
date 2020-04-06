@@ -25,7 +25,7 @@ class mime {
 		}
 
 
-		if ($pudl instanceof pudl) {
+		if ($pudl instanceof \pudl) {
 			if (!array_key_exists($type, self::$cache)) {
 				try {
 					self::$cache[$type] = $pudl->cache(AF_DAY)->rowId(
