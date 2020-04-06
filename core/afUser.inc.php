@@ -20,7 +20,7 @@
 // HANDLES AN INSTANCE OF A SINGLE USER
 ////////////////////////////////////////////////////////////////////////////////
 class			afUser
-	extends		pudlOrm
+	extends		\pudlOrm
 	implements	afUrlx {
 	use			\af\node;
 	use			\af\permission;
@@ -32,7 +32,7 @@ class			afUser
 	////////////////////////////////////////////////////////////////////////////
 	// CONSTRUCTOR
 	////////////////////////////////////////////////////////////////////////////
-	public function __construct(pudl $pudl, $item=false, $fetch=false) {
+	public function __construct(\pudl $pudl, $item=false, $fetch=false) {
 		parent::__construct($pudl, $item, $fetch);
 
 		$this->has_password
@@ -281,11 +281,11 @@ class			afUser
 // SHORTCUT CLASS FOR ANONYMOUS USER
 ////////////////////////////////////////////////////////////////////////////////
 class afAnonymous extends afUser {
-	public function __construct(pudl $pudl) {
+	public function __construct(\pudl $pudl) {
 		try {
 			parent::__construct($pudl, 0, true);
 
-		} catch (pudlException $e) {
+		} catch (\pudlException $e) {
 			$this->user_id		= 0;
 			$this->user_name	= 'anonymous';
 			$this->user_json	= [];
