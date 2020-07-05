@@ -25,31 +25,10 @@ class		afUrl {
 		global $get;
 
 		if (function_exists('\af\cli')  &&  \af\cli()) {
-			if (ob_get_level()) ob_end_clean();
-			$host = ['_cli'];
-			$args = $get->server('argv');
-			if (is_array($args)) {
-				$_SERVER['REQUEST_URI'] = isset($args[1]) ? $args[1] : '/';
-				for ($i=2; $i<count($args); $i++) {
-					$chunk = explode('=', $args[$i], 2);
-					if (count($chunk) > 1) {
-						$_GET[$chunk[0]] = $chunk[1];
-					} else {
-						$_GET[] = $chunk[0];
-					}
-				}
-			} else {
-				$_SERVER['REQUEST_URI'] = '/';
-			}
+			$host = $this->_cli($get);
 
 		} else {
-			$host = explode(':', $get->server('HTTP_HOST', ''));
-			if (empty($host[0])) $host = explode(':', $get->server('SERVER_ADDR', ''));
-			$host[0] = strtolower($host[0]);
-			\af\affirm(400,
-				$host[0] !== '_cli',
-				'RESTRICTED DOMAIN NAME'
-			);
+			$host = $this->_web($get);
 		}
 
 
@@ -93,6 +72,61 @@ class		afUrl {
 			);
 		}
 		*/
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// PARSE COMMAND LINE INTO URL AND PARAMETERS
+	////////////////////////////////////////////////////////////////////////////
+	private function _cli($get) {
+		if (ob_get_level()) ob_end_clean();
+
+		$host = ['_cli'];
+		$args = $get->server('argv');
+
+		if (!is_array($args)) {
+			$_SERVER['REQUEST_URI'] = '/';
+			return $host;
+		}
+
+		$parts = [];
+		for ($i=1; $i<count($args); $i++) {
+			$chunk = explode('=', $args[$i], 2);
+			if (count($chunk) > 1) {
+				$_GET[$chunk[0]] = $chunk[1];
+			} else {
+				$parts[] = $chunk[0];
+			}
+		}
+
+		$_SERVER['REQUEST_URI'] = '/' . implode('/', $parts);
+
+		return $host;
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// PREP PARSING FOR WEB URL
+	////////////////////////////////////////////////////////////////////////////
+	private function _web($get) {
+		$host = explode(':', $get->server('HTTP_HOST', ''));
+
+		if (empty($host[0])) {
+			$host = explode(':', $get->server('SERVER_ADDR', ''));
+		}
+
+		$host[0] = strtolower($host[0]);
+
+		\af\affirm(400,
+			$host[0] !== '_cli',
+			'RESTRICTED DOMAIN NAME'
+		);
+
+		return $host;
 	}
 
 
