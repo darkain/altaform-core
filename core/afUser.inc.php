@@ -32,7 +32,7 @@ class			afUser
 	////////////////////////////////////////////////////////////////////////////
 	// CONSTRUCTOR
 	////////////////////////////////////////////////////////////////////////////
-	public function __construct(\pudl $pudl, $item=false, $fetch=false) {
+	public function __construct(\pudl $pudl=NULL, $item=false, $fetch=false) {
 		parent::__construct($pudl, $item, $fetch);
 
 		$this->has_password
