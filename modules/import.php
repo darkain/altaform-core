@@ -145,7 +145,7 @@ class import {
 	//
 	////////////////////////////////////////////////////////////////////////////
 	public function facebook($facebook_id, $database=true) {
-		$image = $this->importURL(implode('/', [
+		$image = $this->url(implode('/', [
 			'http://graph.facebook.com/v3.3',
 			$facebook_id,
 			'picture?width=9999&height=9999',
