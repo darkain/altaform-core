@@ -378,7 +378,7 @@ class		afUrl {
 			curl_setopt(
 				$ch,
 				CURLOPT_USERAGENT,
-				!empty($agent) ? $agent : ('Altaform ' . altaform::$version)
+				!empty($agent) ? $agent : ('Altaform ' . \altaform::$version)
 			);
 		}
 
@@ -450,7 +450,7 @@ class		afUrl {
 			}
 		}
 
-		altaform::end($end);
+		\altaform::end($end);
 	}
 
 

@@ -92,7 +92,7 @@ function mail($headers, $subject, $body, $attach=false) {
 	$mail->Priority	= $headers['priority'];
 	$mail->Hostname	= $afurl->domain;
 	$mail->Subject	= $subject;
-	$mail->XMailer	= altaform::$version;
+	$mail->XMailer	= \altaform::$version;
 	$mail->WordWrap	= 80;
 
 	$return = $mail->send();
