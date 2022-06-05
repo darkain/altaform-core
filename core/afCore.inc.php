@@ -214,13 +214,14 @@ class		altaform
 
 
 
-	public function contentType($extension=false) {
-		if (empty($extension)) return $this->_extension;
+	public function contentType($extension=NULL) {
+		if (empty($extension))	return $this->_extension;
 
-		if (headers_sent()) return $this;
+		if (headers_sent())		return $this;
 
 		$list	= explode('.', $extension);
-		$ext	= new \af\mime(end($list), $this->_session->pudl());
+		$pudl	= $this->_session ? $this->_session->pudl() : NULL;
+		$ext	= new \af\mime(end($list), $pudl);
 		$item	= $ext->ext();
 
 		$this->_extension = is_string($item) ? $item : end($list);
