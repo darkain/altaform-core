@@ -1,15 +1,25 @@
 <?php
 
-function parse_etime($s) {
-	$m = array();
-	preg_match("/^(([\d]+)-)?(([\d]+):)?([\d]+):([\d]+)$/", trim($s), $m);
+
+////////////////////////////////////////////////////////////////////////////////
+// PARSE OUT THE TIME INFORMATION AND RETURN IT AS NUMBER OF SECONDS
+////////////////////////////////////////////////////////////////////////////////
+function parse_etime($etime) {
+	$m = [];
+	preg_match("/^(([\d]+)-)?(([\d]+):)?([\d]+):([\d]+)$/", trim($etime), $m);
 	return
-		$m[2]*86400+	//Days
-		$m[4]*3600+		//Hours
-		$m[5]*60+		//Minutes
-		$m[6];			//Seconds
+		((int)$m[2]) * 86400 +	// DAYS
+		((int)$m[4]) * 3600 +	// HOURS
+		((int)$m[5]) * 60 +		// MINUTES
+		((int)$m[6]);			// SECONDS
 }
 
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// PREP THE OUTPUT CONTENT
+////////////////////////////////////////////////////////////////////////////////
 $output = [
 	'type'		=> 'NGINX',
 	'version'	=> $_SERVER['SERVER_SOFTWARE'],
@@ -19,6 +29,11 @@ $output = [
 ];
 
 
+
+
+////////////////////////////////////////////////////////////////////////////////
+// DO ALL THE ACTUAL THINGS!!!
+////////////////////////////////////////////////////////////////////////////////
 $list = explode("\n", `ps x -O vsz,etime | grep [n]ginx`);
 foreach ($list as $item) {
 	$item = explode(' ', trim(preg_replace('/(?:\s\s+|\t)/', ' ', $item)));
@@ -31,4 +46,9 @@ foreach ($list as $item) {
 }
 
 
-echo json_encode($output);
+
+
+////////////////////////////////////////////////////////////////////////////////
+// OUTPUT CONTENT AS A JSON DOCUMENT
+////////////////////////////////////////////////////////////////////////////////
+echo json_encode($output) . "\n";
