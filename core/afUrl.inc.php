@@ -44,7 +44,7 @@ class		afUrl {
 		$this->host			= $this->protocol . '://' . $this->domain;
 		$this->af_host		= $this->host;
 
-		$this->method		= strtolower($get->server('REQUEST_METHOD', ''));
+		$this->method		= strtolower($get->server('REQUEST_METHOD', 'GET'));
 		if (!in_array($this->method, $this->_methods)) {
 			$this->method = $this->_methods[0];
 		}
