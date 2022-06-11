@@ -143,11 +143,11 @@ class debug {
 			'user-agent'	=> !isset($get)		? '' :	$get->server('HTTP_USER_AGENT'),
 			'user-referer'	=> !isset($get)		? '' :	$get->server('HTTP_REFERER'),
 
-			'af-url'		=> empty($data['address'])	? $address : $data['address'],
-			'user-device'	=> !isset($af->device)		? '' :	$af->device(),
-			'ip-php'		=> !class_exists('\af\ip')	? '' :	ip::local(),
-			'ip-client'		=> !class_exists('\af\ip')	? '' :	ip::address(),
-			'ip-httpd'		=> !class_exists('\af\ip')	? '' :	ip::server(),
+			'af-url'		=> empty($data['address'])		? $address : $data['address'],
+			'user-device'	=> !isset($af->device)			? '' :	$af->device(),
+			'ip-php'		=> !class_exists('\\af\\ip')	? '' :	ip::local(),
+			'ip-client'		=> !class_exists('\\af\\ip')	? '' :	ip::address(),
+			'ip-httpd'		=> !class_exists('\\af\\ip')	? '' :	ip::server(),
 		], $data);
 
 		if (!empty($router->redirected)) {
@@ -164,7 +164,7 @@ class debug {
 	public static function log($data, $end=true, $backtrace=[]) {
 		global $af, $db, $user, $afconfig;
 
-		if (class_exists('\altaform')) \altaform::$error = true;
+		if (class_exists('\\altaform')) \altaform::$error = true;
 
 		//ONLY LOG ERROR ONCE!
 		static $echo = false;
