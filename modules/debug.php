@@ -145,9 +145,9 @@ class debug {
 
 			'af-url'		=> empty($data['address'])	? $address : $data['address'],
 			'user-device'	=> !isset($af->device)		? '' :	$af->device(),
-			'ip-php'		=> !class_exists('ip')	? '' :	ip::local(),
-			'ip-client'		=> !class_exists('ip')	? '' :	ip::address(),
-			'ip-httpd'		=> !class_exists('ip')	? '' :	ip::server(),
+			'ip-php'		=> !class_exists('\af\ip')	? '' :	ip::local(),
+			'ip-client'		=> !class_exists('\af\ip')	? '' :	ip::address(),
+			'ip-httpd'		=> !class_exists('\af\ip')	? '' :	ip::server(),
 		], $data);
 
 		if (!empty($router->redirected)) {
@@ -164,7 +164,7 @@ class debug {
 	public static function log($data, $end=true, $backtrace=[]) {
 		global $af, $db, $user, $afconfig;
 
-		if (class_exists('altaform')) \altaform::$error = true;
+		if (class_exists('\altaform')) \altaform::$error = true;
 
 		//ONLY LOG ERROR ONCE!
 		static $echo = false;
