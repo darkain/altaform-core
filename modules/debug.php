@@ -380,7 +380,7 @@ class debug {
 		$names = [
 			'pass',		'hash',		'salt',		'key',
 			'secure',	'token',	'secret',	'crypt',
-			'cookie',
+			'cookie',	'session',
 		];
 
 		foreach ($names as $name) {
