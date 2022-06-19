@@ -11,7 +11,7 @@ if (!$user->isStaff()) {
 $output	= [
 	'type'					=> defined('HHVM_VERSION') ? 'HHVM' : 'PHP',
 	'version'				=> defined('HHVM_VERSION') ? HHVM_VERSION : PHP_VERSION,
-	'arch'					=> (PHP_INT_SIZE*8) . '-bit',
+	'arch'					=> trim(`uname -mp`),	// Call OS "uname" command
 	'boot'					=> time(),
 	'memory'				=> 0,
 	'pid'					=> [],
@@ -21,43 +21,22 @@ $output	= [
 
 
 
-$pids = [];
 
-if (defined('HHVM_VERSION')) {
-	$pids[] = posix_getpid();
+$pids[] = posix_getpid();
+foreach ($pids as $key => $pid) {
+	$uptime	= explode('-', trim(exec('ps -o etime= ' . $pid)));
+	$days	= (count($uptime)>1) ? $uptime[0] : 0;
+	$clock	= explode(':', end($uptime));
 
-} else {
-	$list = explode("\n", `ps -eo%mem,pid,command | grep [p]hp-fpm`);
-	foreach ($list as $item) {
-		$item				= trim($item);
-		if (empty($item)) continue;
+	$output['pid'][] = [
+		'boot'		=> ($days*60*60*24) + ($clock[0]*60*60) + ($clock[1]*60) + $clock[2],
+		'memory'	=> ((int)trim(exec('ps -o rss= ' . $pid))) * 1024,
+	];
 
-		$pid				= 0;
-		@sscanf($item, '%f %d', $null, $pid);
-		if (empty($pid)) continue;
-
-		$pids[]				= $pid;
+	if ($key === 0) {
+		$output['boot']		= time() - end($output['pid'])['boot'];
+		$output['memory']	= end($output['pid'])['memory'];
 	}
-}
-
-
-
-foreach ($pids as $pid) {
-	$pidx = ['boot'=>0, 'memory'=>0];
-
-	$stats					= @stat("/proc/$pid/cmdline");
-	if (!empty($stats['ctime'])) {
-		$output['boot']		= min($output['boot'], $stats['ctime']);
-		$pidx['boot']		= $stats['ctime'];
-	}
-
-	$data					= explode(' ', @file_get_contents("/proc/$pid/stat"));
-	if (!empty($data[22])) {
-		$output['memory']	+= $data[22];
-		$pidx['memory']		= $data[22];
-	}
-
-	$output['pid'][]		= $pidx;
 }
 
 
