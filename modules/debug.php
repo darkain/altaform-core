@@ -266,16 +266,16 @@ class debug {
 		}
 		$tag = str_replace('@@', '@', trim($tag));
 
-		return @mail(
-			$afconfig->error['email'],
-			date('r') . ' ' . strip_tags($title),
-			$tag . "\r\n" . wordwrap($text, 75, "\r\n", true),
-			'From: altaform@' . (
-				!empty($afurl->domain)
-				? $afurl->domain
-				: 'example.com'
-			)
-		);
+		try {
+			return @mail([
+					'to'	=> $afconfig->error['email'],
+					'from'	=> $afconfig->email,
+				],
+				date('r') . ' ' . strip_tags($title),
+				$tag . "\r\n" . wordwrap($text, 75, "\r\n", true),
+			);
+		} catch (Exception $e) {}
+		return false;
 	}
 
 
