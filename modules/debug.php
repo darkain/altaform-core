@@ -272,7 +272,7 @@ class debug {
 					'from'	=> $afconfig->email,
 				],
 				date('r') . ' ' . strip_tags($title),
-				$tag . "\r\n" . wordwrap($text, 75, "\r\n", true),
+				$tag . "\r\n" . wordwrap($text, 75, "\r\n", true)
 			);
 		} catch (Exception $e) {}
 		return false;
