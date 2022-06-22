@@ -1,5 +1,6 @@
 # Altaform
-[![Build Status](https://travis-ci.org/darkain/altaform-core.svg?branch=master)](https://travis-ci.org/darkain/altaform-core)
+[![Build Status](https://travis-ci.com/darkain/altaform-core.svg?branch=master)](https://app.travis-ci.com/github/darkain/altaform-core)
+
 
 
 
