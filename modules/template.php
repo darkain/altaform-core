@@ -3,7 +3,7 @@
 
 namespace af;
 
-use Leafo\ScssPhp\Compiler;
+use ScssPhp\ScssPhp\Compiler;
 
 
 define('AF_STAGE_NONE',		0);
@@ -106,7 +106,7 @@ trait template {
 		}
 
 		if (substr($file, -5) === '.scss') {
-			$text = (new Compiler)->compile($text);
+			$text = (new Compiler)->compileString($text)->getCss();
 		}
 
 		$this->_css[] = [$text, $merge];
