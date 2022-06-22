@@ -47,8 +47,17 @@ require_once(__DIR__ . '/../modules/module.php');
 \af\module('debug');
 \af\module('status');
 
-// INIT AF 3.0 MODULES
-if (empty($get))		$get		= new \af\abyss;
+
+// GETVAR SUBSTITUTE
+if (empty($get)) {
+	class _af_test_get extends \af\abyss {
+		function server($name, $default=NULL) {
+			return $default;
+		}
+	}
+	$get = new _af_test_get;
+}
+
 
 
 // AF 2.0 CODE
