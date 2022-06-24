@@ -54,7 +54,7 @@ trait encrypt {
 		if (empty($this->config->encrypt['cipher'])  ||
 			empty($this->config->encrypt['key'])  ||
 			is_null($this->{'af.encrypt'})) {
-			throw new afException('Encryption cipher or key not set');
+			throw new \afException('Encryption cipher or key not set');
 		}
 
 		if (empty($encrypted['iv'])  ||  empty($encrypted['raw'])) return NULL;

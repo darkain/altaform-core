@@ -74,15 +74,15 @@ class geo {
 
 		static $cache = [];
 
-		if (!array_key_exists($location, self::$cache)) {
-			self::$cache[$location] = $pudl->cache(AF_HOUR)->rowId(
+		if (!array_key_exists($location, $cache)) {
+			$cache[$location] = $pudl->cache(AF_HOUR)->rowId(
 				'geolocation',
 				'location',
 				$location
 			);
 		}
 
-		return self::$cache[$location];
+		return $cache[$location];
 	}
 
 

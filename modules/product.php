@@ -59,7 +59,7 @@ class product {
 				->category($category)
 				->responseGroup($group)
 				->search($search);
-		} catch(Exception $e) {}
+		} catch(\Exception $e) {}
 
 		try {
 			$this->pudl->redis()->set("aws-product-$key", $data, (AF_DAY));

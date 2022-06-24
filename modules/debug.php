@@ -274,7 +274,7 @@ class debug {
 				date('r') . ' ' . strip_tags($title),
 				$tag . "\r\n" . wordwrap($text, 75, "\r\n", true)
 			);
-		} catch (Exception $e) {}
+		} catch (\Exception $e) {}
 		return false;
 	}
 
