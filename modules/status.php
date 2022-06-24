@@ -162,7 +162,7 @@ function error($code, $text=false, $log=false, $details=false) {
 namespace af;
 
 function affirm($code, $item, $text=false, $log=false) {
-	if ($item instanceof pudlOrm) return $item->affirm($code, $text, $log);
+	if ($item instanceof \pudlOrm) return $item->affirm($code, $text, $log);
 	return (empty($item) && $item!=='') ? \af\error($code, $text, $log) : $item;
 }
 

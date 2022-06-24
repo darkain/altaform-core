@@ -141,7 +141,7 @@ trait permission {
 		}
 
 		if ($id !== false) {
-			if ($id instanceof pudlOrm) {
+			if ($id instanceof \pudlOrm) {
 				$id = $id->id();
 			} else if (tbx_array($id)) {
 				$id = $id['object_id'];

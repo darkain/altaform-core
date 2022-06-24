@@ -69,7 +69,7 @@ class geo {
 	////////////////////////////////////////////////////////////////////////////
 	// GET A CACHED GEOLOCATION FROM DATABASE
 	////////////////////////////////////////////////////////////////////////////
-	public function geolocate(pudl $pudl, $location) {
+	public function geolocate(\pudl $pudl, $location) {
 		if (empty($pudl)  ||  empty($location)) return NULL;
 
 		static $cache = [];
@@ -178,14 +178,14 @@ class geo {
 	// SANITIZE A LOCATION NAME TO MATCH ALTAFORM FORMATTING.
 	// MAY BE USEFUL TO OTHERS, TOO. IT HELPS WITH GOOGLE MAPS GEOLOCATION API
 	////////////////////////////////////////////////////////////////////////////
-	function clean(pudl $pudl, $location) {
+	function clean(\pudl $pudl, $location) {
 		$location = strtolower($location);
 		$location = ucwords($location);
 		$location = str_replace(',', ', ', $location);
 		$location = str_replace('. ', ' ', $location);
 
-		$location = afString::stripwhitespace($location, ' ');
-		$location = afString::doublespace($location);
+		$location = \afString::stripwhitespace($location, ' ');
+		$location = \afString::doublespace($location);
 
 		$location = preg_replace('/\\busa?\\b/i', '', $location);
 		$location = preg_replace('/\\bunited states( of america)?\\b/i', '', $location);

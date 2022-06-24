@@ -140,7 +140,7 @@ class time {
 		global $af;
 
 		$path  = 'https://maps.googleapis.com/maps/api/timezone/json?';
-		$path .= afUrl::query([
+		$path .= \afUrl::query([
 			'location'		=> implode(',', [(float)$lat, (float)$lon]),
 			'timestamp'		=> $af->time(),
 			'sensor'		=> false,

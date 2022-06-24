@@ -196,7 +196,7 @@ class router {
 		foreach ($this->part as &$val) {
 			$val		= rawurldecode($val);
 
-			if ($get instanceof getvar) {
+			if ($get instanceof \getvar) {
 				$val	= $get->clean($val);
 			}
 

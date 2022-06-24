@@ -43,7 +43,7 @@ trait node {
 				@file_get_contents($url, false,
 					stream_context_create(['http'=>['timeout'=>1]])
 				);
-			} catch (Exception $e) {}
+			} catch (\Exception $e) {}
 		});
 	}
 

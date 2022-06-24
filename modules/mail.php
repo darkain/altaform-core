@@ -100,7 +100,7 @@ function mail($headers, $subject, $body, $attach=false) {
 	if (!empty($path)) @unlink($path);
 
 	if (!$return  &&  $af->debug()) {
-		throw new Exception($mail->ErrorInfo);
+		throw new \Exception($mail->ErrorInfo);
 	}
 
 	return $return;

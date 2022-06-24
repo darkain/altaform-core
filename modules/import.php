@@ -525,6 +525,8 @@ class import {
 	// ADD FILE DATA TO DATABASE
 	////////////////////////////////////////////////////////////////////////////
 	public function database($data, $transaction=false) {
+		global $user;
+
 		if (empty($data)) return;
 
 		if (empty($this->pudl)) {
@@ -598,7 +600,7 @@ class import {
 	////////////////////////////////////////////////////////////////////////////
 	// MEMBER VARIABLES
 	////////////////////////////////////////////////////////////////////////////
-	protected		$altaform	= NULL;
+	protected		$af			= NULL;
 	protected		$pudl		= NULL;
 	public			$thumbSize	= [50, 100, 150, 200];
 	public			$imageSize	= [500=>50, 800=>true, 1920=>true];

@@ -14,7 +14,7 @@ function dump($var, $end=true) {
 	if ($var instanceof \pudlObject) $var = $var->raw();
 
 	if (function_exists('\af\cli')  &&  cli()) {
-		if (!empty($af)  &&  ($af instanceof altaform)) {
+		if (!empty($af)  &&  ($af instanceof \altaform)) {
 			$af->contentType('txt');
 		}
 		var_export($var);
