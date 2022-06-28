@@ -353,21 +353,35 @@ if (!empty($afconfig->pudl)  &&  tbx_array($afconfig->pudl)) {
 		)
 	);
 
+	// LOAD ALTAFORM SETTINGS
+	if (!empty($afconfig->pudl['altaform'])) {
+		if (!is_string($afconfig->pudl['altaform'])) {
+			$afconfig->pudl['altaform'] = 'settings';
+		}
+
+		try {
+			$af->settings = $db	->cache(AF_MINUTE*5, $afconfig->pudl['altaform'])
+								->collection('altaform');
+		} catch (pudlException $e) {}
+	}
+
 	// HIDE PUDL CONFIG FROM $afconfig
 	$afconfig->pudl = [];
-
-	// LOAD ALTAFORM SETTINGS
-	try {
-		$af->settings = $db	->cache(AF_MINUTE*5, 'altaform_settings')
-							->collection('altaform');
-	} catch (pudlException $e) {
-		$af->settings = [];
-	}
 
 } else {
 	require_once(is_owner('_pudl/pudl.php'));
 	require_once(is_owner(__DIR__.'/core/afUser.inc.php'));
 	$af = altaform::create();
+}
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SET DEFAULT ALTAFORM SETTINGS
+////////////////////////////////////////////////////////////////////////////////
+if (empty($af->settings)) {
+	$af->settings = [];
 }
 
 
