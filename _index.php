@@ -340,18 +340,21 @@ if (!empty($afconfig->pudl)  &&  tbx_array($afconfig->pudl)) {
 		}
 	}
 
-	// HIDE PUDL CONFIG FROM $afconfig
-	$afconfig->pudl = [];
-
 	$db->time(
 		$af = altaform::create(
-			new pudlSession($db, 'session',
-				$afconfig->session + [
-					'secure' => $afurl->https,
-				]
-			)
+			!empty($afconfig->pudl['session'])
+			?	new pudlSession($db,
+					$afconfig->pudl['session'],
+					$afconfig->session + [
+						'secure' => $afurl->https,
+					]
+				)
+			:	NULL
 		)
 	);
+
+	// HIDE PUDL CONFIG FROM $afconfig
+	$afconfig->pudl = [];
 
 	// LOAD ALTAFORM SETTINGS
 	try {
