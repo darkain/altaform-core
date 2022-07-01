@@ -28,6 +28,10 @@ foreach ($pids as $key => $pid) {
 	$days	= (count($uptime)>1) ? $uptime[0] : 0;
 	$clock	= explode(':', end($uptime));
 
+	if (empty($clock[0])) $clock[0] = 0;
+	if (empty($clock[1])) $clock[1] = 0;
+	if (empty($clock[2])) $clock[2] = 0;
+
 	$output['pid'][] = [
 		'boot'		=> ($days*60*60*24) + ($clock[0]*60*60) + ($clock[1]*60) + $clock[2],
 		'memory'	=> ((int)trim(exec('ps -o rss= ' . $pid))) * 1024,
