@@ -109,12 +109,6 @@ trait permission {
 			$this->permission[$val] = 1;
 		}
 
-		if (!empty($this->user_adfree)) {
-			if ($this->user_adfree > $this->pudl()->time()) {
-				$this->permission['adfree'] = 1;
-			}
-		}
-
 		return $this;
 	}
 
