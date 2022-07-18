@@ -36,6 +36,7 @@ require_once(is_owner(__DIR__.'/router/router.php'));
 \af\module('sidebar');
 \af\module('youtube');
 \af\module('activity');
+\af\module('password');
 
 
 // ALTAFORM 2.0 CORE FUNCTIONALITY

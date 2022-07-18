@@ -200,22 +200,6 @@ class			afUser
 
 
 	////////////////////////////////////////////////////////////////////////////
-	// GENERATE A RANDOM PASSWORD
-	////////////////////////////////////////////////////////////////////////////
-	public static function password($length=16) {
-		$allowed	= static::password_allowed;
-		$password	= '';
-		$characters	= strlen($allowed)-1;
-		for ($i=0; $i<$length; $i++) {
-			$password .= $allowed[random_int(0, $characters)];
-		}
-		return $password;
-	}
-
-
-
-
-	////////////////////////////////////////////////////////////////////////////
 	// ADD OR DELETE AN ITEM FROM THE USER'S MESSAGE QUEUE
 	////////////////////////////////////////////////////////////////////////////
 	function queue($service, $type, $data=false) {
@@ -263,15 +247,6 @@ class			afUser
 	const	json		= 'user_json';
 	const	table		= 'user';
 	const	prefix		= 'us';
-
-
-
-
-	////////////////////////////////////////////////////////////////////////////
-	// ALLOWED CHARACTERS IN SYSTEM GENERATED PASSWORDS
-	////////////////////////////////////////////////////////////////////////////
-	const password_allowed =
-		'01234abcdefghijklmnopqrstuvwxyz-^/(56789ABCDEFGHIJKLMNOPQRSTUVWXYZ+)\$=';
 }
 
 

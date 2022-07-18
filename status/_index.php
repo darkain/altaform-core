@@ -26,7 +26,7 @@ $ctx = stream_context_create(['http'=>[
 foreach ($servers as &$server) {
 	$nstime = microtime(true);
 
-	//$key	= afUser::password();
+	//$key	= af\password();
 	//$hash	= $af->config->auth($key, true);
 	$url	= $server;// . '?m=' . rawurlencode($key) . '&h=' . rawurlencode($hash);
 	$json	= pudl::jsonDecode(@file_get_contents($url, false, $ctx));
@@ -131,6 +131,8 @@ foreach ($databases as $item) {
 		];
 
 	} else {
+		//TODO:	these should be in a TRY/CATCH block too
+		//		just in cause they hit: max_statement_time
 		$uptime			= $connect->globals('Uptime');
 		$version		= $connect->variables('version');
 		$memory			= $connect->status('Innodb_buffer_pool_bytes_data');
