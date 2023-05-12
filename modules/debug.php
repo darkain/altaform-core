@@ -321,6 +321,9 @@ class debug {
 		// IGNORE CHROME EXTENSIONS
 		if (strpos($get->file, 'chrome-extension://')) return;
 
+		// IGNORE LOCAL FILES
+		if (strpos($get->file, 'file://')) return;
+
 		// IGNORE ERRORS FROM BOTS. THEY ARE TERRIBAD AT PROCESSING SCRIPTS PROPERLY
 		if (preg_match(
 			'/bot|crawl|slurp|spider|ucbrowser|wkhtmltopdf|baiduhd|screenshot/i',
