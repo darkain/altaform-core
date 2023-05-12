@@ -318,6 +318,9 @@ class debug {
 		// IGNORE JQUERY UI ERRORS - THIS LIBRARY IS RANDOMLY BUGGY
 		if (strpos($get->file, 'jquery-ui.min.js')) return;
 
+		// IGNORE CHROME EXTENSIONS
+		if (strpos($get->file, 'chrome-extension://')) return;
+
 		// IGNORE ERRORS FROM BOTS. THEY ARE TERRIBAD AT PROCESSING SCRIPTS PROPERLY
 		if (preg_match(
 			'/bot|crawl|slurp|spider|ucbrowser|wkhtmltopdf|baiduhd|screenshot/i',
