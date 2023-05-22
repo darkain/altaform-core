@@ -177,6 +177,8 @@ class		altaform
 			? $data->json()
 			: json_encode($data, JSON_PARTIAL_OUTPUT_ON_ERROR);
 
+		echo "\n";
+
 		static::end($end);
 	}
 
