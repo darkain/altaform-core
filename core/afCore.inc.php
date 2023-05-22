@@ -186,6 +186,30 @@ class		altaform
 
 
 	////////////////////////////////////////////////////////////////////////////
+	// OUTPUT TO BROWSER AS CSV DATA INSTEAD OF HTML, TXT, ETC.
+	////////////////////////////////////////////////////////////////////////////
+	public function csv($data, $contentType='txt', $end=true) {
+		if ($contentType === true) $contentType = 'csv';
+
+		$this->contentType($contentType);
+
+		if ($data instanceof pudlData) {
+			$data = $data->rows();
+		}
+
+		$out = fopen('php://output', 'w');
+		foreach ($data as $row) {
+			fputcsv($out, $row);
+		}
+		fclose($out);
+
+		static::end($end);
+	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
 	// CHECK TO SEE IF THIS IS A "JQ" REQUEST OR NOT
 	// TODO: THIS IS AN OLD HACK AND NEEDS REPLACED BY A BETTER METHOD
 	////////////////////////////////////////////////////////////////////////////
