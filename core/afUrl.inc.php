@@ -554,6 +554,7 @@ class		afUrl {
 	public $push		= '';
 	public $encoding	= [];
 	public $jq			= false;
+	public $search		= NULL;
 
 	////////////////////////////////////////////////////////////////////////////
 	// LIST OF POSSIBLE HTTP METHODS
