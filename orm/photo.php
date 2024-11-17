@@ -28,14 +28,16 @@ class           afo_photo
     // URL TO THIS OBJECT
 	// TODO: UPDATE THIS WITH CUSTOM CONFIGURABLE BASE, LIKE IN GALLERY
     ////////////////////////////////////////////////////////////////////////////
-    public function url() {
+    public function url($base_url=false) {
         global $afurl;
-        return $afurl->user(
-            $this,
+
+		if (empty($base_url)) $base_url = [];
+
+        return $afurl($base_url + [
             'gallery',
             $this->gallery_id,
             bin2hex($this->file_hash)
-        );
+        ]);
     }
 
 
