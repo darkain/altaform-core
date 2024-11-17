@@ -183,6 +183,8 @@ trait template {
 	// LOAD A TEMPLATE FILE - OVERRIDE DEFAULT TBX FILE LOADER
 	////////////////////////////////////////////////////////////////////////////
 	public function load($file) {
+		if (empty($file)) \af\error(500, 'Invalid template');
+
 		if (tbx_array($file)) {
 			return $this->loadArray($file);
 		}
