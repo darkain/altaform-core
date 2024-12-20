@@ -260,6 +260,16 @@ class		altaform
 
 
 
+	public function contentEncoding($extension=NULL) {
+		if (headers_sent())     return $this;
+		if (empty($extension))	return $this;
+		header('Content-Encoding: ' . $extension);
+		return $this;
+	}
+
+
+
+
 	public function postLogin() {
 		global $user;
 
