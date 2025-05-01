@@ -96,6 +96,7 @@ class		afUrl {
 			$chunk = explode('=', $args[$i], 2);
 			if (count($chunk) > 1) {
 				$_GET[$chunk[0]] = $chunk[1];
+				$_REQUEST[$chunk[0]] = $chunk[1];
 			} else {
 				$parts[] = $chunk[0];
 			}
