@@ -195,7 +195,14 @@ trait template {
 		$pathed	= $this->path() . $device;
 		if (file::readable($pathed)) return parent::load($pathed);
 
-		return parent::load($file);
+		$return = parent::load($file);
+
+		// INSERT DEBUG INFORMATION, JUST ASSUME ITS HTML -SHRUG-
+		if ($this->debug()) {
+			$this->Source = "<!--" . $file . "-->\n" . $this->Source;
+		}
+
+		return $return;
 	}
 
 
