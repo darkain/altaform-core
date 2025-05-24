@@ -8,7 +8,7 @@
             <div class="cpn-discover-text">
                 <span>[item.user_name;magnet=span]</span>
                 <span>[item.link_name;magnet=span]</span>
-                <span>[item.name]</span>
+                <span>[item.name;magnet=span]</span>
             </div>
         </figcaption>
     </figure>
