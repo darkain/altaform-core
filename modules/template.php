@@ -639,7 +639,7 @@ trait template {
 		$ret = parent::_file($data, $file);
 
 		if ($this->debug()) {
-            $data	= '<!-- BEGIN: ' . $file . " -->\n"
+			$data	= '<!-- BEGIN: ' . $file . " -->\n"
 					. $data
 					. '<!-- END: ' . $file . " -->\n";
 		}
