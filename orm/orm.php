@@ -105,7 +105,7 @@ abstract class	afo_orm
 		// URL FOR THE IMAGE FILE ITSELF
 		// TODO: WE NEED A DIFFERENT DEFAULT IMAGE - THIS IS COSPIX SPECIFIC
 		if (empty($this->thumb_hash)) {
-			$this->class	= 'cpn-discover-tag';
+			$this->class	= 'af-discover-tag';
 			$this->img		= $afurl->static . '/thumb2/'
 							. substr(get_class($this), 4)
 							. '.svg';
