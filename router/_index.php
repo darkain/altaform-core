@@ -12,7 +12,13 @@ while ($router->reparse) {
 	$router->path		= $router->route($af);
 
 	if (is_string($router->path)  &&  $router->path !== '') {
-		require(is_owner($router->path));
+		if ($af->debug()) {
+			echo '<!-- BEGIN: ' . getcwd() . $router->path . " -->\n";
+			require(is_owner($router->path));
+			echo '<!-- END: ' . getcwd() . $router->path . " -->\n";
+		} else {
+			require(is_owner($router->path));
+		}
 	}
 
 	chdir($router->directory);
